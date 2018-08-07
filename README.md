@@ -3,7 +3,7 @@
 
 ICONex is a wallet where you can keep not only ICX but also other various crypto-currencies.
 
-## Dependency
+## Dependencies
 * [Spongy Castle](https://rtyley.github.io/spongycastle/) for crypto
 * [Web3j](https://github.com/web3j/web3j) for Ethereum network
 * [SLF4J](https://www.slf4j.org/) for Web3j
