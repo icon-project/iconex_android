@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorMain">#1aaaba</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorWhite20">#33ffffff</color>
+    <color name="colorWhite50">#80ffffff</color>
+    <color name="colorWhite70">#b3ffffff</color>
+    <color name="colorWhite90">#e6ffffff</color>
+
+    <color name="colorText">#262626</color>
+    <color name="colorText20">#33262626</color>
+    <color name="colorText30">#4d262626</color>
+    <color name="colorText50">#80262626</color>
+    <color name="colorText70">#b3262626</color>
+
+    <color name="colorGrayF2">#f2f2f2</color>
+
+    <color name="colorWarning">#f23030</color>
+
+    <!-- Buttons -->
+    <color name="pointColorNormal">#1aaaba</color>
+    <color name="pointColorPressed">#127580</color>
+
+    <color name="buttonNormal">#262626</color>
+    <color name="buttonPressed">#000000</color>
+
+    <color name="buttonDisabled">#e6e6e6</color>
+
+    <color name="buttonText">#ffffff</color>
+    <color name="buttonTextDisabled">#b3b3b3</color>
+
+    <!-- EditText -->
+    <color name="editNormal">#262626</color>
+    <color name="editActivated">#1aaaba</color>
+    <color name="editReadOnly">#33262626</color>
+
+    <!-- Shadow -->
+    <color name="shadow">#2e002626</color>
+
+    <!-- Dim -->
+    <color name="dim">#4d000000</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Transaction -->
+    <color name="colorDeposit">#4588e6</color>
+    <color name="colorRemittance">#e65c67</color>
+
+    <!-- Fingerprint -->
+    <color name="finger_success">#009688</color>
+    <color name="finger_warning">#f4511e</color>
+</resources>

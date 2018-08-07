@@ -1,0 +1,99 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="foundation.icon.iconex.wallet.main.AddressFragment">
+
+    <RelativeLayout
+        android:id="@+id/layout_contents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/bg_white_rounded_4"
+        android:elevation="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_alias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center_horizontal"
+                android:text="Alias"
+                android:textColor="@color/colorText"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="30dp">
+
+                <ImageView
+                    android:id="@+id/img_qrcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminateDrawable="@drawable/anim_loading" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="54dp"
+                android:layout_marginStart="54dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center_horizontal"
+                android:text="Address"
+                android:textColor="@color/colorText"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btn_copy"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_button_b"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center"
+                android:text="@string/copyAddress"
+                android:textAllCaps="false"
+                android:textColor="@color/button_text"
+                android:textSize="14dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="16dp"
+        android:orientation="vertical"
+        app:layout_anchor="@id/layout_contents"
+        app:layout_anchorGravity="top|end">
+
+        <Button
+            android:id="@+id/btn_return"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_wallet_return" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

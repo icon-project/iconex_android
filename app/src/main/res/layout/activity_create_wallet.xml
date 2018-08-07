@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="foundation.icon.iconex.wallet.create.CreateWalletActivity">
+
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/layout_appbar_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <include
+        android:id="@+id/layout_step"
+        layout="@layout/layout_create_wallet_step1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbar" />
+
+    <foundation.icon.iconex.widgets.NonSwipeViewPager
+        android:id="@+id/step_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_step"
+        android:background="@color/colorWhite" />
+
+</RelativeLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:background="@color/colorWhite"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/layout_alias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_alias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_medium"
+            android:text="Wallet A"
+            android:textColor="@color/colorText"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/txt_registered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_dark_rounded_9"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:paddingBottom="1dp"
+            android:paddingEnd="9dp"
+            android:paddingStart="9dp"
+            android:paddingTop="1dp"
+            android:text="@string/registeredWallet"
+            android:textColor="@color/colorWhite"
+            android:textSize="11dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_alias"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/txt_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/txt_symbol"
+            android:fontFamily="@font/nanum_square_bold"
+            android:text="-"
+            android:textColor="@color/colorText"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/txt_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/txt_balance"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/noto_sans_light"
+            android:text="ICX"
+            android:textColor="@color/colorText"
+            android:textSize="12dp" />
+
+        <RelativeLayout
+            android:id="@+id/layout_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@id/txt_symbol"
+            android:background="@color/colorWhite">
+
+            <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:focusable="false"
+                android:indeterminateDrawable="@drawable/anim_loading" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ededed" />
+
+</RelativeLayout>

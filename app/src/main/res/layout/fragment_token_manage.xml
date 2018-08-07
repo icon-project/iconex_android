@@ -1,0 +1,328 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:clickable="true"
+    tools:context=".token.manage.TokenManageFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingEnd="24dp"
+                android:paddingStart="24dp"
+                android:paddingTop="20dp">
+
+                <!-- Address -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/tokenAddress"
+                    android:textColor="@color/colorText"
+                    android:textSize="14dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/btn_qr_scan">
+
+                        <foundation.icon.iconex.widgets.MyEditText
+                            android:id="@+id/edit_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="16dp"
+                            android:layout_toStartOf="@+id/del_address"
+                            android:background="@color/colorWhite"
+                            android:fontFamily="@font/noto_sans_medium"
+                            android:hint="@string/hintToAddress"
+                            android:inputType="textEmailAddress"
+                            android:paddingStart="10dp"
+                            android:singleLine="false"
+                            android:textColor="@color/colorText"
+                            android:textSize="14dp" />
+
+                        <Button
+                            android:id="@+id/del_address"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/ic_input_delete"
+                            android:visibility="invisible" />
+
+                        <View
+                            android:id="@+id/line_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/edit_address"
+                            android:layout_marginTop="6dp"
+                            android:background="@color/editNormal" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/btn_qr_scan"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="14dp"
+                        android:background="@drawable/bg_dark_rounded_4"
+                        android:padding="7dp"
+                        android:src="@drawable/ic_qr_code" />
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txt_addr_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/errContractAddress"
+                    android:textColor="@color/colorWarning"
+                    android:textSize="10sp"
+                    android:visibility="invisible" />
+
+                <!-- Token Name -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/tokenName"
+                    android:textColor="@color/colorText"
+                    android:textSize="14dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <foundation.icon.iconex.widgets.MyEditText
+                        android:id="@+id/edit_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="16dp"
+                        android:layout_toStartOf="@+id/del_name"
+                        android:background="@color/colorWhite"
+                        android:enabled="false"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:hint="@string/hintTokenName"
+                        android:imeOptions="actionDone"
+                        android:paddingStart="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <Button
+                        android:id="@+id/del_name"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_input_delete"
+                        android:visibility="invisible" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/line_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@color/editReadOnly" />
+
+                <TextView
+                    android:id="@+id/txt_name_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/errTokenName"
+                    android:textColor="@color/colorWarning"
+                    android:textSize="10sp"
+                    android:visibility="invisible" />
+
+                <!-- Token Symbol -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/tokenSymbol"
+                    android:textColor="@color/colorText"
+                    android:textSize="14dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <foundation.icon.iconex.widgets.MyEditText
+                        android:id="@+id/edit_symbol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="16dp"
+                        android:layout_toStartOf="@+id/del_symbol"
+                        android:background="@color/colorWhite"
+                        android:enabled="false"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:hint="@string/hintTokenSymbol"
+                        android:paddingStart="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                    <Button
+                        android:id="@+id/del_symbol"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_input_delete"
+                        android:visibility="invisible" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/line_symbol"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@color/editReadOnly" />
+
+                <TextView
+                    android:id="@+id/txt_symbol_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/errTokenSymbol"
+                    android:textColor="@color/colorWarning"
+                    android:textSize="10sp"
+                    android:visibility="invisible" />
+
+                <!-- Token Decimals -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/tokenDecimals"
+                    android:textColor="@color/colorText"
+                    android:textSize="14dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <foundation.icon.iconex.widgets.MyEditText
+                        android:id="@+id/edit_decimals"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/colorWhite"
+                        android:enabled="false"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:hint="@string/hintTokenDecimals"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/colorText"
+                        android:textSize="14dp" />
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/line_decimals"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@color/editReadOnly" />
+
+                <TextView
+                    android:id="@+id/txt_dec_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/errTokenDecimals"
+                    android:textColor="@color/colorWarning"
+                    android:textSize="10sp"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/btn_delete_token"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_button_b"
+                    android:gravity="center"
+                    android:text="@string/deleteToken"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_text"
+                    android:textSize="13dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/anim_loading" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_add_token"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/bg_rounded_button_a"
+        android:enabled="false"
+        android:fontFamily="@font/noto_sans_medium"
+        android:gravity="center"
+        android:text="@string/add"
+        android:textAllCaps="false"
+        android:textColor="@color/button_text"
+        android:textSize="16dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

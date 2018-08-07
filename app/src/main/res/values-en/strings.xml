@@ -1,0 +1,430 @@
+<resources>
+    <string name="app_name">ICONex</string>
+
+    <!-- Common -->
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="complete">Complete</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="edit">Edit</string>
+    <string name="change">Change</string>
+    <string name="copy">Copy</string>
+    <string name="close">Close</string>
+    <string name="add">Add</string>
+    <string name="use">Use Fingerprint</string>
+    <string name="load">Load</string>
+    <string name="retry">RETRY</string>
+    <string name="input">Input</string>
+
+    <string name="unitUSD">USD</string>
+    <string name="unitBTC">BTC</string>
+    <string name="unitICX">ICX</string>
+    <string name="unitETH">ETH</string>
+
+    <string name="withdraw">Transfer</string>
+    <string name="deposit">Deposit</string>
+
+    <string name="errNoAddress">Please enter address.</string>
+
+    <!-- Copy -->
+    <string name="msgCopyPrivateKey">Private key is copied.</string>
+    <string name="msgCopyAddress">Address is copied.</string>
+    <string name="msgCopyTxID">Transaction ID is copied.</string>
+
+    <!-- Splash -->
+    <string name="copyright">\@2018 ICON Foundation</string>
+    <string name="intro1">ICONex enables users to create and manage wallets for various cryptocurrencies that are connected to ICON Network including ICX and ETH.</string>
+    <string name="intro2">Convenient storage and transfer of ICX and other various cryptocurrencies connected with ICON are possible based on the Reserved Balance.</string>
+    <string name="createWallet">Create Wallet</string>
+    <string name="LoadWallet">Load Wallet</string>
+    <string name="hintWalletPassword">Enter wallet password</string>
+
+    <!-- Create Wallet -->
+    <string name="titleCreateWallet">Create Wallet</string>
+    <string name="cancelCreateWallet">Are you sure you want to cancel?</string>
+    <string name="selectCoin">Select Coin</string>
+    <string name="information">Wallet Info</string>
+    <string name="stepDownload">Keystore File</string>
+    <string name="savePrivateKey">Private Key</string>
+    <string name="step1Header">Select a wallet between ICX wallet and ETH wallet.</string>
+    <string name="step1Sub">You can add ERC20 tokens from the Ethereum wallet menu.</string>
+    <string name="step1SelectCoin">Which coin would you like to add?</string>
+    <string name="coin_icx">ICON (ICX)</string>
+    <string name="coin_eth">Ethereum (ETH)</string>
+    <string name="step2Header">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
+    <string name="step2Sub">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
+    <string name="enterInfoHeader">Enter a wallet name and a password.</string>
+    <string name="hintWalletAlias">Enter wallet name</string>
+    <string name="hintCreateWalletPassword">At least 8 characters including letters, numbers, and special characters.</string>
+    <string name="hintWalletPasswordConfirm">Confirm password</string>
+    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters.</string>
+    <string name="step3Header">This Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
+    <string name="step3Sub1">Use this Keystore file to load your wallet from other devices.</string>
+    <string name="step3Sub2">You can download your Keystore file from the \"Backup wallet\" menu later.</string>
+    <string name="walletDownloadGuide">Download Keystore file</string>
+    <string name="walletDownload">Download Keystore file</string>
+    <string name="walletBackupDownload">Download Keystore file</string>
+    <string name="backupKeyStoreFileConfirm">DO NOT SHARE YOUR KEYSTORE FILE WITH OTHERS. Do you want to proceed? </string>
+    <string name="noBackupKeyStoreFileConfirm">Do you want to proceed without downloading the Keystore file?</string>
+    <string name="keyStoreDownloadAccomplished">\"%s\"\nThe file has been downloaded successfully.</string>
+    <string name="step4Header">The private key is unique to your wallet and has no password.</string>
+    <string name="step4Sub1">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
+    <string name="step4Sub2">You can access to your private key from the \'Backup wallet\' menu later.</string>
+    <string name="privateKey">Private Key</string>
+    <string name="copyPrivateKey">Copy Private Key</string>
+    <string name="viewWalletInfo">View Wallet Info</string>
+
+    <string name="errAliasEmpty">Please enter new wallet name.</string>
+    <string name="errPwdEmpty">Please enter your password.</string>
+    <string name="errCheckEmpty">Please confirm your password.</string>
+
+    <!-- Load Wallet -->
+    <string name="titleLoadWallet">Load Wallet</string>
+    <string name="cancelLoadWallet">Are you sure you want to cancel?</string>
+    <string name="loadWalletHeader">How would you like to add your wallet?</string>
+    <string name="loadByKeystore">Keystore File</string>
+    <string name="loadByPrivateKey">Private Key</string>
+    <string name="selectKeyStore">Select Keystore File</string>
+    <string name="loadKeystoreHeader">Select your Keystore file and enter your password.</string>
+    <string name="loadKeystoreSub">If your Keystore file is stored on another device, move the Keystore file to this device or upload it to cloud service and then select the Keystore file.</string>
+    <string name="loadKeystore">Select Keystore File</string>
+    <string name="invalidKeyStoreFile">Incorrect wallet file form.</string>
+    <string name="errPassword">Please check your password.</string>
+    <string name="enterWalletAliasHeader">Please enter a new wallet name</string>
+    <string name="errNoKeystoreFile">Please select keystore file.</string>
+    <string name="errPrivateKey">Incorrect private key. Please check again.</string>
+    <string name="hintEnterWalletAlias">Enter wallet name</string>
+
+    <string name="loadByPrivateKeyHeader">Select a coin and enter your private key</string>
+    <string name="loadByPrivateKeySub">Please be sure to enter the correct private key for the matching coin type.</string>
+    <string name="enterPrivateKey">Enter your private key</string>
+
+    <string name="titleLoadBundle">Load Wallet Bundle</string>
+    <string name="loadBundleHeader">If you load a wallet bundle, the wallets that are already registered in your wallet will not be loaded.\nDo you want to proceed?</string>
+    <string name="loadBundleDetailed">The password of each wallet is the same as the wallet bundle password.</string>
+    <string name="loadBundleTotal">out of %d are already registered in your ICONex</string>
+    <string name="loadBundleRegistered">%d wallets</string>
+    <string name="registeredWallet">Registered</string>
+
+    <string name="enterWalletAliasAndPassword">Please enter the new wallet name and the password.</string>
+    <string name="walletPasswordGuide1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
+    <string name="walletPasswordGuide2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
+
+    <!-- Warning -->
+    <string name="duplicateWalletAlias">This wallet name already exists.</string>
+    <string name="duplicateWalletAddress">This wallet account already exists.</string>
+    <string name="errAtLeast">Password must contain at least 8 characters.</string>
+    <string name="errPasswordPatternMatch">Password must contain a combination of letters, numbers, and special characters.</string>
+    <string name="errSerialChar">Password must not have more than 2 consecutive identical characters.</string>
+    <string name="errWhiteSpace">Please do not leave blank.</string>
+    <string name="errPasswordNotMatched">Passwords do not match. Please check again.</string>
+
+    <!-- Main -->
+    <string name="appbarSelectorWallets">Wallets</string>
+    <string name="appbarSelectorCoinsNTokens">Coins&amp;Tokens</string>
+    <string name="totalAssetValuationAmount">Total Assets</string>
+    <string name="infoTotalAsset">The total asset is based on Coinmarket cap and the tokens that have no USD-converted prices will not be included.</string>
+
+    <!-- Main Side Menu -->
+    <string name="exportWalletBundle">Export Wallet Bundle</string>
+    <string name="settingLock">Screen Lock</string>
+    <string name="settingLanguage">Language</string>
+    <string name="iCONexDisclaimers">ICONex Disclaimer</string>
+
+    <string name="disclaimersHeader">At the time of downloading and using the official ICX wallet,\"ICONex\", the below disclaimer will be applied to the users.</string>
+    <string name="disclaimersContents">1. The private key ICONex user creates in the process of using the ICONex service is stored in your device, ICON Foundation does not store or/and manage the user\'s private key. The ICONex user is solely responsible for safekeeping and managing the private key created. In the case of the ICONex user not being able to use the private key due to computer virus, hacking activities, theft/loss, etc., ICON Foundation is not responsible for any loss.\n\n2. ICON Foundation does not guarantee the integrity, stability, accuracy and security of ICONex, but only provides the current version of ICONex “AS IS”. ICON Foundation is continuously running tests and making updates to provide a more stable and convenient service, however despite these efforts there is always the possibility of unexpected problems. ICON Foundation is not responsible for any unexpected problems, such as malfunction, hacking, loss and computer virus.
+\n\n3. ICON Foundation is not responsible for not being able to provide services due to natural disasters or any other force majeure.\n\n4. ICON Foundation is not responsible for any third-party transactions the ICONex user makes using ICONex as an intermediary.\n\n5. ICON Foundation is not responsible for any indirect, consequential, specific, punitive or any similar damages even though if ICONex is related with any torts, contract, guarantee, liability without fault and carelessness.\n\n6. ICONex supports Korean and English as the official languages. ICON Foundation is not responsible for any loss that comes from mis-translation into other languages than the official languages.\n\n※ All copyrights regarding ICONex is held by ICON Foundation.</string>
+
+    <!-- Wallet Detail -->
+    <string name="txRecords">Transaction History</string>
+    <string name="all">All</string>
+    <string name="pending">Pending</string>
+    <string name="manageWallet">Manage Wallet</string>
+    <string name="selectUnitOfEvaluation">Select Evaluation Currency</string>
+    <string name="selectCoinNToken">Select Coins &amp; Tokens</string>
+    <string name="searchOption">View Option</string>
+    <string name="walletAddress">Wallet Address</string>
+    <string name="copyAddress">Copy Address</string>
+    <string name="noTransaction">No transaction history.</string>
+    <string name="txID">Transaction ID</string>
+    <string name="viewTxInfo">Check Tx</string>
+    <string name="infoTx">ICX transfer transactions not proceeded within 2 minutes will be cancelled automatically, restoring any transfer amount and transaction fees.</string>
+    <string name="txEther">ETH Transaction History</string>
+    <string name="etherscan">Etherscan</string>
+
+    <string name="txState">Transaction Status</string>
+    <string name="txType">Transaction Type</string>
+
+    <!-- Wallet Manage Menu -->
+    <string name="menuManageToken">Manage Token</string>
+    <string name="menuBackupWallet">Backup Wallet</string>
+    <string name="menuChangePwd">Change Wallet Password</string>
+    <string name="menuDeleteWallet">Remove Wallet</string>
+
+    <!-- Token Manage -->
+    <string name="tokenManageTitle">Manage Token</string>
+    <string name="addToken">Add Token</string>
+    <string name="deleteToken">Remove Token</string>
+    <string name="noTokens">No registered token.</string>
+
+    <string name="tokenAddress">Address</string>
+    <string name="tokenName">Token Name</string>
+    <string name="tokenSymbol">Token Symbol</string>
+    <string name="tokenDecimals">Number of Decimals</string>
+
+    <string name="msgTokenDelete">Do you want to delete\n%s ?</string>
+    <string name="msgTokenCancelMod">Are you sure you want to cancel?</string>
+
+    <string name="hintTokenName">Enter token name</string>
+    <string name="hintTokenSymbol">Enter token symbol</string>
+    <string name="hintTokenDecimals">Enter numbers</string>
+
+    <string name="errContractAddress">Incorrect address. Please check again.</string>
+    <string name="errTokenName">Enter token name.</string>
+    <string name="errTokenSymbol">Enter token symbol.</string>
+    <string name="errTokenDecimals">Please enter letters or numbers.</string>
+    <string name="errTokenDuplication">You already have this token.</string>
+    <string name="errTokenInfo">Unable to bring the token information.</string>
+
+    <!-- Transfer -->
+    <string name="possessionAmount">Balance (%s)</string>
+    <string name="sendAmount">Transfer Amount (%s)</string>
+    <string name="hintSendAmount">Enter transfer amount</string>
+    <string name="toAddress">Receiving Address</string>
+    <string name="hintToAddress">Enter address</string>
+    <string name="plus10">+10</string>
+    <string name="plus100">+100</string>
+    <string name="plus1000">+1000</string>
+    <string name="plusMax">Max</string>
+    <string name="selectAddress">Select Address</string>
+    <string name="scanTheQRCode">Scan QR code</string>
+    <string name="sendFee">Transaction Fee (%s)</string>
+    <string name="remainBalance">Balance after transaction (%s)</string>
+    <string name="exchange_usd">%s  USD</string>
+
+    <string name="icxStepLimit">Step Limit</string>
+    <string name="icxStepPrice">Step Price</string>
+    <string name="icxStepSymbol">loop</string>
+    <string name="hintICXStepLimit">Enter step limit</string>
+
+    <string name="hintGasLimit">Enter gas limit</string>
+    <string name="hintData">Enter data</string>
+    <string name="ethEstiFee">Estimated Maximum Fee (ETH)</string>
+    <string name="ethEstiRemain">Estimated Balance (%s)</string>
+
+    <string name="errCantWithdraw">You have 0 balance.\nPlease deposit and transfer.</string>
+    <string name="errNonZero">Enter more than 0 coins.</string>
+    <string name="errNotEnough">This exceeds your balance.</string>
+    <string name="errNeedFee">Transaction fee is too low.</string>
+    <string name="errCheckAddress">Please confirm receiving address.</string>
+    <string name="errSameAddress">Sending and receiving address are the same.</string>
+
+    <string name="errOwnNotEnough">You have insufficient ETH balance for GAS.</string>
+    <string name="errInvalidData">Please check your data.</string>
+
+    <string name="confirmTxInfo">Please check the amount and the receiving address once again.</string>
+
+    <string name="gasLimit">Gas Limit</string>
+    <string name="gasPrice">Gas Price</string>
+    <string name="gwei">Gwei</string>
+    <string name="ethData">Data (Optional)</string>
+
+    <string name="slow">Slow</string>
+    <string name="fast">Fast</string>
+
+    <string name="errGasLimitEmpty">Please enter gas limit.</string>
+
+    <string name="msgEthGasLimit">Gas limit is the amount of gas to send with your transaction.\nUnnecessary gas is refunded to you at the end of transaction. In other words, you can set the maximum amount of gas but the actual gas consumption is not fixed.</string>
+    <string name="msgEthGasPrice">Gas price is an unit of gas.\n1 Gwei equals 0.000000001 ETH.\nEthereum miners prioritize based on gas price when generating blocks. If you set higher gas price, you have more chance to get your transaction confirmed. It also determines your transaction speed.</string>
+    <string name="msgEthEstimateFee">Estimated Maximum Fee\n= Gas Price * Gas Limit\nSet proper gas limit and gas price.\nYou will pay transaction fees even if your transaction is not confirmed by miners.</string>
+    <string name="msgEthData">If you do not enter the data when required, the transaction will fail. You will still have to pay the transaction fees. You don\'t have to enter data if it is not required in the transaction.</string>
+
+    <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
+
+    <!-- Contacts -->
+    <string name="contactsTitle">Select Address</string>
+    <string name="contacts">Registered</string>
+    <string name="contactsRecent">Recent</string>
+    <string name="contactsWallet">My Wallet</string>
+    <string name="addContacts">Add</string>
+    <string name="modContacts">Edit</string>
+    <string name="hintContactsName">Enter address name</string>
+    <string name="hintICXAddress">Enter ICX address</string>
+    <string name="hintETHAddress">Enter ETH address</string>
+    <string name="noContacts">No registered address.</string>
+    <string name="noRecent">No recent address.</string>
+    <string name="noWallet">No available address.</string>
+    <string name="noName">No name</string>
+
+    <string name="msgDeleteContact">Would you like to remove the address you have selected?</string>
+
+    <string name="errDuplicateContactsName">This wallet name already exists.</string>
+    <string name="errDuplicateContactsAddr">This account already exists.</string>
+    <string name="errWrongAddress">Incorrect %s Address.</string>
+
+    <!-- Backup -->
+    <string name="titleBackup">Backup Wallet</string>
+    <string name="headerBackup">You can load your wallet using the Keystore file or your private key. Please backup your Keystore file or your private key.</string>
+    <string name="subjectDownload">Download the Keystore file</string>
+    <string name="downloadKeystore">Keystore File</string>
+    <string name="downDetailed1">The Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
+    <string name="downDetailed2">Use this Keystore file to load your wallet from other devices.</string>
+    <string name="subjectPrivatKey">Save Private Key</string>
+    <string name="priDetailed1">The private key is unique to your wallet and has no password.</string>
+    <string name="priDetailed2">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
+
+    <!-- Change Wallet Password -->
+    <string name="titleChangeWalletPwd">Change Wallet Password</string>
+    <string name="changeWalletPwdHeader">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
+    <string name="changeWalletPwdDetailed">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
+    <string name="changeWalletPwdGuide">Enter Current &amp; New Password</string>
+    <string name="hintOldWalletPwd">Enter current password</string>
+    <string name="hintNewWalletPwd">Enter new password</string>
+    <string name="hintNewWalletPwdConfirm">Confirm new password</string>
+    <string name="doneChangeWalletPwd">Wallet password has been changed.</string>
+
+    <!-- Export bundle -->
+    <string name="titleExportBundle">Export Wallet Bundle</string>
+    <string name="headerExportBundle">Select the wallets to bundle. Passwords are required.</string>
+    <string name="exportBundleDetailed1">Wallet bundle backs up your wallets in one file. You can easily manage different wallets at once.</string>
+    <string name="exportBundleEdtailed2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
+    <string name="countSelectedWallet">%d Selected Wallets</string>
+
+    <string name="bundlePwdHeader">Please create the password for the wallet bundle and download the backup file. </string>
+    <string name="bundlePwdDetailed1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
+    <string name="bundlePwdDetailed2">The Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
+    <string name="bundlePwd">Wallet Bundle Password</string>
+    <string name="bundleDownload">Download</string>
+
+    <string name="msgBundleNotice">If you back up your wallets using the ‘Wallet bundle’ function, the password of each wallet will be changed into\nthe wallet bundle password.\nAre you sure you want to proceed?</string>
+
+    <!-- App lock -->
+    <string name="appLockFingerprintGuide">Place your finger on the sensor\nto unlock the screen</string>
+    <string name="unlockByLockNum">Unlock with the passcode</string>
+    <string name="enterLockNum">Enter Passcode</string>
+    <string name="forgotLockNumGuide">Forgot your passcode?</string>
+    <string name="titleResetLockNum">Reset Screen Lock Passcode</string>
+    <string name="resetLockNumGuide">You can reset your passcode using your wallet password.</string>
+
+    <string name="titleCheckFingerprint">Authenticate with your fingerprint</string>
+    <string name="fingerprintGuide">Please put your finger on fingerprint sensor.</string>
+    <string name="fingerprint_not_recognized">Unable to recognize your fingerprint.\nPlease try again.</string>
+
+    <string name="titleAppLock">Screen Lock</string>
+    <string name="appLockHeader">Do you want to activate the screen lock function?</string>
+    <string name="appLockDetailed">By activating the screen lock function, a 6-digit passcode is required every time you open an ICONex app.\nIf you forget your screen lock passcode, you can reset the passcode using your wallet password.</string>
+    <string name="useLockNum">Activate screen lock passcode</string>
+    <string name="resetLockNum">Change screen lock passcode</string>
+    <string name="unlockFingerprint">Unlock with fingerprint</string>
+
+    <string name="titleFingerprintLock">Fingerprint Unlock Guide</string>
+    <string name="fingerprintLockHeader">Do you want to unlock ICONex with your fingerprint?</string>
+    <string name="fingerprintLockDetailed">You can have fast access to ICONex using your fingerprint.\n\You can unlock ICONex with every fingerprint registered on your mobile phone. Please make sure you have registered your own fingerprint.</string>
+
+    <string name="titleSetLockNum">Activate Screen Lock</string>
+    <string name="lockNumGuide">Enter 6-digit passcode</string>
+    <string name="checkLockNumGuide">Confirm screen lock passcode</string>
+    <string name="titleChangeLockNum">Change Screen Lock Passcode</string>
+    <string name="currentLockNum">Enter current 6-digit passcode</string>
+    <string name="newLockNum">Enter new 6-digit passcode</string>
+
+    <string name="authMsgRecoverFingerprintAuth">Unlock with fingerprint is disabled. Do you want to enable the function?</string>
+
+    <string name="errNoEnrolledFingerprint">Unable to identify your fingerprint. Please try again after registering on mobile settings.</string>
+    <string name="errCheckLockNum">Passcodes do not match\nPlease check again</string>
+    <string name="errCurrentLockNum">Please confirm your passcode</string>
+    <string name="errRetryLockNum">Please Try Again</string>
+    <string name="errInvalidatedByBiometricEnrollment">The fingerprint registered on your mobile does not match and has been disabled. Please unlock the screen with your passcode to check availability.</string>
+
+    <!-- Language -->
+    <string name="titleLanguage">Language</string>
+    <string name="korean">한국어</string>
+    <string name="english">English</string>
+
+    <!-- Token Swap -->
+    <string name="swap">Swap</string>
+
+    <string name="swapStep1">Instructions</string>
+    <string name="swapStep1a">Instructions\n1/2</string>
+    <string name="swapStep1b">Instructions\n2/2</string>
+    <string name="swapStep2">Wallet\nInfo</string>
+    <string name="swapStep3">Keystore\nFile</string>
+    <string name="swapStep4">Private\nKey</string>
+    <string name="swapStep5">Request\nSwap</string>
+
+    <string name="titleSwap">Token Swap</string>
+    <string name="titleSwapInstructions">Token Swap Instructions</string>
+    <string name="titleCreateSwapWallet">Create Wallet for Token Swap</string>
+    <string name="titleRequestSwap">Request Token Swap</string>
+    <string name="swapHeader1">ICX ERC20 tokens on the Ethereum network can now be swapped and transferred to ICON\'s Mainnet</string>
+    <string name="swapDetailed1">Token swap will take place after generating your new ICX coin wallet.</string>
+    <string name="swapExistICXWallet">You have created the wallet for token swap before. Swapped ICX coins will be added to the \"%s\"</string>
+    <string name="swapGuideHeader">Please refer to the following precautions</string>
+    <string name="swapGuideDetailed1">If you follow the instructions the ICX wallet for token swap will be created. (The private key of the ICX wallet for token swap will be identical to the private key of your previous Ethereum wallet.)</string>
+    <string name="swapGuideDetailed2">Please make sure that you name the wallet so that you can distinguish the wallet for token swap from other wallets.</string>
+    <string name="swapGuideDetailed3">If you have stored your tokens in your private wallet such as MyEtherWallet, please load the ETH wallet using the Keystore or private key. Then, the ICX tokens will be added automatically to your ETH wallet and \"Swap\" button will be created.</string>
+    <string name="ICONexCreateWalletManual">[Manual] ICONex Wallet Creation</string>
+    <string name="swapGuideDetailed4">We do not support token swaps for addresses listed on the exchange. In this regard, please take caution for token swaps within the exchange.</string>
+    <string name="maunalConfirm">I have read the instructions, and agree to continue with the token swap.</string>
+
+    <string name="swapPrecautionsH">Please refer to the following precautions.</string>
+    <string name="swapPrecautionsD1">Users can appoint the number of ERC20 tokens willing to swap, and once the swap has taken place it cannot be reversed.</string>
+    <string name="swapPrecautionsD2">After the swap has been completed, ICX distributions will take place automatically at a designated time. However, schedule is subject to change so please refer to the link below.</string>
+    <string name="swapPrecautionsD3">You may not be able to transfer swapped ICX coins to the exchanges that do not support ICX coin wallets.</string>
+    <string name="swapPolicy">ICX Token Swap FAQ</string>
+    <string name="confirmPrecautions">I have read the precautions.</string>
+
+    <string name="swapRequestPrecaution">Please enter the swap amount and complete the token swap request. Once the swap has taken place it cannot be reversed.</string>
+    <string name="erc20TokenSwapAddress">Token Swap Address</string>
+    <string name="erc20TokenDetailed1">This swap address is for ICON\'s token swap only and is automatically entered</string>
+    <string name="erc20TokenDetailed2">Please refer to ICON\'s official channel regarding the swap address as we recommend double checking the swap address</string>
+
+    <string name="receiveICXAddress">Address for ICX coin</string>
+    <string name="receiveICXDetailed1">This is your new ICX wallet address and ICX will be sent automatically at a designated time to \"Address for ICX coin\".</string>
+
+    <string name="swapBalance">Balance (ICX)</string>
+    <string name="swapSendAmount">Swap Amount (ICX)</string>
+    <string name="hintSwapAmount">Enter swap amount</string>
+    <string name="properGasLimit">Gas Limit</string>
+    <string name="properGasPrice">Gas Price</string>
+    <string name="swapRemain">Estimated Balance (ICX)</string>
+    <string name="properGasInfo">Gas limit and gas price are optimized for the token swap</string>
+
+    <string name="swapMsgCreateWalletCancel">Cancel creating wallet and token swap?</string>
+    <string name="swapMsgCancel">Cancel token swap?\nYou may press the swap button later to proceed with the remaining steps.</string>
+    <string name="swapMsgHasNoToken">You have 0 ICX tokens\navailable for token swap.\nPlease check your balance.</string>
+    <string name="swapMsgNotEnoughFee">Please check your ETH balance. ETH is needed for token swap transaction fee.</string>
+
+    <string name="swapConfirmTitle">Check the amount and the receiving address once again</string>
+    <string name="swapConfirmAmount">Swap Amount (ICX)</string>
+    <string name="swapConfirmFee">Max Fee (ETH)</string>
+    <string name="swapReceiveAddress">Receiving Address</string>
+    <string name="swapRequest">Swap</string>
+
+    <string name="swapRequestDone">Request for swap has been completed.\n\nICX distribution schedule is subject to change so please refer to the link below.</string>
+
+    <!-- Util -->
+    <string name="txDeposit">+ %s</string>
+    <string name="txWithdraw">- %s</string>
+
+    <!-- Dialog -->
+    <string name="modWalletAlias">Change Wallet Name</string>
+    <string name="enterWalletPassword">Enter Wallet Password</string>
+    <string name="removeWallet">Are you sure you want to remove your wallet?</string>
+    <string name="warningRemoveWallet">You still have balance in your wallet. If you do not backup this wallet, you may not be able to restore your balance.\nAre you sure you want to delete?</string>
+    <string name="updateNecessary">Please update to the latest version of ICONex.</string>
+
+    <string name="permissionStorageDenied">If storage is not authorized, wallet\nbackup file cannot be downloaded.\n(Storage can be authorized\nvia App settings.)</string>
+    <string name="permissionCameraDenied">If camera is not authorized, QR code scan function cannot be activated.\n(Camera can be authorized\nvia App settings.)</string>
+
+    <!-- Message -->
+    <string name="warningPrivateKey">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
+
+    <!-- Network -->
+    <string name="networkNotWorking">No internet connection</string>
+    <string name="networkRetry">Check your mobile data or Wi-Fi and try again</string>
+
+</resources>

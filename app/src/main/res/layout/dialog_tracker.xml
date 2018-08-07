@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="312dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog_round"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:fontFamily="@font/noto_sans_bold"
+        android:gravity="center"
+        android:text="@string/txID"
+        android:textColor="@color/colorText"
+        android:textSize="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ededed" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="30dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:paddingTop="30dp">
+
+        <TextView
+            android:id="@+id/txt_tx_hash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_regular"
+            android:gravity="start|center_vertical"
+            android:text="Tx Hash"
+            android:textColor="@color/colorText"
+            android:textSize="14dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_copy"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_button_b"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center"
+                android:text="@string/copy"
+                android:textAllCaps="false"
+                android:textColor="@color/button_text"
+                android:textSize="13dp" />
+
+            <Button
+                android:id="@+id/btn_tracker"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_colored_button_b"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center"
+                android:text="@string/viewTxInfo"
+                android:textAllCaps="false"
+                android:textColor="@color/button_text"
+                android:textSize="13dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_close"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_btn_dialog"
+        android:fontFamily="@font/noto_sans_medium"
+        android:text="@string/close"
+        android:textAllCaps="false"
+        android:textColor="@color/button_text"
+        android:textSize="16dp" />
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- EditTextLayout -->
+    <declare-styleable name="EditTextLayout">
+        <attr name="isPassword" format="boolean" />
+        <attr name="hasVisibility" format="boolean" />
+        <attr name="setHint" format="string" />
+        <attr name="setWarning" format="string" />
+    </declare-styleable>
+</resources>

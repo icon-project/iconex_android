@@ -1,0 +1,315 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context="foundation.icon.iconex.wallet.load.LoadInputWalletInfoFragment">
+
+    <LinearLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:paddingTop="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_bold"
+            android:text="@string/step2Header"
+            android:textColor="@color/colorText"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="3dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/dot_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="start|center_vertical"
+                android:text="@string/walletPasswordGuide1"
+                android:textColor="@color/colorText70"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="3dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/dot_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="start|center_vertical"
+                android:text="@string/walletPasswordGuide2"
+                android:textColor="@color/colorText70"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_input"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_header"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:paddingTop="30dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorWhite">
+
+            <TextView
+                android:id="@+id/txt_alias_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/duplicateWalletAlias"
+                android:textColor="@color/colorWarning"
+                android:textSize="10sp"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/line_alias"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@id/txt_alias_warning"
+                android:layout_marginBottom="6dp"
+                android:background="@color/editNormal" />
+
+            <foundation.icon.iconex.widgets.MyEditText
+                android:id="@+id/edit_alias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/line_alias"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="10dp"
+                android:layout_toStartOf="@+id/btn_alias_delete"
+                android:background="@color/colorWhite"
+                android:fontFamily="@font/noto_sans_medium"
+                android:hint="@string/hintWalletAlias"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorText20"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/btn_alias_delete"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_above="@id/line_alias"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_input_delete"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorWhite">
+
+            <TextView
+                android:id="@+id/txt_pwd_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/errPassword"
+                android:textColor="@color/colorWarning"
+                android:textSize="10sp"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/line_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@id/txt_pwd_warning"
+                android:layout_marginBottom="6dp"
+                android:background="@color/editNormal" />
+
+            <foundation.icon.iconex.widgets.MyEditText
+                android:id="@+id/edit_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/line_pwd"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="10dp"
+                android:layout_toStartOf="@+id/layout_button_1"
+                android:background="@color/colorWhite"
+                android:fontFamily="@font/noto_sans_medium"
+                android:hint="@string/hintWalletPassword"
+                android:inputType="textPassword"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorText20"
+                android:textSize="14dp" />
+
+            <LinearLayout
+                android:id="@+id/layout_button_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/line_pwd"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="3dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_pwd_delete"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_input_delete"
+                    android:visibility="invisible" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:background="#979797" />
+
+                <Button
+                    android:id="@+id/btn_pwd_view"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_button_visibility" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorWhite">
+
+            <TextView
+                android:id="@+id/txt_check_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/errPassword"
+                android:textColor="@color/colorWarning"
+                android:textSize="10sp"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/line_check"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@id/txt_check_warning"
+                android:layout_marginBottom="6dp"
+                android:background="@color/editNormal" />
+
+            <foundation.icon.iconex.widgets.MyEditText
+                android:id="@+id/edit_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/line_check"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="10dp"
+                android:layout_toStartOf="@+id/layout_button_2"
+                android:background="@color/colorWhite"
+                android:fontFamily="@font/noto_sans_medium"
+                android:hint="@string/hintWalletPasswordConfirm"
+                android:inputType="textPassword"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorText20"
+                android:textSize="14dp" />
+
+            <LinearLayout
+                android:id="@+id/layout_button_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/line_check"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="3dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_check_delete"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_input_delete"
+                    android:visibility="invisible" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:background="#979797" />
+
+                <Button
+                    android:id="@+id/btn_check_view"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_button_visibility" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_done"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/bg_rounded_button_a"
+        android:enabled="false"
+        android:fontFamily="@font/noto_sans_medium"
+        android:gravity="center"
+        android:text="@string/complete"
+        android:textAllCaps="false"
+        android:textColor="@color/button_text"
+        android:textSize="16dp" />
+</RelativeLayout>

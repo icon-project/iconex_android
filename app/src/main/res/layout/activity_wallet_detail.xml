@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="foundation.icon.iconex.wallet.detail.WalletDetailActivity">
+
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/layout_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout
+        android:id="@+id/layout_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorMain">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_tx"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            app:layoutManager="LinearLayoutManager" />
+    </foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout>
+</LinearLayout>

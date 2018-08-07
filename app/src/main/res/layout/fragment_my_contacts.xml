@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="foundation.icon.iconex.wallet.contacts.MyContactsFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        android:paddingBottom="88dp"
+        android:clipToPadding="false"
+        app:layoutManager="LinearLayoutManager" />
+
+    <RelativeLayout
+        android:id="@+id/layout_no_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_button"
+        android:background="@color/colorWhite"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_regular"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:text="@string/noContacts"
+            android:textColor="@color/colorText50"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorWhite90"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_add_contacts"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/noto_sans_medium"
+            android:background="@drawable/bg_button_b"
+            android:gravity="center"
+            android:text="@string/addContacts"
+            android:textAllCaps="false"
+            android:textColor="@color/button_text"
+            android:textSize="13dp" />
+    </LinearLayout>
+</RelativeLayout>
