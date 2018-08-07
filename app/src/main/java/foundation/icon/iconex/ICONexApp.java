@@ -55,7 +55,7 @@ public class ICONexApp extends Application {
     private Handler lockTimeLimiter = new Handler();
 
     // ========== Preference ================
-    public static final boolean isMain = false;
+    public static final boolean isMain = true;
 
     static {
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
