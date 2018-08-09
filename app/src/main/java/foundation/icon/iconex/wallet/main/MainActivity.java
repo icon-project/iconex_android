@@ -47,6 +47,7 @@ import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.create.CreateWalletActivity;
 import foundation.icon.iconex.wallet.load.LoadWalletActivity;
 import foundation.icon.iconex.wallet.menu.DrawerMenuFragment;
+import foundation.icon.iconex.wallet.menu.appInfo.AppInfoActivity;
 import foundation.icon.iconex.wallet.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.wallet.menu.language.SettingLanguageActivity;
 import foundation.icon.iconex.wallet.menu.lock.SettingLockActivity;
@@ -943,9 +944,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.DEFAULT));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.SETTING_LANGUAGE) {
             startActivity(new Intent(this, SettingLanguageActivity.class));
+        } else if (menu == DrawerMenuFragment.SIDE_MENU.APP_INFO) {
+            startActivity(new Intent(this, AppInfoActivity.class));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.ICONex_DISCLAIMER) {
             TitleMsgDialog dialog = new TitleMsgDialog(this);
-            dialog.setTitle(getString(R.string.iCONexDisclaimers));
+            dialog.setTitle(getString(R.string.ICONexDisclaimers));
             SpannableStringBuilder builder = new SpannableStringBuilder(getString(R.string.disclaimersHeader)
                     + "\n\n" + getString(R.string.disclaimersContents));
             builder.setSpan(new StyleSpan(Typeface.BOLD), 0, getString(R.string.disclaimersHeader).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
