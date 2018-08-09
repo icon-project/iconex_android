@@ -1,16 +1,15 @@
 package foundation.icon.iconex.wallet.menu.appInfo;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import foundation.icon.iconex.R;
 
-public class AppInfoActivity extends AppCompatActivity implements AppInfoFragment.OnAppInfoListener{
+public class AppInfoActivity extends AppCompatActivity implements AppInfoFragment.OnAppInfoListener {
 
     private FragmentManager fragmentManager;
 
@@ -55,14 +54,12 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoFragmen
 
     @Override
     public void onClickOSS() {
-//        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.openSource));
-//        findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_back);
-//
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//        transaction.add(R.id.container, OSSFragment.newInstance());
-//        transaction.addToBackStack(null);
-//        transaction.commit();
+        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.openSource));
+        findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_back);
 
-
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.container, OSSFragment.newInstance());
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

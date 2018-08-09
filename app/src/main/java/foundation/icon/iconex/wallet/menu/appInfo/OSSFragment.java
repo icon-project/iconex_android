@@ -1,12 +1,11 @@
 package foundation.icon.iconex.wallet.menu.appInfo;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import foundation.icon.iconex.R;
 
@@ -30,6 +29,11 @@ public class OSSFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_os, container, false);
+        View v = inflater.inflate(R.layout.fragment_os, container, false);
+
+        WebView webView = v.findViewById(R.id.webview);
+        webView.loadUrl("file:///android_asset/open_source_licenses.html");
+
+        return v;
     }
 }
