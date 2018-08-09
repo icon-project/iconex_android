@@ -170,6 +170,57 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/menu_app_info"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_side_app_info" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:fontFamily="@font/noto_sans_regular"
+                        android:lineSpacingExtra="10sp"
+                        android:text="@string/appInfo"
+                        android:textColor="@color/colorText"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/new_version"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_circle_red"
+                        android:gravity="center"
+                        android:text="N"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="10dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txt_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="end|center_vertical"
+                    android:text="Version"
+                    android:textColor="@color/colorText50"
+                    android:textSize="14dp" />
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/menu_disclaimers"
                 android:layout_width="match_parent"
@@ -188,19 +239,10 @@
                     android:layout_marginStart="12dp"
                     android:fontFamily="@font/noto_sans_regular"
                     android:lineSpacingExtra="10sp"
-                    android:text="@string/iCONexDisclaimers"
+                    android:text="@string/ICONexDisclaimers"
                     android:textColor="@color/colorText"
                     android:textSize="14sp" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/txt_version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="bottom|start"
-                android:fontFamily="@font/nanum_square_regular"
-                android:textColor="@color/colorText" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
