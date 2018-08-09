@@ -132,7 +132,14 @@
     <string name="exportWalletBundle">Export Wallet Bundle</string>
     <string name="settingLock">Screen Lock</string>
     <string name="settingLanguage">Language</string>
-    <string name="iCONexDisclaimers">ICONex Disclaimer</string>
+    <string name="appInfo">App Info</string>
+    <string name="ICONexDisclaimers">ICONex Disclaimer</string>
+
+    <string name="currentVersion">Current Version</string>
+    <string name="latestVersion">Latest Version</string>
+    <string name="update">Update</string>
+
+    <string name="openSource">Open source Licenses</string>
 
     <string name="disclaimersHeader">At the time of downloading and using the official ICX wallet,\"ICONex\", the below disclaimer will be applied to the users.</string>
     <string name="disclaimersContents">1. The private key ICONex user creates in the process of using the ICONex service is stored in your device, ICON Foundation does not store or/and manage the user\'s private key. The ICONex user is solely responsible for safekeeping and managing the private key created. In the case of the ICONex user not being able to use the private key due to computer virus, hacking activities, theft/loss, etc., ICON Foundation is not responsible for any loss.\n\n2. ICON Foundation does not guarantee the integrity, stability, accuracy and security of ICONex, but only provides the current version of ICONex “AS IS”. ICON Foundation is continuously running tests and making updates to provide a more stable and convenient service, however despite these efforts there is always the possibility of unexpected problems. ICON Foundation is not responsible for any unexpected problems, such as malfunction, hacking, loss and computer virus.
@@ -428,5 +435,8 @@
     <!-- Network -->
     <string name="networkNotWorking">No internet connection</string>
     <string name="networkRetry">Check your mobile data or Wi-Fi and try again</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
