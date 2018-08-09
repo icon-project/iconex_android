@@ -1,11 +1,14 @@
 package foundation.icon.iconex.util;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import foundation.icon.iconex.ICONexApp;
 
 /**
  * Created by js on 2018. 5. 8..
@@ -57,5 +60,40 @@ public class Utils {
         }
 
         return builder.toString();
+    }
+
+    public static RES_VERSION versionCheck(Context context, String necessary) {
+        String[] mVersion;
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            mVersion = info.versionName.split("\\.");
+        } catch (Exception e) {
+            return RES_VERSION.NONE;
+        }
+
+        String[] all = ICONexApp.version.split("\\.");
+        String[] hav2;
+        if (necessary != null) {
+            hav2 = necessary.split("\\.");
+
+            if (Integer.parseInt(mVersion[0]) < Integer.parseInt(hav2[0]))
+                return RES_VERSION.UPDATE;
+            else if (Integer.parseInt(mVersion[1]) < Integer.parseInt(hav2[1]))
+                return RES_VERSION.UPDATE;
+        }
+
+        if (Integer.parseInt(mVersion[0]) < Integer.parseInt(all[0]))
+            return RES_VERSION.NEW;
+        else if (Integer.parseInt(mVersion[1]) < Integer.parseInt(all[1]))
+            return RES_VERSION.NEW;
+
+        return RES_VERSION.LATEST;
+    }
+
+    public enum RES_VERSION {
+        NONE,
+        LATEST,
+        NEW,
+        UPDATE
     }
 }

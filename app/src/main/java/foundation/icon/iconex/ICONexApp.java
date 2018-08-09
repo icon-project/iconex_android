@@ -57,6 +57,9 @@ public class ICONexApp extends Application {
     // ========== Preference ================
     public static final boolean isMain = false;
 
+    // ========== Preference ================
+    public static String version = "";
+
     static {
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
     }
@@ -65,7 +68,14 @@ public class ICONexApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        init();
         initRealm();
+    }
+
+    private void init() {
+        PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
+        preferenceUtil.saveBeingLock(false);
+
         loadPreferences();
 
         setLanguage();
@@ -163,8 +173,13 @@ public class ICONexApp extends Application {
                     versionCheck.execute();
 
                     if (isLocked && beingLock) {
-                        startActivity(new Intent(getApplicationContext(), AuthActivity.class)
-                                .putExtra(AuthActivity.ARG_APP_STATUS, AppStatus.RETURNED_TO_FOREGROUND));
+                        if (!activity.getLocalClassName().equals("intro.auth.AuthActivity")) {
+                            startActivity(new Intent(getApplicationContext(), AuthActivity.class)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    .putExtra(AuthActivity.ARG_APP_STATUS, AppStatus.RETURNED_TO_FOREGROUND));
+                        } else {
+                            lockTimeLimiter.removeCallbacks(mLockTimeLimitTask);
+                        }
                     } else {
                         lockTimeLimiter.removeCallbacks(mLockTimeLimitTask);
                     }
