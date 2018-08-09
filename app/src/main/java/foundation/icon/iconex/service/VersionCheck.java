@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 
 import com.google.gson.JsonObject;
 
+import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.service.response.VSResponse;
@@ -57,6 +58,8 @@ public class VersionCheck extends AsyncTask {
                     if (result.equals(OK)) {
                         JsonObject data = response.body().getData();
                         String all = data.get("all").getAsString();
+                        ICONexApp.version = all;
+
                         String necessary = data.get("necessary").getAsString();
 
                         String version = "";
