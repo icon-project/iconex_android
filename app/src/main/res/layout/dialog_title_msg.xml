@@ -13,7 +13,7 @@
         android:layout_marginTop="12dp"
         android:fontFamily="@font/noto_sans_bold"
         android:gravity="center"
-        android:text="@string/iCONexDisclaimers"
+        android:text="@string/ICONexDisclaimers"
         android:textColor="@color/colorText"
         android:textSize="16sp" />
 
