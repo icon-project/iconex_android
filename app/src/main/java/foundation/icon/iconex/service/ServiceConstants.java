@@ -8,8 +8,8 @@ public class ServiceConstants {
     public static final String TRUSTED_HOST_MAIN = "https://wallet.icon.foundation";
     public static final String TRUSTED_HOST_TEST = "https://testwallet.icon.foundation";
 
-    public static final String ETH_HOST = "https://api.myetherapi.com/eth";
-    public static final String ETH_ROP_HOST = "https://api.myetherapi.com/rop";
+    public static final String ETH_HOST = "https://api.myetherwallet.com/eth";
+    public static final String ETH_ROP_HOST = "https://api.myetherwallet.com/rop";
 
     public static final String LC_API_HEADER = "/api";
     public static final String LC_API_VERSION = "/v2";
