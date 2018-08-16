@@ -169,8 +169,11 @@ public class ICONexApp extends Application {
                 Log.d(TAG, "beingLock=" + beingLock);
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
-                    VersionCheck versionCheck = new VersionCheck(activity);
-                    versionCheck.execute();
+                    if (activity.getLocalClassName().equals("wallet.transfer.ICONTransferActivity")
+                            || activity.getLocalClassName().equals("wallet.transfer.EtherTransferActivity")) {
+                        VersionCheck versionCheck = new VersionCheck(activity);
+                        versionCheck.execute();
+                    }
 
                     if (isLocked && beingLock) {
                         if (!activity.getLocalClassName().equals("intro.auth.AuthActivity")) {
