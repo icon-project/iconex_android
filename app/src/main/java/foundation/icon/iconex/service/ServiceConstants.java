@@ -11,8 +11,11 @@ public class ServiceConstants {
     public static final String ETH_HOST = "https://mainnet.infura.io";
     public static final String ETH_ROP_HOST = "https://ropsten.infura.io";
 
+    public static final String DEV_HOST = "http://52.79.233.89:9000";
+
     public static final String LC_API_HEADER = "/api";
-    public static final String LC_API_VERSION = "/v2";
+    public static final String LC_API_V2 = "/v2";
+    public static final String LC_API_V3 = "/v3";
 
     public static final String TR_API_VERSION = "/v0";
     public static final String TR_API_EX_HEADER = "/exchange/currentExchangeList";
@@ -23,6 +26,8 @@ public class ServiceConstants {
 
     public static final String URL_TRACKER_MAIN = "https://tracker.icon.foundation/transaction/";
     public static final String URL_TRACKER_TEST = "https://trackerdev.icon.foundation/transaction/";
+
+    public static final String DEV_TRACKER = "http://trackerlocaldev.icon.foundation";
 
     public static final String URL_ETHERSCAN = "https://etherscan.io/";
     public static final String URL_ROPSTEN = "https://ropsten.etherscan.io/";
