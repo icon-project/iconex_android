@@ -55,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 
 public class TokenManageFragment extends Fragment implements View.OnClickListener {
 
@@ -712,7 +712,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
             String address = params[0];
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;

@@ -28,7 +28,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 
 /**
@@ -355,7 +355,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             switch (v.getId()) {
                 case R.id.txt_etherscan:
                     String tracker;
-                    if (isMain)
+                    if (network == MyConstants.NETWORK_MAIN)
                         tracker = ServiceConstants.URL_ETHERSCAN;
                     else
                         tracker = ServiceConstants.URL_ROPSTEN;

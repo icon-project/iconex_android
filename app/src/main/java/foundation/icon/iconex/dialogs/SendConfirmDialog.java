@@ -39,7 +39,7 @@ import foundation.icon.iconex.wallet.transfer.data.ErcTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 import static foundation.icon.iconex.MyConstants.SYMBOL_ETH;
 import static foundation.icon.iconex.MyConstants.SYMBOL_ICON;
 
@@ -167,7 +167,7 @@ public class SendConfirmDialog extends Dialog {
             EthTxInfo txInfo = (EthTxInfo) mTxInfo;
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -243,7 +243,7 @@ public class SendConfirmDialog extends Dialog {
             EthTxInfo txInfo = (EthTxInfo) mTxInfo;
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;

@@ -46,7 +46,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.widgets.MyEditText;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 
 public class SwapRequestFragment extends Fragment implements View.OnClickListener {
 
@@ -508,7 +508,7 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
             BigInteger estLimit;
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;

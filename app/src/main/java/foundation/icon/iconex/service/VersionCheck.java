@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import com.google.gson.JsonObject;
 
 import foundation.icon.iconex.ICONexApp;
+import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.service.response.VSResponse;
@@ -16,7 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 
 /**
  * Created by js on 2018. 5. 29..
@@ -43,11 +44,20 @@ public class VersionCheck extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            String url;
-            if (isMain)
-                url = ServiceConstants.URL_VERSION_MAIN;
-            else
-                url = ServiceConstants.URL_VERSION_TEST;
+            String url = null;
+            switch (network) {
+                case MyConstants.NETWORK_MAIN:
+                    url = ServiceConstants.URL_VERSION_MAIN;
+                    break;
+
+                case MyConstants.NETWORK_TEST:
+                    url = ServiceConstants.URL_VERSION_TEST;
+                    break;
+
+                case MyConstants.NETWORK_DEV:
+                    url = ServiceConstants.DEV_TRACKER;
+                    break;
+            }
 
             RESTClient client = new RESTClient(url);
             Call<VSResponse> response = client.sendVersionCheck();
