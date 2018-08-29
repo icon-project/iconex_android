@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
@@ -53,7 +54,7 @@ public class RealmUtil {
                     entry.setAddress(coinNToken.getAddress());
                     entry.setSymbol(coinNToken.getSymbol());
                     entry.setBalance("");
-                    entry.setId(PKIUtils.hexEncode(random.generateSeed(3)));
+                    entry.setId(new Random().nextInt(999999) + 1000000);
 
                     if (coinNToken.getType().equals(MyConstants.TYPE_TOKEN)) {
                         entry.setContractAddress(coinNToken.getContractAddress());
@@ -173,7 +174,7 @@ public class RealmUtil {
             token.setUserDecimal(MyConstants.ICX_DEC);
             token.setCreateAt(createdAt);
 
-            if (ICONexApp.isMain)
+            if (ICONexApp.network == MyConstants.NETWORK_MAIN)
                 token.setContractAddress(MyConstants.CONTRACT_MAIN);
             else
                 token.setContractAddress(MyConstants.CONTRACT_TEST);
