@@ -140,6 +140,7 @@
     <string name="update">Update</string>
 
     <string name="openSource">Open source Licenses</string>
+    <string name="networkProvider">Network Provider</string>
 
     <string name="disclaimersHeader">At the time of downloading and using the official ICX wallet,\"ICONex\", the below disclaimer will be applied to the users.</string>
     <string name="disclaimersContents">1. The private key ICONex user creates in the process of using the ICONex service is stored in your device, ICON Foundation does not store or/and manage the user\'s private key. The ICONex user is solely responsible for safekeeping and managing the private key created. In the case of the ICONex user not being able to use the private key due to computer virus, hacking activities, theft/loss, etc., ICON Foundation is not responsible for any loss.\n\n2. ICON Foundation does not guarantee the integrity, stability, accuracy and security of ICONex, but only provides the current version of ICONex “AS IS”. ICON Foundation is continuously running tests and making updates to provide a more stable and convenient service, however despite these efforts there is always the possibility of unexpected problems. ICON Foundation is not responsible for any unexpected problems, such as malfunction, hacking, loss and computer virus.
@@ -242,12 +243,18 @@
     <string name="slow">Slow</string>
     <string name="fast">Fast</string>
 
-    <string name="errGasLimitEmpty">Please enter gas limit.</string>
+    <string name="msgStepLimit">스텝 한도는 Transaction 실행에 지불할 용의가 있는 스텝의 최대량을 의미합니다. 스텝은 최소 4,000, 최대 990,000까지 입력 가능합니다. 스텝 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 스텝만 소진합니다. 즉, 스텝 한도는 최대치만 설정 가능하며 실제 소진되는 스텝량은 유동적입니다.</string>
+    <string name="msgStepPrice">Step price is the amount you pay per unit of step. Step price is paid in loop and 1 loop is fixed to 0.000000000000000001 ICX. ICON transaction fee is imposed according to various factors such as the number of smart contract usage, the amount of blockchain database used and the size of transaction data, etc.</string>
+    <string name="msgICXEstimateFee">Transaction 실행 시 발생할 수 있는 최대 수수료로서, 스텝 한도와 스텝 가격을 곱한 값입니다.</string>
 
     <string name="msgEthGasLimit">Gas limit is the amount of gas to send with your transaction.\nUnnecessary gas is refunded to you at the end of transaction. In other words, you can set the maximum amount of gas but the actual gas consumption is not fixed.</string>
     <string name="msgEthGasPrice">Gas price is an unit of gas.\n1 Gwei equals 0.000000001 ETH.\nEthereum miners prioritize based on gas price when generating blocks. If you set higher gas price, you have more chance to get your transaction confirmed. It also determines your transaction speed.</string>
     <string name="msgEthEstimateFee">Estimated Maximum Fee\n= Gas Price * Gas Limit\nSet proper gas limit and gas price.\nYou will pay transaction fees even if your transaction is not confirmed by miners.</string>
     <string name="msgEthData">If you do not enter the data when required, the transaction will fail. You will still have to pay the transaction fees. You don\'t have to enter data if it is not required in the transaction.</string>
+
+    <string name="errNoSendAmount">송금할 수량을 입력해주세요.</string>
+    <string name="errNoStepLimit">Step 한도를 입력해주세요.</string>
+    <string name="errGasLimitEmpty">Please enter gas limit.</string>
 
     <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
 
