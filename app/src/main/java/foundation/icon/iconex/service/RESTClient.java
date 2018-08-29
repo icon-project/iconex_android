@@ -30,7 +30,7 @@ public class RESTClient {
                 okhttp3.Request original = chain.request();
 
                 okhttp3.Request request = original.newBuilder()
-                        .addHeader("Content-Type", "application/json; charset=utf-8")
+//                        .header("Content-Type", "application/json; charset=utf-8")
                         .method(original.method(), original.body())
                         .build();
                 return chain.proceed(request);
