@@ -12,7 +12,7 @@ public class ConvertUtil {
 
     private static final String TAG = ConvertUtil.class.getSimpleName();
 
-    public static String bigIntToHexString(String value, int dec) {
+    public static String valueToHexString(String value, int dec) {
         BigInteger decimals = getDecimals(dec);
         int start = value.indexOf(".");
         if (start < 1) {
