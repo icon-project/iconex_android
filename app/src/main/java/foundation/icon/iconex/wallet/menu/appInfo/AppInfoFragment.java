@@ -20,7 +20,7 @@ public class AppInfoFragment extends Fragment {
 
     TextView txtCurrent, txtLatest;
     Button btnUpdate;
-    ViewGroup OSS;
+    ViewGroup OSS, np;
 
     public AppInfoFragment() {
         // Required empty public constructor
@@ -59,6 +59,15 @@ public class AppInfoFragment extends Fragment {
             public void onClick(View v) {
                 if (mListener != null)
                     mListener.onClickOSS();
+            }
+        });
+
+        np = v.findViewById(R.id.network_provider);
+        np.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null)
+                    mListener.onClickNP();
             }
         });
 
@@ -110,5 +119,6 @@ public class AppInfoFragment extends Fragment {
     public interface OnAppInfoListener {
         void onUpdate();
         void onClickOSS();
+        void onClickNP();
     }
 }

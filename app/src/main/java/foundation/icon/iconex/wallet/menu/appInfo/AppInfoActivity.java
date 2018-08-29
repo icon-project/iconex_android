@@ -62,4 +62,26 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoFragmen
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+    @Override
+    public void onClickNP() {
+        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.networkProvider));
+        findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_back);
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.container, NetworkProviderFragment.newInstance());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fragmentManager.getBackStackEntryCount() > 1) {
+            ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.appInfo));
+            findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_close);
+            fragmentManager.popBackStackImmediate();
+        } else {
+            finish();
+        }
+    }
 }
