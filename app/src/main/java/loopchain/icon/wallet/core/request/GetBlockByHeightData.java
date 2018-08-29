@@ -6,7 +6,7 @@ import loopchain.icon.wallet.core.Constants;
 
 public class GetBlockByHeightData extends RequestData{
 
-    public GetBlockByHeightData(String id, int height) {
+    public GetBlockByHeightData(int id, int height) {
         this.method = Constants.METHOD_GETBLOCKBYHEIGHT;
         this.id = id;
         

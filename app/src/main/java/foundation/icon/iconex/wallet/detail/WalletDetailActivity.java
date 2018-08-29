@@ -123,7 +123,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             if (refreshLayout.isRefreshing)
                 refreshLayout.stopRefresh(true);
 
-            if (selectedEntry.getId().equals(id)) {
+            if (Integer.toString(selectedEntry.getId()).equals(id)) {
                 selectedEntry.setBalance(result);
                 txAdapter.setWalletEntry(selectedEntry);
             }
@@ -134,7 +134,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             if (refreshLayout.isRefreshing)
                 refreshLayout.stopRefresh(true);
 
-            if (selectedEntry.getId().equals(id)) {
+            if (Integer.toString(selectedEntry.getId()).equals(id)) {
                 selectedEntry.setBalance(result);
                 txAdapter.setWalletEntry(selectedEntry);
             }
@@ -162,7 +162,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 refreshLayout.stopRefresh(true);
 
             if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                if (selectedEntry.getId().equals(id)) {
+                if (Integer.toString(selectedEntry.getId()).equals(id)) {
                     selectedEntry.setBalance(MyConstants.NO_BALANCE);
                     txAdapter.setWalletEntry(selectedEntry);
                 }
@@ -185,7 +185,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 refreshLayout.stopRefresh(true);
 
             if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                if (selectedEntry.getId().equals(id)) {
+                if (Integer.toString(selectedEntry.getId()).equals(id)) {
                     selectedEntry.setBalance(MyConstants.NO_BALANCE);
                     txAdapter.setWalletEntry(selectedEntry);
                 }
@@ -283,7 +283,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         if (getIntent() != null) {
             mWalletInfo = (WalletInfo) getIntent().getSerializableExtra("walletInfo");
             selectedEntry = (WalletEntry) getIntent().getSerializableExtra("walletEntry");
-            entryId = selectedEntry.getId();
+            entryId = Integer.toString(selectedEntry.getId());
         }
 
         appbar = findViewById(R.id.appbar);
@@ -376,18 +376,18 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             HashMap<String, String> rqWallet = new HashMap<>();
 
             if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                rqWallet.put(selectedEntry.getId(), mWalletInfo.getAddress());
+                rqWallet.put(Integer.toString(selectedEntry.getId()), mWalletInfo.getAddress());
                 mService.requestGetBalance(rqWallet, mWalletInfo.getCoinType());
                 mService.requestICONTxList(mWalletInfo.getAddress(), currentPage);
             } else {
                 if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                    rqWallet.put(selectedEntry.getId(), MyConstants.PREFIX_ETH + mWalletInfo.getAddress());
+                    rqWallet.put(Integer.toString(selectedEntry.getId()), MyConstants.PREFIX_ETH + mWalletInfo.getAddress());
                     mService.requestGetBalance(rqWallet, mWalletInfo.getCoinType());
                 } else {
                     HashMap<String, String[]> tokenList = new HashMap<>();
                     for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
                         if (entry.getType().equals(MyConstants.TYPE_TOKEN))
-                            tokenList.put(entry.getId(),
+                            tokenList.put(Integer.toString(entry.getId()),
                                     new String[]{MyConstants.PREFIX_ETH + mWalletInfo.getAddress(), entry.getContractAddress()});
                     }
 
@@ -631,7 +631,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onCoinItem(int position) {
             selectedEntry = mWalletInfo.getWalletEntries().get(position);
-            entryId = selectedEntry.getId();
+            entryId = Integer.toString(selectedEntry.getId());
             txAdapter.setWalletEntry(selectedEntry);
         }
 

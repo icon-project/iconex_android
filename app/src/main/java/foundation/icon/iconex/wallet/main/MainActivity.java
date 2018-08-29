@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
                     if (address.equals(ICONexApp.mWallets.get(i).getAddress())) {
                         for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                            if (id.equals(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId())) {
+                            if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
                                 ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(result);
 
                                 if (isForeground) {
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
                     if (ethAddress.equals(ICONexApp.mWallets.get(i).getAddress())) {
                         for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                            if (id.equals(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId())) {
+                            if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
                                 ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(result);
 
                                 if (isForeground) {
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
                     if (ownAddress.equals(ICONexApp.mWallets.get(i).getAddress())) {
                         for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                            if (id.equals(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId())) {
+                            if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
                                 ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(result);
 
                                 if (isForeground) {
@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
                 if (address.equals(ICONexApp.mWallets.get(i).getAddress())) {
                     for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                        if (id.equals(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId())) {
+                        if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
                             ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(MyConstants.NO_BALANCE);
 
                             if (isForeground) {
@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
                 if (address.equals(ICONexApp.mWallets.get(i).getAddress())) {
                     for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                        if (id.equals(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId())) {
+                        if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
                             ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(MyConstants.NO_BALANCE);
 
                             if (isForeground) {
@@ -585,15 +585,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (info.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 List<WalletEntry> entries = info.getWalletEntries();
                 for (WalletEntry entry : entries) {
-                    icxList.put(entry.getId(), entry.getAddress());
+                    icxList.put(Integer.toString(entry.getId()), entry.getAddress());
                 }
             } else {
                 List<WalletEntry> entries = info.getWalletEntries();
                 for (WalletEntry entry : entries) {
                     if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-                        ethList.put(entry.getId(), MyConstants.PREFIX_ETH + entry.getAddress());
+                        ethList.put(Integer.toString(entry.getId()), MyConstants.PREFIX_ETH + entry.getAddress());
                     } else {
-                        tokenList.put(entry.getId(), new String[]{MyConstants.PREFIX_ETH + entry.getAddress(), entry.getContractAddress()});
+                        tokenList.put(Integer.toString(entry.getId()), new String[]{MyConstants.PREFIX_ETH + entry.getAddress(), entry.getContractAddress()});
                     }
                 }
             }

@@ -740,11 +740,11 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                     @Override
                     public void onOk() {
                         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                            mService.requestETHTransaction(mWalletEntry.getId(), txtPrice.getText().toString(),
+                            mService.requestETHTransaction(Integer.toString(mWalletEntry.getId()), txtPrice.getText().toString(),
                                     editLimit.getText().toString(), editAddress.getText().toString(), editData.getText().toString(),
                                     editSend.getText().toString(), privKey);
                         } else {
-                            mService.requestTokenTransfer(mWalletEntry.getId(), txtPrice.getText().toString(),
+                            mService.requestTokenTransfer(Integer.toString(mWalletEntry.getId()), txtPrice.getText().toString(),
                                     editLimit.getText().toString(), mWalletEntry.getContractAddress(),
                                     editAddress.getText().toString(), editSend.getText().toString(),
                                     Integer.toString(mWalletEntry.getDefaultDec()), privKey);

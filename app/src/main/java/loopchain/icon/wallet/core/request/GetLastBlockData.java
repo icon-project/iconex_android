@@ -6,7 +6,7 @@ import loopchain.icon.wallet.core.Constants;
 
 public class GetLastBlockData extends RequestData{
 
-    public GetLastBlockData(String id) {
+    public GetLastBlockData(int id) {
         this.method = Constants.METHOD_GETLASTBLOCK;
         this.id = id;
         
