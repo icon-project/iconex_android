@@ -62,8 +62,7 @@ public class MyConstants {
     // ======== App Lock ========
     public static final int LOCK_TIME_LIMIT = 5 * 2 * 1000;
 
-    public static final String PATTERN_PASSWORD = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()\\-_+=~`<>,.:;?/\\[\\]{\\}])"
-            + "[A-Za-z\\d!@#$%^&*()\\-_+=~`<>,.:;?/\\[\\]{\\}]{8,}$";
+    public static final String PATTERN_PASSWORD = "^(?=.*?[A-Za-z])(?=.*?\\d)(?=.*?[~!@#$%^&*()_+|<>?:{}]).{8,}$";
 
     public enum TxState {
         DONE,
