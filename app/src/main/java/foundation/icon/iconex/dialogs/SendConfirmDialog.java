@@ -37,6 +37,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.transfer.data.ErcTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
+import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
 
 import static foundation.icon.iconex.ICONexApp.network;
@@ -80,16 +81,17 @@ public class SendConfirmDialog extends Dialog {
             ErcTxInfo txInfo = (ErcTxInfo) mTxInfo;
             ((TextView) findViewById(R.id.txt_send))
                     .setText(String.format(mContext.getString(R.string.sendAmount), txInfo.getSymbol()));
-            ((TextView) findViewById(R.id.txt_fee)).setText(mContext.getString(R.string.ethEstiFee));
+            ((TextView) findViewById(R.id.txt_fee)).setText(String.format(mContext.getString(R.string.estiFee), SYMBOL_ETH));
         } else if (mTxInfo instanceof EthTxInfo) {
             ((TextView) findViewById(R.id.txt_send))
                     .setText(String.format(mContext.getString(R.string.sendAmount), SYMBOL_ETH));
-            ((TextView) findViewById(R.id.txt_fee)).setText(mContext.getString(R.string.ethEstiFee));
+            ((TextView) findViewById(R.id.txt_fee)).setText(String.format(mContext.getString(R.string.estiFee), SYMBOL_ETH));
         } else {
+            ICONTxInfo txInfo = (ICONTxInfo) mTxInfo;
             ((TextView) findViewById(R.id.txt_send))
-                    .setText(String.format(mContext.getString(R.string.sendAmount), SYMBOL_ICON));
+                    .setText(String.format(mContext.getString(R.string.sendAmount), txInfo.getSymbol()));
             ((TextView) findViewById(R.id.txt_fee))
-                    .setText(String.format(mContext.getString(R.string.sendFee), SYMBOL_ICON));
+                    .setText(String.format(mContext.getString(R.string.estiFee), SYMBOL_ICON));
         }
 
         ((TextView) findViewById(R.id.txt_send_amount)).setText(mTxInfo.getSendAmount());
