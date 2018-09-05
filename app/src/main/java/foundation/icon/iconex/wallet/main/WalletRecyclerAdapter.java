@@ -18,7 +18,6 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.WalletEntry;
 import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.util.ConvertUtil;
-import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 
@@ -36,12 +35,19 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
     private WalletInfo mWalletInfo;
     private ItemClickListener mClickListener;
 
+    private final String ercIcxAddr;
+
     // data is passed into the constructor
     public WalletRecyclerAdapter(Context context, WalletInfo walletInfo) {
         mContext = context;
         this.mInflater = LayoutInflater.from(context);
         mWalletInfo = walletInfo;
         this.mData = mWalletInfo.getWalletEntries();
+
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            ercIcxAddr = MyConstants.M_ERC_ICX_ADDR;
+        else
+            ercIcxAddr = MyConstants.T_ERC_ICX_ADDR;
     }
 
     // inflates the row layout from xml when needed
@@ -102,9 +108,13 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
         if (position == getItemCount() - 1)
             holder.line.setVisibility(View.INVISIBLE);
 
-        if (item.getType().equals(MyConstants.TYPE_TOKEN)
-                && item.getSymbol().equals(Constants.KS_COINTYPE_ICX))
-            holder.btnSwap.setVisibility(View.VISIBLE);
+        if (item.getType().equals(MyConstants.TYPE_TOKEN)) {
+            if (item.getContractAddress().equals(ercIcxAddr))
+                holder.btnSwap.setVisibility(View.VISIBLE);
+            else
+                holder.btnSwap.setVisibility(View.GONE);
+        }
+
     }
 
     // total number of rows
