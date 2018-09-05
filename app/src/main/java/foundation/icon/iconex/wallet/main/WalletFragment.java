@@ -199,11 +199,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         menu.setTag(MyConstants.TAG_MENU_ALIAS);
         menus.add(menu);
 
-        if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ETH)) {
-            menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
-            menu.setTag(MyConstants.TAG_MENU_TOKEN);
-            menus.add(menu);
-        }
+        menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
+        menu.setTag(MyConstants.TAG_MENU_TOKEN);
+        menus.add(menu);
 
         menu = new BottomSheetMenu(R.drawable.ic_backup, getString(R.string.menuBackupWallet));
         menu.setTag(MyConstants.TAG_MENU_BACKUP);
@@ -244,8 +242,15 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     break;
 
                 case MyConstants.TAG_MENU_TOKEN:
-                    startActivity(new Intent(mContext, TokenManageActivity.class)
-                            .putExtra("walletInfo", (Serializable) mWalletInfo));
+                    Intent intent = new Intent(mContext, TokenManageActivity.class);
+                    intent.putExtra("walletInfo", (Serializable) mWalletInfo);
+
+                    if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX))
+                        intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.IRC);
+                    else
+                        intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.ERC);
+
+                    startActivity(intent);
                     break;
 
                 case MyConstants.TAG_MENU_BACKUP:

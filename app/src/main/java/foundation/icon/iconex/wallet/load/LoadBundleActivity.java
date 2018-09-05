@@ -50,8 +50,8 @@ public class LoadBundleActivity extends AppCompatActivity {
                 HashMap<String, String> icxAddresses = addrMap[0];
                 HashMap<String, String> ethAddresses = addrMap[1];
 
-                mService.requestGetBalance(icxAddresses, Constants.KS_COINTYPE_ICX);
-                mService.requestGetBalance(ethAddresses, Constants.KS_COINTYPE_ETH);
+                mService.getBalance(icxAddresses, Constants.KS_COINTYPE_ICX);
+                mService.getBalance(ethAddresses, Constants.KS_COINTYPE_ETH);
             } else {
             }
         }
@@ -90,11 +90,6 @@ public class LoadBundleActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                 }
             }
-        }
-
-        @Override
-        public void onReceiveTokenBalance(String id, String address, String result) {
-
         }
 
         @Override

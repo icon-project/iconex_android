@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.gson.JsonObject;
 
 import java.math.BigInteger;
 import java.util.Locale;
@@ -42,10 +43,10 @@ import foundation.icon.iconex.wallet.contacts.ContactsActivity;
 import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.widgets.MyEditText;
 import loopchain.icon.wallet.core.Constants;
+import loopchain.icon.wallet.core.request.Transaction;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import loopchain.icon.wallet.service.crypto.PKIUtils;
-import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -69,8 +70,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
     private Button btnSend;
 
-    private String balance;
-    private BigInteger icx;
+    private BigInteger balance;
 
     private final String CODE_EXCHANGE = "icxusd";
     private String EXCHANGE_PRICE = "";
@@ -80,15 +80,15 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     private String timestamp = null;
     private String txHash = null;
 
-    private WalletInfo mWalletInfo;
-    private WalletEntry mWalletEntry;
-    private String privKey;
-
     private NetworkService mService;
     private boolean mBound = false;
 
     private static final int RC_CONTACTS = 9001;
     private static final int RC_BARCODE_CAPTURE = 9002;
+
+    private WalletInfo mWalletInfo;
+    private WalletEntry mWalletEntry;
+    private String privKey;
 
     private LoopChainClient LCClient = null;
     private BigInteger stepPriceLoop = null;
@@ -152,13 +152,13 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     editAddress.getText().toString(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
             RealmUtil.loadRecents();
 
-            icx = icx.subtract(ConvertUtil.valueToBigInteger(editSend.getText().toString(), 18));
-            mWalletEntry.setBalance(ConvertUtil.getValue(icx, 18));
-            ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(icx, 18));
+            balance = balance.subtract(ConvertUtil.valueToBigInteger(editSend.getText().toString(), 18));
+            mWalletEntry.setBalance(ConvertUtil.getValue(balance, 18));
+            ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(balance, 18));
             ((TextView) findViewById(R.id.txt_fee)).setText(FEE);
             String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
             if (strPrice != null) {
-                Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(icx, 18))
+                Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, 18))
                         * Double.parseDouble(strPrice);
 
                 String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
@@ -200,7 +200,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         ((TextView) findViewById(R.id.txt_send_amount))
                 .setText(String.format(getString(R.string.sendAmount), mWalletEntry.getSymbol()));
         ((TextView) findViewById(R.id.txt_send_fee))
-                .setText(String.format(getString(R.string.sendFee), mWalletEntry.getSymbol()));
+                .setText(String.format(getString(R.string.estiFee), MyConstants.SYMBOL_ICON));
         ((TextView) findViewById(R.id.txt_remain_amount))
                 .setText(String.format(getString(R.string.remainBalance), mWalletEntry.getSymbol()));
         btnBack = findViewById(R.id.btn_back);
@@ -529,12 +529,12 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     public void onResume() {
         super.onResume();
 
-        icx = new BigInteger(mWalletEntry.getBalance());
+        balance = new BigInteger(mWalletEntry.getBalance());
 
-        ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(icx, 18));
+        ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(balance, 18));
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
         if (strPrice != null) {
-            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(icx, 18))
+            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, 18))
                     * Double.parseDouble(strPrice);
 
             String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
@@ -597,13 +597,13 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.btn_plus_all:
-                if (icx.compareTo(ConvertUtil.valueToBigInteger(FEE, 18)) < 0) {
+                if (balance.compareTo(ConvertUtil.valueToBigInteger(FEE, 18)) < 0) {
                     editSend.setText("");
                     lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                     txtSendWarning.setVisibility(View.VISIBLE);
                     txtSendWarning.setText(getString(R.string.errNeedFee));
                 } else {
-                    BigInteger allIcx = icx.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
+                    BigInteger allIcx = balance.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
                     editSend.setText(ConvertUtil.getValue(allIcx, 18));
                     setSendEnable();
                 }
@@ -646,7 +646,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             case R.id.btn_send:
                 BigInteger value = ConvertUtil.valueToBigInteger(editSend.getText().toString(), 18);
                 final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText().toString(), ConvertUtil.getValue(value, 18),
-                        txtFee.getText().toString(), Integer.toHexString(Integer.parseInt(editLimit.getText().toString())));
+                        txtFee.getText().toString(), Integer.toHexString(Integer.parseInt(editLimit.getText().toString())), mWalletEntry.getSymbol());
 
                 Log.d(TAG, "loop=" + ConvertUtil.valueToBigInteger(txtFee.getText().toString(), 18).toString()
                         + "hex=" + ConvertUtil.valueToHexString(ConvertUtil.valueToBigInteger(txtFee.getText().toString(), 18).toString(), 18));
@@ -656,9 +656,36 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void onOk() {
                         timestamp = getTimeStamp();
-                        mService.requestICXTransaction(mWalletEntry.getId(), timestamp, mWalletInfo.getAddress(),
-                                editAddress.getText().toString(), editSend.getText().toString(),
-                                txInfo.getStepLimit(), privKey);
+                        Transaction tx;
+                        if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                            tx = new Transaction.Builder(mWalletEntry.getId(), "0x3", privKey)
+                                    .from(mWalletEntry.getAddress())
+                                    .to(editAddress.getText().toString())
+                                    .value(ConvertUtil.valueToHexString(editSend.getText().toString(), 18))
+                                    .stepLimit(txInfo.getStepLimit())
+                                    .timestamp(timestamp)
+                                    .nonce("0x1")
+                                    .build();
+                        } else {
+                            JsonObject data = new JsonObject();
+                            data.addProperty("method", "transfer");
+                            JsonObject params = new JsonObject();
+                            params.addProperty("_to", editAddress.getText().toString());
+                            params.addProperty("_value", ConvertUtil.valueToHexString(editSend.getText().toString(), 18));
+                            data.add("params", params);
+                            tx = new Transaction.Builder(mWalletEntry.getId(), "0x3", privKey)
+                                    .from(mWalletEntry.getAddress())
+                                    .to(mWalletEntry.getContractAddress())
+                                    .stepLimit(txInfo.getStepLimit())
+                                    .timestamp(timestamp)
+                                    .nonce("0x1")
+                                    .dataType("call")
+                                    .data(data.toString())
+                                    .dataTo(editAddress.getText().toString())
+                                    .build();
+                        }
+
+                        mService.requestICXTransaction(tx);
                     }
                 });
                 dialog.show();
@@ -683,31 +710,51 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
         if (value.isEmpty()) {
 
-            if (icx.compareTo(fee) < 0) {
-                remain = fee.subtract(icx);
-                isNegative = true;
+            if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                if (balance.compareTo(fee) < 0) {
+                    remain = fee.subtract(balance);
+                    isNegative = true;
+                } else {
+                    remain = balance.subtract(fee);
+                    isNegative = false;
+                }
             } else {
-                remain = icx.subtract(fee);
+                remain = balance.subtract(fee);
                 isNegative = false;
             }
         } else {
             send = ConvertUtil.valueToBigInteger(value, 18);
-            switch (icx.compareTo(send)) {
+            switch (balance.compareTo(send)) {
                 case -1:
-                    remain = (send.add(fee)).subtract(icx);
-                    isNegative = true;
-                    break;
-                case 0:
-                    remain = fee;
-                    isNegative = true;
-                    break;
-                case 1:
-                    BigInteger realBigSend = send.add(fee);
-                    if (icx.compareTo(realBigSend) < 0) {
-                        remain = realBigSend.subtract(icx);
+                    if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                        remain = (send.add(fee)).subtract(balance);
                         isNegative = true;
                     } else {
-                        remain = icx.subtract(realBigSend);
+                        remain = send.subtract(balance);
+                        isNegative = true;
+                    }
+                    break;
+                case 0:
+                    if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                        remain = fee;
+                        isNegative = true;
+                    } else {
+                        remain = balance.subtract(send);
+                        isNegative = false;
+                    }
+                    break;
+                case 1:
+                    if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                        BigInteger realBigSend = send.add(fee);
+                        if (balance.compareTo(realBigSend) < 0) {
+                            remain = realBigSend.subtract(balance);
+                            isNegative = true;
+                        } else {
+                            remain = balance.subtract(realBigSend);
+                            isNegative = false;
+                        }
+                    } else {
+                        remain = balance.subtract(send);
                         isNegative = false;
                     }
                     break;
@@ -755,14 +802,14 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             return false;
 
         BigInteger sendAmount = ConvertUtil.valueToBigInteger(value, 18);
-        BigInteger canICX = icx.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
+        BigInteger canICX = balance.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
         if (sendAmount.equals(BigInteger.ZERO)) {
             lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtSendWarning.setVisibility(View.VISIBLE);
             txtSendWarning.setText(getString(R.string.errNonZero));
 
             return false;
-        } else if (icx.compareTo(sendAmount) < 0) {
+        } else if (balance.compareTo(sendAmount) < 0) {
             lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtSendWarning.setVisibility(View.VISIBLE);
             txtSendWarning.setText(getString(R.string.errNotEnough));
@@ -904,10 +951,10 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     private void getStepPrice() {
         int id = new Random().nextInt(999999) + 100000;
         try {
-            Call<LCResponse> responseCall = LCClient.getStepPrice(id, mWalletInfo.getAddress());
+            retrofit2.Call<LCResponse> responseCall = LCClient.getStepPrice(id, mWalletInfo.getAddress());
             responseCall.enqueue(new Callback<LCResponse>() {
                 @Override
-                public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
+                public void onResponse(retrofit2.Call<LCResponse> call, Response<LCResponse> response) {
                     if (response.isSuccessful()) {
                         String result = response.body().getResult().getAsString();
                         stepPriceLoop = ConvertUtil.hexStringToBigInt(result, 18);
@@ -925,15 +972,15 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                             txtStepTrans.setText(String.format(Locale.getDefault(), "%.2f", Double.parseDouble(value) * Double.parseDouble(strExc)));
 
                     } else {
-                        txtStepICX.setText("- loop");
-                        txtStepTrans.setText("- USD");
+                        txtStepICX.setText("- ");
+                        txtStepTrans.setText("- ");
                     }
 
                     setRemain(editSend.getText().toString());
                 }
 
                 @Override
-                public void onFailure(Call<LCResponse> call, Throwable t) {
+                public void onFailure(retrofit2.Call<LCResponse> call, Throwable t) {
 
                 }
             });

@@ -14,8 +14,11 @@ import foundation.icon.iconex.service.RESTClient;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.request.GetBalanceData;
 import loopchain.icon.wallet.core.request.GetICXCallData;
+import loopchain.icon.wallet.core.request.GetScoreApi;
+import loopchain.icon.wallet.core.request.GetStepPrice;
+import loopchain.icon.wallet.core.request.GetTokenBalance;
 import loopchain.icon.wallet.core.request.GetTransactionResultData;
-import loopchain.icon.wallet.core.request.SendTransactionData;
+import loopchain.icon.wallet.core.request.Transaction;
 import loopchain.icon.wallet.core.response.GetTransactionResultResp;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.core.response.TRResponse;
@@ -36,13 +39,26 @@ public class LoopChainClient {
         random = new SecureRandom();
     }
 
-    public Call<LCResponse> sendTransaction(int id, String timestamp, String from, String to, String value, String stepLimit, String hexPrivateKey) throws IOException {
-        if (!value.startsWith("0x")) {
-            value = icxToHexString(value);
-        }
+    public Call<LCResponse> sendTransaction(Transaction tx) throws IOException {
+        Call<LCResponse> response = proxyClient.sendRequest(tx);
+        return response;
+    }
 
-        SendTransactionData txData = new SendTransactionData(id, timestamp, from, to, value, stepLimit, hexPrivateKey);
-        Call<LCResponse> response = proxyClient.sendRequest(txData);
+    public Call<LCResponse> sendIcxCall(int id, String address, String score, JsonObject data) throws IOException {
+        GetICXCallData qData = new GetICXCallData(id, address, score, data);
+        Call<LCResponse> response = proxyClient.sendRequest(qData);
+        return response;
+    }
+
+    public Call<LCResponse> getStepPrice(int id, String address) throws IOException {
+        GetStepPrice qData = new GetStepPrice(id, address);
+        Call<LCResponse> response = proxyClient.sendRequest(qData);
+        return response;
+    }
+
+    public Call<LCResponse> getScoreApi(int id, String address) throws IOException {
+        GetScoreApi qData = new GetScoreApi(id, address);
+        Call<LCResponse> response = proxyClient.sendRequest(qData);
         return response;
     }
 
@@ -52,8 +68,8 @@ public class LoopChainClient {
         return response;
     }
 
-    public Call<LCResponse> getStepPrice(int id, String address) throws IOException {
-        GetICXCallData qData = new GetICXCallData(id, address, Constants.METHOD_GETSTEPPRICE);
+    public Call<LCResponse> getTokenBalance(int id, String address, String score) throws IOException {
+        GetTokenBalance qData = new GetTokenBalance(id, address, score);
         Call<LCResponse> response = proxyClient.sendRequest(qData);
         return response;
     }
