@@ -6,7 +6,7 @@ import loopchain.icon.wallet.core.Constants;
 
 public class GetBlockByHashData extends RequestData{
 
-    public GetBlockByHashData(String id, String hash) {
+    public GetBlockByHashData(int id, String hash) {
         this.method = Constants.METHOD_GETBLOCKBYHASH;
         this.id = id;
         

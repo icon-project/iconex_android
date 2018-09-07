@@ -7,35 +7,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.Web3jFactory;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthEstimateGas;
-import org.web3j.protocol.core.methods.response.EthGasPrice;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.http.HttpService;
-import org.web3j.utils.Convert;
-
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
 
 import foundation.icon.iconex.intro.IntroActivity;
 import foundation.icon.iconex.intro.auth.AuthActivity;
-import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
 import foundation.icon.iconex.wallet.main.MainActivity;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
 import static foundation.icon.iconex.ICONexApp.language;
 
 public class SplashActivity extends AppCompatActivity {

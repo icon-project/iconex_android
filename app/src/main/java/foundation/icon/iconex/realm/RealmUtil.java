@@ -4,12 +4,13 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.control.Token;
+import foundation.icon.iconex.token.Token;
 import foundation.icon.iconex.control.WalletEntry;
 import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.realm.data.CoinNToken;
@@ -21,7 +22,6 @@ import foundation.icon.iconex.realm.data.Wallet;
 import io.realm.Realm;
 import io.realm.RealmList;
 import loopchain.icon.wallet.core.Constants;
-import loopchain.icon.wallet.service.crypto.PKIUtils;
 
 import static foundation.icon.iconex.realm.RealmUtil.COIN_TYPE.ICX;
 
@@ -53,7 +53,7 @@ public class RealmUtil {
                     entry.setAddress(coinNToken.getAddress());
                     entry.setSymbol(coinNToken.getSymbol());
                     entry.setBalance("");
-                    entry.setId(PKIUtils.hexEncode(random.generateSeed(3)));
+                    entry.setId(new Random().nextInt(999999) + 1000000);
 
                     if (coinNToken.getType().equals(MyConstants.TYPE_TOKEN)) {
                         entry.setContractAddress(coinNToken.getContractAddress());
@@ -150,21 +150,25 @@ public class RealmUtil {
 
     private static void addICXToken(String coinType, Realm realm, RealmList<CoinNToken> list, String ownAddr, String createdAt) {
         boolean isExist = false;
+        String contractAddr;
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            contractAddr = MyConstants.M_ERC_ICX_ADDR;
+        else
+            contractAddr = MyConstants.T_ERC_ICX_ADDR;
 
         if (coinType.equals(Constants.KS_COINTYPE_ICX))
             return;
 
         for (CoinNToken entry : list) {
-            if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
-                if (entry.getSymbol().equals(MyConstants.ICX_SYM))
-                    isExist = true;
-            }
+            if (entry.getContractAddress().equals(contractAddr))
+                isExist = true;
         }
 
         if (!isExist) {
             CoinNToken token = realm.createObject(CoinNToken.class);
             token.setType(MyConstants.TYPE_TOKEN);
             token.setAddress(ownAddr);
+            token.setContractAddress(contractAddr);
             token.setName(MyConstants.NAME_ICX);
             token.setUserName(MyConstants.NAME_ICX);
             token.setSymbol(MyConstants.ICX_SYM);
@@ -172,11 +176,6 @@ public class RealmUtil {
             token.setDecimal(MyConstants.ICX_DEC);
             token.setUserDecimal(MyConstants.ICX_DEC);
             token.setCreateAt(createdAt);
-
-            if (ICONexApp.isMain)
-                token.setContractAddress(MyConstants.CONTRACT_MAIN);
-            else
-                token.setContractAddress(MyConstants.CONTRACT_TEST);
 
             list.add(token);
         }

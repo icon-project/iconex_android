@@ -6,14 +6,14 @@ package foundation.icon.iconex.wallet.transfer.data;
 
 public class TxInfo {
 
+    private String toAddress;
     private String sendAmount;
     private String fee;
-    private String toAddress;
 
-    public TxInfo(String send, String fee, String to) {
+    public TxInfo(String to, String send, String fee) {
+        this.toAddress = to;
         this.sendAmount = send;
         this.fee = fee;
-        this.toAddress = to;
     }
 
     public String getSendAmount() {

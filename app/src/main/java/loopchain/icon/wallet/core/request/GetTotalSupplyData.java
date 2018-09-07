@@ -6,7 +6,7 @@ import loopchain.icon.wallet.core.Constants;
 
 public class GetTotalSupplyData extends RequestData{
 
-    public GetTotalSupplyData(String id) {
+    public GetTotalSupplyData(int id) {
         this.method = Constants.METHOD_GETTOTALSUPPLY;
         this.id = id;
         

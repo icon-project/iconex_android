@@ -6,7 +6,7 @@ import loopchain.icon.wallet.core.Constants;
 
 public class GetTransactionByAddressData extends RequestData{
 
-    public GetTransactionByAddressData(String id, String address, int index) {
+    public GetTransactionByAddressData(int id, String address, int index) {
         this.method = Constants.METHOD_GETTRANSACTIONBYADDRESS;
         this.id = id;
         

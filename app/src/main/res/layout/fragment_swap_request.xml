@@ -466,7 +466,7 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/noto_sans_regular"
                         android:gravity="start"
-                        android:text="@string/ethEstiFee"
+                        android:text="@string/estiFee"
                         android:textColor="@color/colorText"
                         android:textSize="14dp" />
 

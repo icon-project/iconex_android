@@ -123,7 +123,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             if (refreshLayout.isRefreshing)
                 refreshLayout.stopRefresh(true);
 
-            if (selectedEntry.getId().equals(id)) {
+            if (Integer.toString(selectedEntry.getId()).equals(id)) {
                 selectedEntry.setBalance(result);
                 txAdapter.setWalletEntry(selectedEntry);
             }
@@ -134,26 +134,10 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             if (refreshLayout.isRefreshing)
                 refreshLayout.stopRefresh(true);
 
-            if (selectedEntry.getId().equals(id)) {
+            if (Integer.toString(selectedEntry.getId()).equals(id)) {
                 selectedEntry.setBalance(result);
                 txAdapter.setWalletEntry(selectedEntry);
             }
-        }
-
-        @Override
-        public void onReceiveTokenBalance(String id, String address, String result) {
-            if (refreshLayout.isRefreshing)
-                refreshLayout.stopRefresh(true);
-
-            for (int i = 0; i < mWalletInfo.getWalletEntries().size(); i++) {
-                if (id.equals(mWalletInfo.getWalletEntries().get(i).getId()))
-                    mWalletInfo.getWalletEntries().get(i).setBalance(result);
-
-                if (id.equals(selectedEntry.getId()))
-                    selectedEntry.setBalance(result);
-            }
-
-            txAdapter.setWalletEntry(selectedEntry);
         }
 
         @Override
@@ -162,7 +146,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 refreshLayout.stopRefresh(true);
 
             if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                if (selectedEntry.getId().equals(id)) {
+                if (Integer.toString(selectedEntry.getId()).equals(id)) {
                     selectedEntry.setBalance(MyConstants.NO_BALANCE);
                     txAdapter.setWalletEntry(selectedEntry);
                 }
@@ -185,7 +169,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 refreshLayout.stopRefresh(true);
 
             if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                if (selectedEntry.getId().equals(id)) {
+                if (Integer.toString(selectedEntry.getId()).equals(id)) {
                     selectedEntry.setBalance(MyConstants.NO_BALANCE);
                     txAdapter.setWalletEntry(selectedEntry);
                 }
@@ -283,7 +267,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         if (getIntent() != null) {
             mWalletInfo = (WalletInfo) getIntent().getSerializableExtra("walletInfo");
             selectedEntry = (WalletEntry) getIntent().getSerializableExtra("walletEntry");
-            entryId = selectedEntry.getId();
+            entryId = Integer.toString(selectedEntry.getId());
         }
 
         appbar = findViewById(R.id.appbar);
@@ -376,22 +360,33 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             HashMap<String, String> rqWallet = new HashMap<>();
 
             if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                rqWallet.put(selectedEntry.getId(), mWalletInfo.getAddress());
-                mService.requestGetBalance(rqWallet, mWalletInfo.getCoinType());
-                mService.requestICONTxList(mWalletInfo.getAddress(), currentPage);
-            } else {
                 if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                    rqWallet.put(selectedEntry.getId(), MyConstants.PREFIX_ETH + mWalletInfo.getAddress());
-                    mService.requestGetBalance(rqWallet, mWalletInfo.getCoinType());
+                    rqWallet.put(Integer.toString(selectedEntry.getId()), mWalletInfo.getAddress());
+                    mService.getBalance(rqWallet, mWalletInfo.getCoinType());
+                    mService.requestICONTxList(mWalletInfo.getAddress(), currentPage);
                 } else {
                     HashMap<String, String[]> tokenList = new HashMap<>();
                     for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
                         if (entry.getType().equals(MyConstants.TYPE_TOKEN))
-                            tokenList.put(entry.getId(),
+                            tokenList.put(Integer.toString(entry.getId()), new String[]{mWalletInfo.getAddress(), entry.getContractAddress()});
+                    }
+
+                    mService.getTokenBalance(tokenList, Constants.KS_COINTYPE_ETH);
+                    mService.requestICONTxList(mWalletInfo.getAddress(), currentPage);
+                }
+            } else {
+                if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                    rqWallet.put(Integer.toString(selectedEntry.getId()), MyConstants.PREFIX_ETH + mWalletInfo.getAddress());
+                    mService.getBalance(rqWallet, mWalletInfo.getCoinType());
+                } else {
+                    HashMap<String, String[]> tokenList = new HashMap<>();
+                    for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
+                        if (entry.getType().equals(MyConstants.TYPE_TOKEN))
+                            tokenList.put(Integer.toString(entry.getId()),
                                     new String[]{MyConstants.PREFIX_ETH + mWalletInfo.getAddress(), entry.getContractAddress()});
                     }
 
-                    mService.requestGetTokenBalance(tokenList);
+                    mService.getTokenBalance(tokenList, Constants.KS_COINTYPE_ETH);
                 }
             }
 
@@ -446,7 +441,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWalletInfo.getAddress(),
                             keyStore.get("crypto").getAsJsonObject(), mWalletInfo.getCoinType());
                     if (bytePrivKey != null) {
-                        if (result == EditTextDialog.RESULT_PWD.REMITTANCE) {
+                        if (result == EditTextDialog.RESULT_PWD.TRANSFER) {
                             startActivity(new Intent(WalletDetailActivity.this, ICONTransferActivity.class)
                                     .putExtra("walletInfo", (Serializable) mWalletInfo)
                                     .putExtra("walletEntry", (Serializable) selectedEntry)
@@ -488,7 +483,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
                     bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWalletInfo.getAddress(), crypto, mWalletInfo.getCoinType());
                     if (bytePrivKey != null) {
-                        if (result == EditTextDialog.RESULT_PWD.REMITTANCE) {
+                        if (result == EditTextDialog.RESULT_PWD.TRANSFER) {
                             startActivity(new Intent(WalletDetailActivity.this, EtherTransferActivity.class)
                                     .putExtra("walletInfo", (Serializable) mWalletInfo)
                                     .putExtra("walletEntry", (Serializable) selectedEntry)
@@ -631,7 +626,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onCoinItem(int position) {
             selectedEntry = mWalletInfo.getWalletEntries().get(position);
-            entryId = selectedEntry.getId();
+            entryId = Integer.toString(selectedEntry.getId());
             txAdapter.setWalletEntry(selectedEntry);
         }
 
@@ -815,7 +810,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             editTextDialog = new EditTextDialog(WalletDetailActivity.this, getString(R.string.enterWalletPassword));
             editTextDialog.setHint(getString(R.string.hintWalletPassword));
             editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-            editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.REMITTANCE);
+            editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.TRANSFER);
             editTextDialog.setOnPasswordCallback(mPasswordDialogCallback);
             editTextDialog.show();
         }
