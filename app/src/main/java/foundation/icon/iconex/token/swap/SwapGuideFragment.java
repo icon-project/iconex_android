@@ -13,11 +13,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.service.ServiceConstants;
 
 public class SwapGuideFragment extends Fragment implements View.OnClickListener {
@@ -223,7 +222,7 @@ public class SwapGuideFragment extends Fragment implements View.OnClickListener 
     private String getWalletAlias() {
         String address = ((TokenSwapActivity) getActivity()).getICXAddr();
 
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             if (wallet.getAddress().equals(address))
                 return wallet.getAlias();
         }

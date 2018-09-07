@@ -15,8 +15,8 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.util.ConvertUtil;
 
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
@@ -33,12 +33,12 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
     private Context mContext;
     private LayoutInflater mInflater;
     private String mType;
-    private List<WalletInfo> mData;
+    private List<Wallet> mData;
     private int mDec;
     private String mSymbol;
     private final String ercIcxAddr;
 
-    public CoinRecyclerAdapter(Context context, String coinType, List<WalletInfo> data, int dec, String symbol) {
+    public CoinRecyclerAdapter(Context context, String coinType, List<Wallet> data, int dec, String symbol) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
         mType = coinType;
@@ -60,7 +60,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        WalletInfo wallet = mData.get(position);
+        Wallet wallet = mData.get(position);
         String totalBalance = getTotalBalance(wallet);
 
         if (totalBalance != null) {
@@ -116,7 +116,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         return mData.size();
     }
 
-    private String getTotalBalance(WalletInfo info) {
+    private String getTotalBalance(Wallet info) {
         BigInteger totalBalance = BigInteger.ZERO;
         int cntNoBalance = 0;
         int cntTarget = 0;
@@ -153,7 +153,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         }
     }
 
-    private boolean availableSwap(WalletInfo wallet) {
+    private boolean availableSwap(Wallet wallet) {
         for (WalletEntry entry : wallet.getWalletEntries()) {
             if (entry.getContractAddress().equals(ercIcxAddr))
                 return true;
@@ -211,8 +211,8 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     // parent activity will implement this method to respond to click events
     public interface WalletClickListener {
-        void onWalletClick(WalletInfo wallet, String symbol);
+        void onWalletClick(Wallet wallet, String symbol);
 
-        void onRequestSwap(WalletInfo wallet);
+        void onRequestSwap(Wallet wallet);
     }
 }

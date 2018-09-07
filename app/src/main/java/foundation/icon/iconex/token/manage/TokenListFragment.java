@@ -15,8 +15,8 @@ import java.util.List;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 
 public class TokenListFragment extends Fragment {
 
@@ -24,7 +24,7 @@ public class TokenListFragment extends Fragment {
 
     private static final String ARG_WALLET = "ARG_WALLET";
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
     private List<WalletEntry> mTokens;
 
     private ViewGroup layoutNoTokens;
@@ -37,10 +37,10 @@ public class TokenListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static TokenListFragment newInstance(WalletInfo walletInfo) {
+    public static TokenListFragment newInstance(Wallet wallet) {
         TokenListFragment fragment = new TokenListFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ARG_WALLET, walletInfo);
+        bundle.putSerializable(ARG_WALLET, wallet);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -50,7 +50,7 @@ public class TokenListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mWalletInfo = (WalletInfo) getArguments().get(ARG_WALLET);
+            mWallet = (Wallet) getArguments().get(ARG_WALLET);
         }
 
         mTokens = makeTokenList();
@@ -111,7 +111,7 @@ public class TokenListFragment extends Fragment {
 
     private List<WalletEntry> makeTokenList() {
         List<WalletEntry> tokens = new ArrayList<>();
-        for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
+        for (WalletEntry entry : mWallet.getWalletEntries()) {
             if (entry.getType().equals(MyConstants.TYPE_TOKEN))
                 tokens.add(entry);
         }
@@ -123,8 +123,8 @@ public class TokenListFragment extends Fragment {
 
         mTokens = new ArrayList<>();
 
-        for (WalletInfo info : ICONexApp.mWallets) {
-            if (info.getAddress().equals(mWalletInfo.getAddress())) {
+        for (Wallet info : ICONexApp.mWallets) {
+            if (info.getAddress().equals(mWallet.getAddress())) {
                 for (WalletEntry entry : info.getWalletEntries()) {
                     if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
                         mTokens.add(entry);

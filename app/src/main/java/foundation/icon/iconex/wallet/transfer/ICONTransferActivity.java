@@ -31,8 +31,8 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.realm.RealmUtil;
@@ -86,7 +86,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     private static final int RC_CONTACTS = 9001;
     private static final int RC_BARCODE_CAPTURE = 9002;
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
     private WalletEntry mWalletEntry;
     private String privKey;
 
@@ -187,14 +187,14 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_icon_transfer);
 
         if (getIntent() != null) {
-            mWalletInfo = (WalletInfo) getIntent().getExtras().get("walletInfo");
+            mWallet = (Wallet) getIntent().getExtras().get("walletInfo");
             mWalletEntry = (WalletEntry) getIntent().getExtras().get("walletEntry");
             privKey = getIntent().getStringExtra("privateKey");
         }
 
         EXCHANGE_PRICE = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
 
-        ((TextView) findViewById(R.id.txt_title)).setText(mWalletInfo.getAlias());
+        ((TextView) findViewById(R.id.txt_title)).setText(mWallet.getAlias());
         ((TextView) findViewById(R.id.txt_possession))
                 .setText(String.format(getString(R.string.possessionAmount), mWalletEntry.getSymbol()));
         ((TextView) findViewById(R.id.txt_send_amount))
@@ -613,8 +613,8 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.btn_contacts:
                 startActivityForResult(new Intent(this, ContactsActivity.class)
-                        .putExtra("coinType", mWalletInfo.getCoinType())
-                        .putExtra("address", mWalletInfo.getAddress()), RC_CONTACTS);
+                        .putExtra("coinType", mWallet.getCoinType())
+                        .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
                 break;
 
             case R.id.btn_scan:
@@ -836,7 +836,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         if (address.isEmpty())
             return false;
 
-        if (address.equals(mWalletInfo.getAddress())) {
+        if (address.equals(mWallet.getAddress())) {
             lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
             txtAddrWarning.setText(getString(R.string.errSameAddress));
@@ -951,7 +951,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     private void getStepPrice() {
         int id = new Random().nextInt(999999) + 100000;
         try {
-            retrofit2.Call<LCResponse> responseCall = LCClient.getStepPrice(id, mWalletInfo.getAddress());
+            retrofit2.Call<LCResponse> responseCall = LCClient.getStepPrice(id, mWallet.getAddress());
             responseCall.enqueue(new Callback<LCResponse>() {
                 @Override
                 public void onResponse(retrofit2.Call<LCResponse> call, Response<LCResponse> response) {

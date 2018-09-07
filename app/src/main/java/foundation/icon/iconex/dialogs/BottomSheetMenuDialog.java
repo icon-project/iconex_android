@@ -1,8 +1,6 @@
 package foundation.icon.iconex.dialogs;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
@@ -18,8 +16,8 @@ import foundation.icon.iconex.control.BottomSheetBasicAdapter;
 import foundation.icon.iconex.control.BottomSheetCoinAdapter;
 import foundation.icon.iconex.control.BottomSheetMenu;
 import foundation.icon.iconex.control.BottomSheetMenuAdapter;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.Wallet;
 
 /**
  * Created by js on 2018. 3. 26..
@@ -38,7 +36,7 @@ public class BottomSheetMenuDialog extends BottomSheetDialog {
     private RecyclerView recyclerView;
 
     private List<String> basicData;
-    private WalletInfo walletData;
+    private Wallet walletData;
     private List<BottomSheetMenu> menuData;
 
     private BottomSheetBasicAdapter basicAdapter;
@@ -110,7 +108,7 @@ public class BottomSheetMenuDialog extends BottomSheetDialog {
         basicData = data;
     }
 
-    public void setEntriesData(WalletInfo data) {
+    public void setEntriesData(Wallet data) {
         walletData = data;
     }
 

@@ -22,7 +22,7 @@ import java.util.TimeZone;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;

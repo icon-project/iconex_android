@@ -16,7 +16,7 @@ import android.widget.TextView;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.widgets.MyEditText;
 
@@ -209,7 +209,7 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
         if (alias.trim().length() == 0)
             return ALIAS_EMPTY;
 
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (info.getAlias().equals(alias)) {
                 return ALIAS_DUP;
             }

@@ -17,7 +17,7 @@ import java.math.BigInteger;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 
 /**
  * Created by js on 2018. 6. 11..
@@ -103,7 +103,7 @@ public class SwapConfirmDialog extends Dialog {
     }
 
     private String getWalletName() {
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             if (wallet.getAddress().equals(mICXAddr))
                 return wallet.getAlias();
         }

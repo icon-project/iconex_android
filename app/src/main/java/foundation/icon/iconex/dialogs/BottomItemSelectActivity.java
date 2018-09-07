@@ -15,8 +15,8 @@ import foundation.icon.iconex.control.BottomSheetBasicAdapter;
 import foundation.icon.iconex.control.BottomSheetCoinAdapter;
 import foundation.icon.iconex.control.BottomSheetMenu;
 import foundation.icon.iconex.control.BottomSheetMenuAdapter;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.Wallet;
 
 public class BottomItemSelectActivity extends Activity {
 
@@ -70,7 +70,7 @@ public class BottomItemSelectActivity extends Activity {
             recyclerView.setAdapter(basicAdapter);
 
         } else if (type == SHEET_TYPE.COIN_TOKEN) {
-            WalletInfo info = (WalletInfo) getIntent().getExtras().get("data");
+            Wallet info = (Wallet) getIntent().getExtras().get("data");
             List<WalletEntry> coinList = info.getWalletEntries();
             coinAdapter = new BottomSheetCoinAdapter(this, coinList);
             coinAdapter.setItemClickListener(new BottomSheetCoinAdapter.CoinSelectListener() {

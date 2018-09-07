@@ -20,8 +20,8 @@ import java.util.Map;
 
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
 import foundation.icon.iconex.widgets.NonSwipeViewPager;
@@ -37,7 +37,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     private NonSwipeViewPager viewPager;
     private BundleViewPagerAdapter adapter;
 
-    private List<WalletInfo> mBundle;
+    private List<Wallet> mBundle;
     private HashMap<String, String> mPrivSet;
 
     public static final int STORAGE_PERMISSION_REQUEST = 10001;
@@ -62,7 +62,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     }
 
     @Override
-    public void onNext(List<WalletInfo> bundle, HashMap<String, String> privSet) {
+    public void onNext(List<Wallet> bundle, HashMap<String, String> privSet) {
         mBundle = bundle;
         mPrivSet = privSet;
 
@@ -83,7 +83,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
         JsonArray tokens;
         JsonObject token;
 
-        for (WalletInfo info : mBundle) {
+        for (Wallet info : mBundle) {
             wallet = new JsonObject();
             walletProperties = new JsonObject();
             tokens = new JsonArray();

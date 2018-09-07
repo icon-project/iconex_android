@@ -44,8 +44,8 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.token.Token;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.RESTClient;
@@ -597,7 +597,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
     }
 
     private boolean checkAddressDup(String address) {
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (mWalletAddr.equals(info.getAddress())) {
                 for (WalletEntry entry : info.getWalletEntries()) {
                     if (address.equals(entry.getContractAddress()))

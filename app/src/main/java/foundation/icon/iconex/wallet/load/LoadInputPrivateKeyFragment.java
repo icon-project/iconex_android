@@ -30,7 +30,7 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.BottomItemSelectActivity;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.widgets.DropdownLayout;
@@ -320,7 +320,7 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
             return false;
         }
 
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (info.getAddress().equals(address))
                 return false;
         }

@@ -8,7 +8,7 @@ import android.util.SparseArray;
 import java.util.HashMap;
 import java.util.List;
 
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 
 /**
  * Created by js on 2018. 3. 29..
@@ -19,7 +19,7 @@ public class CoinViewPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = CoinViewPagerAdapter.class.getSimpleName();
 
     private List<String> mCoins;
-    private HashMap<String, List<WalletInfo>> mCoinsMap;
+    private HashMap<String, List<Wallet>> mCoinsMap;
     private List<CoinsViewItem> mList;
     public SparseArray<CoinFragment> fragments;
 

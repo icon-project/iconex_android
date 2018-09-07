@@ -35,8 +35,8 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.MyEditText;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
@@ -64,7 +64,7 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
 
     private boolean isBundle = false;
     private JsonObject mKeyStore;
-    private List<WalletInfo> mKSBundle;
+    private List<Wallet> mKSBundle;
 
     public static boolean isSelect = false;
 
@@ -134,7 +134,7 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
             public void onBackPressed() {
                 if (layoutFile.getVisibility() == View.VISIBLE) {
                     if (isBundle) {
-                        List<WalletInfo> correctWallets = validateBundlePassword(editPwd.getText().toString(), mKSBundle);
+                        List<Wallet> correctWallets = validateBundlePassword(editPwd.getText().toString(), mKSBundle);
                         if (correctWallets == null || correctWallets.size() == 0)
                             showPwdError(getString(R.string.errPassword));
                         else {
@@ -162,7 +162,7 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     if (layoutFile.getVisibility() == View.VISIBLE) {
                         if (isBundle) {
-                            List<WalletInfo> correctWallets = validateBundlePassword(editPwd.getText().toString(), mKSBundle);
+                            List<Wallet> correctWallets = validateBundlePassword(editPwd.getText().toString(), mKSBundle);
                             if (correctWallets == null || correctWallets.size() == 0)
                                 showPwdError(getString(R.string.errPassword));
                             else {
@@ -256,7 +256,7 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
     public interface OnSelectKeyStoreCallback {
         void onKeyStoreSelected(JsonObject keyStore);
 
-        void onKeyStoreBundleSelected(List<WalletInfo> wallets);
+        void onKeyStoreBundleSelected(List<Wallet> wallets);
     }
 
     @Override
@@ -336,7 +336,7 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
     }
 
     private boolean checkAddress(String address) {
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (info.getAddress().equals(address))
                 return false;
         }
@@ -380,12 +380,12 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
         return true;
     }
 
-    private List<WalletInfo> validateBundlePassword(String pwd, List<WalletInfo> wallets) {
-        List<WalletInfo> tempWallets = new ArrayList<>();
+    private List<Wallet> validateBundlePassword(String pwd, List<Wallet> wallets) {
+        List<Wallet> tempWallets = new ArrayList<>();
         tempWallets.addAll(wallets);
 
         for (int i = 0; i < wallets.size(); i++) {
-            WalletInfo wallet = wallets.get(i);
+            Wallet wallet = wallets.get(i);
             try {
                 JsonObject keyStore = new Gson().fromJson(wallet.getKeyStore(), JsonObject.class);
                 boolean result = validatePassword(pwd, keyStore);
@@ -528,8 +528,8 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
         return true;
     }
 
-    private List<WalletInfo> validateKSBundle(JsonArray bundle) {
-        List<WalletInfo> wallets = new ArrayList<>();
+    private List<Wallet> validateKSBundle(JsonArray bundle) {
+        List<Wallet> wallets = new ArrayList<>();
 
         for (JsonElement element : bundle) {
             JsonObject eleObj = element.getAsJsonObject();
@@ -540,7 +540,7 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
                     continue;
 
                 try {
-                    WalletInfo info = new WalletInfo();
+                    Wallet info = new Wallet();
                     JsonObject bundleInfo = item.getValue().getAsJsonObject();
 
                     String name = bundleInfo.get("name").getAsString();
