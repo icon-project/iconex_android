@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="@string/msgNotoken"
+        android:text="@string/msgNoToken"
         android:textColor="@color/colorText70"
         android:textSize="12dp" />
 
