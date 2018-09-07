@@ -183,7 +183,7 @@
     <string name="tokenSymbol">Token Symbol</string>
     <string name="tokenDecimals">Number of Decimals</string>
 
-    <string name="msgNotoken">목록에 토큰이 없다면 직접 입력하여 추가해주세요.</string>
+    <string name="msgNoToken">목록에 토큰이 없다면 직접 입력하여 추가해주세요.</string>
     <string name="enterTokenInfo">토큰 정보 입력</string>
 
     <string name="msgTokenDelete">Do you want to delete\n%s ?</string>
@@ -355,8 +355,6 @@
     <string name="errCurrentLockNum">Please confirm your passcode</string>
     <string name="errRetryLockNum">Please Try Again</string>
     <string name="errInvalidatedByBiometricEnrollment">The fingerprint registered on your mobile does not match and has been disabled. Please unlock the screen with your passcode to check availability.</string>
-
-    <string name="errFingerprintLockOut">Fingerprint scan is currently locked. You can reactivate the fingerprint scan by entering your mobile</string>
 
     <!-- Language -->
     <string name="titleLanguage">Language</string>

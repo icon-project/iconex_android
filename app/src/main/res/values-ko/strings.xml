@@ -182,7 +182,7 @@
     <string name="tokenSymbol">토큰 기호 (Token Symbol)</string>
     <string name="tokenDecimals">소수 자리 수 (Number of Decimals)</string>
 
-    <string name="msgNotoken">목록에 토큰이 없다면 직접 입력하여 추가해주세요.</string>
+    <string name="msgNoToken">목록에 토큰이 없다면 직접 입력하여 추가해주세요.</string>
     <string name="enterTokenInfo">토큰 정보 입력</string>
 
     <string name="msgTokenDelete">%s 을(를)\n삭제하시겠습니까?</string>
@@ -354,8 +354,6 @@
     <string name="errCurrentLockNum">잠금 번호가 일치 하지 않습니다.</string>
     <string name="errRetryLockNum">잠금 번호를 다시 확인해주세요.</string>
     <string name="errInvalidatedByBiometricEnrollment">등록되어 있는 지문 정보가 변경되어 지문 인증을 사용할 수 없습니다. 잠금 번호로 로그인 후, 지문 사용 여부를 다시 설정해주세요.</string>
-
-    <string name="errFingerprintLockOut">Fingerprint scan is currently locked. You can reactivate the fingerprint scan by entering your mobile</string>
 
     <!-- Language -->
     <string name="titleLanguage">언어 설정</string>
