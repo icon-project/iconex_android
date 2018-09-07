@@ -18,7 +18,6 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.WalletEntry;
 import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.util.ConvertUtil;
-import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 import static foundation.icon.iconex.MyConstants.NO_BALANCE;
@@ -37,6 +36,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
     private List<WalletInfo> mData;
     private int mDec;
     private String mSymbol;
+    private final String ercIcxAddr;
 
     public CoinRecyclerAdapter(Context context, String coinType, List<WalletInfo> data, int dec, String symbol) {
         mContext = context;
@@ -45,6 +45,11 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         mData = data;
         mDec = dec;
         mSymbol = symbol;
+
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            ercIcxAddr = MyConstants.M_ERC_ICX_ADDR;
+        else
+            ercIcxAddr = MyConstants.T_ERC_ICX_ADDR;
     }
 
     @Override
@@ -100,9 +105,10 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         if (position == getItemCount() - 1)
             holder.line.setVisibility(View.INVISIBLE);
 
-        if (mType.equals(MyConstants.TYPE_TOKEN)
-                && mSymbol.equals(Constants.KS_COINTYPE_ICX))
+        if (availableSwap(wallet))
             holder.btnSwap.setVisibility(View.VISIBLE);
+        else
+            holder.btnSwap.setVisibility(View.GONE);
     }
 
     @Override
@@ -145,6 +151,15 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         } else {
             return null;
         }
+    }
+
+    private boolean availableSwap(WalletInfo wallet) {
+        for (WalletEntry entry : wallet.getWalletEntries()) {
+            if (entry.getContractAddress().equals(ercIcxAddr))
+                return true;
+        }
+
+        return false;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

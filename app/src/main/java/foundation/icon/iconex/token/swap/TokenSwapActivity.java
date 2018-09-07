@@ -352,7 +352,7 @@ public class TokenSwapActivity extends AppCompatActivity implements SwapGuideFra
         dialog.setOnDialogListener(new SwapConfirmDialog.OnDialogListener() {
             @Override
             public void onOk() {
-                mService.requestTokenTransfer(mToken.getId(), price,
+                mService.requestTokenTransfer(Integer.toString(mToken.getId()), price,
                         limit, mToken.getContractAddress(),
                         MyConstants.ETH_INCINERATION, amount,
                         Integer.toString(mToken.getDefaultDec()), mPriv);

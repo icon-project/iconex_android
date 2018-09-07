@@ -57,7 +57,7 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
                 mWalletInfo = wallet;
                 dialog = new EditTextDialog(getActivity(), getString(R.string.enterWalletPassword));
                 dialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                dialog.setPasswordType(EditTextDialog.RESULT_PWD.REMITTANCE);
+                dialog.setPasswordType(EditTextDialog.RESULT_PWD.TRANSFER);
                 dialog.setOnPasswordCallback(onPasswordCallback);
                 dialog.setHint(getString(R.string.hintWalletPassword));
                 dialog.show();

@@ -28,7 +28,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 
 /**
@@ -54,6 +54,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private MyConstants.TxState mState;
     private MyConstants.TxType mType;
     private String mCoinType;
+    private final String ercIcxAddr;
 
     private LayoutInflater mInflater;
     private HeaderClickListener mHeaderClickListener;
@@ -73,6 +74,11 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         this.entry = entry;
         this.EXCHANGE = exchange;
+
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            ercIcxAddr = MyConstants.M_ERC_ICX_ADDR;
+        else
+            ercIcxAddr = MyConstants.T_ERC_ICX_ADDR;
     }
 
     @Override
@@ -135,11 +141,13 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             }
 
-            if (entry.getType().equals(MyConstants.TYPE_TOKEN)
-                    && entry.getSymbol().equals(Constants.KS_COINTYPE_ICX))
-                headerViewHolder.btnSwap.setVisibility(View.VISIBLE);
-            else
-                headerViewHolder.btnSwap.setVisibility(View.GONE);
+            if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
+                if (entry.getContractAddress().equals(ercIcxAddr))
+                    ((HeaderViewHolder) holder).btnSwap.setVisibility(View.VISIBLE);
+                else
+                    ((HeaderViewHolder) holder).btnSwap.setVisibility(View.GONE);
+            }
+
 
             ((TextView) headerViewHolder.btnExchange.findViewById(R.id.txt_exchange)).setText(EXCHANGE);
             ((TextView) headerViewHolder.btnSelectCoin.findViewById(R.id.txt_selected_name)).setText(entry.getUserName());
@@ -355,7 +363,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             switch (v.getId()) {
                 case R.id.txt_etherscan:
                     String tracker;
-                    if (isMain)
+                    if (network == MyConstants.NETWORK_MAIN)
                         tracker = ServiceConstants.URL_ETHERSCAN;
                     else
                         tracker = ServiceConstants.URL_ROPSTEN;

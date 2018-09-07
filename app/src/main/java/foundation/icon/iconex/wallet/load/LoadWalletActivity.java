@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
@@ -92,7 +93,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
             boolean registered = checkRegisterAlias(alias);
 
             BundleItem item = new BundleItem();
-            item.setId(PKIUtils.hexEncode(new SecureRandom().generateSeed(3)));
+            item.setId(new Random().nextInt(999999) + 100000);
             item.setCoinType(wallet.getCoinType());
             item.setAlias(wallet.getAlias());
             item.setAddress(wallet.getAddress());

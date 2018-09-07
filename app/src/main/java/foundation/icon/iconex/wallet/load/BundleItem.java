@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class BundleItem implements Serializable {
-    String id;
+    int id;
     String coinType;
     String alias;
     String address;
@@ -15,11 +15,11 @@ public class BundleItem implements Serializable {
     String balance = "";
     String symbol;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

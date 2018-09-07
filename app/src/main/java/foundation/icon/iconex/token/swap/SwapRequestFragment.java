@@ -46,7 +46,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.widgets.MyEditText;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 
 public class SwapRequestFragment extends Fragment implements View.OnClickListener {
 
@@ -334,7 +334,7 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
 
             case R.id.btn_complete:
                 if (validateOwnBalance())
-                    mListener.onSwapRequest(editSend.getText().toString(), txtPrice.getText().toString().substring(0,2),
+                    mListener.onSwapRequest(editSend.getText().toString(), txtPrice.getText().toString().substring(0, 2),
                             txtLimit.getText().toString(), txtFee.getText().toString());
                 else
                     btnComplete.setEnabled(false);
@@ -508,7 +508,7 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
             BigInteger estLimit;
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;

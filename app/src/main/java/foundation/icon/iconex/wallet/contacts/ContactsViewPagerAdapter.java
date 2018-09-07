@@ -13,7 +13,7 @@ import foundation.icon.iconex.R;
 
 public class ContactsViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private final int PAGE_COUNT = 3;
+    private final int PAGE_COUNT = 2;
 
     private final int CONTACTS = 0;
     private final int RECENT = 1;
@@ -28,8 +28,7 @@ public class ContactsViewPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
 
         mContext = context;
-        tabTitles = new String[]{mContext.getString(R.string.contacts),
-                mContext.getString(R.string.contactsRecent), mContext.getString(R.string.contactsWallet)};
+        tabTitles = new String[]{mContext.getString(R.string.contacts), mContext.getString(R.string.contactsWallet)};
         mCoinType = coinType;
         mAddress = address;
         mEditable = false;
@@ -40,9 +39,6 @@ public class ContactsViewPagerAdapter extends FragmentStatePagerAdapter {
         if (position == CONTACTS) {
             MyContactsFragment myContactsFragment = MyContactsFragment.newInstance(mCoinType, mEditable);
             return myContactsFragment;
-        } else if (position == RECENT) {
-            ContactsFragment recent = ContactsFragment.newInstance(mCoinType, mAddress, BasicContactsAdapter.TYPE_RECENT);
-            return recent;
         } else {
             ContactsFragment wallet = ContactsFragment.newInstance(mCoinType, mAddress, BasicContactsAdapter.TYPE_WALLET);
             return wallet;

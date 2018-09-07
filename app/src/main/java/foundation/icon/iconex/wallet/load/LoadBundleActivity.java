@@ -50,8 +50,8 @@ public class LoadBundleActivity extends AppCompatActivity {
                 HashMap<String, String> icxAddresses = addrMap[0];
                 HashMap<String, String> ethAddresses = addrMap[1];
 
-                mService.requestGetBalance(icxAddresses, Constants.KS_COINTYPE_ICX);
-                mService.requestGetBalance(ethAddresses, Constants.KS_COINTYPE_ETH);
+                mService.getBalance(icxAddresses, Constants.KS_COINTYPE_ICX);
+                mService.getBalance(ethAddresses, Constants.KS_COINTYPE_ETH);
             } else {
             }
         }
@@ -68,7 +68,7 @@ public class LoadBundleActivity extends AppCompatActivity {
         public void onReceiveICXBalance(String id, String address, String result) {
 
             for (int i = 0; i < mBundle.size(); i++) {
-                if (id.equals(mBundle.get(i).getId())) {
+                if (id.equals(Integer.toString(mBundle.get(i).getId()))) {
                     mBundle.get(i).setBalance(result);
 
                     adapter.setData(mBundle);
@@ -82,7 +82,7 @@ public class LoadBundleActivity extends AppCompatActivity {
         public void onReceiveETHBalance(String id, String address, String result) {
 
             for (int i = 0; i < mBundle.size(); i++) {
-                if (id.equals(mBundle.get(i).getId())) {
+                if (id.equals(Integer.toString(mBundle.get(i).getId()))) {
                     mBundle.get(i).setBalance(result);
 
                     adapter.setData(mBundle);
@@ -93,15 +93,10 @@ public class LoadBundleActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onReceiveTokenBalance(String id, String address, String result) {
-
-        }
-
-        @Override
         public void onReceiveError(String id, String address, int code) {
 
             for (int i = 0; i < mBundle.size(); i++) {
-                if (id.equals(mBundle.get(i).getId())) {
+                if (id.equals(Integer.toString(mBundle.get(i).getId()))) {
                     mBundle.get(i).setBalance(MyConstants.NO_BALANCE);
 
                     adapter.setData(mBundle);
@@ -116,7 +111,7 @@ public class LoadBundleActivity extends AppCompatActivity {
         public void onReceiveException(String id, String address, String msg) {
 
             for (int i = 0; i < mBundle.size(); i++) {
-                if (id.equals(mBundle.get(i).getId())) {
+                if (id.equals(Integer.toString(mBundle.get(i).getId()))) {
                     mBundle.get(i).setBalance(MyConstants.NO_BALANCE);
 
                     adapter.setData(mBundle);
@@ -194,9 +189,9 @@ public class LoadBundleActivity extends AppCompatActivity {
 
         for (BundleItem item : mBundle) {
             if (item.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                icxAddresses.put(item.getId(), item.getAddress());
+                icxAddresses.put(Integer.toString(item.getId()), item.getAddress());
             } else {
-                ethAddresses.put(item.getId(), MyConstants.PREFIX_ETH + item.getAddress());
+                ethAddresses.put(Integer.toString(item.getId()), MyConstants.PREFIX_ETH + item.getAddress());
             }
         }
 

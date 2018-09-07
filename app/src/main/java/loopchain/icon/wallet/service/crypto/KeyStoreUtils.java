@@ -1,7 +1,5 @@
 package loopchain.icon.wallet.service.crypto;
 
-import android.util.Log;
-
 import com.google.gson.JsonObject;
 
 import org.spongycastle.crypto.digests.SHA256Digest;

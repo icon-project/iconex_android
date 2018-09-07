@@ -6,7 +6,7 @@ import loopchain.icon.wallet.core.Constants;
 
 public class GetTransactionResultData extends RequestData {
 
-    public GetTransactionResultData(String id, String txHash) {
+    public GetTransactionResultData(int id, String txHash) {
         this.method = Constants.METHOD_GETTRANSACTIONRESULT;
         this.id = id;
         

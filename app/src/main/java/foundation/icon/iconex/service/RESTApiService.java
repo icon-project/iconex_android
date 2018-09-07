@@ -9,6 +9,7 @@ import loopchain.icon.wallet.core.response.TRResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -18,7 +19,8 @@ import retrofit2.http.Query;
 
 public interface RESTApiService {
 
-    @POST(ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_VERSION)
+    @Headers("Content-Type: application/json; charset=utf-8")
+    @POST(ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3)
     Call<LCResponse> sendRequest(@Body RequestData requestData);
 
     @GET(ServiceConstants.TR_API_VERSION + ServiceConstants.TR_API_EX_HEADER)

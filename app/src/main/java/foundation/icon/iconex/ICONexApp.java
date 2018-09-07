@@ -55,7 +55,7 @@ public class ICONexApp extends Application {
     private Handler lockTimeLimiter = new Handler();
 
     // ========== Preference ================
-    public static final boolean isMain = false;
+    public static int network = 0;
 
     // ========== Preference ================
     public static String version = "";

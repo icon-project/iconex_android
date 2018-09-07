@@ -15,10 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.ServiceConstants;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 
 /**
  * Created by js on 2018. 3. 29..
@@ -73,11 +74,20 @@ public class TrackerDialog extends Dialog implements View.OnClickListener {
                 break;
 
             case R.id.btn_tracker:
-                String tracker;
-                if (isMain)
-                    tracker = ServiceConstants.URL_TRACKER_MAIN;
-                else
-                    tracker = ServiceConstants.URL_TRACKER_TEST;
+                String tracker = null;
+                switch (network) {
+                    case MyConstants.NETWORK_MAIN:
+                        tracker = ServiceConstants.URL_TRACKER_MAIN;
+                        break;
+
+                    case MyConstants.NETWORK_TEST:
+                        tracker = ServiceConstants.URL_TRACKER_TEST;
+                        break;
+
+                    case MyConstants.NETWORK_DEV:
+                        tracker = ServiceConstants.DEV_TRACKER;
+                        break;
+                }
 
                 String url = tracker + txHash;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
