@@ -180,21 +180,41 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_next"
-        style="@style/Widget.AppCompat.Button.Borderless"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="72dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/bg_rounded_button_a"
-        android:enabled="false"
-        android:fontFamily="@font/noto_sans_medium"
-        android:gravity="center"
-        android:text="@string/next"
-        android:textAllCaps="false"
-        android:textColor="@color/button_text"
-        android:textSize="16dp" />
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btn_back"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_rounded_button_a"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:text="@string/back"
+            android:textAllCaps="false"
+            android:textColor="@color/button_text"
+            android:textSize="16dp" />
+
+        <Button
+            android:id="@+id/btn_next"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_colored_rounded_button_a"
+            android:enabled="false"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:text="@string/next"
+            android:textAllCaps="false"
+            android:textColor="@color/button_text"
+            android:textSize="16dp" />
+    </LinearLayout>
 </RelativeLayout>

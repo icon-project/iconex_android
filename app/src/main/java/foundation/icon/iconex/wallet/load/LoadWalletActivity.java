@@ -17,10 +17,10 @@ import java.util.Random;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.widgets.NonSwipeViewPager;
 import loopchain.icon.wallet.core.Constants;
@@ -167,6 +167,11 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     }
 
     @Override
+    public void onKeyStoreBack() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+    }
+
+    @Override
     public void onDoneLoadWalletByKeyStore(String alias) {
         mAlias = alias;
         Wallet wallet = new Wallet();
@@ -265,6 +270,24 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     }
 
     @Override
+    public void onNameBack() {
+
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+    }
+
+    @Override
+    public void onPrivBack() {
+
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+    }
+
+    @Override
+    public void onInfoBack() {
+
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_BUNDLE_LIST) {
             if (resultCode == LoadBundleActivity.RES_LOAD) {
@@ -285,9 +308,23 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
 
     @Override
     public void onBackPressed() {
-        if (viewPager.getCurrentItem() == 0)
-            super.onBackPressed();
-        else
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+        if (viewPager.getCurrentItem() == 0) {
+            finish();
+        } else {
+            Basic2ButtonDialog dialog = new Basic2ButtonDialog(LoadWalletActivity.this);
+            dialog.setMessage(getString(R.string.cancelLoadWallet));
+            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                @Override
+                public void onOk() {
+                    finish();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+            dialog.show();
+        }
     }
 }

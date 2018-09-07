@@ -30,9 +30,9 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.BottomItemSelectActivity;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.DropdownLayout;
 import foundation.icon.iconex.widgets.MyEditText;
 import loopchain.icon.wallet.core.Constants;
@@ -52,7 +52,7 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
     private View linePriv;
     private Button btnPrivDelete;
     private TextView txtPrivWarning;
-    private Button btnNext;
+    private Button btnNext, btnBack;
 
     private String mCoinType;
     private String mPrivateKey;
@@ -165,6 +165,7 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
                     btnPrivDelete.setVisibility(View.VISIBLE);
                 } else {
                     btnPrivDelete.setVisibility(View.INVISIBLE);
+                    btnNext.setEnabled(false);
                 }
 
 //                int lines = editPriv.getLineCount();
@@ -209,6 +210,8 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
 
         btnNext = v.findViewById(R.id.btn_next);
         btnNext.setOnClickListener(this);
+        btnBack = v.findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(this);
 
         return v;
     }
@@ -225,7 +228,6 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
 
             case R.id.btn_priv_delete:
                 editPriv.setText("");
-                btnNext.setEnabled(false);
                 txtPrivWarning.setVisibility(View.INVISIBLE);
                 if (editPriv.isFocused())
                     linePriv.setBackgroundColor(getResources().getColor(R.color.editActivated));
@@ -234,7 +236,13 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
                 break;
 
             case R.id.btn_next:
+                clear();
                 mListener.onLoadPrivateKeyNext(mCoinType, mPrivateKey);
+                break;
+
+            case R.id.btn_back:
+                clear();
+                mListener.onPrivBack();
                 break;
         }
     }
@@ -391,10 +399,18 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
 
     public interface OnLoadPrivateKeyListener {
         void onLoadPrivateKeyNext(String coinType, String privKey);
+
+        void onPrivBack();
     }
 
     private void makeCoinList() {
         coinList.add("ICON (ICX)");
         coinList.add("Ethereum (ETH)");
+    }
+
+    private void clear() {
+        dropDown.setItem(getString(R.string.coin_icx));
+        mCoinType = Constants.KS_COINTYPE_ICX;
+        editPriv.setText("");
     }
 }
