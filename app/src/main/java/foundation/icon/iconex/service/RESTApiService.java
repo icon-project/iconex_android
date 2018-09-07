@@ -23,10 +23,10 @@ public interface RESTApiService {
     @POST(ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3)
     Call<LCResponse> sendRequest(@Body RequestData requestData);
 
-    @GET(ServiceConstants.TR_API_VERSION + ServiceConstants.TR_API_EX_HEADER)
+    @GET(ServiceConstants.TR_V0 + ServiceConstants.TR_API_EX_HEADER)
     Call<TRResponse> sendGetExchangeList(@Query("codeList") String codeList);
 
-    @GET(ServiceConstants.TR_API_VERSION + ServiceConstants.TR_API_TX_LIST_HEADER)
+    @GET(ServiceConstants.TR_V3 + ServiceConstants.TR_API_TX_LIST_HEADER)
     Call<TRResponse> sendGetTxList(@Query("address") String address, @Query("page") int page);
 
     @GET(ServiceConstants.VS_API)

@@ -5,6 +5,8 @@ package foundation.icon.iconex.service;
  */
 
 public class ServiceConstants {
+
+    // ICON
     public static final String TRUSTED_HOST_MAIN = "https://wallet.icon.foundation";
     public static final String TRUSTED_HOST_TEST = "https://testwallet.icon.foundation";
 
@@ -14,27 +16,25 @@ public class ServiceConstants {
     public static final String DEV_HOST = "http://13.209.103.183:9000";
 
     public static final String LC_API_HEADER = "/api";
-    public static final String LC_API_V2 = "/v2";
     public static final String LC_API_V3 = "/v3";
 
-    public static final String TR_API_VERSION = "/v0";
-    public static final String TR_API_EX_HEADER = "/exchange/currentExchangeList";
-    public static final String TR_API_TX_LIST_HEADER = "/wallet/walletDetailTxList";
-
-    public static final String TRUSTED_TRACKER_MAIN = "https://tracker.icon.foundation";
-    public static final String TRUSTED_TRACKER_TEST = "https://trackerdev.icon.foundation";
-
+    // ICON Tracker
     public static final String URL_TRACKER_MAIN = "https://tracker.icon.foundation/transaction/";
     public static final String URL_TRACKER_TEST = "https://trackerdev.icon.foundation/transaction/";
-
     public static final String DEV_TRACKER = "http://trackerlocaldev.icon.foundation";
 
-    public static final String URL_ETHERSCAN = "https://etherscan.io/";
-    public static final String URL_ROPSTEN = "https://ropsten.etherscan.io/";
+    public static final String TR_V0 = "/v0";
+    public static final String TR_V3 = "/v3";
+    public static final String TR_API_EX_HEADER = "/exchange/currentExchangeList";
+    public static final String TR_API_TX_LIST_HEADER = "/address/txList";
 
     public static final String URL_VERSION_MAIN = "https://tracker.icon.foundation";
     public static final String URL_VERSION_TEST = "https://trackerdev.icon.foundation";
     public static final String VS_API = "/app/and.json";
+
+    // Ethereum
+    public static final String URL_ETHERSCAN = "https://etherscan.io/";
+    public static final String URL_ROPSTEN = "https://ropsten.etherscan.io/";
 
     public static final String RAW_JSON = "https://raw.githubusercontent.com";
     public static final String ETH_TOKENS = "/kvhnuke/etherwallet/mercury/app/scripts/tokens/ethTokens.json";
