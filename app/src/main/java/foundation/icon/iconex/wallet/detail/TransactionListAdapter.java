@@ -186,12 +186,12 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 itemViewHolder.txtDate.setTextColor(mContext.getResources().getColor(R.color.colorRemittance));
                 itemViewHolder.txtValue.setTextColor(mContext.getResources().getColor(R.color.colorRemittance));
                 itemViewHolder.txtSymbol.setTextColor(mContext.getResources().getColor(R.color.colorRemittance));
-                itemViewHolder.txtValue.setText("-" + item.getAmount());
+                itemViewHolder.txtValue.setText("- " + item.getAmount());
             } else {
                 itemViewHolder.txtDate.setTextColor(mContext.getResources().getColor(R.color.colorDeposit));
                 itemViewHolder.txtValue.setTextColor(mContext.getResources().getColor(R.color.colorDeposit));
                 itemViewHolder.txtSymbol.setTextColor(mContext.getResources().getColor(R.color.colorDeposit));
-                itemViewHolder.txtValue.setText("+" + item.getAmount());
+                itemViewHolder.txtValue.setText("+ " + item.getAmount());
             }
             itemViewHolder.txtSymbol.setText(entry.getSymbol());
         }
