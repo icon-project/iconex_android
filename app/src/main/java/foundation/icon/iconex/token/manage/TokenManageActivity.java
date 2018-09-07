@@ -14,9 +14,10 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.WalletEntry;
 import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import loopchain.icon.wallet.core.Constants;
 
 public class TokenManageActivity extends AppCompatActivity implements View.OnClickListener, TokenListFragment.OnTokenListClickListener,
-        TokenManageFragment.OnTokenManageListener {
+        TokenManageFragment.OnTokenManageListener, IrcListFragment.OnIrcListListener {
 
     private static final String TAG = TokenManageActivity.class.getSimpleName();
 
@@ -29,17 +30,24 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
 
     private final String TAG_ADD = "TAG_ADD";
     private final String TAG_MOD = "TAG_MOD";
+    private final String TAG_IRC = "TAG_IRC";
 
     private FragmentManager fragmentManager;
 
     private TokenListFragment listFragment;
     private TokenManageFragment addFragment;
     private TokenManageFragment modFragment;
+    private IrcListFragment ircFragment;
+
+    private TOKEN_TYPE tokenType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_token_manage);
+
+        if (getIntent().getExtras() != null)
+            tokenType = (TOKEN_TYPE) getIntent().getExtras().get("type");
 
         mWalletInfo = (WalletInfo) getIntent().getSerializableExtra("walletInfo");
 
@@ -127,7 +135,13 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         btnEdit.setText(getString(R.string.edit));
         txtTitle.setText(entry.getUserName());
 
-        modFragment = TokenManageFragment.newInstance(mWalletInfo.getAddress(), MyConstants.MODE_TOKEN.MOD, entry);
+        TOKEN_TYPE tokenType;
+        if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX))
+            tokenType = TOKEN_TYPE.IRC;
+        else
+            tokenType = TOKEN_TYPE.ERC;
+
+        modFragment = TokenManageFragment.newInstance(mWalletInfo.getAddress(), MyConstants.MODE_TOKEN.MOD, tokenType, entry);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.addToBackStack(TAG_MOD);
         transaction.add(R.id.container, modFragment);
@@ -156,10 +170,43 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onTokenAdd() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.addToBackStack(TAG_ADD);
-        addFragment = TokenManageFragment.newInstance(mWalletInfo.getAddress(), MyConstants.MODE_TOKEN.ADD, null);
-        transaction.add(R.id.container, addFragment);
+
+        if (tokenType == TOKEN_TYPE.IRC) {
+            ircFragment = IrcListFragment.newInstance(mWalletInfo.getAddress());
+            transaction.add(R.id.container, ircFragment);
+            transaction.addToBackStack(TAG_IRC);
+        } else {
+            addFragment = TokenManageFragment.newInstance(mWalletInfo.getAddress(), MyConstants.MODE_TOKEN.ADD,
+                    TOKEN_TYPE.ERC, null);
+            transaction.add(R.id.container, addFragment);
+            transaction.addToBackStack(TAG_ADD);
+        }
+
         transaction.commit();
+    }
+
+    @Override
+    public void enterInfo() {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        fragmentManager.popBackStackImmediate();
+        addFragment = TokenManageFragment.newInstance(mWalletInfo.getAddress(), MyConstants.MODE_TOKEN.ADD,
+                TOKEN_TYPE.IRC, null);
+        transaction.add(R.id.container, addFragment);
+        transaction.addToBackStack(TAG_ADD);
+
+        transaction.commit();
+    }
+
+    @Override
+    public void onListClose() {
+        fragmentManager.popBackStackImmediate();
+        txtTitle.setText(getString(R.string.tokenManageTitle));
+
+        btnEdit.setSelected(false);
+        btnEdit.setText(getString(R.string.edit));
+        btnEdit.setVisibility(View.INVISIBLE);
+
+        listFragment.tokenNotifyDataChanged();
     }
 
     @Override
@@ -196,4 +243,10 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         } else
             super.onBackPressed();
     }
+
+    public enum TOKEN_TYPE {
+        IRC,
+        ERC
+    }
+
 }

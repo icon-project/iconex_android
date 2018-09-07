@@ -220,7 +220,7 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
     }
 
     public enum RESULT_PWD {
-        REMITTANCE,
+        TRANSFER,
         BACKUP,
         SWAP,
         REMOVE

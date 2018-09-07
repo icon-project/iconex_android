@@ -88,8 +88,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
     private Button btnSend;
 
-    private String balance;
-    private BigInteger eth;
+    private BigInteger balance;
 
     private String CODE_EXCHANGE = "ethusd";
     private String EXCHANGE_PRICE = "";
@@ -179,7 +178,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                 .setText(String.format(getString(R.string.possessionAmount), mWalletEntry.getSymbol()));
         ((TextView) findViewById(R.id.txt_send_amount))
                 .setText(String.format(getString(R.string.sendAmount), mWalletEntry.getSymbol()));
-        ((TextView) findViewById(R.id.txt_send_fee)).setText(getString(R.string.ethEstiFee));
+        ((TextView) findViewById(R.id.txt_send_fee)).setText(String.format(getString(R.string.estiFee), MyConstants.SYMBOL_ETH));
         ((TextView) findViewById(R.id.txt_remain_amount))
                 .setText(String.format(getString(R.string.ethEstiRemain), mWalletEntry.getSymbol()));
         btnBack = findViewById(R.id.btn_back);
@@ -596,9 +595,9 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
     public void onResume() {
         super.onResume();
 
-        eth = new BigInteger(mWalletEntry.getBalance());
+        balance = new BigInteger(mWalletEntry.getBalance());
 
-        ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(eth, mWalletEntry.getDefaultDec()));
+        ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
         ((TextView) findViewById(R.id.txt_fee)).setText(calculateFee());
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
         if (strPrice != null) {
@@ -608,7 +607,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
                 txtTransSend.setText(String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE));
             } else {
-                Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(eth, mWalletEntry.getDefaultDec()))
+                Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()))
                         * Double.parseDouble(strPrice);
 
                 String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
@@ -798,26 +797,26 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
         if (editSend.getText().toString().isEmpty()) {
             if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                if (eth.compareTo(bigFee) < 0) {
-                    bigRemain = bigFee.subtract(eth);
+                if (balance.compareTo(bigFee) < 0) {
+                    bigRemain = bigFee.subtract(balance);
                     isNegative = true;
                 } else {
-                    bigRemain = eth.subtract(bigFee);
+                    bigRemain = balance.subtract(bigFee);
                     isNegative = false;
                 }
             } else {
-                bigRemain = eth;
+                bigRemain = balance;
                 isNegative = false;
             }
         } else {
             bigSend = ConvertUtil.valueToBigInteger(value, mWalletEntry.getDefaultDec());
-            switch (eth.compareTo(bigSend)) {
+            switch (balance.compareTo(bigSend)) {
                 case -1:
                     if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                        bigRemain = (bigSend.add(bigFee)).subtract(eth);
+                        bigRemain = (bigSend.add(bigFee)).subtract(balance);
                         isNegative = true;
                     } else {
-                        bigRemain = bigSend.subtract(eth);
+                        bigRemain = bigSend.subtract(balance);
                         isNegative = true;
                     }
                     break;
@@ -826,22 +825,22 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                         bigRemain = bigFee;
                         isNegative = true;
                     } else {
-                        bigRemain = eth.subtract(bigSend);
+                        bigRemain = balance.subtract(bigSend);
                         isNegative = false;
                     }
                     break;
                 case 1:
                     if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
                         BigInteger realBigSend = bigSend.add(bigFee);
-                        if (eth.compareTo(realBigSend) < 0) {
-                            bigRemain = realBigSend.subtract(eth);
+                        if (balance.compareTo(realBigSend) < 0) {
+                            bigRemain = realBigSend.subtract(balance);
                             isNegative = true;
                         } else {
-                            bigRemain = eth.subtract(realBigSend);
+                            bigRemain = balance.subtract(realBigSend);
                             isNegative = false;
                         }
                     } else {
-                        bigRemain = eth.subtract(bigSend);
+                        bigRemain = balance.subtract(bigSend);
                         isNegative = false;
                     }
                     break;
@@ -911,14 +910,14 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         BigInteger fee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
 
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-            BigInteger canICX = eth.subtract(fee);
+            BigInteger canICX = balance.subtract(fee);
             if (sendAmount.equals(BigInteger.ZERO)) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
                 txtSendWarning.setText(getString(R.string.errNonZero));
 
                 return false;
-            } else if (eth.compareTo(sendAmount) < 0) {
+            } else if (balance.compareTo(sendAmount) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
                 txtSendWarning.setText(getString(R.string.errNotEnough));
@@ -941,7 +940,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                 txtSendWarning.setText(getString(R.string.errNonZero));
 
                 return false;
-            } else if (eth.compareTo(sendAmount) < 0) {
+            } else if (balance.compareTo(sendAmount) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
                 txtSendWarning.setText(getString(R.string.errNotEnough));

@@ -183,6 +183,9 @@
     <string name="tokenSymbol">Token Symbol</string>
     <string name="tokenDecimals">Number of Decimals</string>
 
+    <string name="msgNoToken">목록에 토큰이 없다면 직접 입력하여 추가해주세요.</string>
+    <string name="enterTokenInfo">토큰 정보 입력</string>
+
     <string name="msgTokenDelete">Do you want to delete\n%s ?</string>
     <string name="msgTokenCancelMod">Are you sure you want to cancel?</string>
 
@@ -220,7 +223,7 @@
 
     <string name="hintGasLimit">Enter gas limit</string>
     <string name="hintData">Enter data</string>
-    <string name="ethEstiFee">Estimated Maximum Fee(ETH)</string>
+    <string name="estiFee">Estimated Maximum Fee(%s)</string>
     <string name="ethEstiRemain">Estimated Balance (%s)</string>
 
     <string name="errCantWithdraw">You have 0 balance.\nPlease deposit and transfer.</string>

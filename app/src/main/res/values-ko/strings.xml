@@ -182,6 +182,9 @@
     <string name="tokenSymbol">토큰 기호 (Token Symbol)</string>
     <string name="tokenDecimals">소수 자리 수 (Number of Decimals)</string>
 
+    <string name="msgNoToken">목록에 토큰이 없다면 직접 입력하여 추가해주세요.</string>
+    <string name="enterTokenInfo">토큰 정보 입력</string>
+
     <string name="msgTokenDelete">%s 을(를)\n삭제하시겠습니까?</string>
     <string name="msgTokenCancelMod">토큰 정보 수정을\n취소하시겠습니까?</string>
 
@@ -219,7 +222,7 @@
 
     <string name="hintGasLimit">가스 한도 입력</string>
     <string name="hintData">데이터 입력</string>
-    <string name="ethEstiFee">예상 최대 수수료 (ETH)</string>
+    <string name="estiFee">예상 최대 수수료 (%s)</string>
     <string name="ethEstiRemain">송금 후 예상 잔액 (%s)</string>
 
     <string name="errCantWithdraw">코인 보유량이 없습니다.\n입금 후 송금해 주세요.</string>

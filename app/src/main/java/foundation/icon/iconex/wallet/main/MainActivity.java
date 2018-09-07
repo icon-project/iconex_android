@@ -235,37 +235,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
-        public void onReceiveTokenBalance(String id, String address, String result) {
-
-            if (isForeground) {
-                String ownAddress = address.substring(2);
-
-                for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-                    if (ownAddress.equals(ICONexApp.mWallets.get(i).getAddress())) {
-                        for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                            if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
-                                ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(result);
-
-                                if (isForeground) {
-                                    if (mViewType == ViewType.WALLETS)
-                                        walletViewPagerAdapter.notifyDataSetChanged();
-                                    else
-                                        coinViewPagerAdapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                boolean isDone = isDoneRequest();
-                if (isDone) {
-                    balanceLoading.setVisibility(View.GONE);
-                    setTotalAsset();
-                }
-            }
-        }
-
-        @Override
         public void onReceiveError(String id, String address, int code) {
 
             if (address.startsWith(MyConstants.PREFIX_ETH))
@@ -531,16 +500,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         balanceLoading.setVisibility(View.VISIBLE);
 
-        Object[] balanceList = makeRQBalanceList();
-        HashMap<String, String> icxAddresses = (HashMap<String, String>) balanceList[0];
-        HashMap<String, String> ethAddresses = (HashMap<String, String>) balanceList[1];
-        HashMap<String, String[]> tokenAddresses = (HashMap<String, String[]>) balanceList[2];
+        Object[] balanceList = makeGetBalanceList();
+        HashMap<String, String> icxList = (HashMap<String, String>) balanceList[0];
+        HashMap<String, String[]> ircList = (HashMap<String, String[]>) balanceList[1];
+        HashMap<String, String> ethList = (HashMap<String, String>) balanceList[2];
+        HashMap<String, String[]> ercList = (HashMap<String, String[]>) balanceList[3];
 
-        TOTAL_ENTRIES = icxAddresses.size() + ethAddresses.size() + tokenAddresses.size();
-        setTotalRequestCount(icxAddresses.size() + ethAddresses.size() + tokenAddresses.size());
-        mService.requestGetBalance(icxAddresses, Constants.KS_COINTYPE_ICX);
-        mService.requestGetBalance(ethAddresses, Constants.KS_COINTYPE_ETH);
-        mService.requestGetTokenBalance(tokenAddresses);
+        TOTAL_ENTRIES = icxList.size() + ethList.size() + ercList.size();
+        setTotalRequestCount(icxList.size() + ethList.size() + ercList.size());
+        mService.getBalance(icxList, Constants.KS_COINTYPE_ICX);
+        mService.getTokenBalance(ircList, Constants.KS_COINTYPE_ICX);
+        mService.getBalance(ethList, Constants.KS_COINTYPE_ETH);
+        mService.getTokenBalance(ercList, Constants.KS_COINTYPE_ETH);
     }
 
     public void notifyWalletChanged() {
@@ -575,17 +546,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private Object[] makeRQBalanceList() {
+    private Object[] makeGetBalanceList() {
 
         HashMap<String, String> icxList = new HashMap<>();
         HashMap<String, String> ethList = new HashMap<>();
-        HashMap<String, String[]> tokenList = new HashMap<>();
+        HashMap<String, String[]> ercList = new HashMap<>();
+        HashMap<String, String[]> ircList = new HashMap<>();
 
         for (WalletInfo info : ICONexApp.mWallets) {
             if (info.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 List<WalletEntry> entries = info.getWalletEntries();
                 for (WalletEntry entry : entries) {
-                    icxList.put(Integer.toString(entry.getId()), entry.getAddress());
+                    if (entry.getType().equals(MyConstants.TYPE_COIN))
+                        icxList.put(Integer.toString(entry.getId()), entry.getAddress());
+                    else
+                        ircList.put(Integer.toString(entry.getId()), new String[]{entry.getAddress(), entry.getContractAddress()});
                 }
             } else {
                 List<WalletEntry> entries = info.getWalletEntries();
@@ -593,13 +568,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (entry.getType().equals(MyConstants.TYPE_COIN)) {
                         ethList.put(Integer.toString(entry.getId()), MyConstants.PREFIX_ETH + entry.getAddress());
                     } else {
-                        tokenList.put(Integer.toString(entry.getId()), new String[]{MyConstants.PREFIX_ETH + entry.getAddress(), entry.getContractAddress()});
+                        ercList.put(Integer.toString(entry.getId()), new String[]{MyConstants.PREFIX_ETH + entry.getAddress(), entry.getContractAddress()});
                     }
                 }
             }
         }
 
-        return new Object[]{icxList, ethList, tokenList};
+        return new Object[]{icxList, ircList, ethList, ercList};
     }
 
     private void makeCoinNameList() {

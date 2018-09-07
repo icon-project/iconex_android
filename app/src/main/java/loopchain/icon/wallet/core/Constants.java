@@ -13,9 +13,11 @@ public class Constants {
     public static final String METHOD_GETTRANSACTIONBYADDRESS = "icx_getTransactionByAddress";
     public static final String METHOD_GETTOTALSUPPLY = "icx_getTotalSupply";
     public static final String METHOD_ICXCALL = "icx_call";
+    public static final String METHOD_GETSCOREAPI = "icx_getScoreApi";
 
     public static final String METHOD_GETSTEPPRICE = "getStepPrice";
     public static final String METHOD_GETSTEPCOSTS = "getStepCosts";
+    public static final String METHOD_GETTOKENBALANCE = "balanceOf";
 
     public static final String ADDRESS_GOVERNANCE = "cx0000000000000000000000000000000000000001";
 

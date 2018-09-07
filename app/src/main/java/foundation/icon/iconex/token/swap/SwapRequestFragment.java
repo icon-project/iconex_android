@@ -334,7 +334,7 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
 
             case R.id.btn_complete:
                 if (validateOwnBalance())
-                    mListener.onSwapRequest(editSend.getText().toString(), txtPrice.getText().toString().substring(0,2),
+                    mListener.onSwapRequest(editSend.getText().toString(), txtPrice.getText().toString().substring(0, 2),
                             txtLimit.getText().toString(), txtFee.getText().toString());
                 else
                     btnComplete.setEnabled(false);

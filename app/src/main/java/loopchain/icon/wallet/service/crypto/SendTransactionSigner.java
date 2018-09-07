@@ -2,9 +2,13 @@ package loopchain.icon.wallet.service.crypto;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.math.BigInteger;
 
 import loopchain.icon.wallet.core.Constants;
+import loopchain.icon.wallet.core.request.Transaction;
 
 public class SendTransactionSigner {
     private static final String TAG = SendTransactionSigner.class.getSimpleName();
@@ -12,13 +16,23 @@ public class SendTransactionSigner {
     private String _method = Constants.METHOD_SENDTRANSACTION;
     private byte[] _tbs;
 
-    public SendTransactionSigner(String version, String from, String to, String value, String stepLimit, String timestamp, String nid, String nonce) {
-        _tbs = makeTbs(version, from, to, value, stepLimit, timestamp, nid, nonce);
+    public SendTransactionSigner(Transaction tx) {
+        _tbs = makeTbs(tx);
     }
 
-    private byte[] makeTbs(String version, String from, String to, String value, String stepLimit, String timestamp, String nid, String nonce) {
-        String tbs = _method + ".from." + from + ".nid." + nid + ".nonce." + nonce + ".stepLimit." + stepLimit
-                + ".timestamp." + timestamp + ".to." + to  + ".value." + value + ".version." + version;
+    private byte[] makeTbs(Transaction tx) {
+
+        String tbs;
+        if (tx.getDataType() == null)
+            tbs = _method + ".from." + tx.getFrom() + ".nid." + tx.getNid() + ".nonce." + tx.getNonce() + ".stepLimit." + tx.getStepLimit()
+                    + ".timestamp." + tx.getTimestamp() + ".to." + tx.getTo() + ".value." + tx.getValue() + ".version." + tx.getVersion();
+        else {
+            String value = new Gson().fromJson(tx.getData(), JsonObject.class).get("params").getAsJsonObject().get("_value").getAsString();
+            tbs = _method + ".data.{method.transfer.params.{_to." + tx.getDataTo() + "._value." + value + "}}.dataType.call.from." + tx.getFrom()
+                    + ".nid." + tx.getNid() + ".nonce." + tx.getNonce() + ".stepLimit." + tx.getStepLimit()
+                    + ".timestamp." + tx.getTimestamp() + ".to." + tx.getTo() + ".version." + tx.getVersion();
+        }
+
         Log.d(TAG, "tbs=" + tbs);
 
         return tbs.getBytes();
