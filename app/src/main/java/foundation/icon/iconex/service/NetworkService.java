@@ -345,10 +345,9 @@ public class NetworkService extends Service {
                             if (response.isSuccessful()) {
                                 String resCode = response.body().getResult();
                                 if (resCode.equals(MyConstants.RESULT_OK)) {
-                                    String totalData = response.body().getTotalData();
-                                    JsonObject data = response.body().getData().getAsJsonObject();
-                                    JsonArray txList = data.get("walletTx").getAsJsonArray();
-                                    mTxListCallback.onReceiveTransactionList(Integer.parseInt(totalData), txList);
+                                    int listSize = response.body().getListSize();
+                                    JsonArray data = response.body().getData().getAsJsonArray();
+                                    mTxListCallback.onReceiveTransactionList(listSize, data);
                                 } else {
                                     mTxListCallback.onReceiveError(resCode);
                                 }
