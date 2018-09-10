@@ -28,8 +28,8 @@ import java.util.List;
 
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.SwapConfirmDialog;
 import foundation.icon.iconex.dialogs.SwapRequestDoneDialog;
@@ -64,7 +64,7 @@ public class TokenSwapActivity extends AppCompatActivity implements SwapGuideFra
     private TYPE_SWAP mType;
     private static String mPriv;
 
-    private static WalletInfo mWallet;
+    private static Wallet mWallet;
     private static WalletEntry mToken;
     private static String mAddr;
 
@@ -99,7 +99,7 @@ public class TokenSwapActivity extends AppCompatActivity implements SwapGuideFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_token_swap);
 
-        mWallet = (WalletInfo) getIntent().getSerializableExtra(ARG_WALLET);
+        mWallet = (Wallet) getIntent().getSerializableExtra(ARG_WALLET);
         mToken = (WalletEntry) getIntent().getSerializableExtra(ARG_TOKEN);
         mAddr = getIntent().getStringExtra(ARG_ICX_ADDR);
         mType = (TYPE_SWAP) getIntent().getSerializableExtra(ARG_TYPE);
@@ -201,7 +201,7 @@ public class TokenSwapActivity extends AppCompatActivity implements SwapGuideFra
             noWalletAdapter = new NoWalletSwapStepAdapter(getSupportFragmentManager());
             viewPager.setAdapter(noWalletAdapter);
 
-            wallet = new WalletInfo();
+            wallet = new Wallet();
             wallet.setCoinType(Constants.KS_COINTYPE_ICX);
         } else {
             swapStep = layoutInflater.inflate(R.layout.layout_swap_step1, null);
@@ -401,7 +401,7 @@ public class TokenSwapActivity extends AppCompatActivity implements SwapGuideFra
         return isDownloaded;
     }
 
-    private WalletInfo wallet;
+    private Wallet wallet;
 
     private class CreateKeyStore extends AsyncTask<String, Void, String[]> {
         @Override
@@ -454,7 +454,7 @@ public class TokenSwapActivity extends AppCompatActivity implements SwapGuideFra
         }
     }
 
-    public static WalletInfo getWallet() {
+    public static Wallet getWallet() {
         return mWallet;
     }
 

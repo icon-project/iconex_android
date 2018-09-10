@@ -1,4 +1,4 @@
-package foundation.icon.iconex.control;
+package foundation.icon.iconex.wallet;
 
 import android.os.Parcel;
 import android.os.Parcelable;

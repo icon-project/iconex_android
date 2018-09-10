@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 
 /**
  * Created by js on 2018. 4. 24..
@@ -33,7 +33,7 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        WalletInfo wallet = ICONexApp.mWallets.get(position);
+        Wallet wallet = ICONexApp.mWallets.get(position);
         holder.txtAlias.setText(wallet.getAlias());
     }
 
@@ -67,6 +67,6 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
     }
 
     public interface OnWalletClickListener {
-        void onWalletClick(WalletInfo wallet);
+        void onWalletClick(Wallet wallet);
     }
 }

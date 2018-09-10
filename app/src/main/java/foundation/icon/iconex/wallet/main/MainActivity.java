@@ -35,8 +35,8 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.TitleMsgDialog;
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<String> walletNames;
     private List<String> coinNames;
-    private HashMap<String, List<WalletInfo>> coinsMap;
+    private HashMap<String, List<Wallet>> coinsMap;
     private List<CoinsViewItem> coinsList;
 
     private boolean mBound = false;
@@ -541,8 +541,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void makeNameList() {
         walletNames = new ArrayList<>();
-        for (WalletInfo walletInfo : ICONexApp.mWallets) {
-            walletNames.add(walletInfo.getAlias());
+        for (Wallet wallet : ICONexApp.mWallets) {
+            walletNames.add(wallet.getAlias());
         }
     }
 
@@ -553,7 +553,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         HashMap<String, String[]> ercList = new HashMap<>();
         HashMap<String, String[]> ircList = new HashMap<>();
 
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (info.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 List<WalletEntry> entries = info.getWalletEntries();
                 for (WalletEntry entry : entries) {
@@ -580,7 +580,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void makeCoinNameList() {
         coinNames = new ArrayList<>();
 
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 String coinName;
                 if (entry.getType().equals(MyConstants.TYPE_COIN))
@@ -603,10 +603,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private HashMap<String, List<WalletInfo>> makeListFromCoin() {
-        HashMap<String, List<WalletInfo>> coinsMap = new HashMap<>();
+    private HashMap<String, List<Wallet>> makeListFromCoin() {
+        HashMap<String, List<Wallet>> coinsMap = new HashMap<>();
 
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 String key;
                 if (entry.getType().equals(MyConstants.TYPE_COIN))
@@ -619,11 +619,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 if (!coinsMap.containsKey(key)) {
-                    List<WalletInfo> walletList = new ArrayList<>();
+                    List<Wallet> walletList = new ArrayList<>();
                     walletList.add(wallet);
                     coinsMap.put(key, walletList);
                 } else {
-                    List<WalletInfo> walletList = coinsMap.get(key);
+                    List<Wallet> walletList = coinsMap.get(key);
                     walletList.add(wallet);
                     coinsMap.put(key, walletList);
                 }
@@ -636,7 +636,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<CoinsViewItem> makeListFromCoins() {
         List<CoinsViewItem> list = new ArrayList<>();
 
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 String key;
                 if (entry.getType().equals(MyConstants.TYPE_COIN))
@@ -657,7 +657,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 if (itemPos >= 0) {
-                    List<WalletInfo> wallets = list.get(itemPos).getWallets();
+                    List<Wallet> wallets = list.get(itemPos).getWallets();
                     wallets.add(wallet);
                     list.get(itemPos).setWallets(wallets);
                 } else {
@@ -670,7 +670,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     item.setName(key);
                     item.setSymbol(entry.getSymbol());
 
-                    List<WalletInfo> wallets = new ArrayList<>();
+                    List<Wallet> wallets = new ArrayList<>();
                     wallets.add(wallet);
                     item.setWallets(wallets);
 
@@ -757,7 +757,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setTotalAsset() {
         Double totalAsset = 0.0;
         int cntNoBalance = 0;
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             for (WalletEntry entry : info.getWalletEntries()) {
 
                 if (!entry.getBalance().isEmpty()) {

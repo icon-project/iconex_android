@@ -39,8 +39,8 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -52,7 +52,7 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
 
     private static final String TAG = SwapRequestFragment.class.getSimpleName();
 
-    private WalletInfo mWallet;
+    private Wallet mWallet;
     private WalletEntry mToken;
 
     private final BigInteger mLimit = new BigInteger("55000");

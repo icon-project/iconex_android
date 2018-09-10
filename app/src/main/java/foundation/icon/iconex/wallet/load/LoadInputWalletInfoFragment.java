@@ -21,8 +21,8 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.control.PasswordValidator;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -40,7 +40,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
     private Button btnAliasDel, btnPwdDel, btnCheckDel;
     private Button btnPwdView, btnCheckView;
 
-    private Button btnDone;
+    private Button btnDone, btnBack;
 
     private InputMethodManager mImm;
 
@@ -318,6 +318,8 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
         btnDone = v.findViewById(R.id.btn_done);
         btnDone.setOnClickListener(this);
+        btnBack = v.findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(this);
 
         mImm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
 
@@ -363,6 +365,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
             case R.id.btn_done:
                 mListener.onDoneInputWalletInfo(editAlias.getText().toString(), editPwd.getText().toString());
+                break;
+
+            case R.id.btn_back:
+                clear();
+                mListener.onInfoBack();
                 break;
         }
     }
@@ -431,7 +438,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         if (alias.trim().length() == 0)
             return ALIAS_EMPTY;
 
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (info.getAlias().equals(alias)) {
                 return ALIAS_DUP;
             }
@@ -487,7 +494,15 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             btnDone.setEnabled(false);
     }
 
+    private void clear() {
+        editAlias.setText("");
+        editPwd.setText("");
+        editCheck.setText("");
+    }
+
     public interface OnInputWalletInfoListener {
         void onDoneInputWalletInfo(String name, String pwd);
+
+        void onInfoBack();
     }
 }

@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -53,8 +53,8 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
         WalletListAdapter adapter = new WalletListAdapter(getActivity());
         adapter.setOnWalletClickListener(new WalletListAdapter.OnWalletClickListener() {
             @Override
-            public void onWalletClick(WalletInfo wallet) {
-                mWalletInfo = wallet;
+            public void onWalletClick(Wallet wallet) {
+                mWallet = wallet;
                 dialog = new EditTextDialog(getActivity(), getString(R.string.enterWalletPassword));
                 dialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
                 dialog.setPasswordType(EditTextDialog.RESULT_PWD.TRANSFER);
@@ -85,13 +85,13 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
         mListener = null;
     }
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
     private EditTextDialog dialog;
 
     private EditTextDialog.OnPasswordCallback onPasswordCallback = new EditTextDialog.OnPasswordCallback() {
         @Override
         public void onConfirm(EditTextDialog.RESULT_PWD result, String text) {
-            JsonObject keyStore = new Gson().fromJson(mWalletInfo.getKeyStore(), JsonObject.class);
+            JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
             byte[] bytePrivKey;
             try {
                 JsonObject crypto;
@@ -100,7 +100,7 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
                 else
                     crypto = keyStore.get("Crypto").getAsJsonObject();
 
-                bytePrivKey = KeyStoreUtils.decryptPrivateKey(text, mWalletInfo.getAddress(), crypto, mWalletInfo.getCoinType());
+                bytePrivKey = KeyStoreUtils.decryptPrivateKey(text, mWallet.getAddress(), crypto, mWallet.getCoinType());
                 if (bytePrivKey != null) {
                     mListener.onVerification();
 
@@ -115,7 +115,7 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
     };
 
     @Override
-    public void onWalletClick(WalletInfo wallet) {
+    public void onWalletClick(Wallet wallet) {
 
     }
 

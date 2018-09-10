@@ -18,8 +18,8 @@ import java.util.List;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.token.IrcToken;
 import loopchain.icon.wallet.core.Constants;
 
@@ -107,7 +107,7 @@ public class IrcListAdapter extends RecyclerView.Adapter {
     private void makeTokenList() {
         ownTokens = new ArrayList<>();
 
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 if (wallet.getAddress().equals(address)) {
                     for (WalletEntry entry : wallet.getWalletEntries()) {

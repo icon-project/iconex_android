@@ -15,8 +15,8 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.util.ConvertUtil;
 
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
@@ -32,17 +32,17 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
     private Context mContext;
     private List<WalletEntry> mData;
     private LayoutInflater mInflater;
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
     private ItemClickListener mClickListener;
 
     private final String ercIcxAddr;
 
     // data is passed into the constructor
-    public WalletRecyclerAdapter(Context context, WalletInfo walletInfo) {
+    public WalletRecyclerAdapter(Context context, Wallet wallet) {
         mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        mWalletInfo = walletInfo;
-        this.mData = mWalletInfo.getWalletEntries();
+        mWallet = wallet;
+        this.mData = mWallet.getWalletEntries();
 
         if (ICONexApp.network == MyConstants.NETWORK_MAIN)
             ercIcxAddr = MyConstants.M_ERC_ICX_ADDR;
@@ -156,14 +156,14 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
             switch (view.getId()) {
                 case R.id.btn_swap:
                     if (mClickListener != null)
-                        mClickListener.onRequestSwap(mWalletInfo.getWalletEntries().get(0),
-                                mWalletInfo.getWalletEntries().get(getAdapterPosition()));
+                        mClickListener.onRequestSwap(mWallet.getWalletEntries().get(0),
+                                mWallet.getWalletEntries().get(getAdapterPosition()));
                     break;
 
                 default:
                     if (mClickListener != null) {
-                        if (!mWalletInfo.getWalletEntries().get(getAdapterPosition()).getBalance().isEmpty())
-                            mClickListener.onItemClick(mWalletInfo.getWalletEntries().get(getAdapterPosition()));
+                        if (!mWallet.getWalletEntries().get(getAdapterPosition()).getBalance().isEmpty())
+                            mClickListener.onItemClick(mWallet.getWalletEntries().get(getAdapterPosition()));
                     }
             }
         }

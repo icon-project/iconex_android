@@ -17,7 +17,7 @@ import java.util.Locale;
 
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.realm.MyMigration;
 import foundation.icon.iconex.realm.RealmUtil;
@@ -34,7 +34,7 @@ public class ICONexApp extends Application {
 
     private static final String TAG = ICONexApp.class.getSimpleName();
 
-    public static ArrayList<WalletInfo> mWallets = new ArrayList<>();
+    public static ArrayList<Wallet> mWallets = new ArrayList<>();
 
     // ========== Exchange Rate ================
     public static List<String> EXCHANGES = new ArrayList<>();

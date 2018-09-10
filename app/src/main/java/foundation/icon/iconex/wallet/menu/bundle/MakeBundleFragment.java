@@ -22,7 +22,7 @@ import java.util.List;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -122,7 +122,7 @@ public class MakeBundleFragment extends Fragment {
         List<BundleItem> list = new ArrayList<>();
 
         BundleItem wallet;
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             wallet = new BundleItem();
             wallet.setAlias(info.getAlias());
             wallet.setBalance(getBalance(info));
@@ -136,7 +136,7 @@ public class MakeBundleFragment extends Fragment {
         return list;
     }
 
-    private String getBalance(WalletInfo info) {
+    private String getBalance(Wallet info) {
         BigInteger balance;
 
         try {
@@ -214,6 +214,6 @@ public class MakeBundleFragment extends Fragment {
     };
 
     public interface OnMakeBundleListener {
-        void onNext(List<WalletInfo> bundle, HashMap<String, String> privSet);
+        void onNext(List<Wallet> bundle, HashMap<String, String> privSet);
     }
 }

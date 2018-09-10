@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import loopchain.icon.wallet.core.Constants;
 
@@ -21,7 +21,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
 
     private static final String TAG = TokenManageActivity.class.getSimpleName();
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
 
     private ViewGroup appbar;
     private TextView txtTitle;
@@ -49,7 +49,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         if (getIntent().getExtras() != null)
             tokenType = (TOKEN_TYPE) getIntent().getExtras().get("type");
 
-        mWalletInfo = (WalletInfo) getIntent().getSerializableExtra("walletInfo");
+        mWallet = (Wallet) getIntent().getSerializableExtra("walletInfo");
 
         appbar = findViewById(R.id.appbar);
         txtTitle = findViewById(R.id.txt_title);
@@ -61,7 +61,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         btnEdit.setOnClickListener(this);
 
         fragmentManager = getSupportFragmentManager();
-        listFragment = TokenListFragment.newInstance(mWalletInfo);
+        listFragment = TokenListFragment.newInstance(mWallet);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.container, listFragment);
         transaction.commit();
@@ -136,12 +136,12 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         txtTitle.setText(entry.getUserName());
 
         TOKEN_TYPE tokenType;
-        if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX))
+        if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
             tokenType = TOKEN_TYPE.IRC;
         else
             tokenType = TOKEN_TYPE.ERC;
 
-        modFragment = TokenManageFragment.newInstance(mWalletInfo.getAddress(), MyConstants.MODE_TOKEN.MOD, tokenType, entry);
+        modFragment = TokenManageFragment.newInstance(mWallet.getAddress(), MyConstants.MODE_TOKEN.MOD, tokenType, entry);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.addToBackStack(TAG_MOD);
         transaction.add(R.id.container, modFragment);
@@ -172,11 +172,11 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         if (tokenType == TOKEN_TYPE.IRC) {
-            ircFragment = IrcListFragment.newInstance(mWalletInfo.getAddress());
+            ircFragment = IrcListFragment.newInstance(mWallet.getAddress());
             transaction.add(R.id.container, ircFragment);
             transaction.addToBackStack(TAG_IRC);
         } else {
-            addFragment = TokenManageFragment.newInstance(mWalletInfo.getAddress(), MyConstants.MODE_TOKEN.ADD,
+            addFragment = TokenManageFragment.newInstance(mWallet.getAddress(), MyConstants.MODE_TOKEN.ADD,
                     TOKEN_TYPE.ERC, null);
             transaction.add(R.id.container, addFragment);
             transaction.addToBackStack(TAG_ADD);
@@ -189,7 +189,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     public void enterInfo() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         fragmentManager.popBackStackImmediate();
-        addFragment = TokenManageFragment.newInstance(mWalletInfo.getAddress(), MyConstants.MODE_TOKEN.ADD,
+        addFragment = TokenManageFragment.newInstance(mWallet.getAddress(), MyConstants.MODE_TOKEN.ADD,
                 TOKEN_TYPE.IRC, null);
         transaction.add(R.id.container, addFragment);
         transaction.addToBackStack(TAG_ADD);

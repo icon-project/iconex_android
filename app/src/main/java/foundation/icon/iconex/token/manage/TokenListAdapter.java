@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
+import foundation.icon.iconex.wallet.WalletEntry;
 
 /**
  * Created by js on 2018. 4. 7..

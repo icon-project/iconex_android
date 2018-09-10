@@ -26,7 +26,7 @@ import java.io.Serializable;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.control.PasswordValidator;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.widgets.MyEditText;
@@ -36,7 +36,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
 
     private static final String TAG = WalletPwdChangeActivity.class.getSimpleName();
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
 
     private Button btnClose;
     private MyEditText editOldPwd, editPwd, editCheck;
@@ -61,7 +61,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_wallet_pwd_change);
 
         if (getIntent() != null) {
-            mWalletInfo = (WalletInfo) getIntent().getExtras().get("walletInfo");
+            mWallet = (Wallet) getIntent().getExtras().get("walletInfo");
         }
 
         appbar = findViewById(R.id.appbar);
@@ -365,20 +365,20 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.btn_change:
-                String address = mWalletInfo.getAddress();
-                JsonObject oldKeyStore = new Gson().fromJson(mWalletInfo.getKeyStore(), JsonObject.class);
+                String address = mWallet.getAddress();
+                JsonObject oldKeyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
                 String id = oldKeyStore.get(("id")).getAsString();
-                String newKeyStore = getKeyStore(mWalletInfo.getCoinType(), id, address, mPrivateKey, editPwd.getText().toString());
+                String newKeyStore = getKeyStore(mWallet.getCoinType(), id, address, mPrivateKey, editPwd.getText().toString());
                 if (newKeyStore != null) {
                     try {
-                        RealmUtil.modWalletPassword(mWalletInfo.getAddress(), newKeyStore);
-                        mWalletInfo.setKeyStore(newKeyStore);
+                        RealmUtil.modWalletPassword(mWallet.getAddress(), newKeyStore);
+                        mWallet.setKeyStore(newKeyStore);
                         BasicDialog dialog = new BasicDialog(this);
                         dialog.setMessage(getString(R.string.doneChangeWalletPwd));
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                setResult(RESULT_CODE, new Intent().putExtra("result", (Serializable) mWalletInfo));
+                                setResult(RESULT_CODE, new Intent().putExtra("result", (Serializable) mWallet));
                                 finish();
                             }
                         });
@@ -434,7 +434,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
     }
 
     private boolean validateCurrentPwd(String pwd) {
-        JsonObject keyStore = new Gson().fromJson(mWalletInfo.getKeyStore(), JsonObject.class);
+        JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
 
         JsonObject crypto;
         if (keyStore.has("crypto"))
@@ -444,7 +444,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
 
         byte[] privKey = null;
         try {
-            privKey = KeyStoreUtils.decryptPrivateKey(pwd, mWalletInfo.getAddress(), crypto, mWalletInfo.getCoinType());
+            privKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
         } catch (Exception e) {
             e.printStackTrace();
         }

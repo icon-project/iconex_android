@@ -15,7 +15,7 @@ import java.util.List;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import loopchain.icon.wallet.core.Constants;
 
 public class ContactsFragment extends Fragment {
@@ -92,7 +92,7 @@ public class ContactsFragment extends Fragment {
             }
 
         } else {
-            List<WalletInfo> walletList = makeWalletList();
+            List<Wallet> walletList = makeWalletList();
             if (walletList.size() == 0) {
                 emptyContacts.setVisibility(View.VISIBLE);
                 ((TextView) emptyContacts.findViewById(R.id.txt_message)).setText(getString(R.string.noWallet));
@@ -107,8 +107,8 @@ public class ContactsFragment extends Fragment {
         return v;
     }
 
-    private List<WalletInfo> makeWalletList() {
-        List<WalletInfo> list = new ArrayList<>();
+    private List<Wallet> makeWalletList() {
+        List<Wallet> list = new ArrayList<>();
         for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
             if (ICONexApp.mWallets.get(i).getCoinType().equals(mCoinType)
                     && !ICONexApp.mWallets.get(i).getAddress().equals(mAddress)) {
