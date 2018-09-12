@@ -17,12 +17,12 @@ import java.util.Locale;
 
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.realm.MyMigration;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.PreferenceUtil;
+import foundation.icon.iconex.wallet.Wallet;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -166,7 +166,7 @@ public class ICONexApp extends Application {
 
                 PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
                 boolean beingLock = preferenceUtil.getBeingLock();
-                Log.d(TAG, "beingLock=" + beingLock);
+                Log.d(TAG, "Foreground beingLock=" + beingLock);
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
                     if (activity.getLocalClassName().equals("wallet.transfer.ICONTransferActivity")
@@ -181,9 +181,11 @@ public class ICONexApp extends Application {
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     .putExtra(AuthActivity.ARG_APP_STATUS, AppStatus.RETURNED_TO_FOREGROUND));
                         } else {
+                            Log.d(TAG, "remove time callback");
                             lockTimeLimiter.removeCallbacks(mLockTimeLimitTask);
                         }
                     } else {
+                        Log.d(TAG, "remove time callback");
                         lockTimeLimiter.removeCallbacks(mLockTimeLimitTask);
                     }
 
@@ -211,6 +213,11 @@ public class ICONexApp extends Application {
                 // app goes to background
                 mAppStatus = AppStatus.BACKGROUND;
 
+                PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
+                boolean beingLock = preferenceUtil.getBeingLock();
+                if (beingLock)
+                    preferenceUtil.saveBeingLock(false);
+
                 lockTimeLimiter.postDelayed(mLockTimeLimitTask, MyConstants.LOCK_TIME_LIMIT);
             }
         }
@@ -227,6 +234,7 @@ public class ICONexApp extends Application {
     private Runnable mLockTimeLimitTask = new Runnable() {
         @Override
         public void run() {
+            Log.d(TAG, "*** Time Lock Task Executed!!");
             PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
             preferenceUtil.saveBeingLock(true);
         }
