@@ -24,7 +24,7 @@ public class MyConstants {
     public static final int CODE_OK = 0;
     public static final String RESULT_OK = "200";
 
-    public static final String PREFIX_ETH = "0x";
+    public static final String PREFIX_HEX = "0x";
     public static final String PREFIX_IRC = "cx";
 
     // ======== Realm schema version ========
@@ -69,6 +69,11 @@ public class MyConstants {
     public static final int NETWORK_DEV = 2;
   
     public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+{}:<>?]).{8,}$";
+
+    public enum CoinType {
+        ICX,
+        ETH
+    }
 
     public enum TxState {
         DONE,

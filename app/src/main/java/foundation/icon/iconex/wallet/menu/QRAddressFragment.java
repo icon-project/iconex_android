@@ -53,7 +53,7 @@ public class QRAddressFragment extends Fragment {
         if (getArguments() != null) {
             mAddress = getArguments().getString(ARG_ADDR);
             if (!mAddress.startsWith("hx"))
-                mAddress = MyConstants.PREFIX_ETH + mAddress;
+                mAddress = MyConstants.PREFIX_HEX + mAddress;
         }
     }
 

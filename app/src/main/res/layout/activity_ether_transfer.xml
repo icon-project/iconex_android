@@ -638,7 +638,7 @@
                             android:layout_toStartOf="@+id/del_data"
                             android:background="@color/colorWhite"
                             android:fontFamily="@font/noto_sans_medium"
-                            android:hint="@string/hintData"
+                            android:hint="@string/hintUtfData"
                             android:inputType="text"
                             android:paddingStart="10dp"
                             android:textSize="14dp" />

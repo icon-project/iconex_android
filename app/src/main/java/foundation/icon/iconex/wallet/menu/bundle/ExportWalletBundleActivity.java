@@ -121,7 +121,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
             walletProperties.addProperty("createdAt", info.getCreatedAt());
 
             if (info.getCoinType().equals(Constants.KS_COINTYPE_ETH))
-                wallet.add(MyConstants.PREFIX_ETH + info.getAddress(), walletProperties);
+                wallet.add(MyConstants.PREFIX_HEX + info.getAddress(), walletProperties);
             else
                 wallet.add(info.getAddress(), walletProperties);
 

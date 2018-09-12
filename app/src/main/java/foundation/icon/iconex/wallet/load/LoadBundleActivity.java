@@ -191,7 +191,7 @@ public class LoadBundleActivity extends AppCompatActivity {
             if (item.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 icxAddresses.put(Integer.toString(item.getId()), item.getAddress());
             } else {
-                ethAddresses.put(Integer.toString(item.getId()), MyConstants.PREFIX_ETH + item.getAddress());
+                ethAddresses.put(Integer.toString(item.getId()), MyConstants.PREFIX_HEX + item.getAddress());
             }
         }
 

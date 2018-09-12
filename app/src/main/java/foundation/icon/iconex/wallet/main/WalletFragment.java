@@ -133,7 +133,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_wallet_address:
                 if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ETH))
-                    ((MainActivity) getActivity()).showWalletAddress(mWallet.getAlias(), MyConstants.PREFIX_ETH + mWallet.getAddress());
+                    ((MainActivity) getActivity()).showWalletAddress(mWallet.getAlias(), MyConstants.PREFIX_HEX + mWallet.getAddress());
                 else
                     ((MainActivity) getActivity()).showWalletAddress(mWallet.getAlias(), mWallet.getAddress());
 

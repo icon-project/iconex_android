@@ -10,19 +10,19 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.token.Token;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.realm.data.CoinNToken;
 import foundation.icon.iconex.realm.data.ETHContacts;
 import foundation.icon.iconex.realm.data.ICXContacts;
 import foundation.icon.iconex.realm.data.RecentETHSend;
 import foundation.icon.iconex.realm.data.RecentICXSend;
+import foundation.icon.iconex.token.Token;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import io.realm.Realm;
 import io.realm.RealmList;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.iconex.realm.RealmUtil.COIN_TYPE.ICX;
+import static foundation.icon.iconex.MyConstants.CoinType.ICX;
 
 /**
  * Created by js on 2018. 3. 5..
@@ -294,7 +294,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addContacts(COIN_TYPE type, String name, String address) {
+    public static void addContacts(MyConstants.CoinType type, String name, String address) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;
@@ -360,7 +360,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addRecentSend(COIN_TYPE type, String txHash, String name, String address, String date, String amount, String symbol) {
+    public static void addRecentSend(MyConstants.CoinType type, String txHash, String name, String address, String date, String amount, String symbol) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;
@@ -478,23 +478,8 @@ public class RealmUtil {
         realm.close();
     }
 
-    public enum COIN_TYPE {
-        ICX,
-        ETH
-    }
-
     private static String getTimeStamp() {
         long time = System.currentTimeMillis();
         return Long.toString(time);
     }
-
-//    public static void modWalletAddress(String address) {
-//        Realm realm = Realm.getDefaultInstance();
-//        realm.beginTransaction();
-//        Wallet wallet = realm.where(Wallet.class).equalTo("address", "아니야").findFirst();
-//        wallet.setAddress(address);
-//        realm.commitTransaction();
-//
-//        realm.close();
-//    }
 }

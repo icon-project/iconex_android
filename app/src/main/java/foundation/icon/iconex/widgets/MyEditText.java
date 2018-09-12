@@ -44,8 +44,8 @@ public class MyEditText extends AppCompatEditText {
             if (mKeyPreImeListener != null) {
                 mKeyPreImeListener.onBackPressed();
 
-                InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
+//                InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                inputMethodManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
 
                 return false;
             } else {

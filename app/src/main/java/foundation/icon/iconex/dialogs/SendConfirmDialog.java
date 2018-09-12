@@ -177,8 +177,8 @@ public class SendConfirmDialog extends Dialog {
             Web3j web3j = Web3jFactory.build(new HttpService(url));
 
             try {
-                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_ETH + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
-                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_ETH + txInfo.getFromAddress(),
+                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_HEX + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
+                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_HEX + txInfo.getFromAddress(),
                         nonce.getTransactionCount(),
                         Convert.toWei(txInfo.getPrice(), Convert.Unit.GWEI).toBigInteger(),
                         new BigInteger(txInfo.getLimit()),
@@ -260,8 +260,8 @@ public class SendConfirmDialog extends Dialog {
                         Collections.<TypeReference<?>>emptyList());
                 String data = FunctionEncoder.encode(function);
                 Log.d(TAG, "Data=" + data);
-                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_ETH + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
-                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_ETH + txInfo.getFromAddress(),
+                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_HEX + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
+                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_HEX + txInfo.getFromAddress(),
                         nonce.getTransactionCount(),
                         Convert.toWei(txInfo.getPrice(), Convert.Unit.GWEI).toBigInteger(),
                         new BigInteger(txInfo.getLimit()),

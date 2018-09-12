@@ -57,7 +57,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         btnBack = findViewById(R.id.btn_close);
         btnBack.setBackgroundResource(R.drawable.ic_appbar_back);
         btnBack.setOnClickListener(this);
-        btnEdit = findViewById(R.id.btn_mod);
+        btnEdit = findViewById(R.id.txt_mod);
         btnEdit.setOnClickListener(this);
 
         fragmentManager = getSupportFragmentManager();
@@ -113,7 +113,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                     finish();
                 break;
 
-            case R.id.btn_mod:
+            case R.id.txt_mod:
                 if (!btnEdit.isSelected()) {
                     btnEdit.setSelected(true);
                     btnEdit.setText(getString(R.string.complete));

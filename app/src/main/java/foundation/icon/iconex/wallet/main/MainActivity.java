@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceiveError(String id, String address, int code) {
 
-            if (address.startsWith(MyConstants.PREFIX_ETH))
+            if (address.startsWith(MyConstants.PREFIX_HEX))
                 address = address.substring(2);
 
             for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceiveException(String id, String address, String msg) {
 
-            if (address.startsWith(MyConstants.PREFIX_ETH))
+            if (address.startsWith(MyConstants.PREFIX_HEX))
                 address = address.substring(2);
 
             for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
@@ -566,9 +566,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 List<WalletEntry> entries = info.getWalletEntries();
                 for (WalletEntry entry : entries) {
                     if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-                        ethList.put(Integer.toString(entry.getId()), MyConstants.PREFIX_ETH + entry.getAddress());
+                        ethList.put(Integer.toString(entry.getId()), MyConstants.PREFIX_HEX + entry.getAddress());
                     } else {
-                        ercList.put(Integer.toString(entry.getId()), new String[]{MyConstants.PREFIX_ETH + entry.getAddress(), entry.getContractAddress()});
+                        ercList.put(Integer.toString(entry.getId()), new String[]{MyConstants.PREFIX_HEX + entry.getAddress(), entry.getContractAddress()});
                     }
                 }
             }

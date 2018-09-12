@@ -38,13 +38,13 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
 import foundation.icon.iconex.wallet.transfer.data.ErcTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
@@ -1119,7 +1119,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
     @Nullable
     private String findContactName(String address) {
         for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-            if (address.equals(MyConstants.PREFIX_ETH + ICONexApp.mWallets.get(i).getAddress()))
+            if (address.equals(MyConstants.PREFIX_HEX + ICONexApp.mWallets.get(i).getAddress()))
                 return ICONexApp.mWallets.get(i).getAlias();
         }
 
@@ -1143,7 +1143,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         if (contactName == null)
             contactName = "";
 
-        RealmUtil.addRecentSend(RealmUtil.COIN_TYPE.ETH, "", contactName,
+        RealmUtil.addRecentSend(MyConstants.CoinType.ETH, "", contactName,
                 editAddress.getText().toString(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }

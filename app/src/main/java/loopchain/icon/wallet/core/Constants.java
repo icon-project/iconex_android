@@ -17,7 +17,11 @@ public class Constants {
 
     public static final String METHOD_GETSTEPPRICE = "getStepPrice";
     public static final String METHOD_GETSTEPCOSTS = "getStepCosts";
+    public static final String METHOD_GETMAXSTEPLIMIT = "getMaxStepLimit";
     public static final String METHOD_GETTOKENBALANCE = "balanceOf";
+
+    public static final String DATA_CALL = "call";
+    public static final String DATA_MESSAGE = "message";
 
     public static final String ADDRESS_GOVERNANCE = "cx0000000000000000000000000000000000000001";
 

@@ -536,7 +536,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                 return false;
             }
         } else {
-            if (!address.startsWith(MyConstants.PREFIX_ETH)) {
+            if (!address.startsWith(MyConstants.PREFIX_HEX)) {
                 lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtAddrWarning.setVisibility(View.VISIBLE);
                 txtAddrWarning.setText(getString(R.string.errContractAddress));

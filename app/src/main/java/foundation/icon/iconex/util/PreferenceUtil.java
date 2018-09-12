@@ -25,6 +25,8 @@ public class PreferenceUtil {
     private final String PREF_FINGERPRINT = "FINGERPRINT";
     private final String PREF_LANGUAGE = "LANGUAGE";
     private final String PREF_NETWORK = "NETWORK";
+    private final String PREF_MIN_STEP = "MIN_STEP";
+    private final String PREF_MAX_STEP = "MAX_STEP";
 
     public PreferenceUtil(Context context) {
         mContext = context;
@@ -108,6 +110,26 @@ public class PreferenceUtil {
 
             return MyConstants.NETWORK_MAIN;
         }
+    }
+
+    public void setMinStep(String min) {
+        SharedPreferences.Editor editor = mPreference.edit();
+        editor.putString(PREF_MIN_STEP, min);
+        editor.apply();
+    }
+
+    public String getMinStep() {
+        return mPreference.getString(PREF_MIN_STEP, "0");
+    }
+
+    public void setMaxStep(String max) {
+        SharedPreferences.Editor editor = mPreference.edit();
+        editor.putString(PREF_MAX_STEP, max);
+        editor.apply();
+    }
+
+    public String getMaxStep() {
+        return mPreference.getString(PREF_MAX_STEP, "0");
     }
 
     public void loadPreference() {
