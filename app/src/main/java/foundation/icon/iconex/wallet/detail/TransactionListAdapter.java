@@ -139,6 +139,9 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     headerViewHolder.txtAsset.setText(MyConstants.NO_BALANCE);
                     headerViewHolder.txtTransAsset.setText(MyConstants.NO_BALANCE);
                 }
+            } else {
+                headerViewHolder.txtAsset.setText(MyConstants.NO_BALANCE);
+                headerViewHolder.txtTransAsset.setText(MyConstants.NO_BALANCE);
             }
 
             if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
