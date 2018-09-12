@@ -506,8 +506,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         HashMap<String, String> ethList = (HashMap<String, String>) balanceList[2];
         HashMap<String, String[]> ercList = (HashMap<String, String[]>) balanceList[3];
 
-        TOTAL_ENTRIES = icxList.size() + ethList.size() + ercList.size();
-        setTotalRequestCount(icxList.size() + ethList.size() + ercList.size());
+        TOTAL_ENTRIES = icxList.size() + ircList.size() + ethList.size() + ercList.size();
+        setTotalRequestCount(icxList.size() + ircList.size() + ethList.size() + ercList.size());
         mService.getBalance(icxList, Constants.KS_COINTYPE_ICX);
         mService.getTokenBalance(ircList, Constants.KS_COINTYPE_ICX);
         mService.getBalance(ethList, Constants.KS_COINTYPE_ETH);
