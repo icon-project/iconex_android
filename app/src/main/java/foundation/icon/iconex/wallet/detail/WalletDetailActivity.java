@@ -376,14 +376,14 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 }
             } else {
                 if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                    rqWallet.put(Integer.toString(selectedEntry.getId()), MyConstants.PREFIX_ETH + mWallet.getAddress());
+                    rqWallet.put(Integer.toString(selectedEntry.getId()), MyConstants.PREFIX_HEX + mWallet.getAddress());
                     mService.getBalance(rqWallet, mWallet.getCoinType());
                 } else {
                     HashMap<String, String[]> tokenList = new HashMap<>();
                     for (WalletEntry entry : mWallet.getWalletEntries()) {
                         if (entry.getType().equals(MyConstants.TYPE_TOKEN))
                             tokenList.put(Integer.toString(entry.getId()),
-                                    new String[]{MyConstants.PREFIX_ETH + mWallet.getAddress(), entry.getContractAddress()});
+                                    new String[]{MyConstants.PREFIX_HEX + mWallet.getAddress(), entry.getContractAddress()});
                     }
 
                     mService.getTokenBalance(tokenList, Constants.KS_COINTYPE_ETH);

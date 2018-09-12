@@ -18,6 +18,7 @@
     <string name="load">Load</string>
     <string name="retry">RETRY</string>
     <string name="input">Input</string>
+    <string name="view">View</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -221,8 +222,18 @@
     <string name="icxStepSymbol">loop</string>
     <string name="hintICXStepLimit">Enter step limit</string>
 
+    <string name="data">Data</string>
+    <string name="inputType">Input type</string>
+    <string name="hintUtfData">Hello ICON</string>
+    <string name="hintHexData">0x1234...</string>
+    <string name="cancelEnterData">데이터 입력을 취소하시겠습니까?</string>
+    <string name="noticeStepLimit">입력된 데이터를 포함한 적정 Step 한도는 %,d 이상 입니다.</string>
+    <string name="errHexString">입력된 데이터는 Hex 가 아닙니다.</string>
+    <string name="errMinStep">%,d 보다 높은 스텝 한도를 입력해주세요.</string>
+    <string name="errMaxStep">%,d 보다 낮은 스텝 한도를 입력해주세요.</string>
+    <string name="errNotEnoughIcx">Insufficient ICX balance for transaction fee</string>
+
     <string name="hintGasLimit">Enter gas limit</string>
-    <string name="hintData">Enter data</string>
     <string name="estiFee">Estimated Maximum Fee(%s)</string>
     <string name="ethEstiRemain">Estimated Balance (%s)</string>
 

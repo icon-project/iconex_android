@@ -30,7 +30,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/btn_mod"
+        android:id="@+id/txt_mod"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

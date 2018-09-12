@@ -26,7 +26,7 @@ public class ServiceConstants {
     public static final String TR_V0 = "/v0";
     public static final String TR_V3 = "/v3";
     public static final String TR_API_EX_HEADER = "/exchange/currentExchangeList";
-    public static final String TR_API_TX_LIST_HEADER = "/address/txList";
+    public static final String TR_API_TX_LIST_HEADER = "/address/txListForWallet";
 
     public static final String URL_VERSION_MAIN = "https://tracker.icon.foundation";
     public static final String URL_VERSION_TEST = "https://trackerdev.icon.foundation";

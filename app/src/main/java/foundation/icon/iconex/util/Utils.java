@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import foundation.icon.iconex.ICONexApp;
+import foundation.icon.iconex.MyConstants;
 
 /**
  * Created by js on 2018. 5. 8..
@@ -88,6 +89,20 @@ public class Utils {
             return RES_VERSION.NEW;
 
         return RES_VERSION.LATEST;
+    }
+
+    public static String remove0x(String hex) {
+        if (hex.startsWith(MyConstants.PREFIX_HEX))
+            return hex.substring(2);
+        else
+            return hex;
+    }
+
+    public static String checkPrefix(String hex) {
+        if (!hex.startsWith(MyConstants.PREFIX_HEX))
+            return MyConstants.PREFIX_HEX + hex;
+        else
+            return hex;
     }
 
     public enum RES_VERSION {

@@ -26,11 +26,19 @@ public class SendTransactionSigner {
         if (tx.getDataType() == null)
             tbs = _method + ".from." + tx.getFrom() + ".nid." + tx.getNid() + ".nonce." + tx.getNonce() + ".stepLimit." + tx.getStepLimit()
                     + ".timestamp." + tx.getTimestamp() + ".to." + tx.getTo() + ".value." + tx.getValue() + ".version." + tx.getVersion();
-        else {
+        else if (tx.getDataType().equals(Constants.DATA_CALL)) {
             String value = new Gson().fromJson(tx.getData(), JsonObject.class).get("params").getAsJsonObject().get("_value").getAsString();
             tbs = _method + ".data.{method.transfer.params.{_to." + tx.getDataTo() + "._value." + value + "}}.dataType.call.from." + tx.getFrom()
                     + ".nid." + tx.getNid() + ".nonce." + tx.getNonce() + ".stepLimit." + tx.getStepLimit()
                     + ".timestamp." + tx.getTimestamp() + ".to." + tx.getTo() + ".version." + tx.getVersion();
+        } else {
+            if (tx.getValue() == null) {
+                tbs = _method + ".data." + tx.getData() + ".dataType.message.from." + tx.getFrom() + ".nid." + tx.getNid() + ".nonce." + tx.getNonce() + ".stepLimit." + tx.getStepLimit()
+                        + ".timestamp." + tx.getTimestamp() + ".to." + tx.getTo() + ".version." + tx.getVersion();
+            } else {
+                tbs = _method + ".data." + tx.getData() + ".dataType.message.from." + tx.getFrom() + ".nid." + tx.getNid() + ".nonce." + tx.getNonce() + ".stepLimit." + tx.getStepLimit()
+                        + ".timestamp." + tx.getTimestamp() + ".to." + tx.getTo() + ".value." + tx.getValue() + ".version." + tx.getVersion();
+            }
         }
 
         Log.d(TAG, "tbs=" + tbs);

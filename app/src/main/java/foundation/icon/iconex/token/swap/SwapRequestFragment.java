@@ -532,8 +532,8 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
                         Collections.<TypeReference<?>>emptyList());
                 String data = FunctionEncoder.encode(function);
                 Log.d(TAG, "Data=" + data);
-                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_ETH + from, DefaultBlockParameterName.LATEST).send();
-                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_ETH + from,
+                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_HEX + from, DefaultBlockParameterName.LATEST).send();
+                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_HEX + from,
                         nonce.getTransactionCount(),
                         Convert.toWei(gasPrice.toString(), Convert.Unit.GWEI).toBigInteger(),
                         mLimit,

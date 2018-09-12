@@ -19,6 +19,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import java.util.List;
 
 import foundation.icon.iconex.ICONexApp;
+import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.Contacts;
@@ -120,12 +121,12 @@ public class MyContactsFragment extends Fragment {
         public void onConfirm(ContactsDialog.MODE mode, String name, String address) {
             if (mode == ContactsDialog.MODE.ADD) {
                 if (mType.equals(Constants.KS_COINTYPE_ICX)) {
-                    RealmUtil.addContacts(RealmUtil.COIN_TYPE.ICX, name, address);
+                    RealmUtil.addContacts(MyConstants.CoinType.ICX, name, address);
                     RealmUtil.loadContacts();
 
                     data = ICONexApp.ICXContacts;
                 } else {
-                    RealmUtil.addContacts(RealmUtil.COIN_TYPE.ETH, name, address);
+                    RealmUtil.addContacts(MyConstants.CoinType.ETH, name, address);
                     RealmUtil.loadContacts();
 
                     data = ICONexApp.ETHContacts;

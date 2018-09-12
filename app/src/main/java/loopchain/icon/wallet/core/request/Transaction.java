@@ -100,6 +100,10 @@ public class Transaction extends RequestData {
         return builder.dataTo;
     }
 
+    public Builder getBuilder() {
+        return builder;
+    }
+
 
     public static class Builder {
         private final int id;

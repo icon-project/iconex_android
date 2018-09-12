@@ -14,7 +14,9 @@ import foundation.icon.iconex.service.RESTClient;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.request.GetBalanceData;
 import loopchain.icon.wallet.core.request.GetICXCallData;
+import loopchain.icon.wallet.core.request.GetMaxStepLimit;
 import loopchain.icon.wallet.core.request.GetScoreApi;
+import loopchain.icon.wallet.core.request.GetStepCosts;
 import loopchain.icon.wallet.core.request.GetStepPrice;
 import loopchain.icon.wallet.core.request.GetTokenBalance;
 import loopchain.icon.wallet.core.request.GetTransactionResultData;
@@ -70,6 +72,18 @@ public class LoopChainClient {
 
     public Call<LCResponse> getTokenBalance(int id, String address, String score) throws IOException {
         GetTokenBalance qData = new GetTokenBalance(id, address, score);
+        Call<LCResponse> response = proxyClient.sendRequest(qData);
+        return response;
+    }
+
+    public Call<LCResponse> getStepMaxLimit(int id, String address) throws IOException {
+        GetMaxStepLimit qData = new GetMaxStepLimit(id, address);
+        Call<LCResponse> response = proxyClient.sendRequest(qData);
+        return response;
+    }
+
+    public Call<LCResponse> getStepCost(int id, String address) throws IOException {
+        GetStepCosts qData = new GetStepCosts(id, address);
         Call<LCResponse> response = proxyClient.sendRequest(qData);
         return response;
     }
