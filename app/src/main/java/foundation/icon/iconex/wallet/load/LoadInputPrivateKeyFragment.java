@@ -236,13 +236,13 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
                 break;
 
             case R.id.btn_next:
-                clear();
                 mListener.onLoadPrivateKeyNext(mCoinType, mPrivateKey);
+                clear();
                 break;
 
             case R.id.btn_back:
-                clear();
                 mListener.onPrivBack();
+                clear();
                 break;
         }
     }

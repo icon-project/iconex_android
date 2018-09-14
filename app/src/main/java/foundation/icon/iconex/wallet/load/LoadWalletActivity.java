@@ -86,8 +86,8 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
 
         for (int i = 0; i < mBundle.size(); i++) {
             Wallet wallet = mBundle.get(i);
-            String alias = wallet.getAlias();
-            boolean registered = checkRegisterAlias(alias);
+//            String alias = wallet.getAlias();
+            boolean registered = checkRegister(wallet.getAddress());
 
             BundleItem item = new BundleItem();
             item.setId(new Random().nextInt(999999) + 100000);
@@ -109,9 +109,9 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
         return list;
     }
 
-    private boolean checkRegisterAlias(String alias) {
+    private boolean checkRegister(String address) {
         for (Wallet wallet : ICONexApp.mWallets) {
-            if (alias.equals(wallet.getAlias()))
+            if (address.equals(wallet.getAddress()))
                 return true;
         }
 

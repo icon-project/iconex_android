@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -35,8 +36,6 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.TitleMsgDialog;
@@ -44,6 +43,8 @@ import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.create.CreateWalletActivity;
 import foundation.icon.iconex.wallet.load.LoadWalletActivity;
 import foundation.icon.iconex.wallet.menu.DrawerMenuFragment;
@@ -365,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         balanceLoading = findViewById(R.id.layout_asset_progress);
 
         txtTotalAsset = findViewById(R.id.txt_total_asset);
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtTotalAsset, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         btnUSD = findViewById(R.id.btn_select_usd);
         btnUSD.setOnClickListener(this);
         btnUSD.setSelected(true);
@@ -394,8 +396,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onPageSelected(int position) {
-                walletNameRecyclerAdapter.setSelectedPosition(walletViewPager.getCurrentItem());
-                walletNameRecycler.smoothScrollToPosition(walletViewPager.getCurrentItem());
+                walletNameRecyclerAdapter.setSelectedPosition(position);
+                walletNameRecycler.smoothScrollToPosition(position);
             }
 
             @Override
@@ -413,8 +415,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onPageSelected(int position) {
-                walletNameRecyclerAdapter.setSelectedPosition(coinsViewPager.getCurrentItem());
-                walletNameRecycler.smoothScrollToPosition(coinsViewPager.getCurrentItem());
+                walletNameRecyclerAdapter.setSelectedPosition(position);
+                walletNameRecycler.smoothScrollToPosition(position);
             }
 
             @Override
@@ -515,28 +517,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void notifyWalletChanged() {
-        makeNameList();
-        walletNameRecyclerAdapter = new WalletNameRecyclerAdapter(this, walletNames);
-        walletNameRecyclerAdapter.setClickListener(new WalletNameRecyclerAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                walletViewPager.setCurrentItem(position, true);
-            }
-        });
-        walletNameRecycler.setAdapter(walletNameRecyclerAdapter);
-
-        walletViewPagerAdapter = new WalletViewPagerAdapter(getSupportFragmentManager());
-        walletViewPager.setAdapter(walletViewPagerAdapter);
+        if (mViewType == ViewType.WALLETS)
+            setWalletsView();
+        else
+            setCoinsView();
 
         getBalance();
     }
 
     public void refreshNameView() {
-        makeNameList();
-        walletNameRecyclerAdapter.setNameList(walletNames);
+        if (mViewType == ViewType.WALLETS) {
+            int position = walletViewPager.getCurrentItem();
 
-        walletNameRecyclerAdapter.setSelectedPosition(walletViewPager.getCurrentItem());
-        walletNameRecycler.smoothScrollToPosition(walletViewPager.getCurrentItem());
+            makeNameList();
+            walletNameRecyclerAdapter.setNameList(walletNames);
+
+            walletViewPagerAdapter = new WalletViewPagerAdapter(getSupportFragmentManager());
+            walletViewPager.setAdapter(walletViewPagerAdapter);
+
+            walletViewPager.setCurrentItem(position, true);
+        } else {
+            int position = coinsViewPager.getCurrentItem();
+
+            coinsList = new ArrayList<>();
+            coinsList = makeListFromCoins();
+            makeCoinNameList(coinsList);
+
+            walletNameRecyclerAdapter.setNameList(coinNames);
+
+            coinViewPagerAdapter = new CoinViewPagerAdapter(getSupportFragmentManager(), coinsList);
+            coinsViewPager.setAdapter(coinViewPagerAdapter);
+
+            coinsViewPager.setCurrentItem(position, true);
+        }
     }
 
     private void makeNameList() {
@@ -577,60 +590,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return new Object[]{icxList, ircList, ethList, ercList};
     }
 
-    private void makeCoinNameList() {
+    private void makeCoinNameList(List<CoinsViewItem> list) {
         coinNames = new ArrayList<>();
 
-        for (Wallet wallet : ICONexApp.mWallets) {
-            for (WalletEntry entry : wallet.getWalletEntries()) {
-                String coinName;
-                if (entry.getType().equals(MyConstants.TYPE_COIN))
-                    coinName = entry.getName();
-                else {
-                    if (entry.getSymbol().equals(MyConstants.ICX_SYM))
-                        coinName = MyConstants.NAME_ICX + " Token";
-                    else
-                        coinName = entry.getSymbol() + " Token";
-                }
-
-                if (!coinNames.contains(coinName))
-                    coinNames.add(coinName);
-            }
+        for (CoinsViewItem item : list) {
+            coinNames.add(item.getName());
         }
-
-        if (coinNames.contains(MyConstants.NAME_ICX)) {
-            coinNames.remove(MyConstants.NAME_ICX);
-            coinNames.add(0, MyConstants.NAME_ICX);
-        }
-    }
-
-    private HashMap<String, List<Wallet>> makeListFromCoin() {
-        HashMap<String, List<Wallet>> coinsMap = new HashMap<>();
-
-        for (Wallet wallet : ICONexApp.mWallets) {
-            for (WalletEntry entry : wallet.getWalletEntries()) {
-                String key;
-                if (entry.getType().equals(MyConstants.TYPE_COIN))
-                    key = entry.getName();
-                else {
-                    if (entry.getSymbol().equals(MyConstants.ICX_SYM))
-                        key = MyConstants.NAME_ICX + " Token";
-                    else
-                        key = entry.getSymbol() + " Token";
-                }
-
-                if (!coinsMap.containsKey(key)) {
-                    List<Wallet> walletList = new ArrayList<>();
-                    walletList.add(wallet);
-                    coinsMap.put(key, walletList);
-                } else {
-                    List<Wallet> walletList = coinsMap.get(key);
-                    walletList.add(wallet);
-                    coinsMap.put(key, walletList);
-                }
-            }
-        }
-
-        return coinsMap;
     }
 
     private List<CoinsViewItem> makeListFromCoins() {
@@ -640,19 +605,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 String key;
                 if (entry.getType().equals(MyConstants.TYPE_COIN))
-                    key = entry.getName();
+                    key = entry.getSymbol();
                 else {
-                    if (entry.getSymbol().equals(MyConstants.ICX_SYM))
-                        key = MyConstants.NAME_ICX + " Token";
-                    else
-                        key = entry.getSymbol() + " Token";
+                    key = entry.getContractAddress();
                 }
 
                 int itemPos = -1;
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getName().equals(key)) {
-                        itemPos = i;
-                        break;
+                    CoinsViewItem tmp = list.get(i);
+                    if (tmp.getType().equals(MyConstants.TYPE_COIN)) {
+                        if (tmp.getSymbol().equals(key)) {
+                            itemPos = i;
+                            break;
+                        }
+                    } else {
+                        if (tmp.getContractAddr().equals(key)) {
+                            itemPos = i;
+                            break;
+                        }
                     }
                 }
 
@@ -662,19 +632,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     list.get(itemPos).setWallets(wallets);
                 } else {
                     CoinsViewItem item = new CoinsViewItem();
-                    if (entry.getType().equals(MyConstants.TYPE_COIN))
+                    if (entry.getType().equals(MyConstants.TYPE_COIN)) {
                         item.setType(MyConstants.TYPE_COIN);
-                    else
+                        item.setName(entry.getName());
+                    } else {
                         item.setType(MyConstants.TYPE_TOKEN);
+                        item.setContractAddr(entry.getContractAddress());
+                        item.setName(entry.getName() + " Token");
+                    }
 
-                    item.setName(key);
                     item.setSymbol(entry.getSymbol());
+                    item.setDec(entry.getDefaultDec());
 
                     List<Wallet> wallets = new ArrayList<>();
                     wallets.add(wallet);
                     item.setWallets(wallets);
 
-                    list.add(item);
+                    if (item.getType().equals(MyConstants.TYPE_COIN)
+                            && item.getName().equals(MyConstants.NAME_ICX))
+                        list.add(0, item);
+                    else
+                        list.add(item);
                 }
             }
         }
@@ -685,9 +663,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setCoinsView() {
         mViewType = ViewType.COINS;
 
-        makeCoinNameList();
-//        coinsMap = makeListFromCoin();
+        coinsList = new ArrayList<>();
         coinsList = makeListFromCoins();
+        makeCoinNameList(coinsList);
 
         walletNameRecyclerAdapter = new WalletNameRecyclerAdapter(this, coinNames);
         walletNameRecyclerAdapter.setClickListener(new WalletNameRecyclerAdapter.ItemClickListener() {

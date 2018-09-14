@@ -238,6 +238,10 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                 fragmentManager.popBackStackImmediate();
                 txtTitle.setText(getString(R.string.tokenManageTitle));
 
+                btnEdit.setSelected(false);
+                btnEdit.setText(getString(R.string.edit));
+                btnEdit.setVisibility(View.INVISIBLE);
+
                 listFragment.tokenNotifyDataChanged();
             }
         } else

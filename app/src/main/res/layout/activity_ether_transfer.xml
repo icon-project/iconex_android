@@ -14,6 +14,7 @@
         android:layout_alignParentTop="true" />
 
     <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar"
@@ -46,14 +47,13 @@
                 <TextView
                     android:id="@+id/txt_balance"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="16dp"
                     android:layout_marginTop="26dp"
                     android:fontFamily="@font/nanum_square_bold"
                     android:gravity="end|center_vertical"
                     android:letterSpacing="-0.04"
-                    android:text="-.-"
-                    android:textColor="@color/colorText"
-                    android:textSize="14dp" />
+                    android:text="-"
+                    android:textColor="@color/colorText" />
 
                 <TextView
                     android:id="@+id/txt_trans_balance"
@@ -249,6 +249,7 @@
                             android:background="@color/colorWhite"
                             android:fontFamily="@font/noto_sans_medium"
                             android:hint="@string/hintToAddress"
+                            android:imeOptions="actionNext"
                             android:inputType="textEmailAddress"
                             android:paddingStart="10dp"
                             android:textSize="14dp" />
@@ -366,6 +367,7 @@
                             android:background="@color/colorWhite"
                             android:fontFamily="@font/nanum_square_bold"
                             android:hint="@string/hintGasLimit"
+                            android:imeOptions="actionDone"
                             android:inputType="number"
                             android:paddingStart="10dp"
                             android:singleLine="true"
@@ -638,7 +640,7 @@
                             android:layout_toStartOf="@+id/del_data"
                             android:background="@color/colorWhite"
                             android:fontFamily="@font/noto_sans_medium"
-                            android:hint="@string/hintUtfData"
+                            android:hint="@string/hintHexData"
                             android:inputType="text"
                             android:paddingStart="10dp"
                             android:textSize="14dp" />
@@ -753,14 +755,13 @@
                 <TextView
                     android:id="@+id/txt_remain"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="16dp"
                     android:layout_marginTop="26dp"
                     android:fontFamily="@font/nanum_square_bold"
                     android:gravity="end|center_vertical"
                     android:letterSpacing="-0.04"
                     android:text="0"
-                    android:textColor="@color/colorText"
-                    android:textSize="14dp" />
+                    android:textColor="@color/colorText" />
 
                 <TextView
                     android:id="@+id/txt_trans_remain"

@@ -59,6 +59,11 @@ public class RESTClient {
         return response;
     }
 
+    public Call<TRResponse> sendGetTokenTxList(String ownAddr, String contract, int page) throws IOException {
+        Call<TRResponse> response = RESTService.sendGetTokenTxList(page, contract, ownAddr);
+        return response;
+    }
+
     public Call<VSResponse> sendVersionCheck() throws IOException {
         Call<VSResponse> response = RESTService.sendVersionCheck();
         return response;

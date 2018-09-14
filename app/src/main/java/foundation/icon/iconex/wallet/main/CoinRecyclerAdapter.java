@@ -15,9 +15,10 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.util.ConvertUtil;
 
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 import static foundation.icon.iconex.MyConstants.NO_BALANCE;
@@ -32,19 +33,21 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     private Context mContext;
     private LayoutInflater mInflater;
+    private CoinsViewItem mItem;
     private String mType;
     private List<Wallet> mData;
     private int mDec;
     private String mSymbol;
     private final String ercIcxAddr;
 
-    public CoinRecyclerAdapter(Context context, String coinType, List<Wallet> data, int dec, String symbol) {
+    public CoinRecyclerAdapter(Context context, CoinsViewItem item) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
-        mType = coinType;
-        mData = data;
-        mDec = dec;
-        mSymbol = symbol;
+        mItem = item;
+        mType = item.getType();
+        mData = item.getWallets();
+        mSymbol = item.getSymbol();
+        mDec = item.getDec();
 
         if (ICONexApp.network == MyConstants.NETWORK_MAIN)
             ercIcxAddr = MyConstants.M_ERC_ICX_ADDR;
@@ -71,7 +74,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             } else {
                 String value = ConvertUtil.getValue(new BigInteger(totalBalance), mDec);
                 Double doubTotal = Double.parseDouble(value);
-                holder.txtBalance.setText(String.format(Locale.getDefault(), "%,.4f", doubTotal));
+                holder.txtBalance.setText(String.format(Locale.getDefault(), "%s", Utils.formatFloating(value, 4)));
 
                 String exchange = mSymbol.toLowerCase() + ((MainActivity) mContext).getExchangeUnit().toLowerCase();
                 String strPrice;
@@ -105,7 +108,8 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         if (position == getItemCount() - 1)
             holder.line.setVisibility(View.INVISIBLE);
 
-        if (availableSwap(wallet))
+        if (mItem.equals(MyConstants.TYPE_TOKEN)
+                && mItem.getContractAddr().equals(ercIcxAddr))
             holder.btnSwap.setVisibility(View.VISIBLE);
         else
             holder.btnSwap.setVisibility(View.GONE);
@@ -151,15 +155,6 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         } else {
             return null;
         }
-    }
-
-    private boolean availableSwap(Wallet wallet) {
-        for (WalletEntry entry : wallet.getWalletEntries()) {
-            if (entry.getContractAddress().equals(ercIcxAddr))
-                return true;
-        }
-
-        return false;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

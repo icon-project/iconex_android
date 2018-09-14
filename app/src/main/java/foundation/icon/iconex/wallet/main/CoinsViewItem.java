@@ -13,6 +13,8 @@ public class CoinsViewItem implements Serializable {
     private String type;
     private String name;
     private String symbol;
+    private int dec;
+    private String contractAddr;
     private List<Wallet> wallets;
 
     public String getType() {
@@ -39,11 +41,32 @@ public class CoinsViewItem implements Serializable {
         this.symbol = symbol;
     }
 
+    public int getDec() {
+        return dec;
+    }
+
+    public void setDec(int dec) {
+        this.dec = dec;
+    }
+
+    public String getContractAddr() {
+        return contractAddr;
+    }
+
+    public void setContractAddr(String contractAddr) {
+        this.contractAddr = contractAddr;
+    }
+
     public List<Wallet> getWallets() {
         return wallets;
     }
 
     public void setWallets(List<Wallet> wallets) {
         this.wallets = wallets;
+    }
+
+    @Override
+    public String toString() {
+        return "Type=" + type + ", name=" + name + ", symbol=" + symbol;
     }
 }

@@ -31,8 +31,6 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.BottomSheetMenu;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.BottomItemSelectActivity;
@@ -45,6 +43,9 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.token.swap.TokenSwapActivity;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.wallet.menu.WalletAddressCodeActivity;
 import foundation.icon.iconex.wallet.menu.WalletBackUpActivity;
 import foundation.icon.iconex.wallet.menu.WalletPwdChangeActivity;
@@ -97,6 +98,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
     private final int RC_SWAP = 30001;
 
     public static final int RES_REFRESH = 4001;
+    public static final int RES_RENAME = 5001;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -197,23 +199,37 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             for (int i = 0; i < txList.size(); i++) {
                 txItem = new TxItem();
                 JsonObject tx = txList.get(i).getAsJsonObject();
-                txItem.setTxHash(tx.get("txHash").getAsString());
-                txItem.setDate(tx.get("createDate").getAsString());
+
                 txItem.setFrom(tx.get("fromAddr").getAsString());
                 txItem.setTo((tx.get("toAddr").getAsString()));
-                txItem.setAmount(tx.get("amount").getAsString());
                 txItem.setFee(tx.get("fee").getAsString());
 
-                WalletDetailActivity.this.txList.add(txItem);
+                if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                    if (tx.get("txType").getAsString().equals("0")) {
+                        txItem.setTxHash(tx.get("txHash").getAsString());
+                        txItem.setDate(tx.get("createDate").getAsString());
+                        txItem.setAmount(tx.get("amount").getAsString());
+
+                        WalletDetailActivity.this.txList.add(txItem);
+                    }
+                } else {
+                    txItem.setTxHash(tx.get("txHash").getAsString());
+                    txItem.setDate(tx.get("age").getAsString());
+                    txItem.setAmount(tx.get("quantity").getAsString());
+
+                    WalletDetailActivity.this.txList.add(txItem);
+                }
             }
 
+            List<TxItem> result = makeTxList(WalletDetailActivity.this.txList, mState, mType);
+
             if (txAdapter != null && WalletDetailActivity.this.txList.size() > 0) {
-                txAdapter.setMoreData(WalletDetailActivity.this.txList);
+                txAdapter.setMoreData(result);
                 txAdapter.moreLoading(false);
                 txAdapter.notifyDataSetChanged();
             } else {
                 txAdapter = new TransactionListAdapter(
-                        WalletDetailActivity.this, selectedEntry, EXCHANGE, WalletDetailActivity.this.txList,
+                        WalletDetailActivity.this, selectedEntry, EXCHANGE, result,
                         mState, mType, mWallet.getCoinType());
                 txAdapter.setItemClickListener(mTxClickListener);
                 txAdapter.setHeaderClickListener(mHeaderClickListener);
@@ -227,13 +243,9 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         public void onReceiveError(String resCode) {
-            txAdapter = new TransactionListAdapter(
-                    WalletDetailActivity.this, selectedEntry, EXCHANGE, WalletDetailActivity.this.txList,
-                    mState, mType, mWallet.getCoinType());
-            txAdapter.setItemClickListener(mTxClickListener);
-            txAdapter.setHeaderClickListener(mHeaderClickListener);
+            txAdapter.moreLoading(false);
             txAdapter.showLoading(false);
-            recyclerTx.setAdapter(txAdapter);
+            currentPage--;
         }
 
         @Override
@@ -357,6 +369,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         if (mBound) {
             txAdapter.showLoading(true);
 
+            txList = new ArrayList<>();
             HashMap<String, String> rqWallet = new HashMap<>();
 
             if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
@@ -372,7 +385,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     }
 
                     mService.getTokenBalance(tokenList, Constants.KS_COINTYPE_ETH);
-                    mService.requestICONTxList(mWallet.getAddress(), currentPage);
+                    mService.requestIrcTxList(mWallet.getAddress(), selectedEntry.getContractAddress(), currentPage);
                 }
             } else {
                 if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
@@ -596,11 +609,9 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         menu.setTag(MyConstants.TAG_MENU_ALIAS);
         menus.add(menu);
 
-        if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ETH)) {
-            menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
-            menu.setTag(MyConstants.TAG_MENU_TOKEN);
-            menus.add(menu);
-        }
+        menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
+        menu.setTag(MyConstants.TAG_MENU_TOKEN);
+        menus.add(menu);
 
         menu = new BottomSheetMenu(R.drawable.ic_backup, getString(R.string.menuBackupWallet));
         menu.setTag(MyConstants.TAG_MENU_BACKUP);
@@ -627,7 +638,12 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         public void onCoinItem(int position) {
             selectedEntry = mWallet.getWalletEntries().get(position);
             entryId = Integer.toString(selectedEntry.getId());
+            mState = MyConstants.TxState.DONE;
+            mType = MyConstants.TxType.WHOLENESS;
             txAdapter.setWalletEntry(selectedEntry);
+            txAdapter.setSearchState(mState);
+            txAdapter.setSearchType(mType);
+            getTxList();
         }
 
         @Override
@@ -781,7 +797,8 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         public void onTransfer() {
-            if (selectedEntry.getBalance().equals(MyConstants.NO_BALANCE)) {
+            if (selectedEntry.getBalance().equals(MyConstants.NO_BALANCE)
+                    || new BigInteger(selectedEntry.getBalance()).compareTo(BigInteger.ZERO) == 0) {
                 BasicDialog dialog = new BasicDialog(WalletDetailActivity.this);
                 dialog.setMessage(getString(R.string.errCantWithdraw));
                 dialog.show();
@@ -800,7 +817,10 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             } else {
                 if (new BigInteger(mWallet.getWalletEntries().get(0).getBalance()).equals(BigInteger.ZERO)) {
                     BasicDialog dialog = new BasicDialog(WalletDetailActivity.this);
-                    dialog.setMessage(getString(R.string.errOwnNotEnough));
+                    if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
+                        dialog.setMessage(getString(R.string.errIcxOwnNotEnough));
+                    else
+                        dialog.setMessage(getString(R.string.errEthOwnNotEnough));
                     dialog.show();
 
                     return;
@@ -889,7 +909,10 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             txAdapter.moreLoading(true);
             txAdapter.notifyDataSetChanged();
 
-            mService.requestICONTxList(mWallet.getAddress(), ++currentPage);
+            if (selectedEntry.getType().equals(MyConstants.TYPE_COIN))
+                mService.requestICONTxList(mWallet.getAddress(), ++currentPage);
+            else
+                mService.requestIrcTxList(mWallet.getAddress(), selectedEntry.getContractAddress(), ++currentPage);
         }
     }
 }

@@ -45,6 +45,8 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
     public static final int RES_DATA = 1111;
     public static final int RES_CANCEL = 2222;
 
+    private static String beforeStr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,19 +73,37 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
             }
         });
         editData.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String dataStr = s.toString();
                 if (s.length() > 0) {
-                    txtDataLimit.setText(String.format(Locale.getDefault(), "%d", getKB(Utils.checkByteLength(dataStr))));
+                    String dataStr = s.toString();
+                    if (dataStr.getBytes().length > 512 * 1024) {
+                        BasicDialog dialog = new BasicDialog(EnterDataActivity.this);
+                        dialog.setMessage(getString(R.string.errOverByteLimit));
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                editData.setText(beforeStr);
+                                editData.setSelection(editData.getText().toString().length());
+                            }
+                        });
+                        dialog.show();
+                        setDataLength(txtDataLimit, beforeStr.getBytes().length);
+                    } else {
+                        setDataLength(txtDataLimit, dataStr.getBytes().length);
+                        beforeStr = dataStr;
+                    }
+
+                    txtMod.setTextColor(getResources().getColor(R.color.colorWhite));
                     txtMod.setEnabled(true);
                 } else {
-                    txtDataLimit.setText(String.format(Locale.getDefault(), "%d", 0));
+                    txtDataLimit.setText(String.format(Locale.getDefault(), "%d KB", 0));
+                    txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
                     txtMod.setEnabled(false);
                 }
             }
@@ -94,15 +114,19 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        if (data.getDataType() == DataType.UTF)
+        if (data.getDataType() == DataType.UTF) {
             editData.setHint(R.string.hintUtfData);
-        else
+            ((TextView) findViewById(R.id.txt_type)).setText("UTF-8");
+        } else {
             editData.setHint(R.string.hintHexData);
+            ((TextView) findViewById(R.id.txt_type)).setText("HEX");
+        }
 
         if (data.getData() != null) {
-            if (data.getData().isEmpty())
+            if (data.getData().isEmpty()) {
+                txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
                 txtMod.setEnabled(false);
-            else {
+            } else {
                 if (data.getDataType() == DataType.UTF)
                     editData.setText(new String(Hex.decode(Utils.remove0x(data.getData()))));
                 else
@@ -110,8 +134,10 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
 
                 editData.setSelection(editData.getText().toString().length());
             }
-        } else
+        } else {
+            txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
             txtMod.setEnabled(false);
+        }
     }
 
     @Override
@@ -129,7 +155,7 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
                         getStepCost();
                     } catch (Exception e) {
                         BasicDialog err = new BasicDialog(this);
-                        err.setMessage(getString(R.string.errHexString));
+                        err.setMessage(getString(R.string.errInvalidData));
                         err.show();
                     }
                 } else {
@@ -177,12 +203,27 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private long getKB(long byteLength) {
-        if (byteLength % 1024 > 0) {
-            return byteLength / 1024 + 1;
+    private void setDataLength(TextView txtLength, long byteLength) {
+        if (byteLength <= 512 * 1024)
+            txtLength.setTextColor(getResources().getColor(R.color.colorText));
+        else
+            txtLength.setTextColor(getResources().getColor(R.color.colorWarning));
+
+        if (byteLength < 1024) {
+            txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength) + " B"));
+            return;
         } else {
-            return byteLength / 1024;
+            txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength / 1024) + " KB"));
+            return;
         }
+
+//        if (byteLength % 1024 > 0) {
+//
+//            return;
+//        } else {
+//            txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength / 1024) + " KB"));
+//            return;
+//        }
     }
 
     private boolean checkBalance(int stepLimit) {
@@ -219,18 +260,14 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
 
                         if (checkBalance(stepLimit)) {
                             data.setStepCost(stepLimit);
-                            String notice = String.format(Locale.getDefault(), getString(R.string.noticeStepLimit), stepLimit);
+
+                            Intent dataIntent = new Intent();
+                            dataIntent.putExtra(ARG_DATA, data);
+                            setResult(RES_DATA, dataIntent);
+                            finish();
+                        } else {
                             BasicDialog dialog = new BasicDialog(EnterDataActivity.this);
-                            dialog.setMessage(notice);
-                            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface dialog) {
-                                    Intent dataIntent = new Intent();
-                                    dataIntent.putExtra(ARG_DATA, data);
-                                    setResult(RES_DATA, dataIntent);
-                                    finish();
-                                }
-                            });
+                            dialog.setMessage(getString(R.string.errIcxOwnNotEnough));
                             dialog.show();
                         }
                     } else {

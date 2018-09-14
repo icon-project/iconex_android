@@ -9,10 +9,6 @@ public class ServiceConstants {
     // ICON
     public static final String TRUSTED_HOST_MAIN = "https://wallet.icon.foundation";
     public static final String TRUSTED_HOST_TEST = "https://testwallet.icon.foundation";
-
-    public static final String ETH_HOST = "https://mainnet.infura.io";
-    public static final String ETH_ROP_HOST = "https://ropsten.infura.io";
-
     public static final String DEV_HOST = "http://13.209.103.183:9000";
 
     public static final String LC_API_HEADER = "/api";
@@ -27,12 +23,16 @@ public class ServiceConstants {
     public static final String TR_V3 = "/v3";
     public static final String TR_API_EX_HEADER = "/exchange/currentExchangeList";
     public static final String TR_API_TX_LIST_HEADER = "/address/txListForWallet";
+    public static final String TR_API_TOKEN_TX_LIST = "/token/txList";
 
     public static final String URL_VERSION_MAIN = "https://tracker.icon.foundation";
     public static final String URL_VERSION_TEST = "https://trackerdev.icon.foundation";
     public static final String VS_API = "/app/and.json";
 
     // Ethereum
+    public static final String ETH_HOST = "https://eth.solidwallet.io";
+    public static final String ETH_ROP_HOST = "https://ropsten.infura.io";
+
     public static final String URL_ETHERSCAN = "https://etherscan.io/";
     public static final String URL_ROPSTEN = "https://ropsten.etherscan.io/";
 

@@ -25,8 +25,10 @@ public class PreferenceUtil {
     private final String PREF_FINGERPRINT = "FINGERPRINT";
     private final String PREF_LANGUAGE = "LANGUAGE";
     private final String PREF_NETWORK = "NETWORK";
-    private final String PREF_MIN_STEP = "MIN_STEP";
+    private final String PREF_DEFAULT_LIMIT = "DEFAULT_LIMIT";
     private final String PREF_MAX_STEP = "MAX_STEP";
+    private final String PREF_INPUT_PRICE = "INPUT_PRICE";
+    private final String PREF_CONTRACT_CALL = "CONTRACT_CALL";
 
     public PreferenceUtil(Context context) {
         mContext = context;
@@ -112,14 +114,14 @@ public class PreferenceUtil {
         }
     }
 
-    public void setMinStep(String min) {
+    public void setDefaultLimit(String defaultLimit) {
         SharedPreferences.Editor editor = mPreference.edit();
-        editor.putString(PREF_MIN_STEP, min);
+        editor.putString(PREF_DEFAULT_LIMIT, defaultLimit);
         editor.apply();
     }
 
-    public String getMinStep() {
-        return mPreference.getString(PREF_MIN_STEP, "0");
+    public String getDefaultLimit() {
+        return mPreference.getString(PREF_DEFAULT_LIMIT, "0");
     }
 
     public void setMaxStep(String max) {
@@ -130,6 +132,26 @@ public class PreferenceUtil {
 
     public String getMaxStep() {
         return mPreference.getString(PREF_MAX_STEP, "0");
+    }
+
+    public void setInputPrice(String price) {
+        SharedPreferences.Editor editor = mPreference.edit();
+        editor.putString(PREF_INPUT_PRICE, price);
+        editor.apply();
+    }
+
+    public String getInputPrice() {
+        return mPreference.getString(PREF_INPUT_PRICE, "0");
+    }
+
+    public void setContractCall(String contractCall) {
+        SharedPreferences.Editor editor = mPreference.edit();
+        editor.putString(PREF_CONTRACT_CALL, contractCall);
+        editor.apply();
+    }
+
+    public String getContractCall() {
+        return mPreference.getString(PREF_CONTRACT_CALL, "0");
     }
 
     public void loadPreference() {

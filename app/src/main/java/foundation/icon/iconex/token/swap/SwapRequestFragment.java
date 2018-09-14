@@ -39,11 +39,11 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.MyEditText;
 
 import static foundation.icon.iconex.ICONexApp.network;
@@ -409,18 +409,26 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
     }
 
     private void addPlus(int plus) {
-        String value;
-        if (editSend.getText().toString().isEmpty()) {
+        BigInteger value;
+        String amount = editSend.getText().toString();
+        if (amount.isEmpty()) {
             editSend.setText(Integer.toString(plus));
         } else {
-            value = editSend.getText().toString();
-            if (value.indexOf(".") < 0) {
-                value = Integer.toString(Integer.parseInt(value) + plus);
-                editSend.setText(value);
+            if (amount.indexOf(".") < 0) {
+                BigInteger oldValue = new BigInteger(amount);
+                value = oldValue.add(BigInteger.valueOf(plus));
+                if (value.toString().length() > 10)
+                    editSend.setText(oldValue.toString());
+                else
+                    editSend.setText(value.toString());
             } else {
-                String[] total = value.split("\\.");
-                total[0] = Integer.toString(Integer.parseInt(total[0]) + plus);
-                editSend.setText(total[0] + "." + total[1]);
+                String[] total = amount.split("\\.");
+                BigInteger oldValue = new BigInteger(total[0]);
+                value = oldValue.add(BigInteger.valueOf(plus));
+                if (value.toString().length() > 10)
+                    editSend.setText(oldValue.toString() + "." + total[1]);
+                else
+                    editSend.setText(value.toString() + "." + total[1]);
             }
         }
     }

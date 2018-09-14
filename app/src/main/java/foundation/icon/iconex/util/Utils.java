@@ -2,11 +2,13 @@ package foundation.icon.iconex.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
@@ -103,6 +105,22 @@ public class Utils {
             return MyConstants.PREFIX_HEX + hex;
         else
             return hex;
+    }
+
+    public static String formatFloating(String target, int floating) {
+        if (!target.contains("."))
+            return target;
+        else {
+            String[] divide = target.split("\\.");
+            BigInteger integer = new BigInteger(divide[0]);
+            String trailing = divide[1].substring(0, floating);
+
+            return NumberFormat.getNumberInstance(Locale.getDefault()).format(integer) + "." + trailing;
+        }
+    }
+
+    public static String strip(String target) {
+        return target.replaceAll("^\\s++|\\s++$", "");
     }
 
     public enum RES_VERSION {

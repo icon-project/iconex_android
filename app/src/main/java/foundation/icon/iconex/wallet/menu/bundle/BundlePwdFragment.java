@@ -79,7 +79,9 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                 } else {
                     linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
                     int pwdResult = PasswordValidator.validatePassword(editPwd.getText().toString());
-                    if (pwdResult == PasswordValidator.LEAST_8) {
+                    if (pwdResult == PasswordValidator.EMPTY) {
+                        showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                    } else if (pwdResult == PasswordValidator.LEAST_8) {
                         showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
                     } else if (pwdResult == PasswordValidator.HAS_WHITE_SPACE) {
                         showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
@@ -250,7 +252,9 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
             case R.id.btn_export:
                 int pwdResult = PasswordValidator.validatePassword(editPwd.getText().toString());
-                if (pwdResult == PasswordValidator.LEAST_8) {
+                if (pwdResult == PasswordValidator.EMPTY) {
+                    showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                } else if (pwdResult == PasswordValidator.LEAST_8) {
                     showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
                 } else if (pwdResult == PasswordValidator.HAS_WHITE_SPACE) {
                     showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
@@ -336,7 +340,9 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
     private void setDownEnabled() {
         int pwdResult = PasswordValidator.validatePassword(editPwd.getText().toString());
-        if (pwdResult == PasswordValidator.LEAST_8) {
+        if (pwdResult == PasswordValidator.EMPTY) {
+            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+        } else if (pwdResult == PasswordValidator.LEAST_8) {
             showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
         } else if (pwdResult == PasswordValidator.HAS_WHITE_SPACE) {
             showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));

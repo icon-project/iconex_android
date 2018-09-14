@@ -71,13 +71,12 @@
 
                 <TextView
                     android:id="@+id/txt_total_balance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
                     android:fontFamily="@font/nanum_square_bold"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
                     android:text="-"
-                    android:textColor="@color/colorText"
-                    android:textSize="16sp" />
+                    android:textColor="@color/colorText" />
 
                 <TextView
                     android:id="@+id/txt_unit"

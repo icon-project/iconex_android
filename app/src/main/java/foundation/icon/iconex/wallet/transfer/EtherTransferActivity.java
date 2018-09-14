@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +57,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
     private static final String TAG = ICONTransferActivity.class.getSimpleName();
 
+    private ScrollView scroll;
     private Button btnBack;
     private MyEditText editSend, editAddress;
     private View lineSend, lineAddress;
@@ -173,6 +176,8 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
         EXCHANGE_PRICE = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
 
+        scroll = findViewById(R.id.scroll);
+
         ((TextView) findViewById(R.id.txt_title)).setText(mWallet.getAlias());
         ((TextView) findViewById(R.id.txt_possession))
                 .setText(String.format(getString(R.string.possessionAmount), mWalletEntry.getSymbol()));
@@ -180,7 +185,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                 .setText(String.format(getString(R.string.sendAmount), mWalletEntry.getSymbol()));
         ((TextView) findViewById(R.id.txt_send_fee)).setText(String.format(getString(R.string.estiFee), MyConstants.SYMBOL_ETH));
         ((TextView) findViewById(R.id.txt_remain_amount))
-                .setText(String.format(getString(R.string.ethEstiRemain), mWalletEntry.getSymbol()));
+                .setText(String.format(getString(R.string.estiRemain), mWalletEntry.getSymbol()));
         btnBack = findViewById(R.id.btn_back);
         btnBack.setOnClickListener(this);
 
@@ -291,6 +296,10 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_NEXT)) {
                     editAddress.requestFocus();
+
+                    int[] location = new int[2];
+                    btnPlus10.getLocationInWindow(location);
+                    scroll.smoothScrollTo(0, location[1] - findViewById(R.id.appbar).getBottom());
                 }
                 return false;
             }
@@ -336,6 +345,19 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
             }
         });
+        editAddress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_NEXT)) {
+                    editLimit.requestFocus();
+
+                    int[] location = new int[2];
+                    btnContacts.getLocationInWindow(location);
+                    scroll.smoothScrollTo(0, scroll.getScrollY() + (location[1] - findViewById(R.id.appbar).getBottom()));
+                }
+                return false;
+            }
+        });
 
         editLimit = findViewById(R.id.edit_limit);
         editLimit.setLongClickable(false);
@@ -379,6 +401,9 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                         lineLimit.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
                         lineLimit.setBackgroundColor(getResources().getColor(R.color.editNormal));
+
+                    ((TextView) findViewById(R.id.txt_fee)).setText(calculateFee());
+                    setRemain(calculateFee());
                 }
             }
 
@@ -534,6 +559,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         btnDelData.setOnClickListener(this);
 
         txtRemain = findViewById(R.id.txt_remain);
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtRemain, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         txtTransRemain = findViewById(R.id.txt_trans_remain);
         txtPrice = findViewById(R.id.txt_price);
         txtPrice.setText(String.valueOf(seekPrice.getProgress()));
@@ -598,6 +624,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         balance = new BigInteger(mWalletEntry.getBalance());
 
         ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(findViewById(R.id.txt_balance), TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         ((TextView) findViewById(R.id.txt_fee)).setText(calculateFee());
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
         if (strPrice != null) {
@@ -793,6 +820,8 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
 
+//        ((TextView) findViewById(R.id.txt_fee)).setText(ConvertUtil.getValue(bigFee, 18));
+
         boolean isNegative = false;
 
         if (editSend.getText().toString().isEmpty()) {
@@ -884,18 +913,26 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
     }
 
     private void addPlus(int plus) {
-        String value;
-        if (editSend.getText().toString().isEmpty()) {
+        BigInteger value;
+        String amount = editSend.getText().toString();
+        if (amount.isEmpty()) {
             editSend.setText(Integer.toString(plus));
         } else {
-            value = editSend.getText().toString();
-            if (value.indexOf(".") < 0) {
-                value = Integer.toString(Integer.parseInt(value) + plus);
-                editSend.setText(value);
+            if (amount.indexOf(".") < 0) {
+                BigInteger oldValue = new BigInteger(amount);
+                value = oldValue.add(BigInteger.valueOf(plus));
+                if (value.toString().length() > 10)
+                    editSend.setText(oldValue.toString());
+                else
+                    editSend.setText(value.toString());
             } else {
-                String[] total = value.split("\\.");
-                total[0] = Integer.toString(Integer.parseInt(total[0]) + plus);
-                editSend.setText(total[0] + "." + total[1]);
+                String[] total = amount.split("\\.");
+                BigInteger oldValue = new BigInteger(total[0]);
+                value = oldValue.add(BigInteger.valueOf(plus));
+                if (value.toString().length() > 10)
+                    editSend.setText(oldValue.toString() + "." + total[1]);
+                else
+                    editSend.setText(value.toString() + "." + total[1]);
             }
         }
     }
@@ -949,7 +986,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             } else if (ownBalance.compareTo(fee) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errOwnNotEnough));
+                txtSendWarning.setText(getString(R.string.errEthOwnNotEnough));
 
                 return false;
             }
@@ -1086,7 +1123,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
             BigInteger value = ConvertUtil.valueToBigInteger(editSend.getText().toString(), mWalletEntry.getDefaultDec());
-            EthTxInfo txInfo = new EthTxInfo(ConvertUtil.getValue(value, 18), calculateFee(), editAddress.getText().toString());
+            EthTxInfo txInfo = new EthTxInfo(editAddress.getText().toString(), ConvertUtil.getValue(value, 18), calculateFee());
             txInfo.setFromAddress(mWallet.getAddress());
             txInfo.setPrice(txtPrice.getText().toString());
             txInfo.setLimit(editLimit.getText().toString());
@@ -1095,7 +1132,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             return txInfo;
         } else {
             BigInteger value = ConvertUtil.valueToBigInteger(editSend.getText().toString(), mWalletEntry.getDefaultDec());
-            ErcTxInfo txInfo = new ErcTxInfo(ConvertUtil.getValue(value, 18), calculateFee(), editAddress.getText().toString());
+            ErcTxInfo txInfo = new ErcTxInfo(editAddress.getText().toString(), ConvertUtil.getValue(value, 18), calculateFee());
             txInfo.setFromAddress(mWallet.getAddress());
             txInfo.setPrice(txtPrice.getText().toString());
             txInfo.setLimit(editLimit.getText().toString());

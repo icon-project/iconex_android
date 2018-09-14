@@ -26,8 +26,6 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.BottomSheetMenu;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
@@ -37,6 +35,9 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.token.swap.TokenSwapActivity;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
 import foundation.icon.iconex.wallet.menu.WalletBackUpActivity;
 import foundation.icon.iconex.wallet.menu.WalletPwdChangeActivity;
@@ -270,7 +271,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 case MyConstants.TAG_MENU_REMOVE:
                     BigInteger asset = getAsset();
                     final Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-                    if (asset.compareTo(BigInteger.ZERO) == 0) {
+                    if (asset.compareTo(BigInteger.ZERO) == 0
+                            && loadingBalance.getVisibility() == View.GONE) {
                         dialog.setMessage(getString(R.string.removeWallet));
                         dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                             @Override
@@ -417,7 +419,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private EditTextDialog.OnConfirmCallback mAliasDialogCallback = new EditTextDialog.OnConfirmCallback() {
         @Override
-        public void onConfirm(String alias) {
+        public void onConfirm(String target) {
+            String alias = Utils.strip(target);
+
             if (alias.isEmpty()) {
                 editTextDialog.setError(getString(R.string.errWhiteSpace));
                 return;
@@ -519,6 +523,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             case RC_DETAIL:
                 if (resultCode == WalletDetailActivity.RES_REFRESH) {
                     ((MainActivity) getActivity()).notifyWalletChanged();
+                } else {
+                    ((MainActivity) getActivity()).refreshNameView();
                 }
                 break;
 

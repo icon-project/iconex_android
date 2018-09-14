@@ -16,8 +16,8 @@ import android.widget.TextView;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 
 public class LoadInputWalletNameFragment extends Fragment implements View.OnClickListener {
@@ -79,13 +79,13 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    btnNameDelete.setVisibility(View.VISIBLE);
-                } else {
-                    btnNameDelete.setVisibility(View.INVISIBLE);
                     if (Utils.checkByteLength(s.toString()) > 16) {
                         editAlias.setText(s.subSequence(0, s.length() - 1));
                         editAlias.setSelection(editAlias.getText().toString().length());
                     }
+                    btnNameDelete.setVisibility(View.VISIBLE);
+                } else {
+                    btnNameDelete.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -182,7 +182,7 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
                 break;
 
             case R.id.btn_done:
-                mListener.onDoneLoadWalletByKeyStore(editAlias.getText().toString());
+                mListener.onDoneLoadWalletByKeyStore(Utils.strip(editAlias.getText().toString()));
                 break;
 
             case R.id.btn_back:
@@ -209,11 +209,9 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
         mListener = null;
     }
 
-    private int checkAlias(String alias) {
+    private int checkAlias(String target) {
+        String alias = Utils.strip(target);
         if (alias.isEmpty())
-            return ALIAS_EMPTY;
-
-        if (alias.trim().length() == 0)
             return ALIAS_EMPTY;
 
         for (Wallet info : ICONexApp.mWallets) {
@@ -236,6 +234,7 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
 
     public interface OnInputWalletNameCallback {
         void onDoneLoadWalletByKeyStore(String name);
+
         void onNameBack();
     }
 }

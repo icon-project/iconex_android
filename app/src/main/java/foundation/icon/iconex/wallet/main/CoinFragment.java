@@ -22,12 +22,12 @@ import java.util.Locale;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.token.swap.TokenSwapActivity;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
@@ -63,6 +63,7 @@ public class CoinFragment extends Fragment {
     private WalletEntry mToken;
 
     private final int RC_SWAP = 301;
+    private final int RC_DETAIL = 201;
 
     public CoinFragment() {
         // Required empty public constructor
@@ -212,7 +213,7 @@ public class CoinFragment extends Fragment {
 
         setTotalAsset();
 
-        adapter = new CoinRecyclerAdapter(getActivity(), mType, mList, mDecimals, mSymbol);
+        adapter = new CoinRecyclerAdapter(getActivity(), mItem);
         adapter.setClickListener(new CoinRecyclerAdapter.WalletClickListener() {
             @Override
             public void onWalletClick(Wallet wallet, String symbol) {
@@ -220,9 +221,9 @@ public class CoinFragment extends Fragment {
                 for (WalletEntry entry : wallet.getWalletEntries())
                     if (entry.getSymbol().equals(symbol))
                         target = entry;
-                startActivity(new Intent(getActivity(), WalletDetailActivity.class)
+                startActivityForResult(new Intent(getActivity(), WalletDetailActivity.class)
                         .putExtra("walletInfo", (Serializable) wallet)
-                        .putExtra("walletEntry", (Serializable) target));
+                        .putExtra("walletEntry", (Serializable) target), RC_DETAIL);
             }
 
             @Override
@@ -318,5 +319,25 @@ public class CoinFragment extends Fragment {
         }
 
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RC_DETAIL:
+                if (resultCode == WalletDetailActivity.RES_REFRESH) {
+                    ((MainActivity) getActivity()).notifyWalletChanged();
+                } else
+                    ((MainActivity) getActivity()).refreshNameView();
+                break;
+
+            case RC_SWAP:
+                if (resultCode == TokenSwapActivity.RES_CREATED)
+                    ((MainActivity) getActivity()).notifyWalletChanged();
+                break;
+
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

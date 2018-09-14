@@ -369,6 +369,59 @@ public class NetworkService extends Service {
         }).start();
     }
 
+    public void requestIrcTxList(final String own, final String contract, final int page) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String url = null;
+                    switch (network) {
+                        case MyConstants.NETWORK_MAIN:
+                            url = ServiceConstants.URL_VERSION_MAIN;
+                            break;
+
+                        case MyConstants.NETWORK_TEST:
+                            url = ServiceConstants.URL_VERSION_TEST;
+                            break;
+
+                        case MyConstants.NETWORK_DEV:
+                            url = ServiceConstants.DEV_TRACKER;
+                            break;
+                    }
+
+                    LoopChainClient client = new LoopChainClient(url);
+                    Call<TRResponse> responseCall = client.getTokenTxList(own, contract, page);
+                    responseCall.enqueue(new Callback<TRResponse>() {
+                        @Override
+                        public void onResponse(Call<TRResponse> call, Response<TRResponse> response) {
+                            if (response.isSuccessful()) {
+                                String resCode = response.body().getResult();
+                                if (resCode.equals(MyConstants.RESULT_OK)) {
+                                    int listSize = response.body().getListSize();
+                                    JsonArray data = response.body().getData().getAsJsonArray();
+                                    mTxListCallback.onReceiveTransactionList(listSize, data);
+                                } else {
+                                    mTxListCallback.onReceiveError(resCode);
+                                }
+                            } else {
+                                mTxListCallback.onReceiveError("9999");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<TRResponse> call, Throwable t) {
+                            mTxListCallback.onReceiveException(t);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mTxListCallback.onReceiveException(e);
+                }
+            }
+        }).start();
+    }
+
     public void requestICXTransaction(Transaction tx) {
         String url = null;
         switch (network) {

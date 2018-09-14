@@ -26,9 +26,9 @@ import java.io.Serializable;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.control.PasswordValidator;
-import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -157,29 +157,30 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                 } else {
                     linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-                    if (editPwd.getText().toString().isEmpty()) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
-                    } else {
-                        int result = PasswordValidator.validatePassword(editPwd.getText().toString());
-                        switch (result) {
-                            case PasswordValidator.LEAST_8:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
-                                break;
-                            case PasswordValidator.NOT_MATCH_PATTERN:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
-                                break;
+                    int result = PasswordValidator.validatePassword(editPwd.getText().toString());
+                    switch (result) {
+                        case PasswordValidator.EMPTY:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                            break;
 
-                            case PasswordValidator.HAS_WHITE_SPACE:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
-                                break;
+                        case PasswordValidator.LEAST_8:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+                            break;
 
-                            case PasswordValidator.SERIAL_CHAR:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
-                                break;
+                        case PasswordValidator.NOT_MATCH_PATTERN:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
+                            break;
 
-                            default:
-                                hideWarning(editPwd, linePwd, txtPwdWarning);
-                        }
+                        case PasswordValidator.HAS_WHITE_SPACE:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
+                            break;
+
+                        case PasswordValidator.SERIAL_CHAR:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
+                            break;
+
+                        default:
+                            hideWarning(editPwd, linePwd, txtPwdWarning);
                     }
                 }
             }
@@ -471,6 +472,14 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
         }
         int pwdResult = PasswordValidator.validatePassword(pwd);
         switch (pwdResult) {
+            case PasswordValidator.EMPTY:
+                showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                break;
+
+            case PasswordValidator.LEAST_8:
+                showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+                break;
+
             case PasswordValidator.NOT_MATCH_PATTERN:
                 showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
                 break;

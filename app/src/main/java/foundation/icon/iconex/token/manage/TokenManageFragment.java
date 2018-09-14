@@ -43,14 +43,14 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.token.Token;
-import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.RESTClient;
 import foundation.icon.iconex.service.ServiceConstants;
+import foundation.icon.iconex.token.Token;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.MyEditText;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
@@ -590,10 +590,9 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                 btnAdd.setEnabled(false);
         }
 
-        return resultAddr && resultName;
-//        }
+        checkEnteredInfo();
 
-//        return false;
+        return resultAddr && resultName;
     }
 
     private boolean checkAddressDup(String address) {
@@ -653,6 +652,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     editAddr.setText(barcode.displayValue);
+                    editAddr.setSelection(editAddr.getText().toString().length());
                 } else {
 //                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
@@ -812,6 +812,10 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
         if (layoutLoading.getVisibility() != View.VISIBLE)
             layoutLoading.setVisibility(View.VISIBLE);
 
+        editName.setText("");
+        editSym.setText("");
+        editDec.setText("");
+
         String url;
         if (ICONexApp.network == MyConstants.NETWORK_MAIN)
             url = ServiceConstants.TRUSTED_HOST_MAIN;
@@ -921,9 +925,13 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
     private void checkEnteredInfo() {
         if (!editName.getText().toString().isEmpty()
                 && !editSym.getText().toString().isEmpty()
-                && !editDec.getText().toString().isEmpty())
+                && !editDec.getText().toString().isEmpty()) {
+
+            if (layoutLoading.getVisibility() == View.VISIBLE)
+                layoutLoading.setVisibility(View.GONE);
+
             btnAdd.setEnabled(true);
-        else
+        } else
             btnAdd.setEnabled(false);
     }
 

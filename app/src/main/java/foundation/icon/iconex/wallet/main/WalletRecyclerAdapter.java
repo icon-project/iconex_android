@@ -1,7 +1,9 @@
 package foundation.icon.iconex.wallet.main;
 
 import android.content.Context;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +17,10 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 
@@ -75,7 +78,7 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
                 value = ConvertUtil.getValue(balance, item.getDefaultDec());
                 Double doubBalance = Double.parseDouble(value);
 
-                holder.txtBalance.setText(String.format(Locale.getDefault(), "%,.4f", doubBalance));
+                holder.txtBalance.setText(String.format(Locale.getDefault(), "%s", Utils.formatFloating(value, 4)));
 
                 String exchange = item.getSymbol().toLowerCase() + ((MainActivity) mContext).getExchangeUnit().toLowerCase();
                 String strPrice;
@@ -137,6 +140,7 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
             super(itemView);
             txtName = itemView.findViewById(R.id.txt_name);
             txtBalance = itemView.findViewById(R.id.txt_total_balance);
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(txtBalance, 4, 30, 1, TypedValue.COMPLEX_UNIT_SP);
             txtUnit = itemView.findViewById(R.id.txt_unit);
             txtTransBalance = itemView.findViewById(R.id.txt_trans_balance);
             txtTransUnit = itemView.findViewById(R.id.txt_trans_unit);

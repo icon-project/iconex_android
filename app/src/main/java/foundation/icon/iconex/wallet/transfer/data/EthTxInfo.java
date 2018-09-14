@@ -11,8 +11,8 @@ public class EthTxInfo extends TxInfo {
     private String limit;
     private String data;
 
-    public EthTxInfo(String send, String fee, String to) {
-        super(send, fee, to);
+    public EthTxInfo(String to, String send, String fee) {
+        super(to, send, fee);
     }
 
     public String getFromAddress() {

@@ -61,13 +61,13 @@ public class MyConstants {
     public static final String ICX_SYM = "ICX";
 
     // ======== App Lock ========
-    public static final int LOCK_TIME_LIMIT = 5 * 2 * 1000;
-  
+    public static final int LOCK_TIME_LIMIT = 5 * 60 * 1000;
+
     // ======== Network ========
     public static final int NETWORK_MAIN = 0;
     public static final int NETWORK_TEST = 1;
     public static final int NETWORK_DEV = 2;
-  
+
     public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+{}:<>?]).{8,}$";
 
     public enum CoinType {

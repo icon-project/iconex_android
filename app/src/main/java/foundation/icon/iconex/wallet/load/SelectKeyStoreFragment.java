@@ -422,7 +422,10 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
             switch (result) {
                 case SUCCESS:
                     hidePwdError();
-                    btnNext.setEnabled(true);
+                    if (editPwd.getText().toString().isEmpty())
+                        btnNext.setEnabled(false);
+                    else
+                        btnNext.setEnabled(true);
                     break;
 
                 case ERROR:

@@ -98,6 +98,11 @@ public class LoopChainClient {
         return response;
     }
 
+    public Call<TRResponse> getTokenTxList(String own, String contract, int page) throws IOException {
+        Call<TRResponse> response = proxyClient.sendGetTokenTxList(own, contract, page);
+        return response;
+    }
+
     public GetTransactionResultResp getTransactionResult(String txHash) throws IOException {
         int id = new Random().nextInt(999999) + 100000;
         GetTransactionResultData qData = new GetTransactionResultData(id, txHash);

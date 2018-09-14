@@ -9,11 +9,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -101,7 +98,14 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0) {
+                if (s.length() > 0) {
+                    if (Utils.checkByteLength(s.toString()) > 16) {
+                        editName.setText(s.subSequence(0, s.length() - 1));
+                        editName.setSelection(editName.getText().toString().length());
+                    }
+
+                    btnNameDelete.setVisibility(View.VISIBLE);
+                } else {
                     btnNameDelete.setVisibility(View.INVISIBLE);
                     txtNameWarning.setVisibility(View.GONE);
 
@@ -109,20 +113,8 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
                         lineName.setBackgroundColor(mContext.getResources().getColor(R.color.editActivated));
                     else
                         lineName.setBackgroundColor(mContext.getResources().getColor(R.color.editNormal));
-                } else {
-                    btnNameDelete.setVisibility(View.VISIBLE);
-                }
 
-                if (s.length() > 0) {
-                    if (Utils.checkByteLength(s.toString()) > 16) {
-                        editName.setText(s.subSequence(0, s.length() - 1));
-                        editName.setSelection(editName.getText().toString().length());
-                    }
-
-                    if (editAddress.getText().toString().length() > 0)
-                        btnConfirm.setEnabled(true);
-                    else
-                        btnConfirm.setEnabled(false);
+                    btnConfirm.setEnabled(false);
                 }
             }
 
@@ -140,6 +132,7 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
                     lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.editActivated));
                 } else {
                     lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.editNormal));
+                    validateAddress(editAddress.getText().toString());
                 }
             }
         });
@@ -151,26 +144,20 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0) {
+                if (s.length() > 0) {
+                    btnAddrDelete.setVisibility(View.VISIBLE);
+
+                    if (!editName.getText().toString().trim().isEmpty()
+                            && !editAddress.getText().toString().trim().isEmpty())
+                        btnConfirm.setEnabled(true);
+                } else {
                     btnAddrDelete.setVisibility(View.INVISIBLE);
                     txtAddrWarning.setVisibility(View.GONE);
                     if (editAddress.isFocused())
                         lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.editActivated));
                     else
                         lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.editNormal));
-                } else {
-                    btnAddrDelete.setVisibility(View.VISIBLE);
-                }
 
-//                int lines = editAddress.getLineCount();
-//                if (lines > 2) {
-//                    editAddress.getText().delete(editAddress.getSelectionEnd() - 1, editAddress.getSelectionStart());
-//                }
-
-                if (s.length() > 0
-                        && editName.getText().toString().length() > 0) {
-                    btnConfirm.setEnabled(true);
-                } else {
                     btnConfirm.setEnabled(false);
                 }
             }
@@ -300,6 +287,14 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
     }
 
     private boolean validateAddress(String address) {
+        if (address.trim().isEmpty()) {
+            lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
+            txtAddrWarning.setVisibility(View.VISIBLE);
+            txtAddrWarning.setText(mContext.getString(R.string.errNoAddress));
+
+            return false;
+        }
+
         if (mCoinType.equals(loopchain.icon.wallet.core.Constants.KS_COINTYPE_ICX)) {
             if (address.startsWith("hx")) {
                 String temp = address.substring(2);

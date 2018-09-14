@@ -13,8 +13,8 @@ public class ErcTxInfo extends EthTxInfo {
     private int decimals;
     private String symbol;
 
-    public ErcTxInfo(String send, String fee, String to) {
-        super(send, fee, to);
+    public ErcTxInfo(String to, String send, String fee) {
+        super(to, send, fee);
     }
 
     public Credentials getCredentials() {
