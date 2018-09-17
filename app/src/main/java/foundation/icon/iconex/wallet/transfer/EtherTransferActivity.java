@@ -642,12 +642,6 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                         .setText(String.format(getString(R.string.exchange_usd), strBalanceUSD));
             }
 
-            Double feeUSD = Double.parseDouble(calculateFee())
-                    * Double.parseDouble(strPrice);
-            String strFeeUSD = String.format(Locale.getDefault(), "%,.2f", feeUSD);
-            ((TextView) findViewById(R.id.txt_trans_fee))
-                    .setText(String.format(getString(R.string.exchange_usd), strFeeUSD));
-
             setRemain(editSend.getText().toString());
         }
     }
@@ -899,6 +893,12 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                     txtRemain.setText(remainValue);
                     txtTransRemain.setText(String.format(getString(R.string.exchange_usd), strRemainUSD));
                 }
+
+                Double feeUSD = Double.parseDouble(calculateFee())
+                        * Double.parseDouble(strPrice);
+                String strFeeUSD = String.format(Locale.getDefault(), "%,.2f", feeUSD);
+                ((TextView) findViewById(R.id.txt_trans_fee))
+                        .setText(String.format(getString(R.string.exchange_usd), strFeeUSD));
             }
 
 

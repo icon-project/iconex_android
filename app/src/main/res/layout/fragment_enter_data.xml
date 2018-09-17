@@ -4,8 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
-    tools:context=".wallet.transfer.EnterDataActivity">
+    tools:context=".wallet.transfer.EnterDataFragment">
 
     <include
         layout="@layout/layout_appbar_mod"

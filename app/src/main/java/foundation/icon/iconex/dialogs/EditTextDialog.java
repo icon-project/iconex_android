@@ -13,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import foundation.icon.iconex.R;
@@ -44,6 +43,8 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
     private Button btnCancel, btnConfirm;
 
     private String mAlias;
+
+    private String beforeStr;
 
     public EditTextDialog(@NonNull Context context, @NonNull String title) {
         super(context);
@@ -100,8 +101,10 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
 
                     if (mType == TYPE_INPUT.ALIAS) {
                         if (Utils.checkByteLength(s.toString()) > 16) {
-                            editText.setText(s.subSequence(0, s.length() - 1));
+                            editText.setText(beforeStr);
                             editText.setSelection(editText.getText().toString().length());
+                        } else {
+                            beforeStr = s.toString();
                         }
                     }
                 } else {

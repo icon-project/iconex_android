@@ -3,8 +3,7 @@ package foundation.icon.iconex.wallet.transfer.data;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-import foundation.icon.iconex.MyConstants;
-import foundation.icon.iconex.wallet.transfer.EnterDataActivity;
+import foundation.icon.iconex.wallet.transfer.EnterDataFragment;
 
 public class InputData implements Serializable {
 
@@ -12,7 +11,7 @@ public class InputData implements Serializable {
     private BigInteger balance;
     private BigInteger stepPrice;
     private BigInteger amount;
-    private EnterDataActivity.DataType dataType;
+    private EnterDataFragment.DataType dataType;
     private String data;
     private int stepCost;
 
@@ -40,11 +39,11 @@ public class InputData implements Serializable {
         this.address = address;
     }
 
-    public EnterDataActivity.DataType getDataType() {
+    public EnterDataFragment.DataType getDataType() {
         return dataType;
     }
 
-    public void setDataType(EnterDataActivity.DataType dataType) {
+    public void setDataType(EnterDataFragment.DataType dataType) {
         this.dataType = dataType;
     }
 

@@ -356,7 +356,9 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
         boolean checkResult = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(),
                 editCheck.getText().toString());
-        if (!checkResult)
+        if (editCheck.getText().toString().trim().isEmpty()) {
+            showWarning(lineCheck, txtCheckWarning, getString(R.string.errCheckEmpty));
+        } else if (!checkResult)
             showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
         else
             hideWarning(editCheck, lineCheck, txtCheckWarning);

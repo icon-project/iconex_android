@@ -23,7 +23,7 @@
             android:fontFamily="@font/noto_sans_medium"
             android:gravity="center"
             android:lineSpacingExtra="8sp"
-            android:text="@string/data"
+            android:text="@string/selectInputType"
             android:textColor="@color/colorText"
             android:textSize="16dp" />
 

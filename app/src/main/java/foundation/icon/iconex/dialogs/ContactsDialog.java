@@ -44,6 +44,8 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
 
     private Button btnCancel, btnConfirm;
 
+    private String beforeStr;
+
     private int OK = 0;
     private int ERR_LEN_NAME = 1;
     private int ERR_DUP_NAME = 2;
@@ -100,10 +102,13 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     if (Utils.checkByteLength(s.toString()) > 16) {
-                        editName.setText(s.subSequence(0, s.length() - 1));
+                        editName.setText(beforeStr);
                         editName.setSelection(editName.getText().toString().length());
+                    } else {
+                        beforeStr = s.toString();
                     }
 
+                    btnConfirm.setEnabled(true);
                     btnNameDelete.setVisibility(View.VISIBLE);
                 } else {
                     btnNameDelete.setVisibility(View.INVISIBLE);
@@ -257,7 +262,7 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
     private boolean validateName(String name) {
         if (name.trim().length() == 0) {
             lineName.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
-            txtNameWarning.setText(mContext.getString(R.string.errWhiteSpace));
+            txtNameWarning.setText(mContext.getString(R.string.errNoAddressName));
             txtNameWarning.setVisibility(View.VISIBLE);
 
             return false;

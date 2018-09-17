@@ -1,12 +1,16 @@
 package foundation.icon.iconex.wallet.transfer;
 
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -32,40 +36,57 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EnterDataActivity extends AppCompatActivity implements View.OnClickListener {
+public class EnterDataFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = EnterDataFragment.class.getSimpleName();
 
-    private static final String TAG = EnterDataActivity.class.getSimpleName();
-
-    private TextView txtDataLimit, txtMod;
+    private TextView txtDataSize, txtMod;
     private MyEditText editData;
 
     private InputData data;
 
-    public static final String ARG_DATA = "ARG_DATA";
-    public static final int RES_DATA = 1111;
-    public static final int RES_CANCEL = 2222;
+    private static final String ARG_DATA = "ARG_DATA";
 
-    private static String beforeStr;
+    private String beforeStr;
+    private int maxSize;
+
+    public EnterDataFragment() {
+        // Required empty public constructor
+    }
+
+    public static EnterDataFragment newInstance(InputData data) {
+        EnterDataFragment fragment = new EnterDataFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_DATA, data);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enter_data);
+        if (getArguments() != null)
+            data = (InputData) getArguments().get(ARG_DATA);
+    }
 
-        if (getIntent() != null)
-            data = (InputData) getIntent().getSerializableExtra(ARG_DATA);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
-        ((TextView) findViewById(R.id.txt_title)).setText(R.string.data);
-        ((TextView) findViewById(R.id.txt_mod)).setText(R.string.complete);
-        findViewById(R.id.btn_close).setOnClickListener(this);
+        View v = inflater.inflate(R.layout.fragment_enter_data, container, false);
 
-        txtMod = findViewById(R.id.txt_mod);
+        ((TextView) v.findViewById(R.id.txt_title)).setText(R.string.data);
+        ((TextView) v.findViewById(R.id.txt_mod)).setText(R.string.complete);
+        v.findViewById(R.id.btn_close).setOnClickListener(this);
+
+        txtMod = v.findViewById(R.id.txt_mod);
         txtMod.setVisibility(View.VISIBLE);
         txtMod.setOnClickListener(this);
 
-        txtDataLimit = findViewById(R.id.txt_limit);
+        txtDataSize = v.findViewById(R.id.txt_limit);
 
-        editData = findViewById(R.id.edit_data);
+        editData = v.findViewById(R.id.edit_data);
         editData.setOnKeyPreImeListener(new OnKeyPreImeListener() {
             @Override
             public void onBackPressed() {
@@ -82,27 +103,39 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     String dataStr = s.toString();
-                    if (dataStr.getBytes().length > 512 * 1024) {
-                        BasicDialog dialog = new BasicDialog(EnterDataActivity.this);
-                        dialog.setMessage(getString(R.string.errOverByteLimit));
-                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
+                    BasicDialog dialog = new BasicDialog(getActivity());
+                    dialog.setMessage(String.format(Locale.getDefault(), getString(R.string.errOverByteLimit), maxSize));
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            if (beforeStr != null) {
                                 editData.setText(beforeStr);
                                 editData.setSelection(editData.getText().toString().length());
+                            } else {
+                                editData.setText("");
                             }
-                        });
+                        }
+                    });
+
+                    Log.d(TAG, "length=" + dataStr.getBytes().length + " // max=" + maxSize * 1024);
+
+                    if (dataStr.getBytes().length > maxSize * 1024) {
                         dialog.show();
-                        setDataLength(txtDataLimit, beforeStr.getBytes().length);
+
+                        if (beforeStr == null)
+                            setDataSize(txtDataSize, 0);
+                        else
+                            setDataSize(txtDataSize, beforeStr.getBytes().length);
                     } else {
-                        setDataLength(txtDataLimit, dataStr.getBytes().length);
+                        setDataSize(txtDataSize, dataStr.getBytes().length);
                         beforeStr = dataStr;
                     }
+
 
                     txtMod.setTextColor(getResources().getColor(R.color.colorWhite));
                     txtMod.setEnabled(true);
                 } else {
-                    txtDataLimit.setText(String.format(Locale.getDefault(), "%d KB", 0));
+                    txtDataSize.setText(String.format(Locale.getDefault(), "%d KB", 0));
                     txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
                     txtMod.setEnabled(false);
                 }
@@ -116,11 +149,14 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
 
         if (data.getDataType() == DataType.UTF) {
             editData.setHint(R.string.hintUtfData);
-            ((TextView) findViewById(R.id.txt_type)).setText("UTF-8");
+            ((TextView) v.findViewById(R.id.txt_type)).setText("UTF-8");
         } else {
             editData.setHint(R.string.hintHexData);
-            ((TextView) findViewById(R.id.txt_type)).setText("HEX");
+            ((TextView) v.findViewById(R.id.txt_type)).setText("HEX");
         }
+
+        maxSize = 250;
+        ((TextView) v.findViewById(R.id.txt_max)).setText(String.format(Locale.getDefault(), getString(R.string.dataMaxSize), maxSize));
 
         if (data.getData() != null) {
             if (data.getData().isEmpty()) {
@@ -138,6 +174,27 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
             txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
             txtMod.setEnabled(false);
         }
+
+        editData.requestFocus();
+
+        return v;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnEnterDataLisnter) {
+            mListener = (OnEnterDataLisnter) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnEnterDataLisnter");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override
@@ -149,18 +206,28 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.txt_mod:
                 if (data.getDataType() == DataType.HEX) {
+                    if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
+                        BasicDialog err = new BasicDialog(getActivity());
+                        err.setMessage(getString(R.string.errInvalidData));
+                        err.show();
+
+                        break;
+                    }
+
                     try {
                         Hex.decode(Utils.remove0x(editData.getText().toString()));
                         data.setData(Utils.checkPrefix(editData.getText().toString()));
                         getStepCost();
                     } catch (Exception e) {
-                        BasicDialog err = new BasicDialog(this);
+                        BasicDialog err = new BasicDialog(getActivity());
                         err.setMessage(getString(R.string.errInvalidData));
                         err.show();
                     }
                 } else {
                     String dataStr = editData.getText().toString();
+                    Log.d(TAG, "Hex.toHexString Start");
                     String hexStr = Hex.toHexString(dataStr.getBytes());
+                    Log.d(TAG, "Hex.toHexString End");
                     data.setData(Utils.checkPrefix(hexStr));
                     getStepCost();
                 }
@@ -168,19 +235,16 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        showCancel();
-    }
-
     private void showCancel() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+        Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
         dialog.setMessage(getString(R.string.cancelEnterData));
         dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
             @Override
             public void onOk() {
-                setResult(RES_CANCEL);
-                finish();
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                        | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                if (mListener != null)
+                    mListener.onDataCancel();
             }
 
             @Override
@@ -203,7 +267,7 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void setDataLength(TextView txtLength, long byteLength) {
+    private void setDataSize(TextView txtLength, long byteLength) {
         if (byteLength <= 512 * 1024)
             txtLength.setTextColor(getResources().getColor(R.color.colorText));
         else
@@ -216,20 +280,15 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
             txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength / 1024) + " KB"));
             return;
         }
-
-//        if (byteLength % 1024 > 0) {
-//
-//            return;
-//        } else {
-//            txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength / 1024) + " KB"));
-//            return;
-//        }
     }
 
     private boolean checkBalance(int stepLimit) {
         BigInteger limit = new BigInteger(Integer.toString(stepLimit));
         BigInteger fee = limit.multiply(data.getStepPrice());
         BigInteger total = data.getAmount().add(fee);
+
+        Log.d(TAG, "Balance=" + data.getBalance().toString());
+        Log.d(TAG, "totla=" + total.toString());
 
         if (data.getBalance().compareTo(total) < 0)
             return false;
@@ -261,12 +320,10 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
                         if (checkBalance(stepLimit)) {
                             data.setStepCost(stepLimit);
 
-                            Intent dataIntent = new Intent();
-                            dataIntent.putExtra(ARG_DATA, data);
-                            setResult(RES_DATA, dataIntent);
-                            finish();
+                            if (mListener != null)
+                                mListener.onSetData(data);
                         } else {
-                            BasicDialog dialog = new BasicDialog(EnterDataActivity.this);
+                            BasicDialog dialog = new BasicDialog(getActivity());
                             dialog.setMessage(getString(R.string.errIcxOwnNotEnough));
                             dialog.show();
                         }
@@ -288,5 +345,13 @@ public class EnterDataActivity extends AppCompatActivity implements View.OnClick
     public enum DataType {
         UTF,
         HEX
+    }
+
+    private OnEnterDataLisnter mListener;
+
+    public interface OnEnterDataLisnter {
+        void onSetData(InputData data);
+
+        void onDataCancel();
     }
 }

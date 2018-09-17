@@ -8,8 +8,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         multiDexEnabled true
-        versionCode 14
-        versionName "1.2.8"
+        versionCode 16
+        versionName "1.2.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

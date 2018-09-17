@@ -34,6 +34,8 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
     private String mCoinType;
     private String mKeyStore;
 
+    private String beforeStr;
+
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
     private final int ALIAS_EMPTY = 2;
@@ -80,11 +82,19 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(s.subSequence(0, s.length() - 1));
+                        editAlias.setText(beforeStr);
                         editAlias.setSelection(editAlias.getText().toString().length());
+                    } else {
+                        beforeStr = s.toString();
                     }
+
                     btnNameDelete.setVisibility(View.VISIBLE);
                 } else {
+                    if (editAlias.isFocused())
+                        lineName.setBackgroundColor(getActivity().getResources().getColor(R.color.editActivated));
+                    else
+                        lineName.setBackgroundColor(getActivity().getResources().getColor(R.color.editNormal));
+                    txtNameWarning.setVisibility(View.INVISIBLE);
                     btnNameDelete.setVisibility(View.INVISIBLE);
                 }
             }
@@ -109,7 +119,7 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
                     case ALIAS_EMPTY:
                         lineName.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                         txtNameWarning.setVisibility(View.VISIBLE);
-                        txtNameWarning.setText(getString(R.string.errWhiteSpace));
+                        txtNameWarning.setText(getString(R.string.errAliasEmpty));
                         btnDone.setEnabled(false);
                         break;
 
@@ -142,7 +152,7 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
                         case ALIAS_EMPTY:
                             lineName.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                             txtNameWarning.setVisibility(View.VISIBLE);
-                            txtNameWarning.setText(getString(R.string.errWhiteSpace));
+                            txtNameWarning.setText(getString(R.string.errAliasEmpty));
                             btnDone.setEnabled(false);
                             break;
 

@@ -47,6 +47,8 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     private InputMethodManager mImm;
     private OnKeyPreImeListener mOnKeyPreImeListener;
 
+    private String beforeStr;
+
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
     private final int ALIAS_EMPTY = 2;
@@ -145,8 +147,10 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                 if (s.length() > 0) {
                     btnAliasDel.setVisibility(View.VISIBLE);
                     if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(s.subSequence(0, s.length() - 1));
+                        editAlias.setText(beforeStr);
                         editAlias.setSelection(editAlias.getText().toString().length());
+                    } else {
+                        beforeStr = s.toString();
                     }
                 } else {
                     btnAliasDel.setVisibility(View.INVISIBLE);
@@ -469,7 +473,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             aliasValidate = checkAlias(alias);
             switch (aliasValidate) {
                 case ALIAS_EMPTY:
-                    showWarning(lineAlias, txtAliasWarning, getString(R.string.errWhiteSpace));
+                    showWarning(lineAlias, txtAliasWarning, getString(R.string.errAliasEmpty));
                     break;
 
                 case ALIAS_DUP:

@@ -143,11 +143,6 @@
             android:name=".wallet.menu.appInfo.AppInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".wallet.transfer.EnterDataActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
 
         <service
             android:name=".service.NetworkService"
