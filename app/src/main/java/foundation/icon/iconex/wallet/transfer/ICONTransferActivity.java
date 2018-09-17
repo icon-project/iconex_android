@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -34,6 +37,7 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
@@ -56,7 +60,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ICONTransferActivity extends AppCompatActivity implements View.OnClickListener {
+public class ICONTransferActivity extends AppCompatActivity implements View.OnClickListener, EnterDataFragment.OnEnterDataLisnter {
 
     private static final String TAG = ICONTransferActivity.class.getSimpleName();
 
@@ -108,6 +112,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     private BigInteger contractCall = BigInteger.ZERO;
 
     private InputData data = null;
+    private FragmentManager fragmentManager = null;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -650,7 +655,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     DataTypeDialog typeDialog = new DataTypeDialog(this);
                     typeDialog.setOnTypeListener(new DataTypeDialog.OnTypeListener() {
                         @Override
-                        public void onSelect(EnterDataActivity.DataType type) {
+                        public void onSelect(EnterDataFragment.DataType type) {
                             data = new InputData();
                             data.setAddress(mWallet.getAddress());
                             data.setBalance(balance);
@@ -660,17 +665,23 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                             else
                                 data.setAmount(ConvertUtil.valueToBigInteger(editSend.getText().toString(), 18));
                             data.setDataType(type);
-                            Intent dataIntent = new Intent(ICONTransferActivity.this, EnterDataActivity.class);
-                            dataIntent.putExtra(EnterDataActivity.ARG_DATA, data);
-                            startActivityForResult(dataIntent, RC_DATA);
+
+                            fragmentManager = getSupportFragmentManager();
+                            FragmentTransaction transaction = fragmentManager.beginTransaction();
+                            transaction.add(R.id.container, EnterDataFragment.newInstance(data));
+                            transaction.addToBackStack("DATA");
+                            transaction.commit();
+
                             typeDialog.dismiss();
                         }
                     });
                     typeDialog.show();
                 } else {
-                    intent = new Intent(this, EnterDataActivity.class);
-                    intent.putExtra(EnterDataActivity.ARG_DATA, data);
-                    startActivityForResult(intent, RC_DATA);
+                    fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.add(R.id.container, EnterDataFragment.newInstance(data));
+                    transaction.addToBackStack("DATA");
+                    transaction.commit();
                 }
                 break;
 
@@ -840,7 +851,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
             if (stepPriceICX != null)
                 txtTransFee.setText(String.format(Locale.getDefault(), "%,.2f USD",
-                        Double.parseDouble(ConvertUtil.getValue(stepPriceICX, 18)) * Double.parseDouble(strPrice)));
+                        Double.parseDouble(txtFee.getText().toString()) * Double.parseDouble(strPrice)));
 
             if (isNegative) {
                 txtRemain.setText(String.format(getString(R.string.txWithdraw), ConvertUtil.getValue(remain, mWalletEntry.getDefaultDec())));
@@ -1178,7 +1189,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void getIrcStepLimit() {
-        if (editSend.getText().toString().isEmpty()) {
+        if (!editSend.getText().toString().isEmpty()) {
             String address = mWallet.getAddress();
             String value = ConvertUtil.valueToHexString(editSend.getText().toString(), mWalletEntry.getDefaultDec());
 
@@ -1195,7 +1206,32 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     .add(contractCall)
                     .add(inputPrice.multiply(BigInteger.valueOf(byteLength)))
                     .multiply(BigInteger.valueOf(2));
+
+            Log.d(TAG, "minStep=" + minStep.toString());
         }
+    }
+
+    @Override
+    public void onSetData(InputData data) {
+        this.data = data;
+        minStep = new BigInteger(Integer.toString(this.data.getStepCost()));
+        editLimit.setText(minStep.toString());
+
+        btnInput.setText(getString(R.string.view));
+        btnInput.setSelected(true);
+
+        Log.d(TAG, "Hex string=" + this.data.getData());
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        fragmentManager.popBackStackImmediate();
+
+        setSendEnable();
+    }
+
+    @Override
+    public void onDataCancel() {
+        fragmentManager.popBackStackImmediate();
     }
 
     @Override
@@ -1219,21 +1255,29 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             } else {
 
             }
-        } else if (requestCode == RC_DATA) {
-            if (resultCode == EnterDataActivity.RES_DATA) {
-                try {
-                    this.data = (InputData) data.getExtras().get(EnterDataActivity.ARG_DATA);
-                    defaultLimit = new BigInteger(Integer.toString(this.data.getStepCost()));
-                    editLimit.setText(defaultLimit.toString());
+        }
+    }
 
-                    btnInput.setText(getString(R.string.view));
-                    btnInput.setSelected(true);
+    @Override
+    public void onBackPressed() {
+        if (fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0) {
+            Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+            dialog.setMessage(getString(R.string.cancelEnterData));
+            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                @Override
+                public void onOk() {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    fragmentManager.popBackStackImmediate();
+                }
 
-                    setSendEnable();
-                } catch (Exception e) {
+                @Override
+                public void onCancel() {
 
                 }
-            }
-        }
+            });
+            dialog.show();
+        } else
+            super.onBackPressed();
     }
 }
