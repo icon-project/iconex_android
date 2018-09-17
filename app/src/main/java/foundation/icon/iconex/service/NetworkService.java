@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -453,6 +454,7 @@ public class NetworkService extends Service {
                             mRemCallback.onReceiveError(tx.getFrom(), resCode);
                         }
                     } else {
+                        Log.d(TAG, response.raw().request().body().toString());
                         mRemCallback.onReceiveError(tx.getFrom(), 9999);
                     }
                 }

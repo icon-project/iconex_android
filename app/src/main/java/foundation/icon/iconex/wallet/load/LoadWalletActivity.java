@@ -285,6 +285,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     public void onInfoBack() {
 
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+        viewPagerAdapter.toString();
     }
 
     @Override

@@ -8,13 +8,13 @@ import android.view.View;
 import android.widget.Button;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.wallet.transfer.EnterDataActivity;
+import foundation.icon.iconex.wallet.transfer.EnterDataFragment;
 
 public class DataTypeDialog extends BottomSheetDialog implements View.OnClickListener {
 
     private Button btnUtf, btnHex;
 
-    private EnterDataActivity.DataType type;
+    private EnterDataFragment.DataType type;
 
     public DataTypeDialog(@NonNull Context context) {
         super(context, R.style.MyBottomSheetDialog);
@@ -45,14 +45,14 @@ public class DataTypeDialog extends BottomSheetDialog implements View.OnClickLis
                 btnUtf.setSelected(true);
                 btnHex.setSelected(false);
 
-                type = EnterDataActivity.DataType.UTF;
+                type = EnterDataFragment.DataType.UTF;
                 break;
 
             case R.id.btn_hex:
                 btnUtf.setSelected(false);
                 btnHex.setSelected(true);
 
-                type = EnterDataActivity.DataType.HEX;
+                type = EnterDataFragment.DataType.HEX;
                 break;
 
             case R.id.txt_confirm:
@@ -69,6 +69,6 @@ public class DataTypeDialog extends BottomSheetDialog implements View.OnClickLis
     private OnTypeListener mListener;
 
     public interface OnTypeListener {
-        void onSelect(EnterDataActivity.DataType type);
+        void onSelect(EnterDataFragment.DataType type);
     }
 }

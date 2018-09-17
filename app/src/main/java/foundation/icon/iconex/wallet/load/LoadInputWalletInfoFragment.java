@@ -44,6 +44,8 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
     private InputMethodManager mImm;
 
+    private String beforeStr;
+
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
     private final int ALIAS_EMPTY = 2;
@@ -113,8 +115,10 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                 if (s.length() > 0) {
                     btnAliasDel.setVisibility(View.VISIBLE);
                     if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(s.subSequence(0, s.length() - 1));
+                        editAlias.setText(beforeStr);
                         editAlias.setSelection(editAlias.getText().toString().length());
+                    } else {
+                        beforeStr = s.toString();
                     }
                 } else {
                     btnAliasDel.setVisibility(View.INVISIBLE);
@@ -497,10 +501,18 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             btnDone.setEnabled(false);
     }
 
-    private void clear() {
+    public void clear() {
+        editAlias.clearFocus();
+        editPwd.clearFocus();
+        editCheck.clearFocus();
+
         editAlias.setText("");
         editPwd.setText("");
         editCheck.setText("");
+
+        txtAliasWarning.setVisibility(View.INVISIBLE);
+        txtPwdWarning.setVisibility(View.INVISIBLE);
+        txtCheckWarnig.setVisibility(View.INVISIBLE);
     }
 
     public interface OnInputWalletInfoListener {

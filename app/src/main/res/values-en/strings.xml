@@ -229,6 +229,7 @@
     <string name="errMinStep">Enter step limit more than %,d</string>
     <string name="errMaxStep">Enter step limit less tan %,d</string>
     <string name="errIcxOwnNotEnough">Insufficient ICX balance for transaction fee</string>
+    <string name="dataMaxSize">/%d KB</string>
 
     <string name="selectInputType">Select Input Type</string>
 
@@ -268,7 +269,7 @@
     <string name="errNoSendAmount">Please enter transfer amount.</string>
     <string name="errNoStepLimit">Please enter step limit.</string>
     <string name="errGasLimitEmpty">Please enter gas limit.</string>
-    <string name="errOverByteLimit">This exceeds input limit 512KB</string>
+    <string name="errOverByteLimit">This exceeds input limit %dKB</string>
 
     <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
 
@@ -289,6 +290,7 @@
 
     <string name="msgDeleteContact">Would you like to remove the address you have selected?</string>
 
+    <string name="errNoAddressName">Please enter address name.</string>
     <string name="errDuplicateContactsName">This wallet name already exists.</string>
     <string name="errDuplicateContactsAddr">This account already exists.</string>
     <string name="errWrongAddress">Incorrect %s Address.</string>

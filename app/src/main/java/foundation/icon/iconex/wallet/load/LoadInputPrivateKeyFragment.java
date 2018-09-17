@@ -186,16 +186,16 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
                 checkPrivKey(editPriv.getText().toString());
             }
         });
-        editPriv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    hideInputMode();
-                    checkPrivKey(editPriv.getText().toString());
-                }
-                return false;
-            }
-        });
+//        editPriv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+//                    hideInputMode();
+//                    checkPrivKey(editPriv.getText().toString());
+//                }
+//                return false;
+//            }
+//        });
         editPriv.setOnEditTouchListener(new MyEditText.OnEditTouchListener() {
             @Override
             public void onTouch() {
@@ -268,7 +268,7 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
         boolean result;
         byte[] decode = null;
 
-        if (privKey.isEmpty()) {
+        if (privKey.trim().isEmpty()) {
             linePriv.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtPrivWarning.setVisibility(View.VISIBLE);
             txtPrivWarning.setText(getString(R.string.loadByPrivateKeyHeader));

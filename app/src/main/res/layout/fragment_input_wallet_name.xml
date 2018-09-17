@@ -94,6 +94,7 @@
             android:background="@drawable/bg_rounded_button_a"
             android:fontFamily="@font/noto_sans_medium"
             android:text="@string/back"
+            android:textAllCaps="false"
             android:textColor="@color/button_text"
             android:textSize="16dp" />
 
@@ -108,6 +109,7 @@
             android:enabled="false"
             android:fontFamily="@font/noto_sans_medium"
             android:text="@string/complete"
+            android:textAllCaps="false"
             android:textColor="@color/button_text"
             android:textSize="16dp" />
     </LinearLayout>
