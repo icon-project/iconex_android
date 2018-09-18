@@ -30,6 +30,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 import foundation.icon.iconex.widgets.MyEditText;
+import jnr.x86asm.Util;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import retrofit2.Call;
@@ -117,17 +118,21 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                         }
                     });
 
-                    Log.d(TAG, "length=" + dataStr.getBytes().length + " // max=" + maxSize * 1024);
+                    long compareLength;
+                    if (data.getDataType() == DataType.UTF)
+                        compareLength = dataStr.getBytes().length;
+                    else
+                        compareLength = dataStr.getBytes().length / 2;
 
-                    if (dataStr.getBytes().length > maxSize * 1024) {
+                    if (compareLength > maxSize * 1024) {
                         dialog.show();
 
                         if (beforeStr == null)
                             setDataSize(txtDataSize, 0);
                         else
-                            setDataSize(txtDataSize, beforeStr.getBytes().length);
+                            setDataSize(txtDataSize, compareLength);
                     } else {
-                        setDataSize(txtDataSize, dataStr.getBytes().length);
+                        setDataSize(txtDataSize, compareLength);
                         beforeStr = dataStr;
                     }
 
