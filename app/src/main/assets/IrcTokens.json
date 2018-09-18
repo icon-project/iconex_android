@@ -1,12 +1,3 @@
 [
-  {
-    "contractAddr": "cx4ae65c058d35b5bb8cef668be5113354448c0264",
-    "name": "StandardToken",
-    "symbol": "STT",
-    "holderAddr": "hx4873b94352c8c1f3b2f09aaeccea31ce9e90bd31",
-    "holderCount": null,
-    "transferCount": null,
-    "totalSupply": "0",
-    "decimals": 18
-  }
+
 ]
