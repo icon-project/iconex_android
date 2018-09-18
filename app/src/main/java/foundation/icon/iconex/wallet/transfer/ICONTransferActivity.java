@@ -45,6 +45,7 @@ import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.PreferenceUtil;
+import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
@@ -780,6 +781,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         BigInteger send;
 
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(mWalletEntry.getSymbol().toLowerCase() + "usd");
+        String feePrice = ICONexApp.EXCHANGE_TABLE.get("icxusd");
 
         if (stepPriceICX != null && !editLimit.getText().toString().isEmpty())
             fee = stepPriceICX.multiply(new BigInteger(editLimit.getText().toString()));
@@ -849,9 +851,12 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     * Double.parseDouble(strPrice);
             String strRemainUSD = String.format(Locale.getDefault(), "%,.2f", remainUSD);
 
-            if (stepPriceICX != null)
-                txtTransFee.setText(String.format(Locale.getDefault(), "%,.2f USD",
-                        Double.parseDouble(txtFee.getText().toString()) * Double.parseDouble(strPrice)));
+            if (stepPriceICX != null) {
+                if (feePrice != null) {
+                    txtTransFee.setText(String.format(Locale.getDefault(), "%,.2f USD",
+                            Double.parseDouble(txtFee.getText().toString()) * Double.parseDouble(feePrice)));
+                }
+            }
 
             if (isNegative) {
                 txtRemain.setText(String.format(getString(R.string.txWithdraw), ConvertUtil.getValue(remain, mWalletEntry.getDefaultDec())));
@@ -1005,13 +1010,13 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         if (targetLimit.compareTo(minStep) < 0) {
             lineLimit.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtLimitWarning.setVisibility(View.VISIBLE);
-            txtLimitWarning.setText(String.format(Locale.getDefault(), getString(R.string.errMinStep), minStep.intValue()));
+            txtLimitWarning.setText(String.format(Locale.getDefault(), getString(R.string.errMinStep), minStep.toString()));
 
             return false;
         } else if (targetLimit.compareTo(maxStep) > 0) {
             lineLimit.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtLimitWarning.setVisibility(View.VISIBLE);
-            txtLimitWarning.setText(String.format(Locale.getDefault(), getString(R.string.errMaxStep), maxStep.intValue()));
+            txtLimitWarning.setText(String.format(Locale.getDefault(), getString(R.string.errMaxStep), maxStep.toString()));
 
             return false;
         }
@@ -1171,9 +1176,14 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
                     if (response.isSuccessful()) {
-                        int max = Integer.decode(response.body().getResult().getAsString());
-                        maxStep = new BigInteger(Integer.toString(max));
-                        preferenceUtil.setMaxStep(Integer.toString(max));
+                        try {
+                            Log.d(TAG, "result=" + response.body().getResult().getAsString());
+                            maxStep = new BigInteger(Utils.remove0x(response.body().getResult().getAsString()), 16);
+                            Log.d(TAG, "maxStep=" + maxStep.toString());
+                            preferenceUtil.setMaxStep(maxStep.toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else
                         maxStep = new BigInteger(preferenceUtil.getMaxStep());
                 }
