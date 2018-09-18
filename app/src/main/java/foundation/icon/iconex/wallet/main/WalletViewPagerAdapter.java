@@ -3,7 +3,6 @@ package foundation.icon.iconex.wallet.main;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 import android.util.SparseArray;
 
 import foundation.icon.iconex.ICONexApp;
@@ -23,14 +22,14 @@ public class WalletViewPagerAdapter extends FragmentStatePagerAdapter {
     public WalletViewPagerAdapter(FragmentManager fm) {
         super(fm);
         fragments = new SparseArray<>();
+
+        for (int i = 0; i < ICONexApp.mWallets.size(); i++)
+            fragments.put(i, WalletFragment.newInstance(ICONexApp.mWallets.get(i)));
     }
 
     @Override
     public Fragment getItem(int position) {
-        WalletFragment walletFragment = WalletFragment.newInstance(ICONexApp.mWallets.get(position));
-        fragments.put(position, walletFragment);
-
-        return walletFragment;
+        return fragments.get(position);
     }
 
     @Override

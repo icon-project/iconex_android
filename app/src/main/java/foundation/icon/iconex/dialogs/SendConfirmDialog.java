@@ -37,9 +37,10 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.transfer.data.ErcTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
+import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 import static foundation.icon.iconex.MyConstants.SYMBOL_ETH;
 import static foundation.icon.iconex.MyConstants.SYMBOL_ICON;
 
@@ -80,16 +81,17 @@ public class SendConfirmDialog extends Dialog {
             ErcTxInfo txInfo = (ErcTxInfo) mTxInfo;
             ((TextView) findViewById(R.id.txt_send))
                     .setText(String.format(mContext.getString(R.string.sendAmount), txInfo.getSymbol()));
-            ((TextView) findViewById(R.id.txt_fee)).setText(mContext.getString(R.string.ethEstiFee));
+            ((TextView) findViewById(R.id.txt_fee)).setText(String.format(mContext.getString(R.string.estiFee), SYMBOL_ETH));
         } else if (mTxInfo instanceof EthTxInfo) {
             ((TextView) findViewById(R.id.txt_send))
                     .setText(String.format(mContext.getString(R.string.sendAmount), SYMBOL_ETH));
-            ((TextView) findViewById(R.id.txt_fee)).setText(mContext.getString(R.string.ethEstiFee));
+            ((TextView) findViewById(R.id.txt_fee)).setText(String.format(mContext.getString(R.string.estiFee), SYMBOL_ETH));
         } else {
+            ICONTxInfo txInfo = (ICONTxInfo) mTxInfo;
             ((TextView) findViewById(R.id.txt_send))
-                    .setText(String.format(mContext.getString(R.string.sendAmount), SYMBOL_ICON));
+                    .setText(String.format(mContext.getString(R.string.sendAmount), txInfo.getSymbol()));
             ((TextView) findViewById(R.id.txt_fee))
-                    .setText(String.format(mContext.getString(R.string.sendFee), SYMBOL_ICON));
+                    .setText(String.format(mContext.getString(R.string.estiFee), SYMBOL_ICON));
         }
 
         ((TextView) findViewById(R.id.txt_send_amount)).setText(mTxInfo.getSendAmount());
@@ -167,7 +169,7 @@ public class SendConfirmDialog extends Dialog {
             EthTxInfo txInfo = (EthTxInfo) mTxInfo;
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -175,8 +177,8 @@ public class SendConfirmDialog extends Dialog {
             Web3j web3j = Web3jFactory.build(new HttpService(url));
 
             try {
-                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_ETH + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
-                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_ETH + txInfo.getFromAddress(),
+                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_HEX + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
+                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_HEX + txInfo.getFromAddress(),
                         nonce.getTransactionCount(),
                         Convert.toWei(txInfo.getPrice(), Convert.Unit.GWEI).toBigInteger(),
                         new BigInteger(txInfo.getLimit()),
@@ -243,7 +245,7 @@ public class SendConfirmDialog extends Dialog {
             EthTxInfo txInfo = (EthTxInfo) mTxInfo;
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -258,8 +260,8 @@ public class SendConfirmDialog extends Dialog {
                         Collections.<TypeReference<?>>emptyList());
                 String data = FunctionEncoder.encode(function);
                 Log.d(TAG, "Data=" + data);
-                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_ETH + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
-                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_ETH + txInfo.getFromAddress(),
+                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_HEX + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
+                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_HEX + txInfo.getFromAddress(),
                         nonce.getTransactionCount(),
                         Convert.toWei(txInfo.getPrice(), Convert.Unit.GWEI).toBigInteger(),
                         new BigInteger(txInfo.getLimit()),

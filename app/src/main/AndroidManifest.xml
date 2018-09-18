@@ -135,13 +135,19 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
+        <activity
+            android:name=".service.NetworkErrorActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wallet.menu.appInfo.AppInfoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.NetworkService"
             android:enabled="true"
             android:exported="false" />
-
-        <activity android:name=".service.NetworkErrorActivity"></activity>
     </application>
 
 </manifest>

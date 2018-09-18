@@ -17,6 +17,8 @@
     <string name="use">사용</string>
     <string name="load">가져오기</string>
     <string name="retry">재시도</string>
+    <string name="view">보기</string>
+    <string name="input">입력</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -25,7 +27,6 @@
 
     <string name="withdraw">송금</string>
     <string name="deposit">입금</string>
-    <string name="input">입력</string>
 
     <string name="errNoAddress">주소를 입력해주세요.</string>
 
@@ -132,7 +133,15 @@
     <string name="exportWalletBundle">지갑 묶어서 내보내기</string>
     <string name="settingLock">잠금 설정</string>
     <string name="settingLanguage">언어</string>
-    <string name="iCONexDisclaimers">ICONex 이용 면책 조항</string>
+    <string name="appInfo">앱 정보</string>
+    <string name="ICONexDisclaimers">ICONex 이용 면책 조항</string>
+
+    <string name="currentVersion">현재 버전</string>
+    <string name="latestVersion">최신 버전</string>
+    <string name="update">업데이트</string>
+
+    <string name="openSource">오픈소스 라이선스</string>
+    <string name="networkProvider">Network Provider</string>
 
     <string name="disclaimersHeader">ICX 공식 wallet \"ICONex\"의 이용자는 \"ICONex\"를 다운로드하여 이용함과 동시에 아래 면책 조항에 대한 구속력이 발생함을 알려드립니다.</string>
     <string name="disclaimersContents">1.  ICONex이용자가 ICONex 이용 과정에서 생성한 개인 키는 사용자의 모바일 기기에 저장되며, ICON Foundation에서는 ICONex이용자의 개인 키를 별도로 보관ㆍ관리하고 있지 않습니다. ICONex 이용자는 본인이 생성한 개인 키에 대한 보관 및 관리의 책임이 있으며, 바이러스, 해킹, 분실 등 각종 원인으로ICONex이용자가 개인키를 이용할 수 없게 된 경우 ICON Foundation은 이에 대한 일체의 책임을 부담하지 않습니다.\n\n2.  ICON Foundation은 ICONex의 무결성, 안정성, 정확성, 보안성 등에 대하여 보증하지 않으며, 현재 버전의 ICONex를 ‘그 자체로’ 제공합니다.  ICON Foundation은 더 안정적이고 편리한 서비스를 제공하기 위하여 ICONex에 대하여 지속적으로 테스트와 업데이트를 시행하고 있으나, 이러한 노력에도 불구하고 예기치 못한 문제가 발생할 가능성은 항상 존재합니다. ICON Foundation은 오작동, 해킹, 분실, 바이러스 감염 등을 포함한 일체의 예기치 못한 문제에 대하여 책임을 부담하지 않습니다.\n\n3.  ICON Foundation은 천재지변 또는 이에 준하는 불가항력으로 인하여 ICONex 서비스를 제공할 수 없는 경우에는 이에 대한 책임을 부담하지 않습니다.\n\n4.  ICON Foundation은 ICONex 이용자가 ICONex를 매개로 하여 제3자와 거래 등을 한 경우 이와 관련하여 책임을 부담하지 않습니다.\n\n5.  ICON Foundation은 ICONex 이용과 관련하여 불법행위, 계약, 보증, 무과실 책임, 부주의로 인한 어떠한 형태의 책임을 부담하는 경우라 하더라도, 간접적, 결과적, 특수적, 징벌적 또는 이와 유사한 손해에 대해서는 일체의 책임을 부담하지 않습니다.\n\n6.  ICONex는 한국어와 영어를 기본 언어로 지원합니다. 기본으로 제공하는 언어 외에 다른 언어로 번역 시 이로 인해 의미가 잘못 전달되어 발생한 문제에 대해서는 ICON Foundation에게 책임이 없습니다.\n\n※ ICONex와 관련된 모든 저작권은 ICON Foundation에 있습니다. (Copyright © 2018 ICON Foundation)</string>
@@ -174,6 +183,9 @@
     <string name="tokenSymbol">토큰 기호 (Token Symbol)</string>
     <string name="tokenDecimals">소수 자리 수 (Number of Decimals)</string>
 
+    <string name="msgNoToken">목록에 토큰이 없다면 직접 입력하여 추가해주세요.</string>
+    <string name="enterTokenInfo">토큰 정보 입력</string>
+
     <string name="msgTokenDelete">%s 을(를)\n삭제하시겠습니까?</string>
     <string name="msgTokenCancelMod">토큰 정보 수정을\n취소하시겠습니까?</string>
 
@@ -201,7 +213,6 @@
     <string name="selectAddress">주소 선택</string>
     <string name="scanTheQRCode">QR코드 스캔</string>
     <string name="sendFee">송금 수수료(%s)</string>
-    <string name="remainBalance">송금 후 잔액 (%s)</string>
     <string name="exchange_usd">%s  USD</string>
 
     <string name="icxStepLimit">Step 한도</string>
@@ -209,10 +220,21 @@
     <string name="icxStepSymbol">loop</string>
     <string name="hintICXStepLimit">Step 한도 입력 (숫자)</string>
 
+    <string name="data">데이터</string>
+    <string name="inputType">입력 타입</string>
+    <string name="hintUtfData">Hello ICON</string>
+    <string name="hintHexData">0x1234...</string>
+    <string name="cancelEnterData">데이터 입력을 취소하시겠습니까?</string>
+    <string name="errMinStep">%s 보다 높은 스텝 한도를 입력해주세요.</string>
+    <string name="errMaxStep">%s 보다 낮은 스텝 한도를 입력해주세요.</string>
+    <string name="errIcxOwnNotEnough">수수료를 지불할 ICX가 부족합니다.</string>
+    <string name="dataMaxSize">/%d KB</string>
+
+    <string name="selectInputType">입력 타입</string>
+
     <string name="hintGasLimit">가스 한도 입력</string>
-    <string name="hintData">데이터 입력</string>
-    <string name="ethEstiFee">예상 최대 수수료 (ETH)</string>
-    <string name="ethEstiRemain">송금 후 예상 잔액 (%s)</string>
+    <string name="estiFee">예상 최대 수수료 (%s)</string>
+    <string name="estiRemain">송금 후 예상 잔액 (%s)</string>
 
     <string name="errCantWithdraw">코인 보유량이 없습니다.\n입금 후 송금해 주세요.</string>
     <string name="errNonZero">0보다 많은 코인 수량을 입력해주세요.</string>
@@ -221,7 +243,7 @@
     <string name="errCheckAddress">송금 받는 주소를 다시 확인해주세요.</string>
     <string name="errSameAddress">송금하는 주소와 같을 수 없습니다.</string>
 
-    <string name="errOwnNotEnough">이더리움 계좌 잔액이 부족하여 토큰을 송금할 수 없습니다.</string>
+    <string name="errEthOwnNotEnough">이더리움 계좌 잔액이 부족하여 토큰을 송금할 수 없습니다.</string>
     <string name="errInvalidData">데이터를 다시 확인해주세요.</string>
 
     <string name="confirmTxInfo">수량과 주소를\n한번 더 확인해주세요.</string>
@@ -234,12 +256,19 @@
     <string name="slow">느림</string>
     <string name="fast">빠름</string>
 
-    <string name="errGasLimitEmpty">가스 한도를 입력해주세요.</string>
-
+    <string name="msgStepLimit">스텝 한도는 Transaction 실행에 지불할 용의가 있는 스텝의 최대량을 의미합니다. 스텝 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 스텝만 소진합니다. 즉, 스텝 한도는 최대치만 설정 가능하며 실제 소진되는 스텝량은 유동적입니다.</string>
+    <string name="msgStepPrice">Step 한 단위 당 지불하는 가격입니다.\n\nStep 가격은 loop로 지불하며 1 loop는 0.000000000000000001(10^-18) ICX로 고정되어 있습니다. ICON 거래 수수료는 스마트 컨트랙트 기능 사용 횟수, 블록체인 데이터베이스 사용량, 거래 데이터 크기 등에 따라 부과됩니다.</string>
+    <string name="msgICXEstimateFee">Transaction 실행 시 발생할 수 있는 최대 수수료로서, 스텝 한도와 스텝 가격을 곱한 값입니다.</string>
+    <string name="msgIcxData">사용자가 원하는 데이터를 입력하여 송금할 수 있습니다. 입력한 데이터의 크기에 따라 수수료가 부과됩니다.</string>
     <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할\n용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
-    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서\n1 Gwei = 0.000000001 ETH로\n고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Trnasaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
+    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서\n1 Gwei = 0.000000001 ETH로\n고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
     <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로\n가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
     <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 송금할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 송금이 불가하며 수수료만\n차감될 수 있습니다.</string>
+
+    <string name="errNoSendAmount">송금할 수량을 입력해주세요.</string>
+    <string name="errNoStepLimit">Step 한도를 입력해주세요.</string>
+    <string name="errGasLimitEmpty">가스 한도를 입력해주세요.</string>
+    <string name="errOverByteLimit">입력 한도 %dKB를 초과합니다</string>
 
     <string name="msgDoneRequestTransfer">송금 요청이 완료되었습니다.</string>
 
@@ -260,6 +289,7 @@
 
     <string name="msgDeleteContact">선택한 주소를\n삭제하시겠습니까?</string>
 
+    <string name="errNoAddressName">주소록 이름을 입력해주세요.</string>
     <string name="errDuplicateContactsName">같은 이름의 주소가 이미 존재합니다.</string>
     <string name="errDuplicateContactsAddr">같은 주소의 지갑이 이미 존재합니다.</string>
     <string name="errWrongAddress">올바른 %s 주소가 아닙니다.</string>
@@ -337,6 +367,8 @@
     <string name="errCurrentLockNum">잠금 번호가 일치 하지 않습니다.</string>
     <string name="errRetryLockNum">잠금 번호를 다시 확인해주세요.</string>
     <string name="errInvalidatedByBiometricEnrollment">등록되어 있는 지문 정보가 변경되어 지문 인증을 사용할 수 없습니다. 잠금 번호로 로그인 후, 지문 사용 여부를 다시 설정해주세요.</string>
+
+    <string name="errFingerprintLockOut">Fingerprint scan is currently locked. You can reactivate the fingerprint scan by entering your mobile</string>
 
     <!-- Language -->
     <string name="titleLanguage">언어 설정</string>

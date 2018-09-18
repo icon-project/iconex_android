@@ -17,7 +17,8 @@
     <string name="use">Use Fingerprint</string>
     <string name="load">Load</string>
     <string name="retry">RETRY</string>
-    <string name="input">Input</string>
+    <string name="view">View</string>
+    <string name="input">Add</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -132,7 +133,15 @@
     <string name="exportWalletBundle">Export Wallet Bundle</string>
     <string name="settingLock">Screen Lock</string>
     <string name="settingLanguage">Language</string>
-    <string name="iCONexDisclaimers">ICONex Disclaimer</string>
+    <string name="appInfo">App Info</string>
+    <string name="ICONexDisclaimers">ICONex Disclaimer</string>
+
+    <string name="currentVersion">Current Version</string>
+    <string name="latestVersion">Latest Version</string>
+    <string name="update">Update</string>
+
+    <string name="openSource">Open source Licenses</string>
+    <string name="networkProvider">Network Provider</string>
 
     <string name="disclaimersHeader">At the time of downloading and using the official ICX wallet,\"ICONex\", the below disclaimer will be applied to the users.</string>
     <string name="disclaimersContents">1. The private key ICONex user creates in the process of using the ICONex service is stored in your device, ICON Foundation does not store or/and manage the user\'s private key. The ICONex user is solely responsible for safekeeping and managing the private key created. In the case of the ICONex user not being able to use the private key due to computer virus, hacking activities, theft/loss, etc., ICON Foundation is not responsible for any loss.\n\n2. ICON Foundation does not guarantee the integrity, stability, accuracy and security of ICONex, but only provides the current version of ICONex “AS IS”. ICON Foundation is continuously running tests and making updates to provide a more stable and convenient service, however despite these efforts there is always the possibility of unexpected problems. ICON Foundation is not responsible for any unexpected problems, such as malfunction, hacking, loss and computer virus.
@@ -175,6 +184,9 @@
     <string name="tokenSymbol">Token Symbol</string>
     <string name="tokenDecimals">Number of Decimals</string>
 
+    <string name="msgNoToken">Enter the token info if it is not on the list.</string>
+    <string name="enterTokenInfo">Enter Token Info</string>
+
     <string name="msgTokenDelete">Do you want to delete\n%s ?</string>
     <string name="msgTokenCancelMod">Are you sure you want to cancel?</string>
 
@@ -202,7 +214,6 @@
     <string name="selectAddress">Select Address</string>
     <string name="scanTheQRCode">Scan QR code</string>
     <string name="sendFee">Transaction Fee (%s)</string>
-    <string name="remainBalance">Balance after transaction (%s)</string>
     <string name="exchange_usd">%s  USD</string>
 
     <string name="icxStepLimit">Step Limit</string>
@@ -210,10 +221,21 @@
     <string name="icxStepSymbol">loop</string>
     <string name="hintICXStepLimit">Enter step limit</string>
 
+    <string name="data">Data</string>
+    <string name="inputType">Input type</string>
+    <string name="hintUtfData">Hello ICON</string>
+    <string name="hintHexData">0x1234...</string>
+    <string name="cancelEnterData">Are you sure to want to cancel?</string>
+    <string name="errMinStep">Enter step limit more than %s</string>
+    <string name="errMaxStep">Enter step limit less tan %s</string>
+    <string name="errIcxOwnNotEnough">Insufficient ICX balance for transaction fee</string>
+    <string name="dataMaxSize">/%d KB</string>
+
+    <string name="selectInputType">Select Input Type</string>
+
     <string name="hintGasLimit">Enter gas limit</string>
-    <string name="hintData">Enter data</string>
-    <string name="ethEstiFee">Estimated Maximum Fee (ETH)</string>
-    <string name="ethEstiRemain">Estimated Balance (%s)</string>
+    <string name="estiFee">Estimated Maximum Fee (%s)</string>
+    <string name="estiRemain">Estimated Balance (%s)</string>
 
     <string name="errCantWithdraw">You have 0 balance.\nPlease deposit and transfer.</string>
     <string name="errNonZero">Enter more than 0 coins.</string>
@@ -222,7 +244,7 @@
     <string name="errCheckAddress">Please confirm receiving address.</string>
     <string name="errSameAddress">Sending and receiving address are the same.</string>
 
-    <string name="errOwnNotEnough">You have insufficient ETH balance for GAS.</string>
+    <string name="errEthOwnNotEnough">You have insufficient ETH balance for GAS.</string>
     <string name="errInvalidData">Please check your data.</string>
 
     <string name="confirmTxInfo">Please check the amount and the receiving address once again.</string>
@@ -235,12 +257,19 @@
     <string name="slow">Slow</string>
     <string name="fast">Fast</string>
 
-    <string name="errGasLimitEmpty">Please enter gas limit.</string>
-
+    <string name="msgStepLimit">Step limit is the amount of step to send with your transaction. Unnecessary step is refunded to you at the end of transaction. In other words, you can set the maximum amount of step but the actual step consumption is not fixed.</string>
+    <string name="msgStepPrice">Step price is the amount you pay per unit of step.\nStep price is paid in loop and 1 loop is fixed to 0.000000000000000001(10^−18) ICX. ICON transaction fee is imposed according to various factors such as the number of smart contract usage, the amount of blockchain database used and the size of transaction data, etc.</string>
+    <string name="msgICXEstimateFee">Estimated Maximum Fee = Step price * Step limit</string>
+    <string name="msgIcxData">You may enter data to send with the transaction. Transaction fee is imposed according to the size of data.</string>
     <string name="msgEthGasLimit">Gas limit is the amount of gas to send with your transaction.\nUnnecessary gas is refunded to you at the end of transaction. In other words, you can set the maximum amount of gas but the actual gas consumption is not fixed.</string>
     <string name="msgEthGasPrice">Gas price is an unit of gas.\n1 Gwei equals 0.000000001 ETH.\nEthereum miners prioritize based on gas price when generating blocks. If you set higher gas price, you have more chance to get your transaction confirmed. It also determines your transaction speed.</string>
     <string name="msgEthEstimateFee">Estimated Maximum Fee\n= Gas Price * Gas Limit\nSet proper gas limit and gas price.\nYou will pay transaction fees even if your transaction is not confirmed by miners.</string>
     <string name="msgEthData">If you do not enter the data when required, the transaction will fail. You will still have to pay the transaction fees. You don\'t have to enter data if it is not required in the transaction.</string>
+
+    <string name="errNoSendAmount">Please enter transfer amount.</string>
+    <string name="errNoStepLimit">Please enter step limit.</string>
+    <string name="errGasLimitEmpty">Please enter gas limit.</string>
+    <string name="errOverByteLimit">This exceeds input limit %dKB</string>
 
     <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
 
@@ -261,6 +290,7 @@
 
     <string name="msgDeleteContact">Would you like to remove the address you have selected?</string>
 
+    <string name="errNoAddressName">Please enter address name.</string>
     <string name="errDuplicateContactsName">This wallet name already exists.</string>
     <string name="errDuplicateContactsAddr">This account already exists.</string>
     <string name="errWrongAddress">Incorrect %s Address.</string>
@@ -338,6 +368,8 @@
     <string name="errCurrentLockNum">Please confirm your passcode</string>
     <string name="errRetryLockNum">Please Try Again</string>
     <string name="errInvalidatedByBiometricEnrollment">The fingerprint registered on your mobile does not match and has been disabled. Please unlock the screen with your passcode to check availability.</string>
+
+    <string name="errFingerprintLockOut">Fingerprint scan is currently locked. You can reactivate the fingerprint scan by entering your mobile</string>
 
     <!-- Language -->
     <string name="titleLanguage">Language</string>

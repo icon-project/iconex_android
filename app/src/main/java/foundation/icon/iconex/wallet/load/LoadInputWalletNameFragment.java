@@ -16,8 +16,8 @@ import android.widget.TextView;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 
 public class LoadInputWalletNameFragment extends Fragment implements View.OnClickListener {
@@ -29,10 +29,12 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
     private View lineName;
     private TextView txtNameWarning;
 
-    private Button btnDone;
+    private Button btnDone, btnBack;
 
     private String mCoinType;
     private String mKeyStore;
+
+    private String beforeStr;
 
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
@@ -79,13 +81,21 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
+                    if (Utils.checkByteLength(s.toString()) > 16) {
+                        editAlias.setText(beforeStr);
+                        editAlias.setSelection(editAlias.getText().toString().length());
+                    } else {
+                        beforeStr = s.toString();
+                    }
+
                     btnNameDelete.setVisibility(View.VISIBLE);
                 } else {
+                    if (editAlias.isFocused())
+                        lineName.setBackgroundColor(getActivity().getResources().getColor(R.color.editActivated));
+                    else
+                        lineName.setBackgroundColor(getActivity().getResources().getColor(R.color.editNormal));
+                    txtNameWarning.setVisibility(View.INVISIBLE);
                     btnNameDelete.setVisibility(View.INVISIBLE);
-                    if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(s.subSequence(0, s.length() - 1));
-                        editAlias.setSelection(editAlias.getText().toString().length());
-                    }
                 }
             }
 
@@ -109,7 +119,7 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
                     case ALIAS_EMPTY:
                         lineName.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                         txtNameWarning.setVisibility(View.VISIBLE);
-                        txtNameWarning.setText(getString(R.string.errWhiteSpace));
+                        txtNameWarning.setText(getString(R.string.errAliasEmpty));
                         btnDone.setEnabled(false);
                         break;
 
@@ -142,7 +152,7 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
                         case ALIAS_EMPTY:
                             lineName.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                             txtNameWarning.setVisibility(View.VISIBLE);
-                            txtNameWarning.setText(getString(R.string.errWhiteSpace));
+                            txtNameWarning.setText(getString(R.string.errAliasEmpty));
                             btnDone.setEnabled(false);
                             break;
 
@@ -168,6 +178,8 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
 
         btnDone = v.findViewById(R.id.btn_done);
         btnDone.setOnClickListener(this);
+        btnBack = v.findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(this);
 
         return v;
     }
@@ -180,7 +192,12 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
                 break;
 
             case R.id.btn_done:
-                mListener.onDoneLoadWalletByKeyStore(editAlias.getText().toString());
+                mListener.onDoneLoadWalletByKeyStore(Utils.strip(editAlias.getText().toString()));
+                break;
+
+            case R.id.btn_back:
+                clear();
+                mListener.onNameBack();
                 break;
         }
     }
@@ -202,14 +219,12 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
         mListener = null;
     }
 
-    private int checkAlias(String alias) {
+    private int checkAlias(String target) {
+        String alias = Utils.strip(target);
         if (alias.isEmpty())
             return ALIAS_EMPTY;
 
-        if (alias.trim().length() == 0)
-            return ALIAS_EMPTY;
-
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (info.getAlias().equals(alias)) {
                 return ALIAS_DUP;
             }
@@ -223,7 +238,13 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
         mKeyStore = keyStore;
     }
 
+    private void clear() {
+        editAlias.setText("");
+    }
+
     public interface OnInputWalletNameCallback {
         void onDoneLoadWalletByKeyStore(String name);
+
+        void onNameBack();
     }
 }

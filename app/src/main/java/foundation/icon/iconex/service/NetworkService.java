@@ -37,6 +37,7 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import loopchain.icon.wallet.core.Constants;
+import loopchain.icon.wallet.core.request.Transaction;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.core.response.TRResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
@@ -44,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 
 public class NetworkService extends Service {
 
@@ -99,7 +100,7 @@ public class NetworkService extends Service {
         super.onDestroy();
     }
 
-    public void requestGetBalance(HashMap<String, String> addresses, String coinType) {
+    public void getBalance(HashMap<String, String> addresses, String coinType) {
         for (Map.Entry<String, String> entry : addresses.entrySet()) {
             String id = entry.getKey();
             String address = entry.getValue();
@@ -111,14 +112,17 @@ public class NetworkService extends Service {
         }
     }
 
-    public void requestGetTokenBalance(HashMap<String, String[]> addresses) {
+    public void getTokenBalance(HashMap<String, String[]> addresses, String coinType) {
         for (Map.Entry<String, String[]> entry : addresses.entrySet()) {
             String id = entry.getKey();
             String[] values = entry.getValue();
             String ownAddress = values[0];
             String contactAddress = values[1];
 
-            getTokenBalance(id, ownAddress, contactAddress);
+            if (coinType.equals(Constants.KS_COINTYPE_ICX))
+                getIrcBalance(id, ownAddress, contactAddress);
+            else
+                getErcBalance(id, ownAddress, contactAddress);
         }
     }
 
@@ -128,27 +132,36 @@ public class NetworkService extends Service {
             @Override
             public void run() {
                 try {
-                    String url;
-                    if (isMain)
-                        url = ServiceConstants.TRUSTED_HOST_MAIN;
-                    else
-                        url = ServiceConstants.TRUSTED_HOST_TEST;
+                    String url = null;
+                    switch (network) {
+                        case MyConstants.NETWORK_MAIN:
+                            url = ServiceConstants.TRUSTED_HOST_MAIN;
+                            break;
+
+                        case MyConstants.NETWORK_TEST:
+                            url = ServiceConstants.TRUSTED_HOST_TEST;
+                            break;
+
+                        case MyConstants.NETWORK_DEV:
+                            url = ServiceConstants.DEV_HOST;
+                            break;
+                    }
 
                     LoopChainClient client = new LoopChainClient(url);
-                    Call<LCResponse> responseCall = client.getBalance(id, address);
+                    Call<LCResponse> responseCall = client.getBalance(Integer.parseInt(id), address);
                     responseCall.enqueue(new Callback<LCResponse>() {
                         @Override
                         public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
                             if (response.isSuccessful()) {
-                                int resCode = response.body().getResult().getAsJsonObject().get("response_code").getAsInt();
-                                // TODO: 2018. 3. 19. null
-                                if (resCode == MyConstants.CODE_OK) {
+                                // 2018.08.27 - v3
+                                if (response.errorBody() == null) {
                                     String id = response.body().getID();
-                                    String hexBalance = response.body().getResult().getAsJsonObject().get("response").getAsString();
+                                    String hexBalance = response.body().getResult().getAsString();
                                     String balance = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
 
                                     mBalanceCallback.onReceiveICXBalance(id, address, balance);
                                 } else {
+                                    int resCode = response.body().getResult().getAsJsonObject().get("error").getAsJsonObject().get("code").getAsInt();
                                     mBalanceCallback.onReceiveError(id, address, resCode);
                                 }
                             } else {
@@ -162,6 +175,66 @@ public class NetworkService extends Service {
                         }
                     });
                 } catch (Exception e) {
+                    e.printStackTrace();
+                    mBalanceCallback.onReceiveException(id, address, e.getMessage());
+                } finally {
+                    icxMap.remove(id);
+                }
+            }
+        });
+        icxMap.put(id, thread);
+        thread.start();
+    }
+
+    private void getIrcBalance(final String id, final String address, final String score) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String url = null;
+                    switch (network) {
+                        case MyConstants.NETWORK_MAIN:
+                            url = ServiceConstants.TRUSTED_HOST_MAIN;
+                            break;
+
+                        case MyConstants.NETWORK_TEST:
+                            url = ServiceConstants.TRUSTED_HOST_TEST;
+                            break;
+
+                        case MyConstants.NETWORK_DEV:
+                            url = ServiceConstants.DEV_HOST;
+                            break;
+                    }
+
+                    LoopChainClient client = new LoopChainClient(url);
+                    Call<LCResponse> responseCall = client.getTokenBalance(Integer.parseInt(id), address, score);
+                    responseCall.enqueue(new Callback<LCResponse>() {
+                        @Override
+                        public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
+                            if (response.isSuccessful()) {
+                                // 2018.08.27 - v3
+                                if (response.errorBody() == null) {
+                                    String id = response.body().getID();
+                                    String hexBalance = response.body().getResult().getAsString();
+                                    String balance = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
+
+                                    mBalanceCallback.onReceiveICXBalance(id, address, balance);
+                                } else {
+                                    int resCode = response.body().getResult().getAsJsonObject().get("error").getAsJsonObject().get("code").getAsInt();
+                                    mBalanceCallback.onReceiveError(id, address, resCode);
+                                }
+                            } else {
+                                mBalanceCallback.onReceiveError(id, address, response.code());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LCResponse> call, Throwable t) {
+                            mBalanceCallback.onReceiveException(id, address, t.getMessage());
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                     mBalanceCallback.onReceiveException(id, address, e.getMessage());
                 } finally {
                     icxMap.remove(id);
@@ -178,7 +251,7 @@ public class NetworkService extends Service {
         getBalance.execute(id, address);
     }
 
-    private void getTokenBalance(final String id, final String ownAddress, final String contractAddress) {
+    private void getErcBalance(final String id, final String ownAddress, final String contractAddress) {
         TokenBalance getBalance = new TokenBalance();
         ethMap.put(id, getBalance);
         getBalance.execute(id, ownAddress, contractAddress);
@@ -190,11 +263,20 @@ public class NetworkService extends Service {
             @Override
             public void run() {
                 try {
-                    String url;
-                    if (isMain)
-                        url = ServiceConstants.TRUSTED_TRACKER_MAIN;
-                    else
-                        url = ServiceConstants.TRUSTED_TRACKER_TEST;
+                    String url = null;
+                    switch (network) {
+                        case MyConstants.NETWORK_MAIN:
+                            url = ServiceConstants.URL_VERSION_MAIN;
+                            break;
+
+                        case MyConstants.NETWORK_TEST:
+                            url = ServiceConstants.URL_VERSION_TEST;
+                            break;
+
+                        case MyConstants.NETWORK_DEV:
+                            url = ServiceConstants.DEV_TRACKER;
+                            break;
+                    }
 
                     LoopChainClient client = new LoopChainClient(url);
                     Call<TRResponse> responseCall = client.getExchangeRates(exchangeList);
@@ -241,25 +323,37 @@ public class NetworkService extends Service {
             @Override
             public void run() {
                 try {
-                    String url;
-                    if (isMain)
-                        url = ServiceConstants.TRUSTED_TRACKER_MAIN;
-                    else
-                        url = ServiceConstants.TRUSTED_TRACKER_TEST;
+                    String url = null;
+                    switch (network) {
+                        case MyConstants.NETWORK_MAIN:
+                            url = ServiceConstants.URL_VERSION_MAIN;
+                            break;
+
+                        case MyConstants.NETWORK_TEST:
+                            url = ServiceConstants.URL_VERSION_TEST;
+                            break;
+
+                        case MyConstants.NETWORK_DEV:
+                            url = ServiceConstants.DEV_TRACKER;
+                            break;
+                    }
 
                     LoopChainClient client = new LoopChainClient(url);
                     Call<TRResponse> responseCall = client.getTxList(address, page);
                     responseCall.enqueue(new Callback<TRResponse>() {
                         @Override
                         public void onResponse(Call<TRResponse> call, Response<TRResponse> response) {
-                            String resCode = response.body().getResult();
-                            if (resCode.equals(MyConstants.RESULT_OK)) {
-                                String totalData = response.body().getTotalData();
-                                JsonObject data = response.body().getData().getAsJsonObject();
-                                JsonArray txList = data.get("walletTx").getAsJsonArray();
-                                mTxListCallback.onReceiveTransactionList(Integer.parseInt(totalData), txList);
+                            if (response.isSuccessful()) {
+                                String resCode = response.body().getResult();
+                                if (resCode.equals(MyConstants.RESULT_OK)) {
+                                    int listSize = response.body().getListSize();
+                                    JsonArray data = response.body().getData().getAsJsonArray();
+                                    mTxListCallback.onReceiveTransactionList(listSize, data);
+                                } else {
+                                    mTxListCallback.onReceiveError(resCode);
+                                }
                             } else {
-                                mTxListCallback.onReceiveError(resCode);
+                                mTxListCallback.onReceiveError("9999");
                             }
                         }
 
@@ -276,48 +370,155 @@ public class NetworkService extends Service {
         }).start();
     }
 
-    public void requestICXTransaction(final String id, final String timestamp, final String from, final String to, final String value, final String fee, final String privateKey) {
+    public void requestIrcTxList(final String own, final String contract, final int page) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String url;
-                    if (isMain)
-                        url = ServiceConstants.TRUSTED_HOST_MAIN;
-                    else
-                        url = ServiceConstants.TRUSTED_HOST_TEST;
+                    String url = null;
+                    switch (network) {
+                        case MyConstants.NETWORK_MAIN:
+                            url = ServiceConstants.URL_VERSION_MAIN;
+                            break;
+
+                        case MyConstants.NETWORK_TEST:
+                            url = ServiceConstants.URL_VERSION_TEST;
+                            break;
+
+                        case MyConstants.NETWORK_DEV:
+                            url = ServiceConstants.DEV_TRACKER;
+                            break;
+                    }
 
                     LoopChainClient client = new LoopChainClient(url);
-                    Call<LCResponse> responseCall = client.sendTransaction(id, timestamp, from, to, value, fee, privateKey);
-                    responseCall.enqueue(new Callback<LCResponse>() {
+                    Call<TRResponse> responseCall = client.getTokenTxList(own, contract, page);
+                    responseCall.enqueue(new Callback<TRResponse>() {
                         @Override
-                        public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
-                            JsonElement result = response.body().getResult();
-                            if (result != null) {
-                                int resCode = result.getAsJsonObject().get("response_code").getAsInt();
-                                if (resCode == 0) {
-                                    String txHash = result.getAsJsonObject().get("tx_hash").getAsString();
-                                    mRemCallback.onReceiveTransactionResult(id, txHash);
+                        public void onResponse(Call<TRResponse> call, Response<TRResponse> response) {
+                            if (response.isSuccessful()) {
+                                String resCode = response.body().getResult();
+                                if (resCode.equals(MyConstants.RESULT_OK)) {
+                                    int listSize = response.body().getListSize();
+                                    JsonArray data = response.body().getData().getAsJsonArray();
+                                    mTxListCallback.onReceiveTransactionList(listSize, data);
                                 } else {
-                                    mRemCallback.onReceiveError(from, resCode);
+                                    mTxListCallback.onReceiveError(resCode);
                                 }
                             } else {
-                                mRemCallback.onReceiveError(from, 9999);
+                                mTxListCallback.onReceiveError("9999");
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<LCResponse> call, Throwable t) {
-
+                        public void onFailure(Call<TRResponse> call, Throwable t) {
+                            mTxListCallback.onReceiveException(t);
                         }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mRemCallback.onReceiveException(e);
+                    mTxListCallback.onReceiveException(e);
                 }
             }
         }).start();
     }
+
+    public void requestICXTransaction(Transaction tx) {
+        String url = null;
+        switch (network) {
+            case MyConstants.NETWORK_MAIN:
+                url = ServiceConstants.TRUSTED_HOST_MAIN;
+                break;
+
+            case MyConstants.NETWORK_TEST:
+                url = ServiceConstants.TRUSTED_HOST_TEST;
+                break;
+
+            case MyConstants.NETWORK_DEV:
+                url = ServiceConstants.DEV_HOST;
+                break;
+        }
+
+        try {
+            LoopChainClient client = new LoopChainClient(url);
+            Call<LCResponse> responseCall = client.sendTransaction(tx);
+            responseCall.enqueue(new Callback<LCResponse>() {
+                @Override
+                public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.errorBody() == null) {
+                            String txHash = response.body().getResult().getAsString();
+                            mRemCallback.onReceiveTransactionResult(Integer.toString(tx.getId()), txHash);
+                        } else {
+                            int resCode = response.body().getResult().getAsJsonObject().get("error").getAsJsonObject().get("code").getAsInt();
+                            mRemCallback.onReceiveError(tx.getFrom(), resCode);
+                        }
+                    } else {
+                        Log.d(TAG, response.raw().request().body().toString());
+                        mRemCallback.onReceiveError(tx.getFrom(), 9999);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LCResponse> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+
+        }
+    }
+
+//    public void requestICXTransaction(final int id, final String timestamp, final String from, final String to, final String value, final String stepLimit, final String privateKey) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    String url = null;
+//                    switch (network) {
+//                        case MyConstants.NETWORK_MAIN:
+//                            url = ServiceConstants.TRUSTED_HOST_MAIN;
+//                            break;
+//
+//                        case MyConstants.NETWORK_TEST:
+//                            url = ServiceConstants.TRUSTED_HOST_TEST;
+//                            break;
+//
+//                        case MyConstants.NETWORK_DEV:
+//                            url = ServiceConstants.DEV_HOST;
+//                            break;
+//                    }
+//
+//                    LoopChainClient client = new LoopChainClient(url);
+//                    Call<LCResponse> responseCall = client.sendTransaction(id, timestamp, from, to, value, stepLimit, privateKey);
+//                    responseCall.enqueue(new Callback<LCResponse>() {
+//                        @Override
+//                        public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
+//                            if (response.isSuccessful()) {
+//                                if (response.errorBody() == null) {
+//                                    String txHash = response.body().getResult().getAsString();
+//                                    mRemCallback.onReceiveTransactionResult(Integer.toString(id), txHash);
+//                                } else {
+//                                    int resCode = response.body().getResult().getAsJsonObject().get("error").getAsJsonObject().get("code").getAsInt();
+//                                    mRemCallback.onReceiveError(from, resCode);
+//                                }
+//                            } else {
+//                                mRemCallback.onReceiveError(from, 9999);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<LCResponse> call, Throwable t) {
+//
+//                        }
+//                    });
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    mRemCallback.onReceiveException(e);
+//                }
+//            }
+//        }).start();
+//    }
 
     public void requestETHTransaction(String id, String price, String limit, String to, String data, String value, String privateKey) {
         ETHTransaction request = new ETHTransaction();
@@ -354,8 +555,6 @@ public class NetworkService extends Service {
         void onReceiveICXBalance(String id, String address, String result);
 
         void onReceiveETHBalance(String id, String address, String result);
-
-        void onReceiveTokenBalance(String id, String address, String result);
 
         void onReceiveError(String id, String address, int code);
 
@@ -397,7 +596,7 @@ public class NetworkService extends Service {
             address = params[1];
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -435,7 +634,7 @@ public class NetworkService extends Service {
         @Override
         protected String[] doInBackground(String... params) {
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -499,7 +698,7 @@ public class NetworkService extends Service {
             contract = params[2];
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -524,7 +723,7 @@ public class NetworkService extends Service {
             if (result == null)
                 mBalanceCallback.onReceiveError(id, own, 9999);
             else
-                mBalanceCallback.onReceiveTokenBalance(result[0], result[1], result[2]);
+                mBalanceCallback.onReceiveETHBalance(result[0], result[1], result[2]);
 
             ethMap.remove(id);
         }
@@ -544,7 +743,7 @@ public class NetworkService extends Service {
             String privKey = params[7];
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;

@@ -50,14 +50,16 @@
 
     <TextView
         android:id="@+id/txt_asset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:fontFamily="@font/nanum_square_bold"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:letterSpacing="-0.04"
+        android:maxLines="1"
         android:text="-"
-        android:textColor="@color/colorWhite"
-        android:textSize="47sp" />
+        android:textColor="@color/colorWhite" />
 
     <LinearLayout
         android:layout_width="match_parent"

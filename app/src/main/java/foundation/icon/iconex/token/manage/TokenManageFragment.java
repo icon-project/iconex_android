@@ -34,6 +34,7 @@ import org.web3j.tx.exceptions.ContractCallException;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Random;
 
 import ethereum.contract.MyContract;
 import ethereum.contract.MyTransactionManager;
@@ -42,20 +43,22 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.Token;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.RESTClient;
 import foundation.icon.iconex.service.ServiceConstants;
+import foundation.icon.iconex.token.Token;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.MyEditText;
+import loopchain.icon.wallet.core.response.LCResponse;
+import loopchain.icon.wallet.service.LoopChainClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 
 public class TokenManageFragment extends Fragment implements View.OnClickListener {
 
@@ -64,6 +67,9 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
     private static final String ARG_ADDRESS = "ARG_ADDRESS";
     private static final String ARG_MODE = "ARG_MODE";
     private static final String ARG_TOKEN = "ARG_TOKEN";
+    private static final String ARG_TOKEN_TYPE = "ARG_TOKEN_TYPE";
+
+    private TokenManageActivity.TOKEN_TYPE tokenType;
 
     private String mWalletAddr;
     private MyConstants.MODE_TOKEN mMode;
@@ -92,7 +98,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
     private OnKeyPreImeListener onKeyPreImeListener = new OnKeyPreImeListener() {
         @Override
         public void onBackPressed() {
-            checkTokenInfo();
+            validateToken();
         }
     };
 
@@ -100,11 +106,12 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
         // Required empty public constructor
     }
 
-    public static TokenManageFragment newInstance(String walletAddress, MyConstants.MODE_TOKEN mode, WalletEntry token) {
+    public static TokenManageFragment newInstance(String walletAddress, MyConstants.MODE_TOKEN mode, TokenManageActivity.TOKEN_TYPE type, WalletEntry token) {
         TokenManageFragment fragment = new TokenManageFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ADDRESS, walletAddress);
         bundle.putSerializable(ARG_MODE, mode);
+        bundle.putSerializable(ARG_TOKEN_TYPE, type);
         bundle.putSerializable(ARG_TOKEN, token);
         fragment.setArguments(bundle);
         return fragment;
@@ -117,6 +124,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
         if (getArguments() != null) {
             mWalletAddr = getArguments().getString(ARG_ADDRESS);
             mMode = (MyConstants.MODE_TOKEN) getArguments().get(ARG_MODE);
+            tokenType = (TokenManageActivity.TOKEN_TYPE) getArguments().get(ARG_TOKEN_TYPE);
             mToken = (WalletEntry) getArguments().get(ARG_TOKEN);
         }
     }
@@ -137,7 +145,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                     lineAddr.setBackgroundColor(getResources().getColor(R.color.editActivated));
                 } else {
                     lineAddr.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    checkAddress(editAddr.getText().toString());
+                    validateAddress(editAddr.getText().toString());
                 }
             }
         });
@@ -154,9 +162,13 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                         delAddr.setVisibility(View.VISIBLE);
 
                         if (s.length() == 42) {
-                            boolean available = checkAddress(s.toString());
+                            boolean available = validateAddress(s.toString());
                             if (available)
-                                getTokenInfo(s.toString());
+                                if (tokenType == TokenManageActivity.TOKEN_TYPE.IRC)
+                                    getIrcToken(s.toString());
+                                else
+                                    getErcToken(s.toString());
+
                         }
                     } else {
                         delAddr.setVisibility(View.INVISIBLE);
@@ -175,9 +187,9 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
             public void afterTextChanged(Editable s) {
 //                if (mMode != MyConstants.MODE_TOKEN.MOD) {
 //                    if (s.length() == 42) {
-//                        boolean available = checkAddress(s.toString());
+//                        boolean available = validateAddress(s.toString());
 //                        if (available)
-//                            getTokenInfo(s.toString());
+//                            getErcToken(s.toString());
 //                    }
 //                }
             }
@@ -239,7 +251,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    checkTokenInfo();
+                    validateToken();
                 }
                 return false;
             }
@@ -419,7 +431,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                 break;
 
             case R.id.btn_add_token:
-                if (checkTokenInfo()) {
+                if (validateToken()) {
                     addToken();
                     mListener.onClose();
                 }
@@ -427,7 +439,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void getTokenInfo(String address) {
+    private void getErcToken(String address) {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editAddr.getWindowToken(), 0);
 
@@ -482,7 +494,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
     }
 
     public void onEditDone() {
-        boolean check = checkTokenInfo();
+        boolean check = validateToken();
         if (check) {
             try {
                 RealmUtil.modToken(mWalletAddr, editAddr.getText().toString(),
@@ -502,25 +514,34 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private boolean checkAddress(String address) {
+    private boolean validateAddress(String address) {
         if (address.isEmpty()) {
             txtAddrWarning.setVisibility(View.VISIBLE);
             txtAddrWarning.setText(getString(R.string.errNoAddress));
             lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
 
             return false;
-        }
-
-        if (!address.startsWith(MyConstants.PREFIX_ETH)) {
-            lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errContractAddress));
-            return false;
         } else if (checkAddressDup(address)) {
             lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
             txtAddrWarning.setText(getString(R.string.errTokenDuplication));
             return false;
+        }
+
+        if (tokenType == TokenManageActivity.TOKEN_TYPE.IRC) {
+            if (!address.startsWith(MyConstants.PREFIX_IRC)) {
+                lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+                txtAddrWarning.setVisibility(View.VISIBLE);
+                txtAddrWarning.setText(getString(R.string.errContractAddress));
+                return false;
+            }
+        } else {
+            if (!address.startsWith(MyConstants.PREFIX_HEX)) {
+                lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+                txtAddrWarning.setVisibility(View.VISIBLE);
+                txtAddrWarning.setText(getString(R.string.errContractAddress));
+                return false;
+            }
         }
 
         if (editAddr.hasFocus())
@@ -533,7 +554,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
         return true;
     }
 
-    private boolean checkTokenInfo() {
+    private boolean validateToken() {
 
         boolean resultAddr = true;
         boolean resultName;
@@ -542,45 +563,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
         String address = editAddr.getText().toString();
 
         if (mMode == MyConstants.MODE_TOKEN.ADD) {
-            if (address.isEmpty()) {
-                txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errNoAddress));
-                lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-
-                return false;
-            } else {
-                if (!address.startsWith(MyConstants.PREFIX_ETH)) {
-                    txtAddrWarning.setVisibility(View.VISIBLE);
-                    txtAddrWarning.setText(getString(R.string.errContractAddress));
-                    lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-
-                    resultAddr = false;
-                } else {
-                    String temp = address.substring(2);
-                    if (temp.length() != 40) {
-                        txtAddrWarning.setVisibility(View.VISIBLE);
-                        txtAddrWarning.setText(getString(R.string.errContractAddress));
-                        lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-
-                        resultAddr = false;
-                    } else if (checkAddressDup(temp)) {
-                        txtAddrWarning.setVisibility(View.VISIBLE);
-                        txtAddrWarning.setText(getString(R.string.errTokenDuplication));
-                        lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-
-                        resultAddr = false;
-                    } else {
-                        if (editAddr.hasFocus())
-                            lineAddr.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                        else
-                            lineAddr.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
-                        txtAddrWarning.setVisibility(View.INVISIBLE);
-
-                        resultAddr = true;
-                    }
-                }
-            }
+            resultAddr = validateAddress(address);
         }
 
 //        if (editStatus != EDIT_STATUS.READ_ONLY) {
@@ -607,14 +590,13 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                 btnAdd.setEnabled(false);
         }
 
-        return resultAddr && resultName;
-//        }
+        checkEnteredInfo();
 
-//        return false;
+        return resultAddr && resultName;
     }
 
     private boolean checkAddressDup(String address) {
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (mWalletAddr.equals(info.getAddress())) {
                 for (WalletEntry entry : info.getWalletEntries()) {
                     if (address.equals(entry.getContractAddress()))
@@ -670,6 +652,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     editAddr.setText(barcode.displayValue);
+                    editAddr.setSelection(editAddr.getText().toString().length());
                 } else {
 //                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
@@ -712,7 +695,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
             String address = params[0];
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -756,7 +739,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
 //                txtAddrWarning.setVisibility(View.VISIBLE);
 //
 //                btnAdd.setEnabled(false);
-                getEthTokens((String) results.get(KEY_ERROR));
+                getEthTokenInfo((String) results.get(KEY_ERROR));
             } else {
                 if (layoutLoading.getVisibility() == View.VISIBLE)
                     layoutLoading.setVisibility(View.GONE);
@@ -774,12 +757,12 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
 
                 editStatus = EDIT_STATUS.LOADED;
 
-                checkTokenInfo();
+                validateToken();
             }
         }
     }
 
-    private void getEthTokens(String contract) {
+    private void getEthTokenInfo(String contract) {
         try {
             String contents = Utils.readAssets(getActivity(), MyConstants.ETH_TOKEN_FILE);
 
@@ -820,6 +803,136 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
 
             btnAdd.setEnabled(false);
         }
+    }
+
+    private void getIrcToken(String address) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editAddr.getWindowToken(), 0);
+
+        if (layoutLoading.getVisibility() != View.VISIBLE)
+            layoutLoading.setVisibility(View.VISIBLE);
+
+        editName.setText("");
+        editSym.setText("");
+        editDec.setText("");
+
+        String url;
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            url = ServiceConstants.TRUSTED_HOST_MAIN;
+        else if (ICONexApp.network == MyConstants.NETWORK_TEST)
+            url = ServiceConstants.TRUSTED_HOST_TEST;
+        else
+            url = ServiceConstants.DEV_HOST;
+
+        try {
+            int id = new Random().nextInt(999999) + 100000;
+            LoopChainClient LCClient = new LoopChainClient(url);
+            Call<LCResponse> responseCall = LCClient.getScoreApi(id, address);
+            responseCall.enqueue(new Callback<LCResponse>() {
+                @Override
+                public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
+                    if (response.errorBody() == null) {
+                        getIrcTokenInfo(LCClient, address);
+                    } else {
+                        if (layoutLoading.getVisibility() == View.VISIBLE)
+                            layoutLoading.setVisibility(View.GONE);
+
+                        lineAddr.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+                        txtAddrWarning.setText(getString(R.string.errTokenInfo));
+                        txtAddrWarning.setVisibility(View.VISIBLE);
+
+                        btnAdd.setEnabled(false);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LCResponse> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getIrcTokenInfo(LoopChainClient client, String address) {
+        JsonObject tokenName = new JsonObject();
+        tokenName.addProperty("method", "name");
+        JsonObject tokenDecimals = new JsonObject();
+        tokenDecimals.addProperty("method", "decimals");
+        JsonObject tokenSymbol = new JsonObject();
+        tokenSymbol.addProperty("method", "symbol");
+
+        try {
+            Call<LCResponse> nameRes = client.sendIcxCall(111111, mWalletAddr, address, tokenName);
+            nameRes.enqueue(new Callback<LCResponse>() {
+                @Override
+                public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
+                    if (response.isSuccessful()) {
+                        String name = response.body().getResult().getAsString();
+                        defaultName = name;
+                        editName.setText(name);
+                        checkEnteredInfo();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LCResponse> call, Throwable t) {
+
+                }
+            });
+
+            Call<LCResponse> symbolRes = client.sendIcxCall(111112, mWalletAddr, address, tokenSymbol);
+            symbolRes.enqueue(new Callback<LCResponse>() {
+                @Override
+                public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
+                    if (response.isSuccessful()) {
+                        String symbol = response.body().getResult().getAsString();
+                        defaultSym = symbol;
+                        editSym.setText(symbol);
+                        checkEnteredInfo();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LCResponse> call, Throwable t) {
+
+                }
+            });
+
+            Call<LCResponse> decimalRes = client.sendIcxCall(111112, mWalletAddr, address, tokenDecimals);
+            decimalRes.enqueue(new Callback<LCResponse>() {
+                @Override
+                public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
+                    if (response.isSuccessful()) {
+                        String decimals = response.body().getResult().getAsString();
+                        defaultDec = Integer.decode(decimals).intValue();
+                        editDec.setText(Integer.decode(decimals).toString());
+                        checkEnteredInfo();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LCResponse> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void checkEnteredInfo() {
+        if (!editName.getText().toString().isEmpty()
+                && !editSym.getText().toString().isEmpty()
+                && !editDec.getText().toString().isEmpty()) {
+
+            if (layoutLoading.getVisibility() == View.VISIBLE)
+                layoutLoading.setVisibility(View.GONE);
+
+            btnAdd.setEnabled(true);
+        } else
+            btnAdd.setEnabled(false);
     }
 
     private void getEthTokensFromServer(final String contract) {

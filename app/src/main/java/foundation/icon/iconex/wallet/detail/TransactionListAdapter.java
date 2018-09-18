@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,14 @@ import java.util.TimeZone;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 
 /**
@@ -54,6 +56,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private MyConstants.TxState mState;
     private MyConstants.TxType mType;
     private String mCoinType;
+    private final String ercIcxAddr;
 
     private LayoutInflater mInflater;
     private HeaderClickListener mHeaderClickListener;
@@ -73,6 +76,11 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         this.entry = entry;
         this.EXCHANGE = exchange;
+
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            ercIcxAddr = MyConstants.M_ERC_ICX_ADDR;
+        else
+            ercIcxAddr = MyConstants.T_ERC_ICX_ADDR;
     }
 
     @Override
@@ -109,7 +117,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 try {
                     String value = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
                     Double doubBalance = Double.parseDouble(value);
-                    headerViewHolder.txtAsset.setText(String.format(Locale.getDefault(), "%,.4f", doubBalance));
+                    headerViewHolder.txtAsset.setText(String.format(Locale.getDefault(), "%s", Utils.formatFloating(value, 4)));
 
                     String exchangeCode = entry.getSymbol().toLowerCase() + EXCHANGE.toLowerCase();
                     String strPrice;
@@ -133,13 +141,18 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     headerViewHolder.txtAsset.setText(MyConstants.NO_BALANCE);
                     headerViewHolder.txtTransAsset.setText(MyConstants.NO_BALANCE);
                 }
+            } else {
+                headerViewHolder.txtAsset.setText(MyConstants.NO_BALANCE);
+                headerViewHolder.txtTransAsset.setText(MyConstants.NO_BALANCE);
             }
 
-            if (entry.getType().equals(MyConstants.TYPE_TOKEN)
-                    && entry.getSymbol().equals(Constants.KS_COINTYPE_ICX))
-                headerViewHolder.btnSwap.setVisibility(View.VISIBLE);
-            else
-                headerViewHolder.btnSwap.setVisibility(View.GONE);
+            if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
+                if (entry.getContractAddress().equals(ercIcxAddr))
+                    ((HeaderViewHolder) holder).btnSwap.setVisibility(View.VISIBLE);
+                else
+                    ((HeaderViewHolder) holder).btnSwap.setVisibility(View.GONE);
+            }
+
 
             ((TextView) headerViewHolder.btnExchange.findViewById(R.id.txt_exchange)).setText(EXCHANGE);
             ((TextView) headerViewHolder.btnSelectCoin.findViewById(R.id.txt_selected_name)).setText(entry.getUserName());
@@ -178,12 +191,12 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 itemViewHolder.txtDate.setTextColor(mContext.getResources().getColor(R.color.colorRemittance));
                 itemViewHolder.txtValue.setTextColor(mContext.getResources().getColor(R.color.colorRemittance));
                 itemViewHolder.txtSymbol.setTextColor(mContext.getResources().getColor(R.color.colorRemittance));
-                itemViewHolder.txtValue.setText("-" + item.getAmount());
+                itemViewHolder.txtValue.setText("- " + item.getAmount());
             } else {
                 itemViewHolder.txtDate.setTextColor(mContext.getResources().getColor(R.color.colorDeposit));
                 itemViewHolder.txtValue.setTextColor(mContext.getResources().getColor(R.color.colorDeposit));
                 itemViewHolder.txtSymbol.setTextColor(mContext.getResources().getColor(R.color.colorDeposit));
-                itemViewHolder.txtValue.setText("+" + item.getAmount());
+                itemViewHolder.txtValue.setText("+ " + item.getAmount());
             }
             itemViewHolder.txtSymbol.setText(entry.getSymbol());
         }
@@ -270,6 +283,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             txtSymbol = itemView.findViewById(R.id.txt_selected_symbol);
             txtAsset = itemView.findViewById(R.id.txt_asset);
+            TextViewCompat.setAutoSizeTextTypeWithDefaults(txtAsset, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             txtTransAsset = itemView.findViewById(R.id.txt_trans_asset);
 
             btnSelectCoin = itemView.findViewById(R.id.btn_select_coin);
@@ -355,7 +369,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             switch (v.getId()) {
                 case R.id.txt_etherscan:
                     String tracker;
-                    if (isMain)
+                    if (network == MyConstants.NETWORK_MAIN)
                         tracker = ServiceConstants.URL_ETHERSCAN;
                     else
                         tracker = ServiceConstants.URL_ROPSTEN;
@@ -404,6 +418,14 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             txtView.setText(mContext.getString(R.string.withdraw));
         else
             txtView.setText(mContext.getString(R.string.deposit));
+    }
+
+    public void setSearchState(MyConstants.TxState state) {
+        mState = state;
+    }
+
+    public void setSearchType(MyConstants.TxType type) {
+        mType = type;
     }
 
     public void setWalletEntry(WalletEntry entry) {

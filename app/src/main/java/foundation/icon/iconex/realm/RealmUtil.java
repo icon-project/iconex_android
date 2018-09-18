@@ -4,26 +4,25 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.control.Token;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.realm.data.CoinNToken;
 import foundation.icon.iconex.realm.data.ETHContacts;
 import foundation.icon.iconex.realm.data.ICXContacts;
 import foundation.icon.iconex.realm.data.RecentETHSend;
 import foundation.icon.iconex.realm.data.RecentICXSend;
-import foundation.icon.iconex.realm.data.Wallet;
+import foundation.icon.iconex.token.Token;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import io.realm.Realm;
 import io.realm.RealmList;
 import loopchain.icon.wallet.core.Constants;
-import loopchain.icon.wallet.service.crypto.PKIUtils;
 
-import static foundation.icon.iconex.realm.RealmUtil.COIN_TYPE.ICX;
+import static foundation.icon.iconex.MyConstants.CoinType.ICX;
 
 /**
  * Created by js on 2018. 3. 5..
@@ -35,9 +34,9 @@ public class RealmUtil {
     public static void loadWallet() throws Exception {
         Realm realm = Realm.getDefaultInstance();
         ICONexApp.mWallets = new ArrayList<>();
-        if (realm.where(Wallet.class).count() > 0) {
-            for (Wallet wallet : realm.where(Wallet.class).findAll()) {
-                WalletInfo walletInfo = new WalletInfo();
+        if (realm.where(foundation.icon.iconex.realm.data.Wallet.class).count() > 0) {
+            for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAll()) {
+                Wallet walletInfo = new Wallet();
                 walletInfo.setCoinType(wallet.getCoinType());
                 walletInfo.setAlias(wallet.getAlias());
                 walletInfo.setAddress(wallet.getAddress());
@@ -53,7 +52,7 @@ public class RealmUtil {
                     entry.setAddress(coinNToken.getAddress());
                     entry.setSymbol(coinNToken.getSymbol());
                     entry.setBalance("");
-                    entry.setId(PKIUtils.hexEncode(random.generateSeed(3)));
+                    entry.setId(new Random().nextInt(999999) + 1000000);
 
                     if (coinNToken.getType().equals(MyConstants.TYPE_TOKEN)) {
                         entry.setContractAddress(coinNToken.getContractAddress());
@@ -83,9 +82,9 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addWallet(WalletInfo wallet) throws Exception {
+    public static void addWallet(Wallet wallet) throws Exception {
         Realm realm = Realm.getDefaultInstance();
-        Number currentMaxNId = realm.where(Wallet.class).max("id");
+        Number currentMaxNId = realm.where(foundation.icon.iconex.realm.data.Wallet.class).max("id");
         int nextId;
         if (currentMaxNId == null)
             nextId = 1;
@@ -93,7 +92,7 @@ public class RealmUtil {
             nextId = currentMaxNId.intValue() + 1;
 
         realm.beginTransaction();
-        Wallet mWallet = realm.createObject(Wallet.class, nextId);
+        foundation.icon.iconex.realm.data.Wallet mWallet = realm.createObject(foundation.icon.iconex.realm.data.Wallet.class, nextId);
         mWallet.setCoinType(wallet.getCoinType());
         mWallet.setAlias(wallet.getAlias());
         mWallet.setAddress(wallet.getAddress());
@@ -150,21 +149,25 @@ public class RealmUtil {
 
     private static void addICXToken(String coinType, Realm realm, RealmList<CoinNToken> list, String ownAddr, String createdAt) {
         boolean isExist = false;
+        String contractAddr;
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            contractAddr = MyConstants.M_ERC_ICX_ADDR;
+        else
+            contractAddr = MyConstants.T_ERC_ICX_ADDR;
 
         if (coinType.equals(Constants.KS_COINTYPE_ICX))
             return;
 
         for (CoinNToken entry : list) {
-            if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
-                if (entry.getSymbol().equals(MyConstants.ICX_SYM))
-                    isExist = true;
-            }
+            if (entry.getContractAddress().equals(contractAddr))
+                isExist = true;
         }
 
         if (!isExist) {
             CoinNToken token = realm.createObject(CoinNToken.class);
             token.setType(MyConstants.TYPE_TOKEN);
             token.setAddress(ownAddr);
+            token.setContractAddress(contractAddr);
             token.setName(MyConstants.NAME_ICX);
             token.setUserName(MyConstants.NAME_ICX);
             token.setSymbol(MyConstants.ICX_SYM);
@@ -173,19 +176,14 @@ public class RealmUtil {
             token.setUserDecimal(MyConstants.ICX_DEC);
             token.setCreateAt(createdAt);
 
-            if (ICONexApp.isMain)
-                token.setContractAddress(MyConstants.CONTRACT_MAIN);
-            else
-                token.setContractAddress(MyConstants.CONTRACT_TEST);
-
             list.add(token);
         }
     }
 
-    public static void overwriteWallet(String address, WalletInfo wallet) {
+    public static void overwriteWallet(String address, Wallet wallet) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Wallet ownWallet = realm.where(Wallet.class).equalTo("address", address).findFirst();
+        foundation.icon.iconex.realm.data.Wallet ownWallet = realm.where(foundation.icon.iconex.realm.data.Wallet.class).equalTo("address", address).findFirst();
         ownWallet.setAlias(wallet.getAlias());
         ownWallet.setKeyStore(wallet.getKeyStore());
         ownWallet.setCreateAt(wallet.getCreatedAt());
@@ -197,7 +195,7 @@ public class RealmUtil {
     public static void modWalletAlias(String address, String newAlias) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Wallet wallet = realm.where(Wallet.class).equalTo("address", address).findFirst();
+        foundation.icon.iconex.realm.data.Wallet wallet = realm.where(foundation.icon.iconex.realm.data.Wallet.class).equalTo("address", address).findFirst();
         wallet.setAlias(newAlias);
         realm.commitTransaction();
 
@@ -207,7 +205,7 @@ public class RealmUtil {
     public static void modWalletPassword(String address, String keyStore) throws Exception {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Wallet wallet = realm.where(Wallet.class).equalTo("address", address).findFirst();
+        foundation.icon.iconex.realm.data.Wallet wallet = realm.where(foundation.icon.iconex.realm.data.Wallet.class).equalTo("address", address).findFirst();
         wallet.setKeyStore(keyStore);
         realm.commitTransaction();
 
@@ -217,7 +215,7 @@ public class RealmUtil {
     public static void removeWallet(String address) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Wallet wallet = realm.where(Wallet.class).equalTo("address", address).findFirst();
+        foundation.icon.iconex.realm.data.Wallet wallet = realm.where(foundation.icon.iconex.realm.data.Wallet.class).equalTo("address", address).findFirst();
         wallet.deleteFromRealm();
         realm.commitTransaction();
 
@@ -225,7 +223,7 @@ public class RealmUtil {
     }
 
     public static void makeExchanges() {
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             for (WalletEntry entry : info.getWalletEntries()) {
                 String symbol = entry.getSymbol().toLowerCase();
                 if (!ICONexApp.EXCHANGES.contains(symbol))
@@ -237,7 +235,7 @@ public class RealmUtil {
     public static void addToken(String walletAddress, Token token) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Wallet wallet = realm.where(Wallet.class).equalTo("address", walletAddress).findFirst();
+        foundation.icon.iconex.realm.data.Wallet wallet = realm.where(foundation.icon.iconex.realm.data.Wallet.class).equalTo("address", walletAddress).findFirst();
         RealmList<CoinNToken> entries = wallet.getCoinNToken();
         CoinNToken newToken = realm.createObject(CoinNToken.class);
         newToken.setType(MyConstants.TYPE_TOKEN);
@@ -261,7 +259,7 @@ public class RealmUtil {
     public static void modToken(String own, String contract, String name, String symbol, int dec) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Wallet wallet = realm.where(Wallet.class).equalTo("address", own).findFirst();
+        foundation.icon.iconex.realm.data.Wallet wallet = realm.where(foundation.icon.iconex.realm.data.Wallet.class).equalTo("address", own).findFirst();
         RealmList<CoinNToken> list = wallet.getCoinNToken();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getContractAddress() != null
@@ -281,7 +279,7 @@ public class RealmUtil {
     public static void deleteToken(String own, String contract) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Wallet wallet = realm.where(Wallet.class).equalTo("address", own).findFirst();
+        foundation.icon.iconex.realm.data.Wallet wallet = realm.where(foundation.icon.iconex.realm.data.Wallet.class).equalTo("address", own).findFirst();
         RealmList<CoinNToken> list = wallet.getCoinNToken();
         for (CoinNToken token : list) {
             if (token.getContractAddress() != null
@@ -296,7 +294,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addContacts(COIN_TYPE type, String name, String address) {
+    public static void addContacts(MyConstants.CoinType type, String name, String address) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;
@@ -362,7 +360,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addRecentSend(COIN_TYPE type, String txHash, String name, String address, String date, String amount, String symbol) {
+    public static void addRecentSend(MyConstants.CoinType type, String txHash, String name, String address, String date, String amount, String symbol) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;
@@ -480,23 +478,8 @@ public class RealmUtil {
         realm.close();
     }
 
-    public enum COIN_TYPE {
-        ICX,
-        ETH
-    }
-
     private static String getTimeStamp() {
         long time = System.currentTimeMillis();
         return Long.toString(time);
     }
-
-//    public static void modWalletAddress(String address) {
-//        Realm realm = Realm.getDefaultInstance();
-//        realm.beginTransaction();
-//        Wallet wallet = realm.where(Wallet.class).equalTo("address", "아니야").findFirst();
-//        wallet.setAddress(address);
-//        realm.commitTransaction();
-//
-//        realm.close();
-//    }
 }

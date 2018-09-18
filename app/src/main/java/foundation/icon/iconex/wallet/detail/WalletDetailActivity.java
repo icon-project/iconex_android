@@ -31,8 +31,6 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.BottomSheetMenu;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.BottomItemSelectActivity;
@@ -45,6 +43,9 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.token.swap.TokenSwapActivity;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.wallet.menu.WalletAddressCodeActivity;
 import foundation.icon.iconex.wallet.menu.WalletBackUpActivity;
 import foundation.icon.iconex.wallet.menu.WalletPwdChangeActivity;
@@ -65,7 +66,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
     private static final String TAG = WalletDetailActivity.class.getSimpleName();
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
 
     private ViewGroup appbar;
     private TextView txtWalletAlias;
@@ -97,6 +98,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
     private final int RC_SWAP = 30001;
 
     public static final int RES_REFRESH = 4001;
+    public static final int RES_RENAME = 5001;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -123,7 +125,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             if (refreshLayout.isRefreshing)
                 refreshLayout.stopRefresh(true);
 
-            if (selectedEntry.getId().equals(id)) {
+            if (Integer.toString(selectedEntry.getId()).equals(id)) {
                 selectedEntry.setBalance(result);
                 txAdapter.setWalletEntry(selectedEntry);
             }
@@ -134,26 +136,10 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             if (refreshLayout.isRefreshing)
                 refreshLayout.stopRefresh(true);
 
-            if (selectedEntry.getId().equals(id)) {
+            if (Integer.toString(selectedEntry.getId()).equals(id)) {
                 selectedEntry.setBalance(result);
                 txAdapter.setWalletEntry(selectedEntry);
             }
-        }
-
-        @Override
-        public void onReceiveTokenBalance(String id, String address, String result) {
-            if (refreshLayout.isRefreshing)
-                refreshLayout.stopRefresh(true);
-
-            for (int i = 0; i < mWalletInfo.getWalletEntries().size(); i++) {
-                if (id.equals(mWalletInfo.getWalletEntries().get(i).getId()))
-                    mWalletInfo.getWalletEntries().get(i).setBalance(result);
-
-                if (id.equals(selectedEntry.getId()))
-                    selectedEntry.setBalance(result);
-            }
-
-            txAdapter.setWalletEntry(selectedEntry);
         }
 
         @Override
@@ -162,14 +148,14 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 refreshLayout.stopRefresh(true);
 
             if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                if (selectedEntry.getId().equals(id)) {
+                if (Integer.toString(selectedEntry.getId()).equals(id)) {
                     selectedEntry.setBalance(MyConstants.NO_BALANCE);
                     txAdapter.setWalletEntry(selectedEntry);
                 }
             } else {
-                for (int i = 0; i < mWalletInfo.getWalletEntries().size(); i++) {
-                    if (id.equals(mWalletInfo.getWalletEntries().get(i).getId()))
-                        mWalletInfo.getWalletEntries().get(i).setBalance(MyConstants.NO_BALANCE);
+                for (int i = 0; i < mWallet.getWalletEntries().size(); i++) {
+                    if (id.equals(mWallet.getWalletEntries().get(i).getId()))
+                        mWallet.getWalletEntries().get(i).setBalance(MyConstants.NO_BALANCE);
 
                     if (id.equals(selectedEntry.getId()))
                         selectedEntry.setBalance(MyConstants.NO_BALANCE);
@@ -185,14 +171,14 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 refreshLayout.stopRefresh(true);
 
             if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                if (selectedEntry.getId().equals(id)) {
+                if (Integer.toString(selectedEntry.getId()).equals(id)) {
                     selectedEntry.setBalance(MyConstants.NO_BALANCE);
                     txAdapter.setWalletEntry(selectedEntry);
                 }
             } else {
-                for (int i = 0; i < mWalletInfo.getWalletEntries().size(); i++) {
-                    if (id.equals(mWalletInfo.getWalletEntries().get(i).getId()))
-                        mWalletInfo.getWalletEntries().get(i).setBalance(MyConstants.NO_BALANCE);
+                for (int i = 0; i < mWallet.getWalletEntries().size(); i++) {
+                    if (id.equals(mWallet.getWalletEntries().get(i).getId()))
+                        mWallet.getWalletEntries().get(i).setBalance(MyConstants.NO_BALANCE);
 
                     if (id.equals(selectedEntry.getId()))
                         selectedEntry.setBalance(MyConstants.NO_BALANCE);
@@ -213,24 +199,38 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             for (int i = 0; i < txList.size(); i++) {
                 txItem = new TxItem();
                 JsonObject tx = txList.get(i).getAsJsonObject();
-                txItem.setTxHash(tx.get("txHash").getAsString());
-                txItem.setDate(tx.get("createDate").getAsString());
+
                 txItem.setFrom(tx.get("fromAddr").getAsString());
                 txItem.setTo((tx.get("toAddr").getAsString()));
-                txItem.setAmount(tx.get("amount").getAsString());
                 txItem.setFee(tx.get("fee").getAsString());
 
-                WalletDetailActivity.this.txList.add(txItem);
+                if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                    if (tx.get("txType").getAsString().equals("0")) {
+                        txItem.setTxHash(tx.get("txHash").getAsString());
+                        txItem.setDate(tx.get("createDate").getAsString());
+                        txItem.setAmount(tx.get("amount").getAsString());
+
+                        WalletDetailActivity.this.txList.add(txItem);
+                    }
+                } else {
+                    txItem.setTxHash(tx.get("txHash").getAsString());
+                    txItem.setDate(tx.get("age").getAsString());
+                    txItem.setAmount(tx.get("quantity").getAsString());
+
+                    WalletDetailActivity.this.txList.add(txItem);
+                }
             }
 
+            List<TxItem> result = makeTxList(WalletDetailActivity.this.txList, mState, mType);
+
             if (txAdapter != null && WalletDetailActivity.this.txList.size() > 0) {
-                txAdapter.setMoreData(WalletDetailActivity.this.txList);
+                txAdapter.setMoreData(result);
                 txAdapter.moreLoading(false);
                 txAdapter.notifyDataSetChanged();
             } else {
                 txAdapter = new TransactionListAdapter(
-                        WalletDetailActivity.this, selectedEntry, EXCHANGE, WalletDetailActivity.this.txList,
-                        mState, mType, mWalletInfo.getCoinType());
+                        WalletDetailActivity.this, selectedEntry, EXCHANGE, result,
+                        mState, mType, mWallet.getCoinType());
                 txAdapter.setItemClickListener(mTxClickListener);
                 txAdapter.setHeaderClickListener(mHeaderClickListener);
                 recyclerTx.setAdapter(txAdapter);
@@ -238,18 +238,14 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
             txAdapter.showLoading(false);
 
-            changeTxState(mWalletInfo.getCoinType());
+            changeTxState(mWallet.getCoinType());
         }
 
         @Override
         public void onReceiveError(String resCode) {
-            txAdapter = new TransactionListAdapter(
-                    WalletDetailActivity.this, selectedEntry, EXCHANGE, WalletDetailActivity.this.txList,
-                    mState, mType, mWalletInfo.getCoinType());
-            txAdapter.setItemClickListener(mTxClickListener);
-            txAdapter.setHeaderClickListener(mHeaderClickListener);
+            txAdapter.moreLoading(false);
             txAdapter.showLoading(false);
-            recyclerTx.setAdapter(txAdapter);
+            currentPage--;
         }
 
         @Override
@@ -281,9 +277,9 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_wallet_detail);
 
         if (getIntent() != null) {
-            mWalletInfo = (WalletInfo) getIntent().getSerializableExtra("walletInfo");
+            mWallet = (Wallet) getIntent().getSerializableExtra("walletInfo");
             selectedEntry = (WalletEntry) getIntent().getSerializableExtra("walletEntry");
-            entryId = selectedEntry.getId();
+            entryId = Integer.toString(selectedEntry.getId());
         }
 
         appbar = findViewById(R.id.appbar);
@@ -306,7 +302,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         });
 
         txtWalletAlias = findViewById(R.id.txt_wallet_alias);
-        txtWalletAlias.setText(mWalletInfo.getAlias());
+        txtWalletAlias.setText(mWallet.getAlias());
 
         btnBack = findViewById(R.id.btn_back);
         btnBack.setOnClickListener(this);
@@ -344,7 +340,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         txList = new ArrayList<>();
         currentPage = 1;
         txAdapter = new TransactionListAdapter(
-                this, selectedEntry, EXCHANGE, txList, mState, mType, mWalletInfo.getCoinType());
+                this, selectedEntry, EXCHANGE, txList, mState, mType, mWallet.getCoinType());
         txAdapter.setItemClickListener(mTxClickListener);
         txAdapter.setHeaderClickListener(mHeaderClickListener);
         recyclerTx.setAdapter(txAdapter);
@@ -373,25 +369,37 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         if (mBound) {
             txAdapter.showLoading(true);
 
+            txList = new ArrayList<>();
             HashMap<String, String> rqWallet = new HashMap<>();
 
-            if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                rqWallet.put(selectedEntry.getId(), mWalletInfo.getAddress());
-                mService.requestGetBalance(rqWallet, mWalletInfo.getCoinType());
-                mService.requestICONTxList(mWalletInfo.getAddress(), currentPage);
-            } else {
+            if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                    rqWallet.put(selectedEntry.getId(), MyConstants.PREFIX_ETH + mWalletInfo.getAddress());
-                    mService.requestGetBalance(rqWallet, mWalletInfo.getCoinType());
+                    rqWallet.put(Integer.toString(selectedEntry.getId()), mWallet.getAddress());
+                    mService.getBalance(rqWallet, mWallet.getCoinType());
+                    mService.requestICONTxList(mWallet.getAddress(), currentPage);
                 } else {
                     HashMap<String, String[]> tokenList = new HashMap<>();
-                    for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
+                    for (WalletEntry entry : mWallet.getWalletEntries()) {
                         if (entry.getType().equals(MyConstants.TYPE_TOKEN))
-                            tokenList.put(entry.getId(),
-                                    new String[]{MyConstants.PREFIX_ETH + mWalletInfo.getAddress(), entry.getContractAddress()});
+                            tokenList.put(Integer.toString(entry.getId()), new String[]{mWallet.getAddress(), entry.getContractAddress()});
                     }
 
-                    mService.requestGetTokenBalance(tokenList);
+                    mService.getTokenBalance(tokenList, Constants.KS_COINTYPE_ETH);
+                    mService.requestIrcTxList(mWallet.getAddress(), selectedEntry.getContractAddress(), currentPage);
+                }
+            } else {
+                if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                    rqWallet.put(Integer.toString(selectedEntry.getId()), MyConstants.PREFIX_HEX + mWallet.getAddress());
+                    mService.getBalance(rqWallet, mWallet.getCoinType());
+                } else {
+                    HashMap<String, String[]> tokenList = new HashMap<>();
+                    for (WalletEntry entry : mWallet.getWalletEntries()) {
+                        if (entry.getType().equals(MyConstants.TYPE_TOKEN))
+                            tokenList.put(Integer.toString(entry.getId()),
+                                    new String[]{MyConstants.PREFIX_HEX + mWallet.getAddress(), entry.getContractAddress()});
+                    }
+
+                    mService.getTokenBalance(tokenList, Constants.KS_COINTYPE_ETH);
                 }
             }
 
@@ -401,7 +409,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
     private BigInteger getAsset() {
         BigInteger asset = new BigInteger("0");
-        for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
+        for (WalletEntry entry : mWallet.getWalletEntries()) {
             try {
                 BigInteger balance = new BigInteger(entry.getBalance());
                 asset = asset.add(balance);
@@ -439,24 +447,24 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
     private EditTextDialog.OnPasswordCallback mPasswordDialogCallback = new EditTextDialog.OnPasswordCallback() {
         @Override
         public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
-            JsonObject keyStore = new Gson().fromJson(mWalletInfo.getKeyStore(), JsonObject.class);
+            JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
             byte[] bytePrivKey;
-            if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+            if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 try {
-                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWalletInfo.getAddress(),
-                            keyStore.get("crypto").getAsJsonObject(), mWalletInfo.getCoinType());
+                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(),
+                            keyStore.get("crypto").getAsJsonObject(), mWallet.getCoinType());
                     if (bytePrivKey != null) {
-                        if (result == EditTextDialog.RESULT_PWD.REMITTANCE) {
+                        if (result == EditTextDialog.RESULT_PWD.TRANSFER) {
                             startActivity(new Intent(WalletDetailActivity.this, ICONTransferActivity.class)
-                                    .putExtra("walletInfo", (Serializable) mWalletInfo)
+                                    .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("walletEntry", (Serializable) selectedEntry)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
                         } else if (result == EditTextDialog.RESULT_PWD.BACKUP) {
                             startActivity(new Intent(WalletDetailActivity.this, WalletBackUpActivity.class)
-                                    .putExtra("walletInfo", (Serializable) mWalletInfo)
+                                    .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
                         } else {
-                            RealmUtil.removeWallet(mWalletInfo.getAddress());
+                            RealmUtil.removeWallet(mWallet.getAddress());
                             try {
                                 RealmUtil.loadWallet();
                             } catch (Exception e) {
@@ -486,22 +494,22 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     else
                         crypto = keyStore.get("Crypto").getAsJsonObject();
 
-                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWalletInfo.getAddress(), crypto, mWalletInfo.getCoinType());
+                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
                     if (bytePrivKey != null) {
-                        if (result == EditTextDialog.RESULT_PWD.REMITTANCE) {
+                        if (result == EditTextDialog.RESULT_PWD.TRANSFER) {
                             startActivity(new Intent(WalletDetailActivity.this, EtherTransferActivity.class)
-                                    .putExtra("walletInfo", (Serializable) mWalletInfo)
+                                    .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("walletEntry", (Serializable) selectedEntry)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
                         } else if (result == EditTextDialog.RESULT_PWD.BACKUP) {
                             startActivity(new Intent(WalletDetailActivity.this, WalletBackUpActivity.class)
-                                    .putExtra("walletInfo", (Serializable) mWalletInfo)
+                                    .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
                         } else if (result == EditTextDialog.RESULT_PWD.SWAP) {
 
                             try {
                                 Intent swapIntent = new Intent(WalletDetailActivity.this, TokenSwapActivity.class);
-                                swapIntent.putExtra(TokenSwapActivity.ARG_WALLET, (Serializable) mWalletInfo);
+                                swapIntent.putExtra(TokenSwapActivity.ARG_WALLET, (Serializable) mWallet);
                                 swapIntent.putExtra(TokenSwapActivity.ARG_TOKEN, (Serializable) selectedEntry);
                                 String address = PKIUtils.makeAddressFromPrivateKey(bytePrivKey, Constants.KS_COINTYPE_ICX);
                                 if (hasSwapWallet(address))
@@ -516,7 +524,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                                 // TODO: 2018. 5. 16. Notice error
                             }
                         } else {
-                            RealmUtil.removeWallet(mWalletInfo.getAddress());
+                            RealmUtil.removeWallet(mWallet.getAddress());
                             try {
                                 RealmUtil.loadWallet();
                             } catch (Exception e) {
@@ -555,22 +563,22 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 return;
             }
 
-            for (WalletInfo info : ICONexApp.mWallets) {
+            for (Wallet info : ICONexApp.mWallets) {
                 if (info.getAlias().equals(alias)) {
                     editTextDialog.setError(getString(R.string.duplicateWalletAlias));
                     return;
                 }
             }
 
-            RealmUtil.modWalletAlias(mWalletInfo.getAddress(), alias);
+            RealmUtil.modWalletAlias(mWallet.getAddress(), alias);
             try {
                 RealmUtil.loadWallet();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            mWalletInfo.setAlias(alias);
-            txtWalletAlias.setText(mWalletInfo.getAlias());
+            mWallet.setAlias(alias);
+            txtWalletAlias.setText(mWallet.getAlias());
             editTextDialog.dismiss();
         }
     };
@@ -586,8 +594,8 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             }
         } else if (requestCode == RC_CHANGE_PWD) {
             if (resultCode == WalletPwdChangeActivity.RESULT_CODE) {
-                WalletInfo result = (WalletInfo) data.getExtras().get("result");
-                mWalletInfo = result;
+                Wallet result = (Wallet) data.getExtras().get("result");
+                mWallet = result;
             }
         } else if (requestCode == RC_SWAP) {
             if (resultCode == TokenSwapActivity.RES_CREATED)
@@ -597,15 +605,13 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
     private ArrayList<BottomSheetMenu> makeMenus() {
         ArrayList<BottomSheetMenu> menus = new ArrayList<>();
-        BottomSheetMenu menu = new BottomSheetMenu(R.drawable.ic_edit, mWalletInfo.getAlias());
+        BottomSheetMenu menu = new BottomSheetMenu(R.drawable.ic_edit, mWallet.getAlias());
         menu.setTag(MyConstants.TAG_MENU_ALIAS);
         menus.add(menu);
 
-        if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ETH)) {
-            menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
-            menu.setTag(MyConstants.TAG_MENU_TOKEN);
-            menus.add(menu);
-        }
+        menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
+        menu.setTag(MyConstants.TAG_MENU_TOKEN);
+        menus.add(menu);
 
         menu = new BottomSheetMenu(R.drawable.ic_backup, getString(R.string.menuBackupWallet));
         menu.setTag(MyConstants.TAG_MENU_BACKUP);
@@ -630,9 +636,14 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         public void onCoinItem(int position) {
-            selectedEntry = mWalletInfo.getWalletEntries().get(position);
-            entryId = selectedEntry.getId();
+            selectedEntry = mWallet.getWalletEntries().get(position);
+            entryId = Integer.toString(selectedEntry.getId());
+            mState = MyConstants.TxState.DONE;
+            mType = MyConstants.TxType.WHOLENESS;
             txAdapter.setWalletEntry(selectedEntry);
+            txAdapter.setSearchState(mState);
+            txAdapter.setSearchType(mType);
+            getTxList();
         }
 
         @Override
@@ -642,14 +653,14 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     editTextDialog = new EditTextDialog(WalletDetailActivity.this, getString(R.string.modWalletAlias));
                     editTextDialog.setHint(getString(R.string.hintWalletAlias));
                     editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.ALIAS);
-                    editTextDialog.setAlias(mWalletInfo.getAlias());
+                    editTextDialog.setAlias(mWallet.getAlias());
                     editTextDialog.setOnConfirmCallback(mAliasDialogCallback);
                     editTextDialog.show();
                     break;
 
                 case MyConstants.TAG_MENU_TOKEN:
                     startActivity(new Intent(WalletDetailActivity.this, TokenManageActivity.class)
-                            .putExtra("walletInfo", (Serializable) mWalletInfo));
+                            .putExtra("walletInfo", (Serializable) mWallet));
                     break;
 
                 case MyConstants.TAG_MENU_BACKUP:
@@ -663,7 +674,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
                 case MyConstants.TAG_MENU_PWD:
                     startActivityForResult(new Intent(WalletDetailActivity.this, WalletPwdChangeActivity.class)
-                            .putExtra("walletInfo", (Serializable) mWalletInfo), RC_CHANGE_PWD);
+                            .putExtra("walletInfo", (Serializable) mWallet), RC_CHANGE_PWD);
                     break;
 
                 case MyConstants.TAG_MENU_REMOVE:
@@ -674,7 +685,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                         dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                             @Override
                             public void onOk() {
-                                RealmUtil.removeWallet(mWalletInfo.getAddress());
+                                RealmUtil.removeWallet(mWallet.getAddress());
                                 try {
                                     RealmUtil.loadWallet();
                                 } catch (Exception e) {
@@ -736,7 +747,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         public void onSelectCoin() {
             BottomSheetMenuDialog menuDialog = new BottomSheetMenuDialog(WalletDetailActivity.this,
                     getString(R.string.selectCoinNToken), BottomSheetMenuDialog.SHEET_TYPE.COIN_TOKEN);
-            menuDialog.setEntriesData(mWalletInfo);
+            menuDialog.setEntriesData(mWallet);
             menuDialog.setOnItemClickListener(menuListener);
             menuDialog.show();
         }
@@ -765,7 +776,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     return;
                 }
 
-                BigInteger eBalance = new BigInteger(mWalletInfo.getWalletEntries().get(0).getBalance());
+                BigInteger eBalance = new BigInteger(mWallet.getWalletEntries().get(0).getBalance());
                 if (eBalance.equals(BigInteger.ZERO)) {
                     dialog.setMessage(getString(R.string.swapMsgNotEnoughFee));
                     dialog.show();
@@ -786,7 +797,8 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         public void onTransfer() {
-            if (selectedEntry.getBalance().equals(MyConstants.NO_BALANCE)) {
+            if (selectedEntry.getBalance().equals(MyConstants.NO_BALANCE)
+                    || new BigInteger(selectedEntry.getBalance()).compareTo(BigInteger.ZERO) == 0) {
                 BasicDialog dialog = new BasicDialog(WalletDetailActivity.this);
                 dialog.setMessage(getString(R.string.errCantWithdraw));
                 dialog.show();
@@ -803,9 +815,12 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     return;
                 }
             } else {
-                if (new BigInteger(mWalletInfo.getWalletEntries().get(0).getBalance()).equals(BigInteger.ZERO)) {
+                if (new BigInteger(mWallet.getWalletEntries().get(0).getBalance()).equals(BigInteger.ZERO)) {
                     BasicDialog dialog = new BasicDialog(WalletDetailActivity.this);
-                    dialog.setMessage(getString(R.string.errOwnNotEnough));
+                    if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
+                        dialog.setMessage(getString(R.string.errIcxOwnNotEnough));
+                    else
+                        dialog.setMessage(getString(R.string.errEthOwnNotEnough));
                     dialog.show();
 
                     return;
@@ -815,7 +830,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             editTextDialog = new EditTextDialog(WalletDetailActivity.this, getString(R.string.enterWalletPassword));
             editTextDialog.setHint(getString(R.string.hintWalletPassword));
             editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-            editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.REMITTANCE);
+            editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.TRANSFER);
             editTextDialog.setOnPasswordCallback(mPasswordDialogCallback);
             editTextDialog.show();
         }
@@ -823,8 +838,8 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onDeposit() {
             startActivity(new Intent(WalletDetailActivity.this, WalletAddressCodeActivity.class)
-                    .putExtra("title", mWalletInfo.getAlias())
-                    .putExtra("address", mWalletInfo.getAddress()));
+                    .putExtra("title", mWallet.getAlias())
+                    .putExtra("address", mWallet.getAddress()));
 
         }
 
@@ -839,7 +854,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
                     List<TxItem> result = makeTxList(txList, mState, mType);
                     txAdapter = new TransactionListAdapter(WalletDetailActivity.this, selectedEntry, EXCHANGE,
-                            result, mState, mType, mWalletInfo.getCoinType());
+                            result, mState, mType, mWallet.getCoinType());
                     txAdapter.setHeaderClickListener(mHeaderClickListener);
                     txAdapter.setItemClickListener(mTxClickListener);
                     recyclerTx.setAdapter(txAdapter);
@@ -857,15 +872,15 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 if (type == MyConstants.TxType.WHOLENESS) {
                     result.add(tx);
                 } else if (type == MyConstants.TxType.REMITTANCE) {
-                    if (tx.getFrom().equals(mWalletInfo.getAddress()))
+                    if (tx.getFrom().equals(mWallet.getAddress()))
                         result.add(tx);
                 } else {
-                    if (tx.getTo().equals(mWalletInfo.getAddress()))
+                    if (tx.getTo().equals(mWallet.getAddress()))
                         result.add(tx);
                 }
             }
         } else {
-            if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+            if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 for (RecentSendInfo send : ICONexApp.ICXSendInfo) {
                     for (TxItem tx : txList) {
                         if (send.getTxHash().equals(tx.getTxHash())
@@ -881,7 +896,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
     }
 
     private boolean hasSwapWallet(String address) throws Exception {
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             if (address.equals(wallet.getAddress()))
                 return true;
         }
@@ -894,7 +909,10 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
             txAdapter.moreLoading(true);
             txAdapter.notifyDataSetChanged();
 
-            mService.requestICONTxList(mWalletInfo.getAddress(), ++currentPage);
+            if (selectedEntry.getType().equals(MyConstants.TYPE_COIN))
+                mService.requestICONTxList(mWallet.getAddress(), ++currentPage);
+            else
+                mService.requestIrcTxList(mWallet.getAddress(), selectedEntry.getContractAddress(), ++currentPage);
         }
     }
 }

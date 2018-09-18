@@ -21,8 +21,8 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.control.PasswordValidator;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -40,9 +40,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
     private Button btnAliasDel, btnPwdDel, btnCheckDel;
     private Button btnPwdView, btnCheckView;
 
-    private Button btnDone;
+    private Button btnDone, btnBack;
 
     private InputMethodManager mImm;
+
+    private String beforeStr;
 
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
@@ -113,8 +115,10 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                 if (s.length() > 0) {
                     btnAliasDel.setVisibility(View.VISIBLE);
                     if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(s.subSequence(0, s.length() - 1));
+                        editAlias.setText(beforeStr);
                         editAlias.setSelection(editAlias.getText().toString().length());
+                    } else {
+                        beforeStr = s.toString();
                     }
                 } else {
                     btnAliasDel.setVisibility(View.INVISIBLE);
@@ -160,29 +164,30 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                 } else {
                     linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-                    if (editPwd.getText().toString().isEmpty()) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
-                    } else {
-                        int result = PasswordValidator.validatePassword(editPwd.getText().toString());
-                        switch (result) {
-                            case PasswordValidator.LEAST_8:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
-                                break;
-                            case PasswordValidator.NOT_MATCH_PATTERN:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
-                                break;
+                    int result = PasswordValidator.validatePassword(editPwd.getText().toString());
+                    switch (result) {
+                        case PasswordValidator.EMPTY:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                            break;
 
-                            case PasswordValidator.HAS_WHITE_SPACE:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
-                                break;
+                        case PasswordValidator.LEAST_8:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+                            break;
 
-                            case PasswordValidator.SERIAL_CHAR:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
-                                break;
+                        case PasswordValidator.NOT_MATCH_PATTERN:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
+                            break;
 
-                            default:
-                                hideWarning(editPwd, linePwd, txtPwdWarning);
-                        }
+                        case PasswordValidator.HAS_WHITE_SPACE:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
+                            break;
+
+                        case PasswordValidator.SERIAL_CHAR:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
+                            break;
+
+                        default:
+                            hideWarning(editPwd, linePwd, txtPwdWarning);
                     }
                 }
             }
@@ -318,6 +323,8 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
         btnDone = v.findViewById(R.id.btn_done);
         btnDone.setOnClickListener(this);
+        btnBack = v.findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(this);
 
         mImm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
 
@@ -362,7 +369,12 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                 break;
 
             case R.id.btn_done:
-                mListener.onDoneInputWalletInfo(editAlias.getText().toString(), editPwd.getText().toString());
+                mListener.onDoneInputWalletInfo(Utils.strip(editAlias.getText().toString()), editPwd.getText().toString());
+                break;
+
+            case R.id.btn_back:
+                clear();
+                mListener.onInfoBack();
                 break;
         }
     }
@@ -424,14 +436,13 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         txtView.setVisibility(View.INVISIBLE);
     }
 
-    private int checkAlias(String alias) {
+    private int checkAlias(String target) {
+        String alias = Utils.strip(target);
+
         if (alias.isEmpty())
             return ALIAS_EMPTY;
 
-        if (alias.trim().length() == 0)
-            return ALIAS_EMPTY;
-
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (info.getAlias().equals(alias)) {
                 return ALIAS_DUP;
             }
@@ -456,6 +467,9 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         int pwdValidate = PasswordValidator.validatePassword(pwd);
         if (pwdValidate != 0) {
             switch (pwdValidate) {
+                case PasswordValidator.EMPTY:
+                    showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                    break;
                 case PasswordValidator.LEAST_8:
                     showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
                     break;
@@ -487,7 +501,23 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             btnDone.setEnabled(false);
     }
 
+    public void clear() {
+        editAlias.clearFocus();
+        editPwd.clearFocus();
+        editCheck.clearFocus();
+
+        editAlias.setText("");
+        editPwd.setText("");
+        editCheck.setText("");
+
+        txtAliasWarning.setVisibility(View.INVISIBLE);
+        txtPwdWarning.setVisibility(View.INVISIBLE);
+        txtCheckWarnig.setVisibility(View.INVISIBLE);
+    }
+
     public interface OnInputWalletInfoListener {
         void onDoneInputWalletInfo(String name, String pwd);
+
+        void onInfoBack();
     }
 }

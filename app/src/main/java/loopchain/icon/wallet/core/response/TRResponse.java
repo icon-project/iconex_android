@@ -15,8 +15,8 @@ public class TRResponse {
     @SerializedName("description")
     private String decription;
 
-    @SerializedName("totalData")
-    private String totalData;
+    @SerializedName("listSize")
+    private int listSize;
 
     @SerializedName("data")
     private JsonElement data;
@@ -29,8 +29,8 @@ public class TRResponse {
         return decription;
     }
 
-    public String getTotalData() {
-        return totalData;
+    public int getListSize() {
+        return listSize;
     }
 
     public JsonElement getData() {

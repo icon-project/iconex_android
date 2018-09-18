@@ -14,6 +14,7 @@ import java.util.Locale;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.wallet.WalletEntry;
 
 /**
  * Created by js on 2018. 3. 14..

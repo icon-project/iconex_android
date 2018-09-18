@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp">
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/ic_close" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:lineSpacingExtra="8sp"
+            android:text="@string/selectInputType"
+            android:textColor="@color/colorText"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/txt_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="24dp"
+            android:background="@color/colorWhite"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@color/colorText"
+            android:textSize="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#ededed" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="34dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:paddingTop="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="start|center_vertical"
+            android:lineSpacingExtra="10sp"
+            android:text="@string/inputType"
+            android:textColor="@color/colorText"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_utf"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_selector_left"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center"
+                android:text="UTF-8"
+                android:textAllCaps="false"
+                android:textColor="@color/text_selector"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/btn_hex"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="-1dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_selector_right"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center"
+                android:text="HEX"
+                android:textAllCaps="false"
+                android:textColor="@color/text_selector"
+                android:textSize="14dp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

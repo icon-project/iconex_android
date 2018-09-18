@@ -15,10 +15,10 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.util.ConvertUtil;
-import loopchain.icon.wallet.core.Constants;
+import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 import static foundation.icon.iconex.MyConstants.NO_BALANCE;
@@ -33,18 +33,26 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     private Context mContext;
     private LayoutInflater mInflater;
+    private CoinsViewItem mItem;
     private String mType;
-    private List<WalletInfo> mData;
+    private List<Wallet> mData;
     private int mDec;
     private String mSymbol;
+    private final String ercIcxAddr;
 
-    public CoinRecyclerAdapter(Context context, String coinType, List<WalletInfo> data, int dec, String symbol) {
+    public CoinRecyclerAdapter(Context context, CoinsViewItem item) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
-        mType = coinType;
-        mData = data;
-        mDec = dec;
-        mSymbol = symbol;
+        mItem = item;
+        mType = item.getType();
+        mData = item.getWallets();
+        mSymbol = item.getSymbol();
+        mDec = item.getDec();
+
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            ercIcxAddr = MyConstants.M_ERC_ICX_ADDR;
+        else
+            ercIcxAddr = MyConstants.T_ERC_ICX_ADDR;
     }
 
     @Override
@@ -55,7 +63,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        WalletInfo wallet = mData.get(position);
+        Wallet wallet = mData.get(position);
         String totalBalance = getTotalBalance(wallet);
 
         if (totalBalance != null) {
@@ -66,7 +74,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             } else {
                 String value = ConvertUtil.getValue(new BigInteger(totalBalance), mDec);
                 Double doubTotal = Double.parseDouble(value);
-                holder.txtBalance.setText(String.format(Locale.getDefault(), "%,.4f", doubTotal));
+                holder.txtBalance.setText(String.format(Locale.getDefault(), "%s", Utils.formatFloating(value, 4)));
 
                 String exchange = mSymbol.toLowerCase() + ((MainActivity) mContext).getExchangeUnit().toLowerCase();
                 String strPrice;
@@ -100,9 +108,11 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         if (position == getItemCount() - 1)
             holder.line.setVisibility(View.INVISIBLE);
 
-        if (mType.equals(MyConstants.TYPE_TOKEN)
-                && mSymbol.equals(Constants.KS_COINTYPE_ICX))
+        if (mItem.equals(MyConstants.TYPE_TOKEN)
+                && mItem.getContractAddr().equals(ercIcxAddr))
             holder.btnSwap.setVisibility(View.VISIBLE);
+        else
+            holder.btnSwap.setVisibility(View.GONE);
     }
 
     @Override
@@ -110,7 +120,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         return mData.size();
     }
 
-    private String getTotalBalance(WalletInfo info) {
+    private String getTotalBalance(Wallet info) {
         BigInteger totalBalance = BigInteger.ZERO;
         int cntNoBalance = 0;
         int cntTarget = 0;
@@ -196,8 +206,8 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     // parent activity will implement this method to respond to click events
     public interface WalletClickListener {
-        void onWalletClick(WalletInfo wallet, String symbol);
+        void onWalletClick(Wallet wallet, String symbol);
 
-        void onRequestSwap(WalletInfo wallet);
+        void onRequestSwap(Wallet wallet);
     }
 }

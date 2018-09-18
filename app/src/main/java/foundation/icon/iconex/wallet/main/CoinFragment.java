@@ -22,12 +22,12 @@ import java.util.Locale;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.token.swap.TokenSwapActivity;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
@@ -41,7 +41,7 @@ public class CoinFragment extends Fragment {
     private static final String TAG = CoinFragment.class.getSimpleName();
 
     private String mName;
-    private List<WalletInfo> mList;
+    private List<Wallet> mList;
     private int mDecimals;
     private String mSymbol;
 
@@ -59,10 +59,11 @@ public class CoinFragment extends Fragment {
 
     private ViewGroup loadingBalance;
 
-    private WalletInfo mWallet;
+    private Wallet mWallet;
     private WalletEntry mToken;
 
     private final int RC_SWAP = 301;
+    private final int RC_DETAIL = 201;
 
     public CoinFragment() {
         // Required empty public constructor
@@ -86,7 +87,7 @@ public class CoinFragment extends Fragment {
         if (getArguments() != null) {
             mItem = (CoinsViewItem) getArguments().getSerializable(ARG_ITEM);
 //            mName = getArguments().getString(ARG_NAME);
-//            mList = (ArrayList<WalletInfo>) getArguments().get(ARG_LIST);
+//            mList = (ArrayList<Wallet>) getArguments().get(ARG_LIST);
             mType = mItem.getType();
             mName = mItem.getName();
             mSymbol = mItem.getSymbol();
@@ -124,7 +125,7 @@ public class CoinFragment extends Fragment {
         int cntTarget = 0;
         String unit = ((MainActivity) getActivity()).getExchangeUnit();
 
-        for (WalletInfo wallet : mList) {
+        for (Wallet wallet : mList) {
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 if (entry.getType().equals(mType)) {
                     if (entry.getSymbol().equals(mSymbol)) {
@@ -177,10 +178,10 @@ public class CoinFragment extends Fragment {
         loadingBalance.setVisibility(View.VISIBLE);
 
 
-        List<WalletInfo> list = new ArrayList<>();
+        List<Wallet> list = new ArrayList<>();
         mList = new ArrayList<>();
 
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 if (entry.getType().equals(mType)) {
                     if (entry.getSymbol().equals(mSymbol)) {
@@ -195,7 +196,7 @@ public class CoinFragment extends Fragment {
         if (loadingBalance.getVisibility() == View.VISIBLE) {
 
             boolean isDone = true;
-            for (WalletInfo wallet : mList) {
+            for (Wallet wallet : mList) {
                 for (WalletEntry entry : wallet.getWalletEntries()) {
                     if (entry.getBalance().isEmpty()) {
                         isDone = isDone && false;
@@ -212,21 +213,21 @@ public class CoinFragment extends Fragment {
 
         setTotalAsset();
 
-        adapter = new CoinRecyclerAdapter(getActivity(), mType, mList, mDecimals, mSymbol);
+        adapter = new CoinRecyclerAdapter(getActivity(), mItem);
         adapter.setClickListener(new CoinRecyclerAdapter.WalletClickListener() {
             @Override
-            public void onWalletClick(WalletInfo wallet, String symbol) {
+            public void onWalletClick(Wallet wallet, String symbol) {
                 WalletEntry target = null;
                 for (WalletEntry entry : wallet.getWalletEntries())
                     if (entry.getSymbol().equals(symbol))
                         target = entry;
-                startActivity(new Intent(getActivity(), WalletDetailActivity.class)
+                startActivityForResult(new Intent(getActivity(), WalletDetailActivity.class)
                         .putExtra("walletInfo", (Serializable) wallet)
-                        .putExtra("walletEntry", (Serializable) target));
+                        .putExtra("walletEntry", (Serializable) target), RC_DETAIL);
             }
 
             @Override
-            public void onRequestSwap(WalletInfo wallet) {
+            public void onRequestSwap(Wallet wallet) {
                 mWallet = wallet;
                 WalletEntry own = wallet.getWalletEntries().get(0);
 
@@ -312,11 +313,31 @@ public class CoinFragment extends Fragment {
     };
 
     private boolean hasSwapWallet(String address) throws Exception {
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             if (address.equals(wallet.getAddress()))
                 return true;
         }
 
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RC_DETAIL:
+                if (resultCode == WalletDetailActivity.RES_REFRESH) {
+                    ((MainActivity) getActivity()).notifyWalletChanged();
+                } else
+                    ((MainActivity) getActivity()).refreshNameView();
+                break;
+
+            case RC_SWAP:
+                if (resultCode == TokenSwapActivity.RES_CREATED)
+                    ((MainActivity) getActivity()).notifyWalletChanged();
+                break;
+
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

@@ -44,7 +44,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
             }
         });
 
-        btnMod = findViewById(R.id.btn_mod);
+        btnMod = findViewById(R.id.txt_mod);
         btnMod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

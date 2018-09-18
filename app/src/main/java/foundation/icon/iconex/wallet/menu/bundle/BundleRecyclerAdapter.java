@@ -15,7 +15,7 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 
 /**
  * Created by js on 2018. 3. 23..
@@ -128,12 +128,12 @@ public class BundleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
-    public List<WalletInfo> getBundle() {
-        List<WalletInfo> bundle = new ArrayList<>();
+    public List<Wallet> getBundle() {
+        List<Wallet> bundle = new ArrayList<>();
 
         for (BundleItem item : mData) {
             if (item.isSelected()) {
-                for (WalletInfo info : ICONexApp.mWallets) {
+                for (Wallet info : ICONexApp.mWallets) {
                     if (info.getAlias().equals(item.getAlias())) {
                         bundle.add(info);
                         break;

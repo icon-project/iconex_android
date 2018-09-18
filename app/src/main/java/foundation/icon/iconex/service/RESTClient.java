@@ -30,7 +30,7 @@ public class RESTClient {
                 okhttp3.Request original = chain.request();
 
                 okhttp3.Request request = original.newBuilder()
-                        .addHeader("Content-Type", "application/json; charset=utf-8")
+//                        .header("Content-Type", "application/json; charset=utf-8")
                         .method(original.method(), original.body())
                         .build();
                 return chain.proceed(request);
@@ -56,6 +56,11 @@ public class RESTClient {
 
     public Call<TRResponse> sendGetTxList(String address, int page) throws IOException {
         Call<TRResponse> response = RESTService.sendGetTxList(address, page);
+        return response;
+    }
+
+    public Call<TRResponse> sendGetTokenTxList(String ownAddr, String contract, int page) throws IOException {
+        Call<TRResponse> response = RESTService.sendGetTokenTxList(page, contract, ownAddr);
         return response;
     }
 

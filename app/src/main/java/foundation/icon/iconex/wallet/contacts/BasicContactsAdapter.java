@@ -2,25 +2,21 @@ package foundation.icon.iconex.wallet.contacts;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.util.ConvertUtil;
 
 /**
@@ -74,7 +70,7 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
             holder.txtAmount.setText(String.format(mContext.getString(R.string.txWithdraw), data.getAmount()));
             holder.txtSymbol.setText(data.getSymbol());
         } else {
-            WalletInfo data = (WalletInfo) mData.get(position);
+            Wallet data = (Wallet) mData.get(position);
             if (data.getAddress().equals(mAddress)) {
                 return;
             }
@@ -115,16 +111,16 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
                 if (mData.get(getAdapterPosition()) instanceof RecentSendInfo) {
                     mListener.onClick(((RecentSendInfo) mData.get(getAdapterPosition())).getAddress());
                 } else {
-                    mListener.onClick(((WalletInfo) mData.get(getAdapterPosition())).getAddress());
+                    mListener.onClick(((Wallet) mData.get(getAdapterPosition())).getAddress());
                 }
             }
 
         }
     }
 
-    private String getAsset(WalletInfo walletInfo) {
+    private String getAsset(Wallet wallet) {
         BigInteger asset = new BigInteger("0");
-        for (WalletEntry entry : walletInfo.getWalletEntries()) {
+        for (WalletEntry entry : wallet.getWalletEntries()) {
             if (entry.getSymbol().equals(mCoinType)) {
                 try {
                     BigInteger balance = new BigInteger(entry.getBalance());

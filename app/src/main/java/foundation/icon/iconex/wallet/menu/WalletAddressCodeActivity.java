@@ -40,7 +40,7 @@ public class WalletAddressCodeActivity extends AppCompatActivity {
             title = getIntent().getStringExtra("title");
             address = getIntent().getStringExtra("address");
             if (!address.startsWith("hx"))
-                address = MyConstants.PREFIX_ETH + address;
+                address = MyConstants.PREFIX_HEX + address;
         }
 
         ((TextView) findViewById(R.id.txt_title)).setText(title);

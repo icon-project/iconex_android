@@ -21,8 +21,8 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.control.PasswordValidator;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 
 import static foundation.icon.iconex.control.PasswordValidator.checkPasswordMatch;
@@ -46,6 +46,8 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
     private InputMethodManager mImm;
     private OnKeyPreImeListener mOnKeyPreImeListener;
+
+    private String beforeStr;
 
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
@@ -95,7 +97,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
                 btnNext.setEnabled(false);
                 progress.setVisibility(View.VISIBLE);
-                mListener.onStep2Done(editAlias.getText().toString(), editPwd.getText().toString());
+                mListener.onStep2Done(Utils.strip(editAlias.getText().toString()), editPwd.getText().toString());
             }
         });
 
@@ -119,22 +121,17 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                 } else {
                     lineAlias.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-                    if (editAlias.getText().toString().isEmpty()) {
-                        showWarning(lineAlias, txtAliasWarning, getString(R.string.errAliasEmpty));
-                        btnNext.setEnabled(false);
-                    } else {
-                        int aliasValidate = checkAlias(editAlias.getText().toString());
-                        switch (aliasValidate) {
-                            case ALIAS_EMPTY:
-                                showWarning(lineAlias, txtAliasWarning, getString(R.string.errWhiteSpace));
-                                break;
+                    int aliasValidate = checkAlias(editAlias.getText().toString());
+                    switch (aliasValidate) {
+                        case ALIAS_EMPTY:
+                            showWarning(lineAlias, txtAliasWarning, getString(R.string.errWhiteSpace));
+                            break;
 
-                            case ALIAS_DUP:
-                                showWarning(lineAlias, txtAliasWarning, getString(R.string.duplicateWalletAlias));
-                                break;
-                            default:
-                                hideWarning(editAlias, lineAlias, txtAliasWarning);
-                        }
+                        case ALIAS_DUP:
+                            showWarning(lineAlias, txtAliasWarning, getString(R.string.duplicateWalletAlias));
+                            break;
+                        default:
+                            hideWarning(editAlias, lineAlias, txtAliasWarning);
                     }
                 }
             }
@@ -150,8 +147,10 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                 if (s.length() > 0) {
                     btnAliasDel.setVisibility(View.VISIBLE);
                     if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(s.subSequence(0, s.length() - 1));
+                        editAlias.setText(beforeStr);
                         editAlias.setSelection(editAlias.getText().toString().length());
+                    } else {
+                        beforeStr = s.toString();
                     }
                 } else {
                     btnAliasDel.setVisibility(View.INVISIBLE);
@@ -198,29 +197,30 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                 } else {
                     linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-                    if (editPwd.getText().toString().isEmpty()) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
-                        btnNext.setEnabled(false);
-                    } else {
-                        int result = PasswordValidator.validatePassword(editPwd.getText().toString());
-                        switch (result) {
-                            case PasswordValidator.LEAST_8:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
-                                break;
-                            case PasswordValidator.NOT_MATCH_PATTERN:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
-                                break;
+                    int result = PasswordValidator.validatePassword(editPwd.getText().toString());
+                    switch (result) {
+                        case PasswordValidator.EMPTY:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                            break;
 
-                            case PasswordValidator.HAS_WHITE_SPACE:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
-                                break;
+                        case PasswordValidator.LEAST_8:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+                            break;
 
-                            case PasswordValidator.SERIAL_CHAR:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
-                                break;
-                            default:
-                                hideWarning(editPwd, linePwd, txtPwdWarning);
-                        }
+                        case PasswordValidator.NOT_MATCH_PATTERN:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
+                            break;
+
+                        case PasswordValidator.HAS_WHITE_SPACE:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
+                            break;
+
+                        case PasswordValidator.SERIAL_CHAR:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
+                            break;
+
+                        default:
+                            hideWarning(editPwd, linePwd, txtPwdWarning);
                     }
                 }
             }
@@ -450,14 +450,12 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             line.setBackgroundColor(getResources().getColor(R.color.editNormal));
     }
 
-    private int checkAlias(String alias) {
+    private int checkAlias(String target) {
+        String alias = Utils.strip(target);
         if (alias.isEmpty())
             return ALIAS_EMPTY;
 
-        if (alias.trim().length() == 0)
-            return ALIAS_EMPTY;
-
-        for (WalletInfo info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.mWallets) {
             if (info.getAlias().equals(alias)) {
                 return ALIAS_DUP;
             }
@@ -475,7 +473,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             aliasValidate = checkAlias(alias);
             switch (aliasValidate) {
                 case ALIAS_EMPTY:
-                    showWarning(lineAlias, txtAliasWarning, getString(R.string.errWhiteSpace));
+                    showWarning(lineAlias, txtAliasWarning, getString(R.string.errAliasEmpty));
                     break;
 
                 case ALIAS_DUP:
@@ -494,6 +492,10 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             pwdValidate = PasswordValidator.validatePassword(pwd);
             if (pwdValidate != 0) {
                 switch (pwdValidate) {
+                    case PasswordValidator.EMPTY:
+                        showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                        break;
+
                     case PasswordValidator.LEAST_8:
                         showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
                         break;

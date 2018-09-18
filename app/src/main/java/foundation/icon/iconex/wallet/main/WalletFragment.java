@@ -26,8 +26,6 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.BottomSheetMenu;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
@@ -37,6 +35,9 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.token.swap.TokenSwapActivity;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
 import foundation.icon.iconex.wallet.menu.WalletBackUpActivity;
 import foundation.icon.iconex.wallet.menu.WalletPwdChangeActivity;
@@ -52,7 +53,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private Context mContext;
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
     private List<WalletEntry> mWalletEntries;
     private WalletEntry mToken;
 
@@ -74,10 +75,10 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    public static WalletFragment newInstance(WalletInfo walletInfo) {
+    public static WalletFragment newInstance(Wallet wallet) {
         WalletFragment fragment = new WalletFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("mWalletInfo", walletInfo);
+        bundle.putSerializable("mWallet", wallet);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -86,8 +87,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mWalletInfo = (WalletInfo) getArguments().get("mWalletInfo");
-            mWalletEntries = mWalletInfo.getWalletEntries();
+            mWallet = (Wallet) getArguments().get("mWallet");
+            mWalletEntries = mWallet.getWalletEntries();
         }
     }
 
@@ -97,7 +98,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment_wallet, container, false);
 
         txtWalletAlias = v.findViewById(R.id.txt_wallet_alias);
-        txtWalletAlias.setText(mWalletInfo.getAlias());
+        txtWalletAlias.setText(mWallet.getAlias());
 
         btnViewAddress = v.findViewById(R.id.btn_wallet_address);
         btnViewAddress.setOnClickListener(this);
@@ -132,10 +133,10 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_wallet_address:
-                if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ETH))
-                    ((MainActivity) getActivity()).showWalletAddress(mWalletInfo.getAlias(), MyConstants.PREFIX_ETH + mWalletInfo.getAddress());
+                if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ETH))
+                    ((MainActivity) getActivity()).showWalletAddress(mWallet.getAlias(), MyConstants.PREFIX_HEX + mWallet.getAddress());
                 else
-                    ((MainActivity) getActivity()).showWalletAddress(mWalletInfo.getAlias(), mWalletInfo.getAddress());
+                    ((MainActivity) getActivity()).showWalletAddress(mWallet.getAlias(), mWallet.getAddress());
 
                 break;
 
@@ -153,7 +154,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         Double totalBalance = 0.0;
         int cntNoBalance = 0;
         String unit = ((MainActivity) getActivity()).getExchangeUnit();
-        for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
+        for (WalletEntry entry : mWallet.getWalletEntries()) {
             if (!entry.getBalance().isEmpty()) {
                 if (entry.getBalance().equals(MyConstants.NO_BALANCE)) {
                     cntNoBalance++;
@@ -180,7 +181,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-        if (cntNoBalance == mWalletInfo.getWalletEntries().size()) {
+        if (cntNoBalance == mWallet.getWalletEntries().size()) {
             txtTotalBalance.setText(MyConstants.NO_BALANCE);
         } else {
             if (unit.equals(EXCHANGE_USD)) {
@@ -195,15 +196,13 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private ArrayList<BottomSheetMenu> makeMenus() {
         ArrayList<BottomSheetMenu> menus = new ArrayList<>();
-        BottomSheetMenu menu = new BottomSheetMenu(R.drawable.ic_edit, mWalletInfo.getAlias());
+        BottomSheetMenu menu = new BottomSheetMenu(R.drawable.ic_edit, mWallet.getAlias());
         menu.setTag(MyConstants.TAG_MENU_ALIAS);
         menus.add(menu);
 
-        if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ETH)) {
-            menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
-            menu.setTag(MyConstants.TAG_MENU_TOKEN);
-            menus.add(menu);
-        }
+        menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
+        menu.setTag(MyConstants.TAG_MENU_TOKEN);
+        menus.add(menu);
 
         menu = new BottomSheetMenu(R.drawable.ic_backup, getString(R.string.menuBackupWallet));
         menu.setTag(MyConstants.TAG_MENU_BACKUP);
@@ -238,14 +237,21 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     editTextDialog = new EditTextDialog(getActivity(), getString(R.string.modWalletAlias));
                     editTextDialog.setHint(getString(R.string.hintWalletAlias));
                     editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.ALIAS);
-                    editTextDialog.setAlias(mWalletInfo.getAlias());
+                    editTextDialog.setAlias(mWallet.getAlias());
                     editTextDialog.setOnConfirmCallback(mAliasDialogCallback);
                     editTextDialog.show();
                     break;
 
                 case MyConstants.TAG_MENU_TOKEN:
-                    startActivity(new Intent(mContext, TokenManageActivity.class)
-                            .putExtra("walletInfo", (Serializable) mWalletInfo));
+                    Intent intent = new Intent(mContext, TokenManageActivity.class);
+                    intent.putExtra("walletInfo", (Serializable) mWallet);
+
+                    if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
+                        intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.IRC);
+                    else
+                        intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.ERC);
+
+                    startActivity(intent);
                     break;
 
                 case MyConstants.TAG_MENU_BACKUP:
@@ -259,18 +265,19 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 case MyConstants.TAG_MENU_PWD:
                     startActivityForResult(new Intent(getActivity(), WalletPwdChangeActivity.class)
-                            .putExtra("walletInfo", (Serializable) mWalletInfo), RC_CHANGE_PWD);
+                            .putExtra("walletInfo", (Serializable) mWallet), RC_CHANGE_PWD);
                     break;
 
                 case MyConstants.TAG_MENU_REMOVE:
                     BigInteger asset = getAsset();
                     final Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-                    if (asset.compareTo(BigInteger.ZERO) == 0) {
+                    if (asset.compareTo(BigInteger.ZERO) == 0
+                            && loadingBalance.getVisibility() == View.GONE) {
                         dialog.setMessage(getString(R.string.removeWallet));
                         dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                             @Override
                             public void onOk() {
-                                RealmUtil.removeWallet(mWalletInfo.getAddress());
+                                RealmUtil.removeWallet(mWallet.getAddress());
                                 try {
                                     RealmUtil.loadWallet();
                                 } catch (Exception e) {
@@ -320,7 +327,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private BigInteger getAsset() {
         BigInteger asset = new BigInteger("0");
-        for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
+        for (WalletEntry entry : mWallet.getWalletEntries()) {
             try {
                 BigInteger balance = new BigInteger(entry.getBalance());
                 asset = asset.add(balance);
@@ -336,9 +343,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         loadingBalance.setVisibility(View.VISIBLE);
 
-        for (WalletInfo wallet : ICONexApp.mWallets) {
-            if (wallet.getAddress().equals(mWalletInfo.getAddress())) {
-                mWalletInfo = wallet;
+        for (Wallet wallet : ICONexApp.mWallets) {
+            if (wallet.getAddress().equals(mWallet.getAddress())) {
+                mWallet = wallet;
                 break;
             }
         }
@@ -346,7 +353,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         if (loadingBalance.getVisibility() == View.VISIBLE) {
 
             boolean isDone = true;
-            for (WalletEntry entry : mWalletInfo.getWalletEntries()) {
+            for (WalletEntry entry : mWallet.getWalletEntries()) {
                 if (entry.getBalance().isEmpty()) {
                     isDone = isDone && false;
                 } else {
@@ -361,12 +368,12 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         setTotalBalance();
 
-        entryRecyclerAdapter = new WalletRecyclerAdapter(getActivity(), mWalletInfo);
+        entryRecyclerAdapter = new WalletRecyclerAdapter(getActivity(), mWallet);
         entryRecyclerAdapter.setClickListener(new WalletRecyclerAdapter.ItemClickListener() {
             @Override
             public void onItemClick(WalletEntry walletEntry) {
                 startActivityForResult(new Intent(getActivity(), WalletDetailActivity.class)
-                        .putExtra("walletInfo", (Serializable) mWalletInfo)
+                        .putExtra("walletInfo", (Serializable) mWallet)
                         .putExtra("walletEntry", (Serializable) walletEntry), RC_DETAIL);
             }
 
@@ -405,14 +412,16 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     }
 
     public String getAddress() {
-        return mWalletInfo.getAddress();
+        return mWallet.getAddress();
     }
 
     private EditTextDialog editTextDialog;
 
     private EditTextDialog.OnConfirmCallback mAliasDialogCallback = new EditTextDialog.OnConfirmCallback() {
         @Override
-        public void onConfirm(String alias) {
+        public void onConfirm(String target) {
+            String alias = Utils.strip(target);
+
             if (alias.isEmpty()) {
                 editTextDialog.setError(getString(R.string.errWhiteSpace));
                 return;
@@ -423,16 +432,16 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            for (WalletInfo info : ICONexApp.mWallets) {
+            for (Wallet info : ICONexApp.mWallets) {
                 if (info.getAlias().equals(alias)) {
                     editTextDialog.setError(getString(R.string.duplicateWalletAlias));
                     return;
                 }
             }
 
-            RealmUtil.modWalletAlias(mWalletInfo.getAddress(), alias);
-            mWalletInfo.setAlias(alias);
-            txtWalletAlias.setText(mWalletInfo.getAlias());
+            RealmUtil.modWalletAlias(mWallet.getAddress(), alias);
+            mWallet.setAlias(alias);
+            txtWalletAlias.setText(mWallet.getAlias());
             ((MainActivity) getActivity()).refreshNameView();
             editTextDialog.dismiss();
         }
@@ -441,7 +450,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private EditTextDialog.OnPasswordCallback mPasswordDialogCallback = new EditTextDialog.OnPasswordCallback() {
         @Override
         public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
-            JsonObject keyStore = new Gson().fromJson(mWalletInfo.getKeyStore(), JsonObject.class);
+            JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
             byte[] bytePrivKey;
             try {
                 JsonObject crypto = null;
@@ -450,17 +459,17 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 else
                     crypto = keyStore.get("Crypto").getAsJsonObject();
 
-                bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWalletInfo.getAddress(), crypto, mWalletInfo.getCoinType());
+                bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
                 if (bytePrivKey != null) {
                     if (result == EditTextDialog.RESULT_PWD.BACKUP) {
                         startActivity(new Intent(getActivity(), WalletBackUpActivity.class)
-                                .putExtra("walletInfo", (Serializable) mWalletInfo)
+                                .putExtra("walletInfo", (Serializable) mWallet)
                                 .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
                     } else if (result == EditTextDialog.RESULT_PWD.SWAP) {
 
                         try {
                             Intent swapIntent = new Intent(getActivity(), TokenSwapActivity.class);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_WALLET, (Serializable) mWalletInfo);
+                            swapIntent.putExtra(TokenSwapActivity.ARG_WALLET, (Serializable) mWallet);
                             swapIntent.putExtra(TokenSwapActivity.ARG_TOKEN, (Serializable) mToken);
                             String ICXAddr = PKIUtils.makeAddressFromPrivateKey(bytePrivKey, Constants.KS_COINTYPE_ICX);
                             if (hasSwapWallet(ICXAddr))
@@ -475,7 +484,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                             // TODO: 2018. 5. 16. Notice error
                         }
                     } else {
-                        RealmUtil.removeWallet(mWalletInfo.getAddress());
+                        RealmUtil.removeWallet(mWallet.getAddress());
                         try {
                             RealmUtil.loadWallet();
                         } catch (Exception e) {
@@ -500,7 +509,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     };
 
     private boolean hasSwapWallet(String address) throws Exception {
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             if (address.equals(wallet.getAddress()))
                 return true;
         }
@@ -514,6 +523,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             case RC_DETAIL:
                 if (resultCode == WalletDetailActivity.RES_REFRESH) {
                     ((MainActivity) getActivity()).notifyWalletChanged();
+                } else {
+                    ((MainActivity) getActivity()).refreshNameView();
                 }
                 break;
 

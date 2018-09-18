@@ -1,0 +1,115 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    tools:context="foundation.icon.iconex.wallet.menu.appInfo.AppInfoFragment">
+
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/market" />
+
+    <TextView
+        android:id="@+id/txt_current"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/noto_sans_bold"
+        android:gravity="center"
+        android:textColor="@color/colorText"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/txt_latest"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/noto_sans_regular"
+        android:gravity="center"
+        android:textColor="@color/colorText"
+        android:textSize="14dp" />
+
+    <Button
+        android:id="@+id/btn_update"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="154dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bg_button_b"
+        android:gravity="center"
+        android:text="@string/update"
+        android:textAllCaps="false"
+        android:textColor="@color/button_text"
+        android:textSize="13dp" />
+
+    <RelativeLayout
+        android:id="@+id/oss"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="40dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/noto_sans_medium"
+            android:text="@string/openSource"
+            android:textColor="@color/colorText"
+            android:textSize="16dp" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_arrow_right" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#ededed" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/network_provider"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/noto_sans_medium"
+            android:text="@string/networkProvider"
+            android:textColor="@color/colorText"
+            android:textSize="16dp" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_arrow_right" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#ededed" />
+    </RelativeLayout>
+</LinearLayout>

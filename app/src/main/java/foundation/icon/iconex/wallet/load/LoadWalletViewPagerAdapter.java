@@ -68,6 +68,10 @@ public class LoadWalletViewPagerAdapter extends FragmentStatePagerAdapter {
         loadInputWalletNameFragment.setKeyStore(coinType, keyStore);
     }
 
+    public void clearInfo() {
+        inputWalletInfoFragment.clear();
+    }
+
     public enum LOAD_TYPE {
         KEYSTORE,
         PRIVATE_KEY

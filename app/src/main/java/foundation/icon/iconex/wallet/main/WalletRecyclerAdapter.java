@@ -1,7 +1,9 @@
 package foundation.icon.iconex.wallet.main;
 
 import android.content.Context;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +17,10 @@ import java.util.Locale;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.util.ConvertUtil;
-import loopchain.icon.wallet.core.Constants;
+import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 
 import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
 
@@ -33,15 +35,22 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
     private Context mContext;
     private List<WalletEntry> mData;
     private LayoutInflater mInflater;
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
     private ItemClickListener mClickListener;
 
+    private final String ercIcxAddr;
+
     // data is passed into the constructor
-    public WalletRecyclerAdapter(Context context, WalletInfo walletInfo) {
+    public WalletRecyclerAdapter(Context context, Wallet wallet) {
         mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        mWalletInfo = walletInfo;
-        this.mData = mWalletInfo.getWalletEntries();
+        mWallet = wallet;
+        this.mData = mWallet.getWalletEntries();
+
+        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+            ercIcxAddr = MyConstants.M_ERC_ICX_ADDR;
+        else
+            ercIcxAddr = MyConstants.T_ERC_ICX_ADDR;
     }
 
     // inflates the row layout from xml when needed
@@ -69,7 +78,7 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
                 value = ConvertUtil.getValue(balance, item.getDefaultDec());
                 Double doubBalance = Double.parseDouble(value);
 
-                holder.txtBalance.setText(String.format(Locale.getDefault(), "%,.4f", doubBalance));
+                holder.txtBalance.setText(String.format(Locale.getDefault(), "%s", Utils.formatFloating(value, 4)));
 
                 String exchange = item.getSymbol().toLowerCase() + ((MainActivity) mContext).getExchangeUnit().toLowerCase();
                 String strPrice;
@@ -102,9 +111,13 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
         if (position == getItemCount() - 1)
             holder.line.setVisibility(View.INVISIBLE);
 
-        if (item.getType().equals(MyConstants.TYPE_TOKEN)
-                && item.getSymbol().equals(Constants.KS_COINTYPE_ICX))
-            holder.btnSwap.setVisibility(View.VISIBLE);
+        if (item.getType().equals(MyConstants.TYPE_TOKEN)) {
+            if (item.getContractAddress().equals(ercIcxAddr))
+                holder.btnSwap.setVisibility(View.VISIBLE);
+            else
+                holder.btnSwap.setVisibility(View.GONE);
+        }
+
     }
 
     // total number of rows
@@ -127,6 +140,7 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
             super(itemView);
             txtName = itemView.findViewById(R.id.txt_name);
             txtBalance = itemView.findViewById(R.id.txt_total_balance);
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(txtBalance, 4, 30, 1, TypedValue.COMPLEX_UNIT_SP);
             txtUnit = itemView.findViewById(R.id.txt_unit);
             txtTransBalance = itemView.findViewById(R.id.txt_trans_balance);
             txtTransUnit = itemView.findViewById(R.id.txt_trans_unit);
@@ -146,14 +160,14 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
             switch (view.getId()) {
                 case R.id.btn_swap:
                     if (mClickListener != null)
-                        mClickListener.onRequestSwap(mWalletInfo.getWalletEntries().get(0),
-                                mWalletInfo.getWalletEntries().get(getAdapterPosition()));
+                        mClickListener.onRequestSwap(mWallet.getWalletEntries().get(0),
+                                mWallet.getWalletEntries().get(getAdapterPosition()));
                     break;
 
                 default:
                     if (mClickListener != null) {
-                        if (!mWalletInfo.getWalletEntries().get(getAdapterPosition()).getBalance().isEmpty())
-                            mClickListener.onItemClick(mWalletInfo.getWalletEntries().get(getAdapterPosition()));
+                        if (!mWallet.getWalletEntries().get(getAdapterPosition()).getBalance().isEmpty())
+                            mClickListener.onItemClick(mWallet.getWalletEntries().get(getAdapterPosition()));
                     }
             }
         }

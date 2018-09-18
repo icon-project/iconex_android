@@ -39,20 +39,20 @@ import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.MyEditText;
 
-import static foundation.icon.iconex.ICONexApp.isMain;
+import static foundation.icon.iconex.ICONexApp.network;
 
 public class SwapRequestFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = SwapRequestFragment.class.getSimpleName();
 
-    private WalletInfo mWallet;
+    private Wallet mWallet;
     private WalletEntry mToken;
 
     private final BigInteger mLimit = new BigInteger("55000");
@@ -334,7 +334,7 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
 
             case R.id.btn_complete:
                 if (validateOwnBalance())
-                    mListener.onSwapRequest(editSend.getText().toString(), txtPrice.getText().toString().substring(0,2),
+                    mListener.onSwapRequest(editSend.getText().toString(), txtPrice.getText().toString().substring(0, 2),
                             txtLimit.getText().toString(), txtFee.getText().toString());
                 else
                     btnComplete.setEnabled(false);
@@ -409,18 +409,26 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
     }
 
     private void addPlus(int plus) {
-        String value;
-        if (editSend.getText().toString().isEmpty()) {
+        BigInteger value;
+        String amount = editSend.getText().toString();
+        if (amount.isEmpty()) {
             editSend.setText(Integer.toString(plus));
         } else {
-            value = editSend.getText().toString();
-            if (value.indexOf(".") < 0) {
-                value = Integer.toString(Integer.parseInt(value) + plus);
-                editSend.setText(value);
+            if (amount.indexOf(".") < 0) {
+                BigInteger oldValue = new BigInteger(amount);
+                value = oldValue.add(BigInteger.valueOf(plus));
+                if (value.toString().length() > 10)
+                    editSend.setText(oldValue.toString());
+                else
+                    editSend.setText(value.toString());
             } else {
-                String[] total = value.split("\\.");
-                total[0] = Integer.toString(Integer.parseInt(total[0]) + plus);
-                editSend.setText(total[0] + "." + total[1]);
+                String[] total = amount.split("\\.");
+                BigInteger oldValue = new BigInteger(total[0]);
+                value = oldValue.add(BigInteger.valueOf(plus));
+                if (value.toString().length() > 10)
+                    editSend.setText(oldValue.toString() + "." + total[1]);
+                else
+                    editSend.setText(value.toString() + "." + total[1]);
             }
         }
     }
@@ -508,7 +516,7 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
             BigInteger estLimit;
 
             String url;
-            if (isMain)
+            if (network == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -532,8 +540,8 @@ public class SwapRequestFragment extends Fragment implements View.OnClickListene
                         Collections.<TypeReference<?>>emptyList());
                 String data = FunctionEncoder.encode(function);
                 Log.d(TAG, "Data=" + data);
-                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_ETH + from, DefaultBlockParameterName.LATEST).send();
-                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_ETH + from,
+                EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_HEX + from, DefaultBlockParameterName.LATEST).send();
+                EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_HEX + from,
                         nonce.getTransactionCount(),
                         Convert.toWei(gasPrice.toString(), Convert.Unit.GWEI).toBigInteger(),
                         mLimit,

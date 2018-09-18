@@ -1,4 +1,4 @@
-package foundation.icon.iconex.control;
+package foundation.icon.iconex.wallet;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by js on 2018. 3. 6..
  */
 
-public class WalletInfo implements Serializable, Parcelable {
+public class Wallet implements Serializable, Parcelable {
 
     private String coinType = "";
     private String alias = "";
@@ -107,22 +107,22 @@ public class WalletInfo implements Serializable, Parcelable {
         dest.writeString(createdAt);
     }
 
-    public static final Parcelable.Creator<WalletInfo> CREATOR
-            = new Parcelable.Creator<WalletInfo>() {
-        public WalletInfo createFromParcel(Parcel in) {
-            return new WalletInfo(in);
+    public static final Parcelable.Creator<Wallet> CREATOR
+            = new Parcelable.Creator<Wallet>() {
+        public Wallet createFromParcel(Parcel in) {
+            return new Wallet(in);
         }
 
-        public WalletInfo[] newArray(int size) {
-            return new WalletInfo[size];
+        public Wallet[] newArray(int size) {
+            return new Wallet[size];
         }
     };
 
-    public WalletInfo() {
+    public Wallet() {
         super();
     }
 
-    public WalletInfo(Parcel in) {
+    public Wallet(Parcel in) {
         coinType = in.readString();
         alias = in.readString();
         address = in.readString();

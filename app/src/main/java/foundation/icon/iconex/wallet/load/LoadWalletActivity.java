@@ -1,8 +1,6 @@
 package foundation.icon.iconex.wallet.load;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,17 +10,17 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.widgets.NonSwipeViewPager;
 import loopchain.icon.wallet.core.Constants;
@@ -41,7 +39,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     private String mCoinType;
     private String mAlias;
     private JsonObject mKeyStore;
-    private List<WalletInfo> mBundle;
+    private List<Wallet> mBundle;
     private String mPrivateKey;
 
     private ArrayList<BundleItem> bundleItems;
@@ -83,16 +81,16 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
 
     private ArrayList<BundleItem> makeList() {
         ArrayList<BundleItem> list = new ArrayList<>();
-        List<WalletInfo> temp = new ArrayList<>();
+        List<Wallet> temp = new ArrayList<>();
         temp.addAll(mBundle);
 
         for (int i = 0; i < mBundle.size(); i++) {
-            WalletInfo wallet = mBundle.get(i);
-            String alias = wallet.getAlias();
-            boolean registered = checkRegisterAlias(alias);
+            Wallet wallet = mBundle.get(i);
+//            String alias = wallet.getAlias();
+            boolean registered = checkRegister(wallet.getAddress());
 
             BundleItem item = new BundleItem();
-            item.setId(PKIUtils.hexEncode(new SecureRandom().generateSeed(3)));
+            item.setId(new Random().nextInt(999999) + 100000);
             item.setCoinType(wallet.getCoinType());
             item.setAlias(wallet.getAlias());
             item.setAddress(wallet.getAddress());
@@ -111,9 +109,9 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
         return list;
     }
 
-    private boolean checkRegisterAlias(String alias) {
-        for (WalletInfo wallet : ICONexApp.mWallets) {
-            if (alias.equals(wallet.getAlias()))
+    private boolean checkRegister(String address) {
+        for (Wallet wallet : ICONexApp.mWallets) {
+            if (address.equals(wallet.getAddress()))
                 return true;
         }
 
@@ -121,7 +119,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     }
 
     private void addBundle() throws Exception {
-        for (WalletInfo wallet : mBundle) {
+        for (Wallet wallet : mBundle) {
 
             if (checkAddress(wallet.getAddress())) {
                 RealmUtil.overwriteWallet(wallet.getAddress(), wallet);
@@ -134,7 +132,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     }
 
     private boolean checkAddress(String address) {
-        for (WalletInfo wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.mWallets) {
             if (address.equals(wallet.getAddress()))
                 return true;
         }
@@ -160,7 +158,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     }
 
     @Override
-    public void onKeyStoreBundleSelected(List<WalletInfo> wallets) {
+    public void onKeyStoreBundleSelected(List<Wallet> wallets) {
         mBundle = wallets;
         bundleItems = makeList();
 
@@ -169,12 +167,17 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     }
 
     @Override
+    public void onKeyStoreBack() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+    }
+
+    @Override
     public void onDoneLoadWalletByKeyStore(String alias) {
         mAlias = alias;
-        WalletInfo walletInfo = new WalletInfo();
-        walletInfo.setAlias(mAlias);
-        walletInfo.setAddress(mKeyStore.get("address").getAsString());
-        walletInfo.setKeyStore(mKeyStore.toString());
+        Wallet wallet = new Wallet();
+        wallet.setAlias(mAlias);
+        wallet.setAddress(mKeyStore.get("address").getAsString());
+        wallet.setKeyStore(mKeyStore.toString());
 
         List<WalletEntry> walletEntries = new ArrayList<>();
         WalletEntry coin = new WalletEntry();
@@ -182,21 +185,21 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
         coin.setAddress(mKeyStore.get("address").getAsString());
 
         if (mKeyStore.has("coinType")) {
-            walletInfo.setCoinType(Constants.KS_COINTYPE_ICX);
+            wallet.setCoinType(Constants.KS_COINTYPE_ICX);
             coin.setSymbol(Constants.KS_COINTYPE_ICX);
             coin.setName(MyConstants.NAME_ICX);
         } else {
-            walletInfo.setCoinType(Constants.KS_COINTYPE_ETH);
+            wallet.setCoinType(Constants.KS_COINTYPE_ETH);
             coin.setSymbol(Constants.KS_COINTYPE_ETH);
             coin.setName(MyConstants.NAME_ETH);
         }
         walletEntries.add(coin);
 
-        walletInfo.setWalletEntries(walletEntries);
-        walletInfo.setCreatedAt(Long.toString(System.currentTimeMillis()));
+        wallet.setWalletEntries(walletEntries);
+        wallet.setCreatedAt(Long.toString(System.currentTimeMillis()));
 
         try {
-            RealmUtil.addWallet(walletInfo);
+            RealmUtil.addWallet(wallet);
             RealmUtil.loadWallet();
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,7 +221,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     public void onDoneInputWalletInfo(String name, String pwd) {
         byte[] privateKey = PKIUtils.hexDecode(mPrivateKey);
         String[] result = null;
-        WalletInfo info = new WalletInfo();
+        Wallet info = new Wallet();
 
         try {
             if (mCoinType.equals(Constants.KS_COINTYPE_ICX)) {
@@ -267,6 +270,25 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     }
 
     @Override
+    public void onNameBack() {
+
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+    }
+
+    @Override
+    public void onPrivBack() {
+
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+    }
+
+    @Override
+    public void onInfoBack() {
+
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+        viewPagerAdapter.toString();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_BUNDLE_LIST) {
             if (resultCode == LoadBundleActivity.RES_LOAD) {
@@ -287,9 +309,23 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
 
     @Override
     public void onBackPressed() {
-        if (viewPager.getCurrentItem() == 0)
-            super.onBackPressed();
-        else
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+        if (viewPager.getCurrentItem() == 0) {
+            finish();
+        } else {
+            Basic2ButtonDialog dialog = new Basic2ButtonDialog(LoadWalletActivity.this);
+            dialog.setMessage(getString(R.string.cancelLoadWallet));
+            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                @Override
+                public void onOk() {
+                    finish();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+            dialog.show();
+        }
     }
 }

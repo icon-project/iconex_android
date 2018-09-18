@@ -26,9 +26,9 @@ import java.io.Serializable;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.control.PasswordValidator;
-import foundation.icon.iconex.control.WalletInfo;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -36,7 +36,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
 
     private static final String TAG = WalletPwdChangeActivity.class.getSimpleName();
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
 
     private Button btnClose;
     private MyEditText editOldPwd, editPwd, editCheck;
@@ -61,7 +61,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_wallet_pwd_change);
 
         if (getIntent() != null) {
-            mWalletInfo = (WalletInfo) getIntent().getExtras().get("walletInfo");
+            mWallet = (Wallet) getIntent().getExtras().get("walletInfo");
         }
 
         appbar = findViewById(R.id.appbar);
@@ -157,29 +157,30 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                 } else {
                     linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-                    if (editPwd.getText().toString().isEmpty()) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
-                    } else {
-                        int result = PasswordValidator.validatePassword(editPwd.getText().toString());
-                        switch (result) {
-                            case PasswordValidator.LEAST_8:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
-                                break;
-                            case PasswordValidator.NOT_MATCH_PATTERN:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
-                                break;
+                    int result = PasswordValidator.validatePassword(editPwd.getText().toString());
+                    switch (result) {
+                        case PasswordValidator.EMPTY:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                            break;
 
-                            case PasswordValidator.HAS_WHITE_SPACE:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
-                                break;
+                        case PasswordValidator.LEAST_8:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+                            break;
 
-                            case PasswordValidator.SERIAL_CHAR:
-                                showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
-                                break;
+                        case PasswordValidator.NOT_MATCH_PATTERN:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
+                            break;
 
-                            default:
-                                hideWarning(editPwd, linePwd, txtPwdWarning);
-                        }
+                        case PasswordValidator.HAS_WHITE_SPACE:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
+                            break;
+
+                        case PasswordValidator.SERIAL_CHAR:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
+                            break;
+
+                        default:
+                            hideWarning(editPwd, linePwd, txtPwdWarning);
                     }
                 }
             }
@@ -365,20 +366,20 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.btn_change:
-                String address = mWalletInfo.getAddress();
-                JsonObject oldKeyStore = new Gson().fromJson(mWalletInfo.getKeyStore(), JsonObject.class);
+                String address = mWallet.getAddress();
+                JsonObject oldKeyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
                 String id = oldKeyStore.get(("id")).getAsString();
-                String newKeyStore = getKeyStore(mWalletInfo.getCoinType(), id, address, mPrivateKey, editPwd.getText().toString());
+                String newKeyStore = getKeyStore(mWallet.getCoinType(), id, address, mPrivateKey, editPwd.getText().toString());
                 if (newKeyStore != null) {
                     try {
-                        RealmUtil.modWalletPassword(mWalletInfo.getAddress(), newKeyStore);
-                        mWalletInfo.setKeyStore(newKeyStore);
+                        RealmUtil.modWalletPassword(mWallet.getAddress(), newKeyStore);
+                        mWallet.setKeyStore(newKeyStore);
                         BasicDialog dialog = new BasicDialog(this);
                         dialog.setMessage(getString(R.string.doneChangeWalletPwd));
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                setResult(RESULT_CODE, new Intent().putExtra("result", (Serializable) mWalletInfo));
+                                setResult(RESULT_CODE, new Intent().putExtra("result", (Serializable) mWallet));
                                 finish();
                             }
                         });
@@ -434,7 +435,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
     }
 
     private boolean validateCurrentPwd(String pwd) {
-        JsonObject keyStore = new Gson().fromJson(mWalletInfo.getKeyStore(), JsonObject.class);
+        JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
 
         JsonObject crypto;
         if (keyStore.has("crypto"))
@@ -444,7 +445,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
 
         byte[] privKey = null;
         try {
-            privKey = KeyStoreUtils.decryptPrivateKey(pwd, mWalletInfo.getAddress(), crypto, mWalletInfo.getCoinType());
+            privKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -471,6 +472,14 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
         }
         int pwdResult = PasswordValidator.validatePassword(pwd);
         switch (pwdResult) {
+            case PasswordValidator.EMPTY:
+                showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                break;
+
+            case PasswordValidator.LEAST_8:
+                showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+                break;
+
             case PasswordValidator.NOT_MATCH_PATTERN:
                 showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
                 break;

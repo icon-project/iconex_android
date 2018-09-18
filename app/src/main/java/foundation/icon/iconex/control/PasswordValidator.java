@@ -9,17 +9,22 @@ import foundation.icon.iconex.MyConstants;
 public class PasswordValidator {
 
     public static final int OK = 0;
-    public static final int NOT_MATCH_PATTERN = 1;
-    public static final int HAS_WHITE_SPACE = 2;
-    public static final int SERIAL_CHAR = 3;
-    public static final int LEAST_8 = 4;
+    public static final int EMPTY = 1;
+    public static final int NOT_MATCH_PATTERN = 2;
+    public static final int HAS_WHITE_SPACE = 3;
+    public static final int SERIAL_CHAR = 4;
+    public static final int LEAST_8 = 5;
+
 
     public static int validatePassword(String pwd) {
+        if (pwd.isEmpty())
+            return EMPTY;
+
         if (pwd.length() < 8) {
             return LEAST_8;
         }
 
-        if (pwd.isEmpty() || pwd.contains(" ")) {
+        if (pwd.contains(" ")) {
             return HAS_WHITE_SPACE;
         }
 

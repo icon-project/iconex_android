@@ -1,11 +1,17 @@
 package foundation.icon.iconex.util;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.pm.PackageInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import foundation.icon.iconex.ICONexApp;
+import foundation.icon.iconex.MyConstants;
 
 /**
  * Created by js on 2018. 5. 8..
@@ -57,5 +63,70 @@ public class Utils {
         }
 
         return builder.toString();
+    }
+
+    public static RES_VERSION versionCheck(Context context, String necessary) {
+        String[] mVersion;
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            mVersion = info.versionName.split("\\.");
+        } catch (Exception e) {
+            return RES_VERSION.NONE;
+        }
+
+        String[] all = ICONexApp.version.split("\\.");
+        String[] hav2;
+        if (necessary != null) {
+            hav2 = necessary.split("\\.");
+
+            if (Integer.parseInt(mVersion[0]) < Integer.parseInt(hav2[0]))
+                return RES_VERSION.UPDATE;
+            else if (Integer.parseInt(mVersion[1]) < Integer.parseInt(hav2[1]))
+                return RES_VERSION.UPDATE;
+        }
+
+        if (Integer.parseInt(mVersion[0]) < Integer.parseInt(all[0]))
+            return RES_VERSION.NEW;
+        else if (Integer.parseInt(mVersion[1]) < Integer.parseInt(all[1]))
+            return RES_VERSION.NEW;
+
+        return RES_VERSION.LATEST;
+    }
+
+    public static String remove0x(String hex) {
+        if (hex.startsWith(MyConstants.PREFIX_HEX))
+            return hex.substring(2);
+        else
+            return hex;
+    }
+
+    public static String checkPrefix(String hex) {
+        if (!hex.startsWith(MyConstants.PREFIX_HEX))
+            return MyConstants.PREFIX_HEX + hex;
+        else
+            return hex;
+    }
+
+    public static String formatFloating(String target, int floating) {
+        if (!target.contains("."))
+            return target;
+        else {
+            String[] divide = target.split("\\.");
+            BigInteger integer = new BigInteger(divide[0]);
+            String trailing = divide[1].substring(0, floating);
+
+            return NumberFormat.getNumberInstance(Locale.getDefault()).format(integer) + "." + trailing;
+        }
+    }
+
+    public static String strip(String target) {
+        return target.replaceAll("^\\s++|\\s++$", "");
+    }
+
+    public enum RES_VERSION {
+        NONE,
+        LATEST,
+        NEW,
+        UPDATE
     }
 }

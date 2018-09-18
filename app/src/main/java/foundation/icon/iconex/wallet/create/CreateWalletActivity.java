@@ -22,8 +22,8 @@ import java.util.List;
 
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletEntry;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
@@ -46,7 +46,7 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
 
     private String coinType;
     private String walletName, pwd;
-    private WalletInfo wallet;
+    private Wallet wallet;
     private String privKey;
 
     private boolean isDownloaded = false;
@@ -123,7 +123,7 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
             }
         });
 
-        wallet = new WalletInfo();
+        wallet = new Wallet();
     }
 
     @Override

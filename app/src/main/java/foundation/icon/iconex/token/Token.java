@@ -1,4 +1,4 @@
-package foundation.icon.iconex.control;
+package foundation.icon.iconex.token;
 
 import java.io.Serializable;
 
@@ -8,14 +8,14 @@ import java.io.Serializable;
 
 public class Token implements Serializable{
 
-    String address;
-    String contractAddress;
-    String defaultName;
-    String userName;
-    String defaultSymbol;
-    String userSymbol;
-    int defaultDec;
-    int userDec;
+    protected String address;
+    protected String contractAddress;
+    protected String defaultName;
+    protected String userName;
+    protected String defaultSymbol;
+    protected String userSymbol;
+    protected int defaultDec;
+    protected int userDec;
 
     public String getAddress() {
         return address;

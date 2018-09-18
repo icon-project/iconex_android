@@ -1,4 +1,4 @@
-package foundation.icon.iconex.control;
+package foundation.icon.iconex.wallet;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 
 public class WalletEntry implements Serializable, Parcelable {
-    String id = "";
+    int id = 0;
     String type = "";
     String name = "";
     String address = "";
@@ -25,11 +25,11 @@ public class WalletEntry implements Serializable, Parcelable {
 
     String createdAt = "";
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -138,7 +138,7 @@ public class WalletEntry implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(type);
         dest.writeString(name);
         dest.writeString(address);
@@ -168,7 +168,7 @@ public class WalletEntry implements Serializable, Parcelable {
     }
 
     public WalletEntry(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         type = in.readString();
         name = in.readString();
         address = in.readString();

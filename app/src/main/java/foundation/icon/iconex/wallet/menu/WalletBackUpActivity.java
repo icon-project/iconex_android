@@ -21,7 +21,7 @@ import com.google.gson.JsonObject;
 
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.WalletInfo;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
@@ -35,7 +35,7 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
     private TextView txtPrivKey;
     private Button btnVisibility;
 
-    private WalletInfo mWalletInfo;
+    private Wallet mWallet;
     private String mPrivKey;
 
     private final int STORAGE_PERMISSION_REQUEST = 10001;
@@ -46,7 +46,7 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_wallet_back_up);
 
         if (getIntent() != null) {
-            mWalletInfo = (WalletInfo) getIntent().getSerializableExtra("walletInfo");
+            mWallet = (Wallet) getIntent().getSerializableExtra("walletInfo");
             mPrivKey = getIntent().getStringExtra("privateKey");
         }
 
@@ -104,26 +104,26 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
             case R.id.btn_view_info:
                 String coinName;
                 String format = "%1$s(%2$s)";
-                if (mWalletInfo.getCoinType().equals(Constants.KS_COINTYPE_ICX))
-                    coinName = String.format(format, MyConstants.NAME_ICX, mWalletInfo.getCoinType());
+                if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
+                    coinName = String.format(format, MyConstants.NAME_ICX, mWallet.getCoinType());
                 else
-                    coinName = String.format(format, MyConstants.NAME_ETH, mWalletInfo.getCoinType());
+                    coinName = String.format(format, MyConstants.NAME_ETH, mWallet.getCoinType());
 
                 startActivity(new Intent(this, ViewWalletInfoActivity.class)
-                        .putExtra("alias", mWalletInfo.getAlias())
+                        .putExtra("alias", mWallet.getAlias())
                         .putExtra("coinName", coinName)
-                        .putExtra("address", mWalletInfo.getAddress())
+                        .putExtra("address", mWallet.getAddress())
                         .putExtra("privateKey", mPrivKey)
-                        .putExtra("date", mWalletInfo.getCreatedAt()));
+                        .putExtra("date", mWallet.getCreatedAt()));
 
                 break;
         }
     }
 
     private boolean downloadKeystore() {
-        JsonObject keyStore = new Gson().fromJson(mWalletInfo.getKeyStore(), JsonObject.class);
+        JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
         try {
-            KeyStoreIO.exportKeyStore(keyStore, mWalletInfo.getCoinType());
+            KeyStoreIO.exportKeyStore(keyStore, mWallet.getCoinType());
         } catch (Exception e) {
             e.printStackTrace();
             return false;

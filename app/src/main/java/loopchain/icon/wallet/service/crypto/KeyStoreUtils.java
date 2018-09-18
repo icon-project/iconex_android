@@ -1,7 +1,8 @@
 package loopchain.icon.wallet.service.crypto;
 
-import android.util.Log;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.spongycastle.crypto.digests.SHA256Digest;
@@ -19,6 +20,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
@@ -28,6 +32,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import foundation.icon.iconex.MyConstants;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
 
 public class KeyStoreUtils {
@@ -775,5 +782,320 @@ public class KeyStoreUtils {
         System.out.println("KS Recover address=" + newAddress);
 
         return address.equals(newAddress);
+    }
+
+    public static boolean validatePassword(String pwd, JsonObject keyStore) {
+        String address;
+        try {
+            address = keyStore.get("address").getAsString();
+        } catch (Exception e) {
+            return false;
+        }
+
+        JsonObject crypto;
+        String coinType;
+
+        if (keyStore.has("coinType")) {
+            coinType = Constants.KS_COINTYPE_ICX;
+        } else {
+            coinType = Constants.KS_COINTYPE_ETH;
+        }
+
+        if (keyStore.has("crypto")) {
+            crypto = keyStore.get("crypto").getAsJsonObject();
+        } else {
+            crypto = keyStore.get("Crypto").getAsJsonObject();
+        }
+
+        byte[] privKey = null;
+        try {
+            privKey = KeyStoreUtils.decryptPrivateKey(pwd, address, crypto, coinType);
+        } catch (Exception e) {
+            return false;
+        }
+
+        if (privKey == null)
+            return false;
+
+        return true;
+    }
+
+    public static List<Wallet> validateBundlePassword(String pwd, List<Wallet> wallets) {
+        List<Wallet> tempWallets = new ArrayList<>();
+        tempWallets.addAll(wallets);
+
+        for (int i = 0; i < wallets.size(); i++) {
+            Wallet wallet = wallets.get(i);
+            try {
+                JsonObject keyStore = new Gson().fromJson(wallet.getKeyStore(), JsonObject.class);
+                boolean result = validatePassword(pwd, keyStore);
+                if (!result)
+                    tempWallets.remove(wallet);
+            } catch (Exception e) {
+                tempWallets.remove(wallet);
+            }
+        }
+
+        return tempWallets;
+    }
+
+    public static boolean validateKeyStore(JsonObject keyStore) {
+        Exception e;
+
+        try {
+            if (!keyStore.has("address") && !keyStore.has("version")
+                    && (!keyStore.has("crypto") || !keyStore.has("Crypto"))) {
+                e = new Exception("Invalid Keystore : Has no properties");
+                throw e;
+            }
+
+            if (keyStore.get("version") == null || keyStore.get("version").isJsonNull()) {
+                e = new Exception("Invalid Keystore : version");
+                throw e;
+            }
+
+            if (keyStore.get("address") == null || keyStore.get("address").isJsonNull()
+                    || keyStore.get("address").getAsString().isEmpty()) {
+                e = new Exception("Invalid Keystore : address");
+                throw e;
+            }
+
+            JsonObject crypto = null;
+            if (keyStore.has("crypto")) {
+                if (keyStore.get("crypto") == null || keyStore.get("crypto").isJsonNull()) {
+                    e = new Exception("Invalid Keystore : crypto");
+                    throw e;
+                } else {
+                    crypto = keyStore.get("crypto").getAsJsonObject();
+                }
+            } else if (keyStore.has("Crypto")) {
+                if (keyStore.get("Crypto") == null || keyStore.get("Crypto").isJsonNull()) {
+                    e = new Exception("Invalid Keystore : Crypto");
+                    throw e;
+                } else {
+                    crypto = keyStore.get("Crypto").getAsJsonObject();
+                }
+            }
+
+            if (crypto.get("ciphertext") == null || crypto.get("ciphertext").isJsonNull()
+                    || crypto.get("ciphertext").getAsString().isEmpty()) {
+                e = new Exception("Invalid Keystore : ciphertext");
+                throw e;
+            }
+
+            if (crypto.get("cipherparams") == null || crypto.get("cipherparams").isJsonNull()) {
+                e = new Exception("Invalid Keystore : cipherparams");
+                throw e;
+            } else {
+                JsonObject cipherparams = crypto.get("cipherparams").getAsJsonObject();
+                if (cipherparams.get("iv") == null || cipherparams.get("iv").isJsonNull()
+                        || cipherparams.get("iv").getAsString().isEmpty()) {
+                    e = new Exception("Invalid Keystore : iv");
+                    throw e;
+                }
+            }
+
+            if (crypto.get("cipher") == null || crypto.get("cipher").isJsonNull()
+                    || crypto.get("cipher").getAsString().isEmpty()) {
+                e = new Exception("Invalid Keystore : cipher");
+                throw e;
+            }
+
+            if (crypto.get("kdf") == null || crypto.get("kdf").isJsonNull()
+                    || crypto.get("kdf").getAsString().isEmpty()) {
+                e = new Exception("Invalid Keystore : kdf");
+                throw e;
+            }
+
+            if (crypto.get("kdfparams") == null || crypto.get("kdfparams").isJsonNull()) {
+                e = new Exception("Invalid Keystore : kdfparams");
+                throw e;
+            } else {
+                JsonObject kdfparams = crypto.get("kdfparams").getAsJsonObject();
+                String kdf = crypto.get("kdf").getAsString();
+
+                if (kdfparams.get("dklen") == null || kdfparams.get("dklen").isJsonNull()) {
+                    e = new Exception("Invalid Keystore : dklen");
+                    throw e;
+                }
+
+                if (kdfparams.get("salt") == null || kdfparams.get("salt").isJsonNull()
+                        || kdfparams.get("salt").getAsString().isEmpty()) {
+                    e = new Exception("Invalid Keystore : salt");
+                    throw e;
+                }
+
+                if (kdf.equals(Constants.KDF_PBKDF2)) {
+
+                    if (kdfparams.get("c") == null || kdfparams.get("c").isJsonNull()) {
+                        e = new Exception("Invalid Keystore : c");
+                        throw e;
+                    }
+
+                    if (kdfparams.get("prf") == null || kdfparams.get("prf").isJsonNull()
+                            || kdfparams.get("prf").getAsString().isEmpty()) {
+                        e = new Exception("Invalid Keystore : prf");
+                        throw e;
+                    }
+                } else if (kdf.equals(Constants.KDF_SCRYPT)) {
+
+                    if (kdfparams.get("n") == null || kdfparams.get("n").isJsonNull()) {
+                        e = new Exception("Invalid Keystore : n");
+                        throw e;
+                    }
+
+                    if (kdfparams.get("r") == null || kdfparams.get("r").isJsonNull()) {
+                        e = new Exception("Invalid Keystore : r");
+                        throw e;
+                    }
+
+                    if (kdfparams.get("p") == null || kdfparams.get("p").isJsonNull()) {
+                        e = new Exception("Invalid Keystore : p");
+                        throw e;
+                    }
+                }
+            }
+
+            if (crypto.get("mac") == null || crypto.get("mac").isJsonNull()
+                    || crypto.get("mac").getAsString().isEmpty()) {
+                e = new Exception("Invalid Keystore : mac");
+                throw e;
+            }
+        } catch (Exception exception) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static List<Wallet> validateKSBundle(JsonArray bundle) {
+        List<Wallet> wallets = new ArrayList<>();
+
+        for (JsonElement element : bundle) {
+            JsonObject eleObj = element.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> item : eleObj.entrySet()) {
+                String address = item.getKey();
+
+                if (address == null || address.isEmpty())
+                    continue;
+
+                try {
+                    Wallet info = new Wallet();
+                    JsonObject bundleInfo = item.getValue().getAsJsonObject();
+
+                    String name = bundleInfo.get("name").getAsString();
+                    String type = bundleInfo.get("type").getAsString();
+                    String strPriv = bundleInfo.get("priv").getAsString();
+                    JsonObject priv = new Gson().fromJson(strPriv, JsonObject.class);
+                    JsonArray tokens = bundleInfo.get("tokens").getAsJsonArray();
+
+                    if (name == null || name.isEmpty())
+                        throw new Exception("Name is null");
+
+                    if (type == null || type.isEmpty())
+                        throw new Exception("type is null");
+
+                    if (priv == null || priv.isJsonNull())
+                        throw new Exception("Invalid priv");
+
+                    if (tokens == null || tokens.isJsonNull())
+                        throw new Exception("Invalid tokens");
+
+                    boolean result = validateKeyStore(priv);
+                    if (!result)
+                        throw new Exception("Invalid Keystore");
+
+                    info.setCoinType(type.toUpperCase());
+                    info.setAlias(name);
+                    info.setAddress(priv.get("address").getAsString());
+                    info.setKeyStore(priv.toString());
+
+                    List<WalletEntry> entries = new ArrayList<>();
+                    WalletEntry entry = new WalletEntry();
+                    entry.setType(MyConstants.TYPE_COIN);
+                    entry.setAddress(priv.get("address").getAsString());
+
+                    if (type.equals(Constants.KS_COINTYPE_ICX.toLowerCase()))
+                        entry.setName(MyConstants.NAME_ICX);
+                    else
+                        entry.setName(MyConstants.NAME_ETH);
+
+                    entry.setSymbol(type.toUpperCase());
+
+                    entries.add(entry);
+
+                    for (JsonElement tEle : tokens) {
+                        try {
+                            JsonObject token = tEle.getAsJsonObject();
+                            boolean tokenResult = validateToken(token);
+                            if (!tokenResult)
+                                throw new Exception("Invalid token");
+
+                            entry = new WalletEntry();
+                            entry.setType(MyConstants.TYPE_TOKEN);
+                            entry.setAddress(priv.get("address").getAsString());
+                            entry.setContractAddress(token.get("address").getAsString());
+                            entry.setDefaultDec(token.get("defaultDecimals").getAsInt());
+                            entry.setUserDec(token.get("decimals").getAsInt());
+                            entry.setUserName(token.get("name").getAsString());
+                            entry.setName(token.get("defaultName").getAsString());
+                            entry.setSymbol(token.get("defaultSymbol").getAsString());
+                            entry.setUserSymbol(token.get("symbol").getAsString());
+                            entry.setCreatedAt(token.get("createdAt").getAsString());
+
+                            entries.add(entry);
+                        } catch (Exception tokenException) {
+                        }
+                    }
+
+                    info.setWalletEntries(entries);
+                    info.setCreatedAt(bundleInfo.get("createdAt").getAsString());
+                    wallets.add(info);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return wallets;
+    }
+
+    public static boolean validateToken(JsonObject token) {
+        try {
+            if (!token.has("address") || !token.has("decimals") || !token.has("defaultDecimals")
+                    || !token.has("defaultName") || !token.has("defaultSymbol") || !token.has("name")
+                    || !token.has("symbol"))
+                throw new Exception("Invalid Token");
+
+            if (token.get("address") == null || token.get("address").isJsonNull()
+                    || token.get("address").getAsString().isEmpty())
+                throw new Exception("Invalid Token : Address");
+
+            if (token.get("decimals") == null || token.get("decimals").isJsonNull())
+                throw new Exception("Invalid Token : Decimals");
+
+            if (token.get("defaultDecimals") == null || token.get("defaultDecimals").isJsonNull())
+                throw new Exception("Invalid Token : Default decimals");
+
+            if (token.get("defaultName") == null || token.get("defaultName").isJsonNull()
+                    || token.get("defaultName").getAsString().isEmpty())
+                throw new Exception("Invalid Token : Default Name");
+
+            if (token.get("defaultSymbol") == null || token.get("defaultSymbol").isJsonNull()
+                    || token.get("defaultSymbol").getAsString().isEmpty())
+                throw new Exception("Invalid Token : Default Symbol");
+
+            if (token.get("name") == null || token.get("name").isJsonNull()
+                    || token.get("name").getAsString().isEmpty())
+                throw new Exception("Invalid Token : Name");
+
+            if (token.get("symbol") == null || token.get("symbol").isJsonNull()
+                    || token.get("symbol").getAsString().isEmpty())
+                throw new Exception("Invalid Token : Symbol");
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

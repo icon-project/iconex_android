@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.Utils;
 
 public class DrawerMenuFragment extends Fragment implements View.OnClickListener {
 
@@ -44,17 +44,24 @@ public class DrawerMenuFragment extends Fragment implements View.OnClickListener
         v.findViewById(R.id.menu_export_wallet_bundle).setOnClickListener(this);
         v.findViewById(R.id.menu_setting_lock).setOnClickListener(this);
         v.findViewById(R.id.menu_setting_language).setOnClickListener(this);
+        v.findViewById(R.id.menu_app_info).setOnClickListener(this);
         v.findViewById(R.id.menu_disclaimers).setOnClickListener(this);
 
-        if (!ICONexApp.isMain) {
-            try {
-                PackageInfo info = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-                String version = info.versionName;
-                ((TextView) v.findViewById(R.id.txt_version)).setText("v" + version);
-            } catch (Exception e) {
-                // Nothing.
-            }
+        try {
+            PackageInfo info = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            String version = info.versionName;
+            ((TextView) v.findViewById(R.id.txt_version)).setText(version);
+        } catch (Exception e) {
+            // Nothing.
         }
+
+        Utils.RES_VERSION resVersion = Utils.versionCheck(getActivity(), null);
+        if (resVersion == Utils.RES_VERSION.NEW)
+            v.findViewById(R.id.new_version).setVisibility(View.VISIBLE);
+        else
+            v.findViewById(R.id.new_version).setVisibility(View.GONE);
+
+
         return v;
     }
 
@@ -102,6 +109,10 @@ public class DrawerMenuFragment extends Fragment implements View.OnClickListener
                 mListener.onMenuClicked(SIDE_MENU.SETTING_LANGUAGE);
                 break;
 
+            case R.id.menu_app_info:
+                mListener.onMenuClicked(SIDE_MENU.APP_INFO);
+                break;
+
             case R.id.menu_disclaimers:
                 mListener.onMenuClicked(SIDE_MENU.ICONex_DISCLAIMER);
                 break;
@@ -124,6 +135,7 @@ public class DrawerMenuFragment extends Fragment implements View.OnClickListener
         EXPORT_WALLET_BUNDLE,
         SETTING_LOCK,
         SETTING_LANGUAGE,
-        ICONex_DISCLAIMER,
+        APP_INFO,
+        ICONex_DISCLAIMER
     }
 }

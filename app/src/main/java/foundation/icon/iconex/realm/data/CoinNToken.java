@@ -12,7 +12,7 @@ public class CoinNToken extends RealmObject {
     String name;
     String userName;
     String address;
-    String contractAddress;
+    String contractAddress = "";
     String symbol;
     String userSymbol;
     int decimal;
