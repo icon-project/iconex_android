@@ -18,7 +18,7 @@ public class GetMaxStepLimit extends RequestData {
         data.addProperty("method", Constants.METHOD_GETMAXSTEPLIMIT);
 
         JsonObject dataParams = new JsonObject();
-        dataParams.addProperty("context_type", "invoke");
+        dataParams.addProperty("contextType", "invoke");
         data.add("params", dataParams);
 
         params.add("data", data);
