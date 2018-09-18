@@ -226,8 +226,8 @@
     <string name="hintUtfData">Hello ICON</string>
     <string name="hintHexData">0x1234...</string>
     <string name="cancelEnterData">Are you sure you want to cancel?</string>
-    <string name="errMinStep">Enter step limit more than %,d</string>
-    <string name="errMaxStep">Enter step limit less tan %,d</string>
+    <string name="errMinStep">Enter step limit more than %s</string>
+    <string name="errMaxStep">Enter step limit less than %s</string>
     <string name="dataMaxSize">/%d KB</string>
 
     <string name="selectInputType">Select Input Type</string>

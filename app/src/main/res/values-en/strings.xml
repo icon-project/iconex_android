@@ -226,8 +226,8 @@
     <string name="hintUtfData">Hello ICON</string>
     <string name="hintHexData">0x1234...</string>
     <string name="cancelEnterData">Are you sure to want to cancel?</string>
-    <string name="errMinStep">Enter step limit more than %,d</string>
-    <string name="errMaxStep">Enter step limit less tan %,d</string>
+    <string name="errMinStep">Enter step limit more than %s</string>
+    <string name="errMaxStep">Enter step limit less tan %s</string>
     <string name="errIcxOwnNotEnough">Insufficient ICX balance for transaction fee</string>
     <string name="dataMaxSize">/%d KB</string>
 

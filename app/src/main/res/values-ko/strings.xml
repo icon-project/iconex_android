@@ -225,8 +225,8 @@
     <string name="hintUtfData">Hello ICON</string>
     <string name="hintHexData">0x1234...</string>
     <string name="cancelEnterData">데이터 입력을 취소하시겠습니까?</string>
-    <string name="errMinStep">%,d 보다 높은 스텝 한도를 입력해주세요.</string>
-    <string name="errMaxStep">%,d 보다 낮은 스텝 한도를 입력해주세요.</string>
+    <string name="errMinStep">%s 보다 높은 스텝 한도를 입력해주세요.</string>
+    <string name="errMaxStep">%s 보다 낮은 스텝 한도를 입력해주세요.</string>
     <string name="errIcxOwnNotEnough">수수료를 지불할 ICX가 부족합니다.</string>
     <string name="dataMaxSize">/%d KB</string>
 
