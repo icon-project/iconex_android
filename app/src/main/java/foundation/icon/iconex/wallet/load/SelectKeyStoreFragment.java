@@ -209,6 +209,12 @@ public class SelectKeyStoreFragment extends Fragment implements View.OnClickList
             case R.id.btn_delete:
                 mKeyStore = null;
                 layoutFile.setVisibility(GONE);
+                editPwd.setText("");
+                txtPwdWarning.setVisibility(GONE);
+                if (editPwd.hasFocus())
+                    linePwd.setBackgroundColor(getResources().getColor(R.color.editActivated));
+                else
+                    linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
                 btnNext.setEnabled(false);
                 break;
 

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -30,7 +31,6 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 import foundation.icon.iconex.widgets.MyEditText;
-import jnr.x86asm.Util;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import retrofit2.Call;
@@ -43,9 +43,14 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
     private TextView txtDataSize, txtMod;
     private MyEditText editData;
 
+    private ViewGroup layoutDelete;
+    private Button btnDelete;
+
     private InputData data;
+    private State state;
 
     private static final String ARG_DATA = "ARG_DATA";
+    private static final String ARG_STATE = "ARG_STATE";
 
     private String beforeStr;
     private int maxSize;
@@ -80,6 +85,8 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
         ((TextView) v.findViewById(R.id.txt_title)).setText(R.string.data);
         ((TextView) v.findViewById(R.id.txt_mod)).setText(R.string.complete);
         v.findViewById(R.id.btn_close).setOnClickListener(this);
+
+        layoutDelete = v.findViewById(R.id.layout_delete);
 
         txtMod = v.findViewById(R.id.txt_mod);
         txtMod.setVisibility(View.VISIBLE);
@@ -152,6 +159,9 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
             }
         });
 
+        btnDelete = v.findViewById(R.id.btn_delete);
+        btnDelete.setOnClickListener(this);
+
         if (data.getDataType() == DataType.UTF) {
             editData.setHint(R.string.hintUtfData);
             ((TextView) v.findViewById(R.id.txt_type)).setText("UTF-8");
@@ -168,12 +178,17 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                 txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
                 txtMod.setEnabled(false);
             } else {
+                state = State.VIEW;
+
                 if (data.getDataType() == DataType.UTF)
                     editData.setText(new String(Hex.decode(Utils.remove0x(data.getData()))));
                 else
                     editData.setText(data.getData());
 
-                editData.setSelection(editData.getText().toString().length());
+                layoutDelete.setVisibility(View.VISIBLE);
+                editData.setFocusable(false);
+
+                txtMod.setText(R.string.edit);
             }
         } else {
             txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
@@ -210,32 +225,62 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                 break;
 
             case R.id.txt_mod:
-                if (data.getDataType() == DataType.HEX) {
-                    if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
-                        BasicDialog err = new BasicDialog(getActivity());
-                        err.setMessage(getString(R.string.errInvalidData));
-                        err.show();
+                if (state == State.VIEW) {
+                    layoutDelete.setVisibility(View.GONE);
+                    editData.setSelection(editData.getText().toString().length());
 
-                        break;
-                    }
+                    txtMod.setText(getString(R.string.complete));
 
-                    try {
-                        Hex.decode(Utils.remove0x(editData.getText().toString()));
-                        data.setData(Utils.checkPrefix(editData.getText().toString()));
-                        getStepCost();
-                    } catch (Exception e) {
-                        BasicDialog err = new BasicDialog(getActivity());
-                        err.setMessage(getString(R.string.errInvalidData));
-                        err.show();
-                    }
+                    editData.setFocusableInTouchMode(true);
+                    editData.requestFocus();
+
+                    state = State.INPUT;
                 } else {
-                    String dataStr = editData.getText().toString();
-                    Log.d(TAG, "Hex.toHexString Start");
-                    String hexStr = Hex.toHexString(dataStr.getBytes());
-                    Log.d(TAG, "Hex.toHexString End");
-                    data.setData(Utils.checkPrefix(hexStr));
-                    getStepCost();
+                    if (data.getDataType() == DataType.HEX) {
+                        if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
+                            BasicDialog err = new BasicDialog(getActivity());
+                            err.setMessage(getString(R.string.errInvalidData));
+                            err.show();
+
+                            break;
+                        }
+
+                        try {
+                            Hex.decode(Utils.remove0x(editData.getText().toString()));
+                            data.setData(Utils.checkPrefix(editData.getText().toString()));
+                            getStepCost();
+                        } catch (Exception e) {
+                            BasicDialog err = new BasicDialog(getActivity());
+                            err.setMessage(getString(R.string.errInvalidData));
+                            err.show();
+                        }
+                    } else {
+                        String dataStr = editData.getText().toString();
+                        Log.d(TAG, "Hex.toHexString Start");
+                        String hexStr = Hex.toHexString(dataStr.getBytes());
+                        Log.d(TAG, "Hex.toHexString End");
+                        data.setData(Utils.checkPrefix(hexStr));
+                        getStepCost();
+                    }
                 }
+                break;
+
+            case R.id.btn_delete:
+                Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
+                dialog.setMessage("데이터를 삭제하시겠습니까?");
+                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                    @Override
+                    public void onOk() {
+                        if (mListener != null)
+                            mListener.onDataDelete();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+                dialog.show();
                 break;
         }
     }
@@ -249,7 +294,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 if (mListener != null)
-                    mListener.onDataCancel();
+                    mListener.onDataCancel(data);
             }
 
             @Override
@@ -352,11 +397,18 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
         HEX
     }
 
+    public enum State {
+        INPUT,
+        VIEW
+    }
+
     private OnEnterDataLisnter mListener;
 
     public interface OnEnterDataLisnter {
         void onSetData(InputData data);
 
-        void onDataCancel();
+        void onDataCancel(InputData data);
+
+        void onDataDelete();
     }
 }

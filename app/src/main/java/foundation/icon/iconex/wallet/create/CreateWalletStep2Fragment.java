@@ -145,12 +145,16 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    btnAliasDel.setVisibility(View.VISIBLE);
-                    if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(beforeStr);
-                        editAlias.setSelection(editAlias.getText().toString().length());
+                    if (s.toString().trim().isEmpty()) {
+                        editAlias.setText("");
                     } else {
-                        beforeStr = s.toString();
+                        btnAliasDel.setVisibility(View.VISIBLE);
+                        if (Utils.checkByteLength(s.toString()) > 16) {
+                            editAlias.setText(beforeStr);
+                            editAlias.setSelection(editAlias.getText().toString().length());
+                        } else {
+                            beforeStr = s.toString();
+                        }
                     }
                 } else {
                     btnAliasDel.setVisibility(View.INVISIBLE);
@@ -235,6 +239,11 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnPwdDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editPwd.setText(s.subSequence(0, s.length() - 1));
+                        if (editPwd.getText().toString().length() > 0)
+                            editPwd.setSelection(editPwd.getText().toString().length());
+                    }
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
                     txtPwdWarning.setVisibility(View.INVISIBLE);
@@ -308,6 +317,11 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnCheckDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editCheck.setText(s.subSequence(0, s.length() - 1));
+                        if (editCheck.getText().toString().length() > 0)
+                            editCheck.setSelection(editCheck.getText().toString().length());
+                    }
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
 

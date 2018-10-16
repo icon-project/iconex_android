@@ -19,6 +19,7 @@
     <string name="retry">RETRY</string>
     <string name="view">View</string>
     <string name="input">Add</string>
+    <string name="delete">Delete</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -258,7 +259,7 @@
     <string name="fast">Fast</string>
 
     <string name="msgStepLimit">Step limit is the amount of step to send with your transaction. Unnecessary step is refunded to you at the end of transaction. In other words, you can set the maximum amount of step but the actual step consumption is not fixed.</string>
-    <string name="msgStepPrice">Step price is the amount you pay per unit of step.\nStep price is paid in loop and 1 loop is fixed to 0.000000000000000001(10^−18) ICX. ICON transaction fee is imposed according to various factors such as the number of smart contract usage, the amount of blockchain database used and the size of transaction data, etc.</string>
+    <string name="msgStepPrice">Step price is the amount you pay per unit of step.\nStep price is paid in loop and 1 loop is fixed to 0.000000000000000001(10−18) ICX. ICON transaction fee is imposed according to various factors such as the number of smart contract usage, the amount of blockchain database used and the size of transaction data, etc.</string>
     <string name="msgICXEstimateFee">Estimated Maximum Fee = Step price * Step limit</string>
     <string name="msgIcxData">You may enter data to send with the transaction. Transaction fee is imposed according to the size of data.</string>
     <string name="msgEthGasLimit">Gas limit is the amount of gas to send with your transaction.\nUnnecessary gas is refunded to you at the end of transaction. In other words, you can set the maximum amount of gas but the actual gas consumption is not fixed.</string>

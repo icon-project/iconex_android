@@ -32,6 +32,9 @@ public class DataTypeDialog extends BottomSheetDialog implements View.OnClickLis
         btnUtf.setOnClickListener(this);
         btnHex = findViewById(R.id.btn_hex);
         btnHex.setOnClickListener(this);
+
+        btnUtf.setSelected(true);
+        type = EnterDataFragment.DataType.UTF;
     }
 
     @Override

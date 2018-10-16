@@ -22,6 +22,8 @@
     <color name="colorWarning">#f23030</color>
     <color name="colorRed">#f23d64</color>
 
+    <color name="colorDark10">#1a383838</color>
+
     <!-- Buttons -->
     <color name="pointColorNormal">#1aaaba</color>
     <color name="pointColorPressed">#127580</color>

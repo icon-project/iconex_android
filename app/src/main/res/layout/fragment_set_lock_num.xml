@@ -101,16 +101,16 @@
             android:layout_marginTop="30dp"
             android:columnCount="3"
             android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:rowCount="3">
 
             <Button
                 android:id="@+id/btnNum1"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:background="@color/colorWhite"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="1"
                 android:textColor="@color/colorText"
@@ -118,11 +118,11 @@
 
             <Button
                 android:id="@+id/btnNum2"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_marginStart="4dp"
-                android:background="@color/colorWhite"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="2"
                 android:textColor="@color/colorText"
@@ -130,11 +130,11 @@
 
             <Button
                 android:id="@+id/btnNum3"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_marginStart="4dp"
-                android:background="@color/colorWhite"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="3"
                 android:textColor="@color/colorText"
@@ -142,10 +142,10 @@
 
             <Button
                 android:id="@+id/btnNum4"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:background="@color/colorWhite"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="4"
                 android:textColor="@color/colorText"
@@ -153,11 +153,11 @@
 
             <Button
                 android:id="@+id/btnNum5"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_marginStart="4dp"
-                android:background="@color/colorWhite"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="5"
                 android:textColor="@color/colorText"
@@ -165,11 +165,11 @@
 
             <Button
                 android:id="@+id/btnNum6"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_marginStart="4dp"
-                android:background="@color/colorWhite"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="6"
                 android:textColor="@color/colorText"
@@ -177,10 +177,10 @@
 
             <Button
                 android:id="@+id/btnNum7"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:background="@color/colorWhite"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="7"
                 android:textColor="@color/colorText"
@@ -188,11 +188,11 @@
 
             <Button
                 android:id="@+id/btnNum8"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_marginStart="4dp"
-                android:background="@color/colorWhite"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="8"
                 android:textColor="@color/colorText"
@@ -200,27 +200,27 @@
 
             <Button
                 android:id="@+id/btnNum9"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_marginStart="4dp"
-                android:background="@color/colorWhite"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="9"
                 android:textColor="@color/colorText"
                 android:textSize="32dp" />
 
             <View
-                android:layout_width="104dp"
+                android:layout_width="72dp"
                 android:layout_height="72dp" />
 
             <Button
                 android:id="@+id/btnNum0"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="104dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_marginStart="4dp"
-                android:background="@color/colorWhite"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/bg_btn_keypad_dark"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="0"
                 android:textColor="@color/colorText"
@@ -228,14 +228,12 @@
 
             <ImageView
                 android:id="@+id/delete"
-                android:layout_width="104dp"
+                android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_marginStart="4dp"
-                android:background="@color/colorWhite"
-                android:paddingBottom="23dp"
-                android:paddingEnd="39dp"
-                android:paddingStart="39dp"
-                android:paddingTop="23dp"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/bg_btn_keypad_dark"
+                android:padding="23dp"
                 android:src="@drawable/btn_keypad_delete" />
         </GridLayout>
     </LinearLayout>
