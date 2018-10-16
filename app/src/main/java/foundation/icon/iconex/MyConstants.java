@@ -68,7 +68,7 @@ public class MyConstants {
     public static final int NETWORK_TEST = 1;
     public static final int NETWORK_DEV = 2;
 
-    public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[?!:\.,%+-/*<>{}\(\)\[\]`\"'~_^\\|@#$&]).{8,}$";
+    public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[?!:\\.,%+-/*<>{}()\\[\\]`\"'~_^\\|@#$&]).{8,}$";
 
     public enum CoinType {
         ICX,
