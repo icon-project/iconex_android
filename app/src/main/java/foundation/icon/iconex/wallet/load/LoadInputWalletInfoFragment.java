@@ -113,12 +113,16 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    btnAliasDel.setVisibility(View.VISIBLE);
-                    if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(beforeStr);
-                        editAlias.setSelection(editAlias.getText().toString().length());
+                    if (s.toString().trim().isEmpty()) {
+                        editAlias.setText("");
                     } else {
-                        beforeStr = s.toString();
+                        btnAliasDel.setVisibility(View.VISIBLE);
+                        if (Utils.checkByteLength(s.toString()) > 16) {
+                            editAlias.setText(beforeStr);
+                            editAlias.setSelection(editAlias.getText().toString().length());
+                        } else {
+                            beforeStr = s.toString();
+                        }
                     }
                 } else {
                     btnAliasDel.setVisibility(View.INVISIBLE);
@@ -202,6 +206,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnPwdDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editPwd.setText(s.subSequence(0, s.length() - 1));
+                        if (editPwd.getText().toString().length() > 0)
+                            editPwd.setSelection(editPwd.getText().toString().length());
+                    }
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
                     txtPwdWarning.setVisibility(View.INVISIBLE);
@@ -273,6 +282,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnCheckDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editCheck.setText(s.subSequence(0, s.length() - 1));
+                        if (editCheck.getText().toString().length() > 0)
+                            editCheck.setSelection(editCheck.getText().toString().length());
+                    }
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
                     txtCheckWarnig.setVisibility(View.INVISIBLE);
@@ -302,8 +316,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         });
 
         txtAliasWarning = v.findViewById(R.id.txt_alias_warning);
+        txtAliasWarning.setVisibility(View.INVISIBLE);
         txtPwdWarning = v.findViewById(R.id.txt_pwd_warning);
+        txtPwdWarning.setVisibility(View.INVISIBLE);
         txtCheckWarnig = v.findViewById(R.id.txt_check_warning);
+        txtCheckWarnig.setVisibility(View.INVISIBLE);
 
         lineAlias = v.findViewById(R.id.line_alias);
         linePwd = v.findViewById(R.id.line_pwd);

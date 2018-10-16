@@ -152,6 +152,7 @@
 
             <foundation.icon.iconex.widgets.MyEditText
                 android:id="@+id/edit_alias"
+                style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/line_alias"
@@ -162,6 +163,7 @@
                 android:background="@color/colorWhite"
                 android:fontFamily="@font/noto_sans_medium"
                 android:hint="@string/hintWalletAlias"
+                android:longClickable="false"
                 android:singleLine="true"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorText20"
@@ -208,6 +210,7 @@
 
             <foundation.icon.iconex.widgets.MyEditText
                 android:id="@+id/edit_pwd"
+                style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/line_pwd"
@@ -219,6 +222,7 @@
                 android:fontFamily="@font/noto_sans_medium"
                 android:hint="@string/hintWalletPassword"
                 android:inputType="textPassword"
+                android:longClickable="false"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorText20"
                 android:textSize="14dp" />
@@ -285,6 +289,7 @@
 
             <foundation.icon.iconex.widgets.MyEditText
                 android:id="@+id/edit_check"
+                style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/line_check"
@@ -296,6 +301,7 @@
                 android:fontFamily="@font/noto_sans_medium"
                 android:hint="@string/hintWalletPasswordConfirm"
                 android:inputType="textPassword"
+                android:longClickable="false"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorText20"
                 android:textSize="14dp" />

@@ -100,11 +100,21 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
                     btnConfirm.setEnabled(true);
 
                     if (mType == TYPE_INPUT.ALIAS) {
-                        if (Utils.checkByteLength(s.toString()) > 16) {
-                            editText.setText(beforeStr);
-                            editText.setSelection(editText.getText().toString().length());
+                        if (s.toString().trim().isEmpty()) {
+                            editText.setText("");
                         } else {
-                            beforeStr = s.toString();
+                            if (Utils.checkByteLength(s.toString()) > 16) {
+                                editText.setText(beforeStr);
+                                editText.setSelection(editText.getText().toString().length());
+                            } else {
+                                beforeStr = s.toString();
+                            }
+                        }
+                    } else {
+                        if (s.charAt(s.length() - 1) == ' ') {
+                            editText.setText(s.subSequence(0, s.length() - 1));
+                            if (editText.getText().toString().length() > 0)
+                                editText.setSelection(editText.getText().toString().length());
                         }
                     }
                 } else {
