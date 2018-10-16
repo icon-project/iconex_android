@@ -33,6 +33,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import foundation.icon.iconex.MyConstants;
+import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
@@ -773,15 +774,17 @@ public class KeyStoreUtils {
 
         if (coinType.equals(Constants.KS_COINTYPE_ICX)) {
             newAddress = PKIUtils.makeAddress(publicKey);
+            return address.equals(newAddress);
         } else {
             newAddress = PKIUtils.makeEtherAddress(publicKey);
+            return Utils.checkPrefix(address).equals(Utils.checkPrefix(newAddress));
         }
 
-        System.out.println("KS validate address");
-        System.out.println("KS Address=" + address);
-        System.out.println("KS Recover address=" + newAddress);
+//        System.out.println("KS validate address");
+//        System.out.println("KS Address=" + address);
+//        System.out.println("KS Recover address=" + newAddress);
 
-        return address.equals(newAddress);
+//        return address.equals(newAddress);
     }
 
     public static boolean validatePassword(String pwd, JsonObject keyStore) {
