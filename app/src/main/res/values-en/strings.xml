@@ -207,6 +207,7 @@
     <string name="sendAmount">Transfer Amount (%s)</string>
     <string name="hintSendAmount">Enter transfer amount</string>
     <string name="toAddress">Receiving Address</string>
+    <string name="receivingAddress">Receiving Address</string>
     <string name="hintToAddress">Enter address</string>
     <string name="plus10">+10</string>
     <string name="plus100">+100</string>

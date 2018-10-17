@@ -124,7 +124,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                     int aliasValidate = checkAlias(editAlias.getText().toString());
                     switch (aliasValidate) {
                         case ALIAS_EMPTY:
-                            showWarning(lineAlias, txtAliasWarning, getString(R.string.errWhiteSpace));
+                            showWarning(lineAlias, txtAliasWarning, getString(R.string.errAliasEmpty));
                             break;
 
                         case ALIAS_DUP:
