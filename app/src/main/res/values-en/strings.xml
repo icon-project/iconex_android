@@ -62,7 +62,7 @@
     <string name="hintWalletAlias">Enter wallet name</string>
     <string name="hintCreateWalletPassword">At least 8 characters including letters, numbers, and special characters.</string>
     <string name="hintWalletPasswordConfirm">Confirm password</string>
-    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters.</string>
+    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )</string>
     <string name="step3Header">This Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
     <string name="step3Sub1">Use this Keystore file to load your wallet from other devices.</string>
     <string name="step3Sub2">You can download your Keystore file from the \"Backup wallet\" menu later.</string>
@@ -161,7 +161,7 @@
     <string name="noTransaction">No transaction history.</string>
     <string name="txID">Transaction ID</string>
     <string name="viewTxInfo">Check Tx</string>
-    <string name="infoTx">ICX transfer transactions not proceeded within 2 minutes will be cancelled automatically, restoring any transfer amount and transaction fees.</string>
+    <string name="infoTx">ICX transfer transactions not proceeded will be cancelled automatically, restoring any transfer amount and transaction fees.</string>
     <string name="txEther">ETH Transaction History</string>
     <string name="etherscan">Etherscan</string>
 
