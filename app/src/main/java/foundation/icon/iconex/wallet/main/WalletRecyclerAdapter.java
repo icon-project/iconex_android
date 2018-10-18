@@ -110,14 +110,6 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
 
         if (position == getItemCount() - 1)
             holder.line.setVisibility(View.INVISIBLE);
-
-        if (item.getType().equals(MyConstants.TYPE_TOKEN)) {
-            if (item.getContractAddress().equals(ercIcxAddr))
-                holder.btnSwap.setVisibility(View.VISIBLE);
-            else
-                holder.btnSwap.setVisibility(View.GONE);
-        }
-
     }
 
     // total number of rows
@@ -144,8 +136,6 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
             txtUnit = itemView.findViewById(R.id.txt_unit);
             txtTransBalance = itemView.findViewById(R.id.txt_trans_balance);
             txtTransUnit = itemView.findViewById(R.id.txt_trans_unit);
-            btnSwap = itemView.findViewById(R.id.btn_swap);
-            btnSwap.setOnClickListener(this);
 
             loadingBalance = itemView.findViewById(R.id.loading_balance);
             itemView.setOnClickListener(this);
@@ -158,12 +148,6 @@ public class WalletRecyclerAdapter extends RecyclerView.Adapter<WalletRecyclerAd
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.btn_swap:
-                    if (mClickListener != null)
-                        mClickListener.onRequestSwap(mWallet.getWalletEntries().get(0),
-                                mWallet.getWalletEntries().get(getAdapterPosition()));
-                    break;
-
                 default:
                     if (mClickListener != null) {
                         if (!mWallet.getWalletEntries().get(getAdapterPosition()).getBalance().isEmpty())

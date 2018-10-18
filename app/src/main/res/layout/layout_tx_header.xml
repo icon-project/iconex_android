@@ -117,33 +117,6 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/btn_swap"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@color/colorWhite20"
-            android:clickable="true"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_wallet_swap_white" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:fontFamily="@font/noto_sans_regular"
-                android:gravity="center"
-                android:text="@string/swap"
-                android:textColor="#ffffff"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/btn_withdraw"
             android:layout_width="0dp"
             android:layout_height="48dp"

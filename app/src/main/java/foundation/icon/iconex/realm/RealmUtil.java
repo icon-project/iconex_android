@@ -140,44 +140,9 @@ public class RealmUtil {
             }
         }
 
-        addICXToken(wallet.getCoinType(), realm, list, mWallet.getAddress(), mWallet.getCreateAt());
-
         realm.commitTransaction();
 
         realm.close();
-    }
-
-    private static void addICXToken(String coinType, Realm realm, RealmList<CoinNToken> list, String ownAddr, String createdAt) {
-        boolean isExist = false;
-        String contractAddr;
-        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
-            contractAddr = MyConstants.M_ERC_ICX_ADDR;
-        else
-            contractAddr = MyConstants.T_ERC_ICX_ADDR;
-
-        if (coinType.equals(Constants.KS_COINTYPE_ICX))
-            return;
-
-        for (CoinNToken entry : list) {
-            if (entry.getContractAddress().equals(contractAddr))
-                isExist = true;
-        }
-
-        if (!isExist) {
-            CoinNToken token = realm.createObject(CoinNToken.class);
-            token.setType(MyConstants.TYPE_TOKEN);
-            token.setAddress(ownAddr);
-            token.setContractAddress(contractAddr);
-            token.setName(MyConstants.NAME_ICX);
-            token.setUserName(MyConstants.NAME_ICX);
-            token.setSymbol(MyConstants.ICX_SYM);
-            token.setUserSymbol(MyConstants.ICX_SYM);
-            token.setDecimal(MyConstants.ICX_DEC);
-            token.setUserDecimal(MyConstants.ICX_DEC);
-            token.setCreateAt(createdAt);
-
-            list.add(token);
-        }
     }
 
     public static void overwriteWallet(String address, Wallet wallet) {

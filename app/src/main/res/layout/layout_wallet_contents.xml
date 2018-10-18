@@ -25,22 +25,6 @@
             android:textColor="@color/colorText"
             android:textSize="12sp" />
 
-        <Button
-            android:id="@+id/btn_swap"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="46dp"
-            android:layout_height="18dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@id/txt_name"
-            android:background="@drawable/bg_dark_rounded_9"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/swap"
-            android:textColor="@color/colorWhite"
-            android:textSize="11dp"
-            android:visibility="gone" />
-
         <ImageView
             android:id="@+id/btn_detail"
             android:layout_width="24dp"
