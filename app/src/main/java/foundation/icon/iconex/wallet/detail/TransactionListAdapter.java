@@ -146,14 +146,6 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 headerViewHolder.txtTransAsset.setText(MyConstants.NO_BALANCE);
             }
 
-            if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
-                if (entry.getContractAddress().equals(ercIcxAddr))
-                    ((HeaderViewHolder) holder).btnSwap.setVisibility(View.VISIBLE);
-                else
-                    ((HeaderViewHolder) holder).btnSwap.setVisibility(View.GONE);
-            }
-
-
             ((TextView) headerViewHolder.btnExchange.findViewById(R.id.txt_exchange)).setText(EXCHANGE);
             ((TextView) headerViewHolder.btnSelectCoin.findViewById(R.id.txt_selected_name)).setText(entry.getUserName());
             headerViewHolder.txtSymbol.setText(entry.getSymbol());
@@ -270,7 +262,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView txtSymbol;
         TextView txtAsset, txtTransAsset;
         ViewGroup btnExchange;
-        ViewGroup btnSwap, btnWithdraw, btnDeposit;
+        ViewGroup btnWithdraw, btnDeposit;
         ViewGroup btnInfo;
         ViewGroup btnSearchCondition;
 
@@ -290,8 +282,6 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             btnSelectCoin.setOnClickListener(this);
             btnExchange = itemView.findViewById(R.id.btn_select_exchange);
             btnExchange.setOnClickListener(this);
-            btnSwap = itemView.findViewById(R.id.btn_swap);
-            btnSwap.setOnClickListener(this);
             btnWithdraw = itemView.findViewById(R.id.btn_withdraw);
             btnWithdraw.setOnClickListener(this);
             btnDeposit = itemView.findViewById(R.id.btn_deposit);
@@ -321,11 +311,6 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 case R.id.btn_select_exchange:
                     if (mHeaderClickListener != null)
                         mHeaderClickListener.onSelectExchange();
-                    break;
-
-                case R.id.btn_swap:
-                    if (mHeaderClickListener != null)
-                        mHeaderClickListener.onSwap();
                     break;
 
                 case R.id.btn_withdraw:
