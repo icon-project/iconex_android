@@ -365,6 +365,7 @@
 
     <string name="authMsgRecoverFingerprintAuth">Unlock with fingerprint is disabled. Do you want to enable the function?</string>
 
+    <string name="errNoKeyguard">Please set screen lock from the Settings menu to use \"Unlock with fingerprint\" function.</string>
     <string name="errNoEnrolledFingerprint">Unable to identify your fingerprint. Please try again after registering on mobile settings.</string>
     <string name="errCheckLockNum">Passcodes do not match\nPlease check again</string>
     <string name="errCurrentLockNum">Please confirm your passcode</string>

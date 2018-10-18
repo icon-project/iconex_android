@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.CryptoUtil;
 import foundation.icon.iconex.util.PreferenceUtil;
@@ -25,7 +26,7 @@ public class AuthLockNumFragment extends Fragment implements View.OnClickListene
     private EditText editNum;
     private ImageView num1, num2, num3, num4, num5, num6;
 
-    private boolean isFingerprintInvalidated = false;
+    private MyConstants.FingerprintState isFingerprintInvalidated = MyConstants.FingerprintState.PASSCODE;
 
     public AuthLockNumFragment() {
         // Required empty public constructor
@@ -63,7 +64,7 @@ public class AuthLockNumFragment extends Fragment implements View.OnClickListene
 
                 if (s.length() == 6) {
                     if (validateLockNum(editNum.getText().toString())) {
-                        if (isFingerprintInvalidated)
+                        if (isFingerprintInvalidated == MyConstants.FingerprintState.INVALID)
                             mListener.onFingerprintInvalidated();
                         else
                             mListener.onLockNumUnlockSuccess();
@@ -284,8 +285,8 @@ public class AuthLockNumFragment extends Fragment implements View.OnClickListene
         return txt.equals(uuid);
     }
 
-    public void setInvalidated(boolean isInvalidated) {
-        isFingerprintInvalidated = isInvalidated;
+    public void setInvalidated(MyConstants.FingerprintState state) {
+        isFingerprintInvalidated = state;
     }
 
     private OnLockNumAuthListener mListener;
