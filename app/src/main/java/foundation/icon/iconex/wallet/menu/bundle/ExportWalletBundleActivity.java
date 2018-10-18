@@ -20,10 +20,10 @@ import java.util.Map;
 
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.NonSwipeViewPager;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
@@ -170,9 +170,6 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
 
     @Override
     public void onBackPressed() {
-        if (viewPager.getCurrentItem() == 0)
-            super.onBackPressed();
-        else
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+        finish();
     }
 }

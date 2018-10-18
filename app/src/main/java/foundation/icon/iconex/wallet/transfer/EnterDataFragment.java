@@ -188,7 +188,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                 layoutDelete.setVisibility(View.VISIBLE);
                 editData.setFocusable(false);
 
-                txtMod.setText(R.string.edit);
+                txtMod.setText(R.string.modified);
             }
         } else {
             txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
@@ -267,7 +267,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
 
             case R.id.btn_delete:
                 Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-                dialog.setMessage("데이터를 삭제하시겠습니까?");
+                dialog.setMessage(getString(R.string.msgDeleteData));
                 dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                     @Override
                     public void onOk() {
@@ -376,6 +376,8 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                             BasicDialog dialog = new BasicDialog(getActivity());
                             dialog.setMessage(getString(R.string.errIcxOwnNotEnough));
                             dialog.show();
+
+                            data.setData(null);
                         }
                     } else {
 
