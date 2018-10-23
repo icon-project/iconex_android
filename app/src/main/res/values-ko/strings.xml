@@ -275,6 +275,7 @@
     <string name="errOverByteLimit">입력 한도 %dKB를 초과합니다</string>
 
     <string name="msgDoneRequestTransfer">송금 요청이 완료되었습니다.</string>
+    <string name="errTransferFailed">오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
     <!-- Contacts -->
     <string name="contactsTitle">주소 선택</string>

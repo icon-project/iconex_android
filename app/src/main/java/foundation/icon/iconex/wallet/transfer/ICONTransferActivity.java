@@ -119,7 +119,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
             mService = binder.getService();
             mService.registerExchangeCallback(mExchangeCallback);
-            mService.registerRemCallback(mRemittanceCallback);
+            mService.registerRemCallback(mTransferCallback);
 
             if (mBound) {
                 mService.requestExchangeList(CODE_EXCHANGE);
@@ -159,22 +159,22 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         }
     };
 
-    private NetworkService.RemittanceCallback mRemittanceCallback = new NetworkService.RemittanceCallback() {
+    private NetworkService.TransferCallback mTransferCallback = new NetworkService.TransferCallback() {
         @Override
         public void onReceiveTransactionResult(String id, String txHash) {
 
             Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
-
             finish();
         }
 
         @Override
         public void onReceiveError(String address, int code) {
+            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onReceiveException(Throwable t) {
-
+            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
         }
     };
 
