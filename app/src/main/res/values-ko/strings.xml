@@ -120,7 +120,7 @@
     <string name="duplicateWalletAlias">같은 이름의 지갑이 이미 존재합니다.</string>
     <string name="duplicateWalletAddress">같은 주소의 지갑이 이미 존재합니다.</string>
     <string name="errAtLeast">8자 이상으로 입력해주세요.</string>
-    <string name="errPasswordPatternMatch">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
+    <string name="errPasswordPatternMatch">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
     <string name="errSerialChar">동일한 문자를 3자 이상 연속해서 입력할 수 없습니다.</string>
     <string name="errWhiteSpace">공백 없이 입력해주세요.</string>
     <string name="errPasswordNotMatched">비밀번호가 일치하지 않습니다.</string>
@@ -161,7 +161,7 @@
     <string name="noTransaction">거래 내역이 없습니다.</string>
     <string name="txID">거래 ID</string>
     <string name="viewTxInfo">거래 정보 확인</string>
-    <string name="infoTx">ICX 출금 신청 후 2분 내에 처리되지 않은 거래는 자동 취소되며 출금액과 수수료는 모두 복구됩니다.</string>
+    <string name="infoTx">ICX 출금 신청 후 처리되지 않은 거래는 자동 취소되며 출금액과 수수료는 모두 복구됩니다.</string>
     <string name="txEther">이더리움 거래 내역</string>
     <string name="etherscan">Etherscan</string>
 
@@ -321,7 +321,7 @@
 
     <!-- Export bundle -->
     <string name="titleExportBundle">지갑 묶어서 내보내기</string>
-    <string name="headerExportBundle">어서 내보낼 지갑들을 선택해주세요. 선택한 지갑마다 지갑별 비밀번호 확인이 필요합니다.</string>
+    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요. 선택한 지갑마다 지갑별 비밀번호 확인이 필요합니다.</string>
     <string name="exportBundleDetailed1">지갑 묶어서 내보내기는 선택한 지갑 파일을 묶어서 하나의 파일로 백업하는 기능입니다.</string>
     <string name="exportBundleEdtailed2">지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 경우 지갑 백업파일이 필요합니다.</string>
     <string name="countSelectedWallet">%d 개 지갑 선택</string>

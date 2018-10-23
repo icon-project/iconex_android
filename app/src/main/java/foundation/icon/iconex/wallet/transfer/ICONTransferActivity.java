@@ -305,6 +305,8 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                         lineSend.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
                         lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
+
+                    setRemain(editSend.getText().toString());
                 }
             }
 
@@ -805,7 +807,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     isNegative = false;
                 }
             } else {
-                remain = balance.subtract(fee);
+                remain = balance;
                 isNegative = false;
             }
         } else {

@@ -20,13 +20,13 @@ import android.widget.TextView;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.PasswordValidator;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static foundation.icon.iconex.control.PasswordValidator.checkPasswordMatch;
+import static foundation.icon.iconex.util.PasswordValidator.checkPasswordMatch;
 
 public class LoadInputWalletInfoFragment extends Fragment implements View.OnClickListener {
 

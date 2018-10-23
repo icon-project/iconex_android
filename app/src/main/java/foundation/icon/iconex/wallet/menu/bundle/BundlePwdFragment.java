@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.PasswordValidator;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.widgets.MyEditText;
 
