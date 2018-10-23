@@ -25,7 +25,7 @@ import java.io.Serializable;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.PasswordValidator;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.wallet.Wallet;

@@ -120,7 +120,7 @@
     <string name="duplicateWalletAlias">This wallet name already exists.</string>
     <string name="duplicateWalletAddress">This wallet account already exists.</string>
     <string name="errAtLeast">Password must contain at least 8 characters.</string>
-    <string name="errPasswordPatternMatch">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )</string>
+    <string name="errPasswordPatternMatch">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
     <string name="errSerialChar">Password must not have more than 2 consecutive identical characters.</string>
     <string name="errWhiteSpace">Please do not leave blank.</string>
     <string name="errPasswordNotMatched">Passwords do not match. Please check again.</string>

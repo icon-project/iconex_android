@@ -1,4 +1,4 @@
-package foundation.icon.iconex.control;
+package foundation.icon.iconex.util;
 
 import foundation.icon.iconex.MyConstants;
 
@@ -20,21 +20,20 @@ public class PasswordValidator {
         if (pwd.isEmpty())
             return EMPTY;
 
-        if (pwd.length() < 8) {
+        if (pwd.length() < 8)
             return LEAST_8;
-        }
 
-        if (pwd.contains(" ")) {
+        if (pwd.contains(" "))
             return HAS_WHITE_SPACE;
-        }
 
-        if (!pwd.matches(MyConstants.PATTERN_PASSWORD)) {
+        if (!pwd.matches(MyConstants.PATTERN_PASSWORD))
             return NOT_MATCH_PATTERN;
-        }
 
-        if (!passwordPatternValidate(pwd)) {
+        if (pwd.contains(";"))
+            return NOT_MATCH_PATTERN;
+
+        if (!passwordPatternValidate(pwd))
             return SERIAL_CHAR;
-        }
 
         return OK;
     }
