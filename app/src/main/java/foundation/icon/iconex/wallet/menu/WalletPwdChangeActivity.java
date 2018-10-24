@@ -446,7 +446,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
             line.setBackgroundColor(getResources().getColor(R.color.editNormal));
         }
 
-        txtView.setVisibility(View.INVISIBLE);
+        txtView.setVisibility(View.GONE);
     }
 
     private boolean validateCurrentPwd(String pwd) {

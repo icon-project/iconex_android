@@ -178,7 +178,7 @@
                 android:text="@string/duplicateWalletAlias"
                 android:textColor="@color/colorWarning"
                 android:textSize="10sp"
-                android:visibility="invisible" />
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -256,7 +256,7 @@
                 android:text="@string/errPassword"
                 android:textColor="@color/colorWarning"
                 android:textSize="10sp"
-                android:visibility="invisible" />
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -335,7 +335,7 @@
                 android:text="@string/errPassword"
                 android:textColor="@color/colorWarning"
                 android:textSize="10sp"
-                android:visibility="invisible" />
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

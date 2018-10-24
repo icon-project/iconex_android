@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.widgets.MyEditText;
 
 public class BundlePwdFragment extends Fragment implements View.OnClickListener {
@@ -107,7 +107,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                     btnPwdDel.setVisibility(View.VISIBLE);
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
-                    txtPwdWarning.setVisibility(View.INVISIBLE);
+                    txtPwdWarning.setVisibility(View.GONE);
                     if (editPwd.isFocused())
                         linePwd.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -164,7 +164,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                     btnCheckDel.setVisibility(View.VISIBLE);
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
-                    txtCheckWarning.setVisibility(View.INVISIBLE);
+                    txtCheckWarning.setVisibility(View.GONE);
                     if (editCheck.isFocused())
                         lineCheck.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -331,7 +331,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
     }
 
     private void hideWarning(MyEditText edit, View line, TextView txtView) {
-        txtView.setVisibility(View.INVISIBLE);
+        txtView.setVisibility(View.GONE);
         if (edit.isFocused())
             line.setBackgroundColor(getResources().getColor(R.color.editActivated));
         else
@@ -366,8 +366,8 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
         if ((pwdResult == PasswordValidator.OK)
                 && checkResult) {
             btnExport.setEnabled(true);
-            txtPwdWarning.setVisibility(View.INVISIBLE);
-            txtCheckWarning.setVisibility(View.INVISIBLE);
+            txtPwdWarning.setVisibility(View.GONE);
+            txtCheckWarning.setVisibility(View.GONE);
         } else {
             btnExport.setEnabled(false);
         }

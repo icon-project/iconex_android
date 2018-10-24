@@ -324,8 +324,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                     }
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
-
-                    txtCheckWarnig.setVisibility(View.INVISIBLE);
+                    txtCheckWarnig.setVisibility(View.GONE);
                     if (editCheck.isFocused())
                         lineCheck.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -564,9 +563,9 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
         lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-        txtAliasWarning.setVisibility(View.INVISIBLE);
-        txtPwdWarning.setVisibility(View.INVISIBLE);
-        txtCheckWarnig.setVisibility(View.INVISIBLE);
+        txtAliasWarning.setVisibility(View.GONE);
+        txtPwdWarning.setVisibility(View.GONE);
+        txtCheckWarnig.setVisibility(View.GONE);
 
         progress.setVisibility(View.GONE);
         btnNext.setEnabled(false);
