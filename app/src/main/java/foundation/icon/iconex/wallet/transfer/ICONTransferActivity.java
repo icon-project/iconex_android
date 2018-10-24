@@ -35,6 +35,7 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
+import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
@@ -119,7 +120,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
             mService = binder.getService();
             mService.registerExchangeCallback(mExchangeCallback);
-            mService.registerRemCallback(mRemittanceCallback);
+            mService.registerRemCallback(mTransferCallback);
 
             if (mBound) {
                 mService.requestExchangeList(CODE_EXCHANGE);
@@ -159,22 +160,22 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         }
     };
 
-    private NetworkService.RemittanceCallback mRemittanceCallback = new NetworkService.RemittanceCallback() {
+    private NetworkService.TransferCallback mTransferCallback = new NetworkService.TransferCallback() {
         @Override
         public void onReceiveTransactionResult(String id, String txHash) {
 
             Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
-
             finish();
         }
 
         @Override
         public void onReceiveError(String address, int code) {
+            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onReceiveException(Throwable t) {
-
+            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -769,6 +770,12 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                                     .dataTo(editAddress.getText().toString())
                                     .build();
                         }
+
+//                        RecentSendInfo pending = new RecentSendInfo();
+//                        pending.setAmount(editSend.getText().toString());
+//                        pending.setDate(timestamp);
+//                        pending.setSymbol(mWalletEntry.getSymbol());
+//                        pending.
 
                         mService.requestICXTransaction(tx);
                     }

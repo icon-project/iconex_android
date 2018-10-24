@@ -276,6 +276,7 @@
     <string name="errOverByteLimit">This exceeds input limit %dKB</string>
 
     <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
+    <string name="errTransferFailed">Error occurred.\nPlease try again.</string>
 
     <!-- Contacts -->
     <string name="contactsTitle">Select Address</string>

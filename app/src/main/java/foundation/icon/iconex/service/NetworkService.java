@@ -448,14 +448,14 @@ public class NetworkService extends Service {
                     if (response.isSuccessful()) {
                         if (response.errorBody() == null) {
                             String txHash = response.body().getResult().getAsString();
-                            mRemCallback.onReceiveTransactionResult(Integer.toString(tx.getId()), txHash);
+                            mTransferCallback.onReceiveTransactionResult(Integer.toString(tx.getId()), txHash);
                         } else {
                             int resCode = response.body().getResult().getAsJsonObject().get("error").getAsJsonObject().get("code").getAsInt();
-                            mRemCallback.onReceiveError(tx.getFrom(), resCode);
+                            mTransferCallback.onReceiveError(tx.getFrom(), resCode);
                         }
                     } else {
                         Log.d(TAG, response.raw().request().body().toString());
-                        mRemCallback.onReceiveError(tx.getFrom(), 9999);
+                        mTransferCallback.onReceiveError(tx.getFrom(), 9999);
                     }
                 }
 
@@ -497,13 +497,13 @@ public class NetworkService extends Service {
 //                            if (response.isSuccessful()) {
 //                                if (response.errorBody() == null) {
 //                                    String txHash = response.body().getResult().getAsString();
-//                                    mRemCallback.onReceiveTransactionResult(Integer.toString(id), txHash);
+//                                    mTransferCallback.onReceiveTransactionResult(Integer.toString(id), txHash);
 //                                } else {
 //                                    int resCode = response.body().getResult().getAsJsonObject().get("error").getAsJsonObject().get("code").getAsInt();
-//                                    mRemCallback.onReceiveError(from, resCode);
+//                                    mTransferCallback.onReceiveError(from, resCode);
 //                                }
 //                            } else {
-//                                mRemCallback.onReceiveError(from, 9999);
+//                                mTransferCallback.onReceiveError(from, 9999);
 //                            }
 //                        }
 //
@@ -514,7 +514,7 @@ public class NetworkService extends Service {
 //                    });
 //                } catch (Exception e) {
 //                    e.printStackTrace();
-//                    mRemCallback.onReceiveException(e);
+//                    mTransferCallback.onReceiveException(e);
 //                }
 //            }
 //        }).start();
@@ -533,7 +533,7 @@ public class NetworkService extends Service {
     private BalanceCallback mBalanceCallback;
     private TxListCallback mTxListCallback;
     private ExchangeCallback mExchangeCallback;
-    private RemittanceCallback mRemCallback;
+    private TransferCallback mTransferCallback;
 
     public void registerBalanceCallback(BalanceCallback callback) {
         mBalanceCallback = callback;
@@ -547,8 +547,8 @@ public class NetworkService extends Service {
         mExchangeCallback = callback;
     }
 
-    public void registerRemCallback(RemittanceCallback callback) {
-        mRemCallback = callback;
+    public void registerRemCallback(TransferCallback callback) {
+        mTransferCallback = callback;
     }
 
     public interface BalanceCallback {
@@ -577,7 +577,7 @@ public class NetworkService extends Service {
         void onReceiveException(Throwable t);
     }
 
-    public interface RemittanceCallback {
+    public interface TransferCallback {
         void onReceiveTransactionResult(String id, String txHash);
 
         void onReceiveError(String address, int code);
@@ -678,9 +678,9 @@ public class NetworkService extends Service {
             super.onPostExecute(result);
 
 //            if (result != null) {
-//                mRemCallback.onReceiveTransactionResult(result[0], result[1]);
+//                mTransferCallback.onReceiveTransactionResult(result[0], result[1]);
 //            } else {
-//                mRemCallback.onReceiveError("ETHTransfer", 9999);
+//                mTransferCallback.onReceiveError("ETHTransfer", 9999);
 //            }
         }
     }
@@ -772,9 +772,9 @@ public class NetworkService extends Service {
             super.onPostExecute(results);
 
 //            if (results != null) {
-//                mRemCallback.onReceiveTransactionResult(results[0], results[1]);
+//                mTransferCallback.onReceiveTransactionResult(results[0], results[1]);
 //            } else {
-//                mRemCallback.onReceiveError("TokenTransfer", 8888);
+//                mTransferCallback.onReceiveError("TokenTransfer", 8888);
 //            }
         }
     }
