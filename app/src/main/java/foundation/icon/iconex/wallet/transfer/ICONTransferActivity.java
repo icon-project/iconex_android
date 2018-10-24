@@ -35,6 +35,7 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
+import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
@@ -769,6 +770,12 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                                     .dataTo(editAddress.getText().toString())
                                     .build();
                         }
+
+//                        RecentSendInfo pending = new RecentSendInfo();
+//                        pending.setAmount(editSend.getText().toString());
+//                        pending.setDate(timestamp);
+//                        pending.setSymbol(mWalletEntry.getSymbol());
+//                        pending.
 
                         mService.requestICXTransaction(tx);
                     }
