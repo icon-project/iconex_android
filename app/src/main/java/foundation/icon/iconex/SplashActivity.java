@@ -123,10 +123,15 @@ public class SplashActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             if (ICONexApp.useFingerprint) {
                 FingerprintAuthBuilder builder = new FingerprintAuthBuilder(SplashActivity.this);
-                boolean hasKey = builder.hasKey();
 
-                if (!hasKey)
+                try {
+                    boolean hasKey = builder.hasKey();
+
+                    if (!hasKey)
+                        builder.createKey(FingerprintAuthBuilder.DEFAULT_KEY_NAME, true);
+                } catch (Exception e) {
                     builder.createKey(FingerprintAuthBuilder.DEFAULT_KEY_NAME, true);
+                }
             }
 
             return null;

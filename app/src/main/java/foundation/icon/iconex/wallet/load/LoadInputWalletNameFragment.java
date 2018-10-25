@@ -81,14 +81,18 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(beforeStr);
-                        editAlias.setSelection(editAlias.getText().toString().length());
+                    if (s.toString().trim().isEmpty()) {
+                        editAlias.setText("");
                     } else {
-                        beforeStr = s.toString();
-                    }
+                        if (Utils.checkByteLength(s.toString()) > 16) {
+                            editAlias.setText(beforeStr);
+                            editAlias.setSelection(editAlias.getText().toString().length());
+                        } else {
+                            beforeStr = s.toString();
+                        }
 
-                    btnNameDelete.setVisibility(View.VISIBLE);
+                        btnNameDelete.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     if (editAlias.isFocused())
                         lineName.setBackgroundColor(getActivity().getResources().getColor(R.color.editActivated));
@@ -173,6 +177,7 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
 
         lineName = v.findViewById(R.id.line_name);
         txtNameWarning = v.findViewById(R.id.txt_name_warning);
+        txtNameWarning.setVisibility(View.INVISIBLE);
         btnNameDelete = v.findViewById(R.id.btn_name_delete);
         btnNameDelete.setOnClickListener(this);
 

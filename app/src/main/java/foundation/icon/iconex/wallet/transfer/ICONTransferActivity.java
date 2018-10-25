@@ -25,8 +25,6 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.JsonObject;
 
-import org.spongycastle.util.encoders.Hex;
-
 import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Map;
@@ -37,6 +35,7 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
+import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
@@ -121,7 +120,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
             mService = binder.getService();
             mService.registerExchangeCallback(mExchangeCallback);
-            mService.registerRemCallback(mRemittanceCallback);
+            mService.registerRemCallback(mTransferCallback);
 
             if (mBound) {
                 mService.requestExchangeList(CODE_EXCHANGE);
@@ -161,22 +160,22 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         }
     };
 
-    private NetworkService.RemittanceCallback mRemittanceCallback = new NetworkService.RemittanceCallback() {
+    private NetworkService.TransferCallback mTransferCallback = new NetworkService.TransferCallback() {
         @Override
         public void onReceiveTransactionResult(String id, String txHash) {
 
             Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
-
             finish();
         }
 
         @Override
         public void onReceiveError(String address, int code) {
+            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onReceiveException(Throwable t) {
-
+            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -291,10 +290,10 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                             txtTransSend.setText(String.format("%s USD", strTransUSD));
                         }
 
-                        if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
-                            getIrcStepLimit();
-                            editLimit.setText(minStep.toString());
-                        }
+//                        if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
+//                            getIrcStepLimit();
+//                            editLimit.setText(minStep.toString());
+//                        }
                         setRemain(amount);
                     }
                 } else {
@@ -307,6 +306,8 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                         lineSend.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
                         lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
+
+                    setRemain(editSend.getText().toString());
                 }
             }
 
@@ -593,6 +594,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         Intent intent;
+        String message;
         BasicDialog info = new BasicDialog(this);
 
         switch (v.getId()) {
@@ -692,6 +694,8 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.info_step_price:
+                message = getString(R.string.msgStepPrice);
+                info = new BasicDialog(this, BasicDialog.TYPE.SUPER, message.indexOf("-"), message.indexOf("-") + 3);
                 info.setMessage(getString(R.string.msgStepPrice));
                 info.show();
                 break;
@@ -767,6 +771,12 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                                     .build();
                         }
 
+//                        RecentSendInfo pending = new RecentSendInfo();
+//                        pending.setAmount(editSend.getText().toString());
+//                        pending.setDate(timestamp);
+//                        pending.setSymbol(mWalletEntry.getSymbol());
+//                        pending.
+
                         mService.requestICXTransaction(tx);
                     }
                 });
@@ -804,7 +814,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     isNegative = false;
                 }
             } else {
-                remain = balance.subtract(fee);
+                remain = balance;
                 isNegative = false;
             }
         } else {
@@ -1043,14 +1053,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private byte[] makeTbs(String fee, String from, String timestamp, String to, String value, String nonce) {
-        String tbs = Constants.METHOD_SENDTRANSACTION + ".fee." + fee + ".from." + from;
-        if (nonce != null)
-            tbs = tbs + ".nonce." + nonce;
-        tbs = tbs + ".timestamp." + timestamp + ".to." + to + ".value." + value;
-        return tbs.getBytes();
-    }
-
     public String getTxHash(byte[] _tbs) {
         try {
             byte[] hash = PKIUtils.hash(_tbs, PKIUtils.ALGORITHM_HASH);
@@ -1064,20 +1066,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     protected String getTimeStamp() {
         long time = System.currentTimeMillis() * 1000;
         return "0x" + Long.toHexString(time);
-    }
-
-    private String findContactName(String address) {
-        for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-            if (address.equals(ICONexApp.mWallets.get(i).getAddress()))
-                return ICONexApp.mWallets.get(i).getAlias();
-        }
-
-        for (int j = 0; j < ICONexApp.ICXContacts.size(); j++) {
-            if (address.equals(ICONexApp.ICXContacts.get(j).getAddress()))
-                return ICONexApp.ICXContacts.get(j).getName();
-        }
-
-        return null;
     }
 
     private void getStepPrice() {
@@ -1149,7 +1137,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     }
 
                     if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN))
-                        minStep = defaultLimit.add(contractCall).multiply(BigInteger.valueOf(2));
+                        minStep = defaultLimit.multiply(BigInteger.valueOf(2));
                     else
                         minStep = defaultLimit;
 
@@ -1198,29 +1186,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void getIrcStepLimit() {
-        if (!editSend.getText().toString().isEmpty()) {
-            String address = mWallet.getAddress();
-            String value = ConvertUtil.valueToHexString(editSend.getText().toString(), mWalletEntry.getDefaultDec());
-
-            JsonObject data = new JsonObject();
-            data.addProperty("method", "transfer");
-            JsonObject params = new JsonObject();
-            params.addProperty("_to", address);
-            params.addProperty("_value", value);
-            data.add("params", params);
-
-            int byteLength = Hex.encode(data.toString().getBytes()).length;
-
-            minStep = defaultLimit
-                    .add(contractCall)
-                    .add(inputPrice.multiply(BigInteger.valueOf(byteLength)))
-                    .multiply(BigInteger.valueOf(2));
-
-            Log.d(TAG, "minStep=" + minStep.toString());
-        }
-    }
-
     @Override
     public void onSetData(InputData data) {
         this.data = data;
@@ -1240,7 +1205,23 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onDataCancel() {
+    public void onDataCancel(InputData data) {
+        if (data.getData() == null)
+            this.data = null;
+
+        fragmentManager.popBackStackImmediate();
+    }
+
+    @Override
+    public void onDataDelete() {
+        this.data = null;
+
+        btnInput.setText(R.string.input);
+        btnInput.setSelected(false);
+
+        minStep = defaultLimit;
+        editLimit.setText(minStep.toString());
+
         fragmentManager.popBackStackImmediate();
     }
 
@@ -1262,8 +1243,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 } else {
                     Log.d(TAG, "No barcode captured, intent data is null");
                 }
-            } else {
-
             }
         }
     }

@@ -25,7 +25,7 @@ import java.io.Serializable;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.PasswordValidator;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.wallet.Wallet;
@@ -117,6 +117,11 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnOldDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editOldPwd.setText(s.subSequence(0, s.length() - 1));
+                        if (editOldPwd.getText().toString().length() > 0)
+                            editOldPwd.setSelection(editOldPwd.getText().toString().length());
+                    }
                 } else {
                     btnOldDel.setVisibility(View.INVISIBLE);
                     hideWarning(editOldPwd, lineOld, txtOldWarning);
@@ -195,6 +200,11 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnPwdDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editPwd.setText(s.subSequence(0, s.length() - 1));
+                        if (editPwd.getText().toString().length() > 0)
+                            editPwd.setSelection(editPwd.getText().toString().length());
+                    }
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
                     hideWarning(editPwd, linePwd, txtPwdWarning);
@@ -262,6 +272,11 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnCheckDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editCheck.setText(s.subSequence(0, s.length() - 1));
+                        if (editCheck.getText().toString().length() > 0)
+                            editCheck.setSelection(editCheck.getText().toString().length());
+                    }
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
                     hideWarning(editCheck, lineCheck, txtCheckWarnig);
@@ -431,7 +446,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
             line.setBackgroundColor(getResources().getColor(R.color.editNormal));
         }
 
-        txtView.setVisibility(View.INVISIBLE);
+        txtView.setVisibility(View.GONE);
     }
 
     private boolean validateCurrentPwd(String pwd) {

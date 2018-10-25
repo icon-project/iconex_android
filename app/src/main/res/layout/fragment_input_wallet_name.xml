@@ -50,6 +50,7 @@
 
         <foundation.icon.iconex.widgets.MyEditText
             android:id="@+id/edit_name"
+            style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/line_name"
@@ -61,6 +62,7 @@
             android:fontFamily="@font/noto_sans_medium"
             android:hint="@string/hintWalletAlias"
             android:imeOptions="actionDone"
+            android:longClickable="false"
             android:singleLine="true"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorText20"

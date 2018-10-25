@@ -159,5 +159,6 @@ public class PreferenceUtil {
         ICONexApp.useFingerprint = getUseFingerprint();
         ICONexApp.language = getLanguage();
 //        ICONexApp.network = getNetwork();
+        ICONexApp.network = MyConstants.NETWORK_MAIN;
     }
 }

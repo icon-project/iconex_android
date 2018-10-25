@@ -20,13 +20,13 @@ import android.widget.TextView;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.PasswordValidator;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static foundation.icon.iconex.control.PasswordValidator.checkPasswordMatch;
+import static foundation.icon.iconex.util.PasswordValidator.checkPasswordMatch;
 
 public class LoadInputWalletInfoFragment extends Fragment implements View.OnClickListener {
 
@@ -113,16 +113,20 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    btnAliasDel.setVisibility(View.VISIBLE);
-                    if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(beforeStr);
-                        editAlias.setSelection(editAlias.getText().toString().length());
+                    if (s.toString().trim().isEmpty()) {
+                        editAlias.setText("");
                     } else {
-                        beforeStr = s.toString();
+                        btnAliasDel.setVisibility(View.VISIBLE);
+                        if (Utils.checkByteLength(s.toString()) > 16) {
+                            editAlias.setText(beforeStr);
+                            editAlias.setSelection(editAlias.getText().toString().length());
+                        } else {
+                            beforeStr = s.toString();
+                        }
                     }
                 } else {
                     btnAliasDel.setVisibility(View.INVISIBLE);
-                    txtAliasWarning.setVisibility(View.INVISIBLE);
+                    txtAliasWarning.setVisibility(View.GONE);
                     if (editAlias.isFocused())
                         lineAlias.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -202,9 +206,14 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnPwdDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editPwd.setText(s.subSequence(0, s.length() - 1));
+                        if (editPwd.getText().toString().length() > 0)
+                            editPwd.setSelection(editPwd.getText().toString().length());
+                    }
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
-                    txtPwdWarning.setVisibility(View.INVISIBLE);
+                    txtPwdWarning.setVisibility(View.GONE);
                     if (editPwd.isFocused())
                         linePwd.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -273,9 +282,14 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnCheckDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editCheck.setText(s.subSequence(0, s.length() - 1));
+                        if (editCheck.getText().toString().length() > 0)
+                            editCheck.setSelection(editCheck.getText().toString().length());
+                    }
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
-                    txtCheckWarnig.setVisibility(View.INVISIBLE);
+                    txtCheckWarnig.setVisibility(View.GONE);
                     if (editCheck.isFocused())
                         lineCheck.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -302,8 +316,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         });
 
         txtAliasWarning = v.findViewById(R.id.txt_alias_warning);
+        txtAliasWarning.setVisibility(View.GONE);
         txtPwdWarning = v.findViewById(R.id.txt_pwd_warning);
+        txtPwdWarning.setVisibility(View.GONE);
         txtCheckWarnig = v.findViewById(R.id.txt_check_warning);
+        txtCheckWarnig.setVisibility(View.GONE);
 
         lineAlias = v.findViewById(R.id.line_alias);
         linePwd = v.findViewById(R.id.line_pwd);
@@ -433,7 +450,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             line.setBackgroundColor(getResources().getColor(R.color.editNormal));
         }
 
-        txtView.setVisibility(View.INVISIBLE);
+        txtView.setVisibility(View.GONE);
     }
 
     private int checkAlias(String target) {
@@ -510,9 +527,9 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         editPwd.setText("");
         editCheck.setText("");
 
-        txtAliasWarning.setVisibility(View.INVISIBLE);
-        txtPwdWarning.setVisibility(View.INVISIBLE);
-        txtCheckWarnig.setVisibility(View.INVISIBLE);
+        txtAliasWarning.setVisibility(View.GONE);
+        txtPwdWarning.setVisibility(View.GONE);
+        txtCheckWarnig.setVisibility(View.GONE);
     }
 
     public interface OnInputWalletInfoListener {

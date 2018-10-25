@@ -107,12 +107,6 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
         if (position == getItemCount() - 1)
             holder.line.setVisibility(View.INVISIBLE);
-
-        if (mItem.equals(MyConstants.TYPE_TOKEN)
-                && mItem.getContractAddr().equals(ercIcxAddr))
-            holder.btnSwap.setVisibility(View.VISIBLE);
-        else
-            holder.btnSwap.setVisibility(View.GONE);
     }
 
     @Override
@@ -174,9 +168,6 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
             txtTransBalance = itemView.findViewById(R.id.txt_trans_balance);
             txtTransUnit = itemView.findViewById(R.id.txt_trans_unit);
 
-            btnSwap = itemView.findViewById(R.id.btn_swap);
-            btnSwap.setOnClickListener(this);
-
             line = itemView.findViewById(R.id.line_view);
 
             loadingBalance = itemView.findViewById(R.id.loading_balance);
@@ -187,13 +178,8 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.btn_swap) {
-                if (mClickListener != null)
-                    mClickListener.onRequestSwap(mData.get(getAdapterPosition()));
-            } else {
-                if (mClickListener != null) {
-                    mClickListener.onWalletClick(mData.get(getAdapterPosition()), mSymbol);
-                }
+            if (mClickListener != null) {
+                mClickListener.onWalletClick(mData.get(getAdapterPosition()), mSymbol);
             }
         }
     }

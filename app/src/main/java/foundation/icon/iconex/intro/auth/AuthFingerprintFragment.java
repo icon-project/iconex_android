@@ -1,6 +1,7 @@
 package foundation.icon.iconex.intro.auth;
 
 import android.annotation.TargetApi;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.hardware.fingerprint.FingerprintManager;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
@@ -26,6 +28,8 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
 
     private TextView txtHelper;
     private ViewGroup btnLockNum;
+
+    private KeyguardManager keyguardManager;
 
     private FingerprintManager fm;
     private FingerprintAuthBuilder fab;
@@ -56,11 +60,11 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
         btnLockNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onByLockNum(false);
+                mListener.onByLockNum(MyConstants.FingerprintState.PASSCODE);
             }
         });
 
-        fm = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
+        keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
 
         return v;
     }
@@ -69,26 +73,65 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
     public void onResume() {
         super.onResume();
 
-        fab = new FingerprintAuthBuilder(getActivity());
-//        fab.createKey(FingerprintAuthBuilder.DEFAULT_KEY_NAME, true);
+        BasicDialog dialog = new BasicDialog(getActivity());
 
-        try {
-            if (fab.initCipher(fab.defaultCipher, fab.DEFAULT_KEY_NAME)) {
-                helper = new FingerprintAuthHelper(fm, this);
-                helper.startFingerprintAuthListening(new FingerprintManager.CryptoObject(fab.defaultCipher));
-            } else {
-
+        if (!keyguardManager.isKeyguardSecure()) {
+            if (!dialog.isShowing()) {
+                dialog = new BasicDialog(getActivity());
+                dialog.setMessage(getString(R.string.errNoKeyguard));
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mListener.onByLockNum(MyConstants.FingerprintState.DISABLED);
+                    }
+                });
+                dialog.show();
             }
-        } catch (Exception e) {
-            BasicDialog dialog = new BasicDialog(getActivity());
-            dialog.setMessage(getString(R.string.errInvalidatedByBiometricEnrollment));
-            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    mListener.onByLockNum(true);
+        } else {
+            fab = new FingerprintAuthBuilder(getActivity());
+            fm = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
+
+            try {
+                if (fab.initCipher(fab.defaultCipher, fab.DEFAULT_KEY_NAME)) {
+                    helper = new FingerprintAuthHelper(fm, this);
+                    if (helper.isFingerprintAuthAvailable())
+                        helper.startFingerprintAuthListening(new FingerprintManager.CryptoObject(fab.defaultCipher));
+                    else {
+                        if (!dialog.isShowing()) {
+                            dialog.setMessage(getString(R.string.errNoEnrolledFingerprint));
+                            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    mListener.onByLockNum(MyConstants.FingerprintState.NO_ENROLLED);
+                                }
+                            });
+                            dialog.show();
+                        }
+                    }
+                } else {
+                    if (!dialog.isShowing()) {
+                        dialog.setMessage(getString(R.string.errInvalidatedByBiometricEnrollment));
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                mListener.onByLockNum(MyConstants.FingerprintState.INVALID);
+                            }
+                        });
+                        dialog.show();
+                    }
                 }
-            });
-            dialog.show();
+            } catch (Exception e) {
+                if (!dialog.isShowing()) {
+                    dialog.setMessage(getString(R.string.errInvalidatedByBiometricEnrollment));
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            mListener.onByLockNum(MyConstants.FingerprintState.INVALID);
+                        }
+                    });
+                    dialog.show();
+                }
+            }
         }
     }
 
@@ -132,7 +175,7 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
     public void onError(int errMsgId, String error) {
         Log.d(TAG, "onError : errorMsgId=" + errMsgId + ", " + "ErrorString=" + error);
         helper.stopFingerprintAuthListening();
-        mListener.onByLockNum(false);
+        mListener.onByLockNum(MyConstants.FingerprintState.PASSCODE);
     }
 
     public interface OnFingerprintLockListener {
@@ -140,6 +183,6 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
 
         void onFingerprintFailed();
 
-        void onByLockNum(boolean isInvalidated);
+        void onByLockNum(MyConstants.FingerprintState state);
     }
 }

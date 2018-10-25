@@ -19,6 +19,8 @@
     <string name="retry">RETRY</string>
     <string name="view">View</string>
     <string name="input">Add</string>
+    <string name="delete">Delete</string>
+    <string name="modified">Edit</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -61,7 +63,7 @@
     <string name="hintWalletAlias">Enter wallet name</string>
     <string name="hintCreateWalletPassword">At least 8 characters including letters, numbers, and special characters.</string>
     <string name="hintWalletPasswordConfirm">Confirm password</string>
-    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters.</string>
+    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )</string>
     <string name="step3Header">This Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
     <string name="step3Sub1">Use this Keystore file to load your wallet from other devices.</string>
     <string name="step3Sub2">You can download your Keystore file from the \"Backup wallet\" menu later.</string>
@@ -118,7 +120,7 @@
     <string name="duplicateWalletAlias">This wallet name already exists.</string>
     <string name="duplicateWalletAddress">This wallet account already exists.</string>
     <string name="errAtLeast">Password must contain at least 8 characters.</string>
-    <string name="errPasswordPatternMatch">Password must contain a combination of letters, numbers, and special characters.</string>
+    <string name="errPasswordPatternMatch">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
     <string name="errSerialChar">Password must not have more than 2 consecutive identical characters.</string>
     <string name="errWhiteSpace">Please do not leave blank.</string>
     <string name="errPasswordNotMatched">Passwords do not match. Please check again.</string>
@@ -160,7 +162,7 @@
     <string name="noTransaction">No transaction history.</string>
     <string name="txID">Transaction ID</string>
     <string name="viewTxInfo">Check Tx</string>
-    <string name="infoTx">ICX transfer transactions not proceeded within 2 minutes will be cancelled automatically, restoring any transfer amount and transaction fees.</string>
+    <string name="infoTx">ICX transfer transactions not proceeded will be cancelled automatically, restoring any transfer amount and transaction fees.</string>
     <string name="txEther">ETH Transaction History</string>
     <string name="etherscan">Etherscan</string>
 
@@ -206,6 +208,7 @@
     <string name="sendAmount">Transfer Amount (%s)</string>
     <string name="hintSendAmount">Enter transfer amount</string>
     <string name="toAddress">Receiving Address</string>
+    <string name="receivingAddress">Receiving Address</string>
     <string name="hintToAddress">Enter address</string>
     <string name="plus10">+10</string>
     <string name="plus100">+100</string>
@@ -258,13 +261,14 @@
     <string name="fast">Fast</string>
 
     <string name="msgStepLimit">Step limit is the amount of step to send with your transaction. Unnecessary step is refunded to you at the end of transaction. In other words, you can set the maximum amount of step but the actual step consumption is not fixed.</string>
-    <string name="msgStepPrice">Step price is the amount you pay per unit of step.\nStep price is paid in loop and 1 loop is fixed to 0.000000000000000001(10^−18) ICX. ICON transaction fee is imposed according to various factors such as the number of smart contract usage, the amount of blockchain database used and the size of transaction data, etc.</string>
+    <string name="msgStepPrice">Step price is the amount you pay per unit of step.\nStep price is paid in loop and 1 loop is fixed to 0.000000000000000001(10−18) ICX. ICON transaction fee is imposed according to various factors such as the number of smart contract usage, the amount of blockchain database used and the size of transaction data, etc.</string>
     <string name="msgICXEstimateFee">Estimated Maximum Fee = Step price * Step limit</string>
     <string name="msgIcxData">You may enter data to send with the transaction. Transaction fee is imposed according to the size of data.</string>
     <string name="msgEthGasLimit">Gas limit is the amount of gas to send with your transaction.\nUnnecessary gas is refunded to you at the end of transaction. In other words, you can set the maximum amount of gas but the actual gas consumption is not fixed.</string>
     <string name="msgEthGasPrice">Gas price is an unit of gas.\n1 Gwei equals 0.000000001 ETH.\nEthereum miners prioritize based on gas price when generating blocks. If you set higher gas price, you have more chance to get your transaction confirmed. It also determines your transaction speed.</string>
     <string name="msgEthEstimateFee">Estimated Maximum Fee\n= Gas Price * Gas Limit\nSet proper gas limit and gas price.\nYou will pay transaction fees even if your transaction is not confirmed by miners.</string>
     <string name="msgEthData">If you do not enter the data when required, the transaction will fail. You will still have to pay the transaction fees. You don\'t have to enter data if it is not required in the transaction.</string>
+    <string name="msgDeleteData">Are you sure you want to delete data?</string>
 
     <string name="errNoSendAmount">Please enter transfer amount.</string>
     <string name="errNoStepLimit">Please enter step limit.</string>
@@ -272,6 +276,7 @@
     <string name="errOverByteLimit">This exceeds input limit %dKB</string>
 
     <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
+    <string name="errTransferFailed">Error occurred.\nPlease try again.</string>
 
     <!-- Contacts -->
     <string name="contactsTitle">Select Address</string>
@@ -363,6 +368,7 @@
 
     <string name="authMsgRecoverFingerprintAuth">Unlock with fingerprint is disabled. Do you want to enable the function?</string>
 
+    <string name="errNoKeyguard">Please set screen lock from the Settings menu to use \"Unlock with fingerprint\" function.</string>
     <string name="errNoEnrolledFingerprint">Unable to identify your fingerprint. Please try again after registering on mobile settings.</string>
     <string name="errCheckLockNum">Passcodes do not match\nPlease check again</string>
     <string name="errCurrentLockNum">Please confirm your passcode</string>

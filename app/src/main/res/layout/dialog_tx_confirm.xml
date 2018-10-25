@@ -87,7 +87,7 @@
             android:layout_marginTop="24dp"
             android:fontFamily="@font/noto_sans_regular"
             android:gravity="start|center_vertical"
-            android:text="@string/toAddress"
+            android:text="@string/receivingAddress"
             android:textColor="@color/colorText"
             android:textSize="14sp" />
 

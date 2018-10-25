@@ -118,8 +118,14 @@ public class AuthActivity extends AppCompatActivity implements AuthFingerprintFr
     }
 
     @Override
-    public void onByLockNum(boolean isInvalidated) {
-        frgLockNum.setInvalidated(isInvalidated);
+    public void onByLockNum(MyConstants.FingerprintState state) {
+        if (state == MyConstants.FingerprintState.DISABLED || state == MyConstants.FingerprintState.NO_ENROLLED) {
+            PreferenceUtil preferenceUtil = new PreferenceUtil(this);
+            preferenceUtil.saveUseFingerprint(false);
+            preferenceUtil.loadPreference();
+        }
+
+        frgLockNum.setInvalidated(state);
         setFragment(frgLockNum, true);
     }
 

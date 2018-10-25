@@ -14,7 +14,7 @@
         <item name="colorControlNormal">@color/editNormal</item>
         <item name="colorControlActivated">@color/editActivated</item>
         <item name="android:textColor">@color/editNormal</item>
-        <item name="android:textCursorDrawable">@color/editActivated</item>
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
     </style>
 
     <style name="Theme.Transparent" parent="Theme.AppCompat.Light.DarkActionBar">

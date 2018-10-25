@@ -1,5 +1,6 @@
 package foundation.icon.iconex.wallet.menu.lock;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -146,12 +147,17 @@ public class AppLockManageFragment extends Fragment implements View.OnClickListe
     }
 
     private void checkEnrolledFingerprint() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        BasicDialog dialog = new BasicDialog(getActivity());
+
+        KeyguardManager keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
+        if (!keyguardManager.isKeyguardSecure()) {
+            dialog.setMessage(getString(R.string.errNoKeyguard));
+            dialog.show();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             FingerprintManager fm = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
             if (fm.hasEnrolledFingerprints())
                 mListener.onUnlockFinger();
             else {
-                BasicDialog dialog = new BasicDialog(getActivity());
                 dialog.setMessage(getString(R.string.errNoEnrolledFingerprint));
                 dialog.show();
             }

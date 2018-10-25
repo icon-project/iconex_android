@@ -19,6 +19,8 @@
     <string name="retry">재시도</string>
     <string name="view">보기</string>
     <string name="input">입력</string>
+    <string name="delete">삭제</string>
+    <string name="modified">수정</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -61,7 +63,7 @@
     <string name="hintWalletAlias">지갑 이름 입력 (8자)</string>
     <string name="hintCreateWalletPassword">비밀번호 입력 (영문, 숫자, 특수문자 혼용 8자 이상)</string>
     <string name="hintWalletPasswordConfirm">비밀번호 확인</string>
-    <string name="createPasswordWarning">영문, 숫자, 특수문자를 혼용하여 입력해주세요.</string>
+    <string name="createPasswordWarning">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
     <string name="step3Header">지갑 백업 파일(Keystore)은 지갑의 고유 정보인 개인 키(Private Key)를 담고 있는 파일이며, 지갑 백업 파일에는 비밀번호가 설정되어 있습니다.</string>
     <string name="step3Sub1">지갑 백업 파일과 비밀번호가 있으면 지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 수 있습니다.</string>
     <string name="step3Sub2">지갑을 만든 후 ‘지갑 백업’에서도 다운로드할 수 있습니다.</string>
@@ -118,7 +120,7 @@
     <string name="duplicateWalletAlias">같은 이름의 지갑이 이미 존재합니다.</string>
     <string name="duplicateWalletAddress">같은 주소의 지갑이 이미 존재합니다.</string>
     <string name="errAtLeast">8자 이상으로 입력해주세요.</string>
-    <string name="errPasswordPatternMatch">영문, 숫자, 특수문자를 혼용하여 입력해주세요.</string>
+    <string name="errPasswordPatternMatch">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
     <string name="errSerialChar">동일한 문자를 3자 이상 연속해서 입력할 수 없습니다.</string>
     <string name="errWhiteSpace">공백 없이 입력해주세요.</string>
     <string name="errPasswordNotMatched">비밀번호가 일치하지 않습니다.</string>
@@ -159,7 +161,7 @@
     <string name="noTransaction">거래 내역이 없습니다.</string>
     <string name="txID">거래 ID</string>
     <string name="viewTxInfo">거래 정보 확인</string>
-    <string name="infoTx">ICX 출금 신청 후 2분 내에 처리되지 않은 거래는 자동 취소되며 출금액과 수수료는 모두 복구됩니다.</string>
+    <string name="infoTx">ICX 출금 신청 후 처리되지 않은 거래는 자동 취소되며 출금액과 수수료는 모두 복구됩니다.</string>
     <string name="txEther">이더리움 거래 내역</string>
     <string name="etherscan">Etherscan</string>
 
@@ -202,9 +204,10 @@
 
     <!-- Transfer -->
     <string name="possessionAmount">보유 수량 (%s)</string>
-    <string name="sendAmount">송금할 코인 수량 (%s)</string>
+    <string name="sendAmount">송금 수량 (%s)</string>
     <string name="hintSendAmount">코인 수량 입력</string>
     <string name="toAddress">송금 받는 주소</string>
+    <string name="receivingAddress">받는 주소</string>
     <string name="hintToAddress">주소 입력</string>
     <string name="plus10">+10</string>
     <string name="plus100">+100</string>
@@ -225,8 +228,8 @@
     <string name="hintUtfData">Hello ICON</string>
     <string name="hintHexData">0x1234...</string>
     <string name="cancelEnterData">데이터 입력을 취소하시겠습니까?</string>
-    <string name="errMinStep">%s 보다 높은 스텝 한도를 입력해주세요.</string>
-    <string name="errMaxStep">%s 보다 낮은 스텝 한도를 입력해주세요.</string>
+    <string name="errMinStep">%s 보다 높은 Step 한도를 입력해주세요.</string>
+    <string name="errMaxStep">%s 보다 낮은 Step 한도를 입력해주세요.</string>
     <string name="errIcxOwnNotEnough">수수료를 지불할 ICX가 부족합니다.</string>
     <string name="dataMaxSize">/%d KB</string>
 
@@ -256,14 +259,15 @@
     <string name="slow">느림</string>
     <string name="fast">빠름</string>
 
-    <string name="msgStepLimit">스텝 한도는 Transaction 실행에 지불할 용의가 있는 스텝의 최대량을 의미합니다. 스텝 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 스텝만 소진합니다. 즉, 스텝 한도는 최대치만 설정 가능하며 실제 소진되는 스텝량은 유동적입니다.</string>
-    <string name="msgStepPrice">Step 한 단위 당 지불하는 가격입니다.\n\nStep 가격은 loop로 지불하며 1 loop는 0.000000000000000001(10^-18) ICX로 고정되어 있습니다. ICON 거래 수수료는 스마트 컨트랙트 기능 사용 횟수, 블록체인 데이터베이스 사용량, 거래 데이터 크기 등에 따라 부과됩니다.</string>
-    <string name="msgICXEstimateFee">Transaction 실행 시 발생할 수 있는 최대 수수료로서, 스텝 한도와 스텝 가격을 곱한 값입니다.</string>
+    <string name="msgStepLimit">Step 한도는 Transaction 실행에 지불할 용의가 있는 Step의 최대량을 의미합니다. Step 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 Step만 소진합니다. 즉, Step 한도는 최대치만 설정 가능하며 실제 소진되는 Step량은 유동적입니다.</string>
+    <string name="msgStepPrice">Step 한 단위 당 지불하는 가격입니다.\n\nStep 가격은 loop로 지불하며 1 loop는 0.000000000000000001(10-18) ICX로 고정되어 있습니다. ICON 거래 수수료는 스마트 컨트랙트 기능 사용 횟수, 블록체인 데이터베이스 사용량, 거래 데이터 크기 등에 따라 부과됩니다.</string>
+    <string name="msgICXEstimateFee">Transaction 실행 시 발생할 수 있는 최대 수수료로서, Step 한도와 Step 가격을 곱한 값입니다.</string>
     <string name="msgIcxData">사용자가 원하는 데이터를 입력하여 송금할 수 있습니다. 입력한 데이터의 크기에 따라 수수료가 부과됩니다.</string>
     <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할\n용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
     <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서\n1 Gwei = 0.000000001 ETH로\n고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
     <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로\n가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
     <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 송금할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 송금이 불가하며 수수료만\n차감될 수 있습니다.</string>
+    <string name="msgDeleteData">입력된 데이터를 삭제하시겠습니까?</string>
 
     <string name="errNoSendAmount">송금할 수량을 입력해주세요.</string>
     <string name="errNoStepLimit">Step 한도를 입력해주세요.</string>
@@ -271,6 +275,7 @@
     <string name="errOverByteLimit">입력 한도 %dKB를 초과합니다</string>
 
     <string name="msgDoneRequestTransfer">송금 요청이 완료되었습니다.</string>
+    <string name="errTransferFailed">오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
     <!-- Contacts -->
     <string name="contactsTitle">주소 선택</string>
@@ -317,7 +322,7 @@
 
     <!-- Export bundle -->
     <string name="titleExportBundle">지갑 묶어서 내보내기</string>
-    <string name="headerExportBundle">묶어서 백업할 지갑들을 선택해주세요. 선택한 지갑마다 지갑별 비밀번호 확인이 필요합니다.</string>
+    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요. 선택한 지갑마다 지갑별 비밀번호 확인이 필요합니다.</string>
     <string name="exportBundleDetailed1">지갑 묶어서 내보내기는 선택한 지갑 파일을 묶어서 하나의 파일로 백업하는 기능입니다.</string>
     <string name="exportBundleEdtailed2">지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 경우 지갑 백업파일이 필요합니다.</string>
     <string name="countSelectedWallet">%d 개 지갑 선택</string>
@@ -362,6 +367,7 @@
 
     <string name="authMsgRecoverFingerprintAuth">지문으로 잠금 해제 사용이 중지되었습니다. 사용 설정을 하시겠습니까?</string>
 
+    <string name="errNoKeyguard">휴대폰의 설정에서 화면 잠금 설정 후 \"지문으로 잠금 해제\" 기능을 사용할 수 있습니다.</string>
     <string name="errNoEnrolledFingerprint">지문 정보가 등록되어 있지 않습니다.\n휴대폰의 설정화면에서 지문 등록 후 다시 시도해주세요.</string>
     <string name="errCheckLockNum">잠금 번호가 일치하지 않습니다.\n설정할 잠금 번호 입력부터 다시 시도해주세요.</string>
     <string name="errCurrentLockNum">잠금 번호가 일치 하지 않습니다.</string>
@@ -442,7 +448,7 @@
     <string name="txWithdraw">- %s</string>
 
     <!-- Dialog -->
-    <string name="modWalletAlias">지갑 이름 수정</string>
+    <string name="modWalletAlias">지갑 이름 변경</string>
     <string name="enterWalletPassword">지갑 비밀번호 입력</string>
     <string name="removeWallet">지갑을 삭제하시겠습니까?</string>
     <string name="warningRemoveWallet">삭제하시려는 지갑에 잔액이 남아있습니다. 지갑 백업이 되어있지 않으면 잔액 복구가 불가능합니다.\n그래도 삭제하시겠습니까?</string>

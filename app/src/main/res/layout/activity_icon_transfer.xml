@@ -99,6 +99,7 @@
 
                         <foundation.icon.iconex.widgets.MyEditText
                             android:id="@+id/edit_send_amount"
+                            style="@style/CustomEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
@@ -243,6 +244,7 @@
 
                         <foundation.icon.iconex.widgets.MyEditText
                             android:id="@+id/edit_to_address"
+                            style="@style/CustomEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
@@ -369,6 +371,7 @@
 
                         <foundation.icon.iconex.widgets.MyEditText
                             android:id="@+id/edit_step_limit"
+                            style="@style/CustomEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toStartOf="@+id/del_step_limit"

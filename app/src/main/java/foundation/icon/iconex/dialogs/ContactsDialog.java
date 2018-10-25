@@ -101,15 +101,19 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    if (Utils.checkByteLength(s.toString()) > 16) {
-                        editName.setText(beforeStr);
-                        editName.setSelection(editName.getText().toString().length());
+                    if (s.toString().trim().isEmpty()) {
+                        editName.setText("");
                     } else {
-                        beforeStr = s.toString();
-                    }
+                        if (Utils.checkByteLength(s.toString()) > 16) {
+                            editName.setText(beforeStr);
+                            editName.setSelection(editName.getText().toString().length());
+                        } else {
+                            beforeStr = s.toString();
+                        }
 
-                    btnConfirm.setEnabled(true);
-                    btnNameDelete.setVisibility(View.VISIBLE);
+                        btnConfirm.setEnabled(true);
+                        btnNameDelete.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     btnNameDelete.setVisibility(View.INVISIBLE);
                     txtNameWarning.setVisibility(View.GONE);

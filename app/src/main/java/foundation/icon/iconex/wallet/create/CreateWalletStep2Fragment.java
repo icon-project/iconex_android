@@ -20,12 +20,12 @@ import android.widget.TextView;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.PasswordValidator;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 
-import static foundation.icon.iconex.control.PasswordValidator.checkPasswordMatch;
+import static foundation.icon.iconex.util.PasswordValidator.checkPasswordMatch;
 
 public class CreateWalletStep2Fragment extends Fragment implements View.OnClickListener {
 
@@ -124,7 +124,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                     int aliasValidate = checkAlias(editAlias.getText().toString());
                     switch (aliasValidate) {
                         case ALIAS_EMPTY:
-                            showWarning(lineAlias, txtAliasWarning, getString(R.string.errWhiteSpace));
+                            showWarning(lineAlias, txtAliasWarning, getString(R.string.errAliasEmpty));
                             break;
 
                         case ALIAS_DUP:
@@ -145,16 +145,20 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    btnAliasDel.setVisibility(View.VISIBLE);
-                    if (Utils.checkByteLength(s.toString()) > 16) {
-                        editAlias.setText(beforeStr);
-                        editAlias.setSelection(editAlias.getText().toString().length());
+                    if (s.toString().trim().isEmpty()) {
+                        editAlias.setText("");
                     } else {
-                        beforeStr = s.toString();
+                        btnAliasDel.setVisibility(View.VISIBLE);
+                        if (Utils.checkByteLength(s.toString()) > 16) {
+                            editAlias.setText(beforeStr);
+                            editAlias.setSelection(editAlias.getText().toString().length());
+                        } else {
+                            beforeStr = s.toString();
+                        }
                     }
                 } else {
                     btnAliasDel.setVisibility(View.INVISIBLE);
-                    txtAliasWarning.setVisibility(View.INVISIBLE);
+                    txtAliasWarning.setVisibility(View.GONE);
 
                     if (editAlias.isFocused())
                         lineAlias.setBackgroundColor(getResources().getColor(R.color.editActivated));
@@ -235,9 +239,14 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnPwdDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editPwd.setText(s.subSequence(0, s.length() - 1));
+                        if (editPwd.getText().toString().length() > 0)
+                            editPwd.setSelection(editPwd.getText().toString().length());
+                    }
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
-                    txtPwdWarning.setVisibility(View.INVISIBLE);
+                    txtPwdWarning.setVisibility(View.GONE);
 
                     if (editPwd.isFocused())
                         linePwd.setBackgroundColor(getResources().getColor(R.color.editActivated));
@@ -308,10 +317,14 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnCheckDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editCheck.setText(s.subSequence(0, s.length() - 1));
+                        if (editCheck.getText().toString().length() > 0)
+                            editCheck.setSelection(editCheck.getText().toString().length());
+                    }
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
-
-                    txtCheckWarnig.setVisibility(View.INVISIBLE);
+                    txtCheckWarnig.setVisibility(View.GONE);
                     if (editCheck.isFocused())
                         lineCheck.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -443,7 +456,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     }
 
     private void hideWarning(View edit, View line, View txtView) {
-        txtView.setVisibility(View.INVISIBLE);
+        txtView.setVisibility(View.GONE);
         if (edit.isFocused())
             line.setBackgroundColor(getResources().getColor(R.color.editActivated));
         else
@@ -550,9 +563,9 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
         lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-        txtAliasWarning.setVisibility(View.INVISIBLE);
-        txtPwdWarning.setVisibility(View.INVISIBLE);
-        txtCheckWarnig.setVisibility(View.INVISIBLE);
+        txtAliasWarning.setVisibility(View.GONE);
+        txtPwdWarning.setVisibility(View.GONE);
+        txtCheckWarnig.setVisibility(View.GONE);
 
         progress.setVisibility(View.GONE);
         btnNext.setEnabled(false);

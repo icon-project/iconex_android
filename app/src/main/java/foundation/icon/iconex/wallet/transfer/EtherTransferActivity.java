@@ -114,8 +114,8 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
     private static final int RC_BARCODE_CAPTURE = 9002;
 
     private static final int DEFAULT_PRICE = 21;
-    private static final int DEFAULT_COIN_LIMIT = 21000;
-    private static final int DEFAULT_TOKEN_LIMIT = 55000;
+    private static final int DEFAULT_GAS_LIMIT = 21000;
+    private static final int CONTRACT_GAS_LIMIT = 55000;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -284,6 +284,8 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                     else
                         lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
                 }
+
+                setRemain(editSend.getText().toString());
             }
 
             @Override
@@ -362,9 +364,9 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         editLimit = findViewById(R.id.edit_limit);
         editLimit.setLongClickable(false);
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN))
-            editLimit.setText(String.valueOf(DEFAULT_COIN_LIMIT));
+            editLimit.setText(String.valueOf(DEFAULT_GAS_LIMIT));
         else
-            editLimit.setText(String.valueOf(DEFAULT_TOKEN_LIMIT));
+            editLimit.setText(String.valueOf(CONTRACT_GAS_LIMIT));
         editLimit.setOnKeyPreImeListener(onKeyPreImeListener);
         editLimit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -451,15 +453,20 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0)
+                if (s.length() > 0) {
                     btnDelData.setVisibility(View.VISIBLE);
-                else {
+                    editLimit.setText(String.valueOf(CONTRACT_GAS_LIMIT));
+                    setRemain(editSend.getText().toString());
+                } else {
                     btnDelData.setVisibility(View.INVISIBLE);
                     txtDataWarning.setVisibility(View.GONE);
                     if (editData.isFocused())
                         lineData.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
                         lineData.setBackgroundColor(getResources().getColor(R.color.editNormal));
+
+                    editLimit.setText(String.valueOf(DEFAULT_GAS_LIMIT));
+                    setRemain(editSend.getText().toString());
                 }
             }
 

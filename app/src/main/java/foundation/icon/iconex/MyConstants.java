@@ -96,4 +96,11 @@ public class MyConstants {
         LOST,
         RECOVER
     }
+
+    public enum FingerprintState {
+        INVALID,
+        DISABLED,
+        NO_ENROLLED,
+        PASSCODE
+    }
 }
