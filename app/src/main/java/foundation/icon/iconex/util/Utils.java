@@ -113,7 +113,11 @@ public class Utils {
         else {
             String[] divide = target.split("\\.");
             BigInteger integer = new BigInteger(divide[0]);
-            String trailing = divide[1].substring(0, floating);
+            String trailing;
+            if (divide[1].length() < floating)
+                trailing = divide[1];
+            else
+                trailing = divide[1].substring(0, floating);
 
             return NumberFormat.getNumberInstance(Locale.getDefault()).format(integer) + "." + trailing;
         }
