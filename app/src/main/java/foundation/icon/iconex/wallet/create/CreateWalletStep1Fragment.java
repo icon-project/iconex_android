@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +65,9 @@ public class CreateWalletStep1Fragment extends Fragment {
         listViewCoin = v.findViewById(R.id.list_view_coin);
 
         View listViewHeader = getActivity().getLayoutInflater().inflate(R.layout.layout_step1_listview_header, null);
+        listViewHeader.setClickable(false);
+        listViewHeader.setFocusable(false);
+        listViewHeader.setLongClickable(false);
         listViewCoin.addHeaderView(listViewHeader);
 
         ItemCoin ICX = new ItemCoin(getString(R.string.coin_icx), Constants.KS_COINTYPE_ICX);

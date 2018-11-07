@@ -45,7 +45,6 @@ import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.token.swap.TokenSwapActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.wallet.menu.WalletAddressCodeActivity;
 import foundation.icon.iconex.wallet.menu.WalletBackUpActivity;
 import foundation.icon.iconex.wallet.menu.WalletPwdChangeActivity;
@@ -659,8 +658,15 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     break;
 
                 case MyConstants.TAG_MENU_TOKEN:
-                    startActivity(new Intent(WalletDetailActivity.this, TokenManageActivity.class)
-                            .putExtra("walletInfo", (Serializable) mWallet));
+                    Intent intent = new Intent(WalletDetailActivity.this, TokenManageActivity.class);
+                    intent.putExtra("walletInfo", (Serializable) mWallet);
+
+                    if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
+                        intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.IRC);
+                    else
+                        intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.ERC);
+
+                    startActivity(intent);
                     break;
 
                 case MyConstants.TAG_MENU_BACKUP:
