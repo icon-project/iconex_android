@@ -12,6 +12,7 @@ public class TxItem {
     private String to;
     private String amount;
     private String fee;
+    private int state;
 
     public String getTxHash() {
         return txHash;
@@ -61,13 +62,22 @@ public class TxItem {
         this.fee = fee;
     }
 
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     public String toString() {
         return "txHash=" + txHash + "\n"
                 + "date=" + date + "\n"
                 + "from=" + from + "\n"
                 + "to=" + to + "\n"
                 + "amount" + amount + "\n"
-                + "fee=" + fee;
+                + "fee=" + fee
+                + "state=" + state;
 
     }
 }
