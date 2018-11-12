@@ -178,7 +178,6 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 itemViewHolder.txtDate.setText("- -");
             }
 
-
             if (entry.getAddress().equals(item.getFrom())) {
                 itemViewHolder.txtDate.setTextColor(mContext.getResources().getColor(R.color.colorRemittance));
                 itemViewHolder.txtValue.setTextColor(mContext.getResources().getColor(R.color.colorRemittance));
@@ -190,6 +189,13 @@ public class TransactionListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 itemViewHolder.txtSymbol.setTextColor(mContext.getResources().getColor(R.color.colorDeposit));
                 itemViewHolder.txtValue.setText("+ " + item.getAmount());
             }
+
+            if (item.getState() == 0) {
+                itemViewHolder.txtDate.setTextColor(mContext.getResources().getColor(R.color.buttonTextDisabled));
+                itemViewHolder.txtValue.setTextColor(mContext.getResources().getColor(R.color.buttonTextDisabled));
+                itemViewHolder.txtSymbol.setTextColor(mContext.getResources().getColor(R.color.buttonTextDisabled));
+            }
+
             itemViewHolder.txtSymbol.setText(entry.getSymbol());
         }
     }

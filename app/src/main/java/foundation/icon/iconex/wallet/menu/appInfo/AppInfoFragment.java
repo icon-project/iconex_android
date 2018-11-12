@@ -118,7 +118,9 @@ public class AppInfoFragment extends Fragment {
 
     public interface OnAppInfoListener {
         void onUpdate();
+
         void onClickOSS();
+
         void onClickNP();
     }
 }
