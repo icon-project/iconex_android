@@ -203,7 +203,7 @@
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 android:scrollbars="none"
-                app:layoutManager="LinearLayoutManager" />
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
         </android.support.design.widget.AppBarLayout>
 
         <foundation.icon.iconex.widgets.CustomViewPager

@@ -1,5 +1,7 @@
 package foundation.icon.iconex.wallet.menu.appInfo;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.service.ServiceConstants;
 
 public class AppInfoActivity extends AppCompatActivity implements AppInfoFragment.OnAppInfoListener {
 
@@ -49,7 +52,8 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoFragmen
 
     @Override
     public void onUpdate() {
-
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ServiceConstants.URL_STORE)));
+        finishAffinity();
     }
 
     @Override

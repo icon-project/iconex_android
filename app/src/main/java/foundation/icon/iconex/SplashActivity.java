@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.Locale;
 
+import foundation.icon.connect.SelectWalletActivity;
 import foundation.icon.iconex.intro.IntroActivity;
-import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
 import foundation.icon.iconex.wallet.main.MainActivity;
@@ -24,10 +24,18 @@ public class SplashActivity extends AppCompatActivity {
 
     private final int PERMISSION_REQUEST = 10001;
 
+    private boolean ICONConnect = false;
+    private MyConstants.ConnectMethod connectMethod = MyConstants.ConnectMethod.NONE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        if (getIntent().getBooleanExtra(MyConstants.ICON_CONNECT, false)) {
+            ICONConnect = true;
+            connectMethod = (MyConstants.ConnectMethod) getIntent().getExtras().get("method");
+        }
     }
 
     @Override
@@ -77,14 +85,12 @@ public class SplashActivity extends AppCompatActivity {
 
     private void checkPermission() {
         if (ICONexApp.mWallets.size() > 0) {
-                if (ICONexApp.isLocked) {
-                    StartAuthenticate startAuthenticate = new StartAuthenticate();
-                    startAuthenticate.execute();
-                } else {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                    finish();
-                }
+            if (ICONexApp.isLocked) {
+                StartAuthenticate startAuthenticate = new StartAuthenticate();
+                startAuthenticate.execute();
+            } else {
+                startActivity(connectMethod);
+            }
         } else {
             startActivity(new Intent(SplashActivity.this, IntroActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
@@ -141,8 +147,30 @@ public class SplashActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            startActivity(new Intent(SplashActivity.this, AuthActivity.class));
-            finish();
+            startActivity(connectMethod);
         }
+    }
+
+    private void startActivity(MyConstants.ConnectMethod method) {
+        switch (method) {
+            case BIND:
+                startActivity(new Intent(this, SelectWalletActivity.class));
+                break;
+
+            case SIGN:
+                break;
+
+            case SendICX:
+                break;
+
+            case SendIRC:
+                break;
+
+            default:
+                startActivity(new Intent(SplashActivity.this, MainActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        }
+
+        finish();
     }
 }

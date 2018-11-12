@@ -146,11 +146,22 @@
             android:name=".wallet.menu.appInfo.AppInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity android:name="foundation.icon.connect.SelectWalletActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.NetworkService"
             android:enabled="true"
             android:exported="false" />
+
+        <receiver android:name="foundation.icon.connect.ConnectReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ICON_CONNECT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

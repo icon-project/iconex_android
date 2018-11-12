@@ -68,6 +68,9 @@ public class MyConstants {
     public static final int NETWORK_TEST = 1;
     public static final int NETWORK_DEV = 2;
 
+    // ======== ICON Connect ========
+    public static final String ICON_CONNECT = "ICON_CONNECT";
+
     public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[?!:\\.,%+-/*<>{}()\\[\\]`\"'~_^\\|@#$&]).{8,}$";
 
     public enum CoinType {
@@ -102,5 +105,13 @@ public class MyConstants {
         DISABLED,
         NO_ENROLLED,
         PASSCODE
+    }
+
+    public enum ConnectMethod {
+        NONE,
+        BIND,
+        SIGN,
+        SendICX,
+        SendIRC
     }
 }

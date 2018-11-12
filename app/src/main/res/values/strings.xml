@@ -465,4 +465,7 @@
     <string name="networkNotWorking">No internet connection</string>
     <string name="networkRetry">Check your mobile data or Wi-Fi and try again</string>
 
+    <!-- ICON Connect -->
+    <string name="selectWallet">Select Wallet</string>
+
 </resources>

@@ -464,4 +464,7 @@
     <string name="networkNotWorking">네트워크에 접속 할 수 없습니다.</string>
     <string name="networkRetry">연결 상태 확인 후 다시 시도해주세요.</string>
 
+    <!-- ICON Connect -->
+    <string name="selectWallet">지갑 선택</string>
+
 </resources>
