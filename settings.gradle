@@ -1,1 +1,1 @@
-include ':app', ':sample_icon_connect'
+include ':iconex', ':sample_icon_connect'
