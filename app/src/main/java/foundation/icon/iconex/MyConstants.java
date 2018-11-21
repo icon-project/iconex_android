@@ -64,12 +64,9 @@ public class MyConstants {
     public static final int LOCK_TIME_LIMIT = 5 * 60 * 1000;
 
     // ======== Network ========
-    public static final int NETWORK_MAIN = 0;
-    public static final int NETWORK_TEST = 1;
-    public static final int NETWORK_DEV = 2;
-
-    // ======== ICON Connect ========
-    public static final String ICON_CONNECT = "ICON_CONNECT";
+    public static final int NETWORK_MAIN = 1;
+    public static final int NETWORK_TEST = 2;
+    public static final int NETWORK_DEV = 3;
 
     public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[?!:\\.,%+-/*<>{}()\\[\\]`\"'~_^\\|@#$&]).{8,}$";
 
@@ -105,13 +102,5 @@ public class MyConstants {
         DISABLED,
         NO_ENROLLED,
         PASSCODE
-    }
-
-    public enum ConnectMethod {
-        NONE,
-        BIND,
-        SIGN,
-        SendICX,
-        SendIRC
     }
 }

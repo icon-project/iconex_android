@@ -202,6 +202,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 txItem.setFrom(tx.get("fromAddr").getAsString());
                 txItem.setTo((tx.get("toAddr").getAsString()));
                 txItem.setFee(tx.get("fee").getAsString());
+                txItem.setState(Integer.parseInt(tx.get("state").getAsString()));
 
                 if (selectedEntry.getType().equals(MyConstants.TYPE_COIN)) {
                     if (tx.get("txType").getAsString().equals("0")) {

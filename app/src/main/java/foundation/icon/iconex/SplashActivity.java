@@ -7,10 +7,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import java.util.Locale;
 
-import foundation.icon.connect.SelectWalletActivity;
+import foundation.icon.connect.ErrorCodes;
+import foundation.icon.connect.IconConnect;
+import foundation.icon.connect.RequestData;
 import foundation.icon.iconex.intro.IntroActivity;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
@@ -24,17 +27,16 @@ public class SplashActivity extends AppCompatActivity {
 
     private final int PERMISSION_REQUEST = 10001;
 
-    private boolean ICONConnect = false;
-    private MyConstants.ConnectMethod connectMethod = MyConstants.ConnectMethod.NONE;
+    private RequestData request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        if (getIntent().getBooleanExtra(MyConstants.ICON_CONNECT, false)) {
-            ICONConnect = true;
-            connectMethod = (MyConstants.ConnectMethod) getIntent().getExtras().get("method");
+        if (getIntent().getBooleanExtra(ICONexApp.ICON_CONNECT, false)) {
+            ICONexApp.isConnect = true;
+            request = (RequestData) getIntent().getExtras().get("request");
         }
     }
 
@@ -55,7 +57,16 @@ public class SplashActivity extends AppCompatActivity {
 
                             @Override
                             public void onPass() {
-                                checkPermission();
+                                Log.d(TAG, "ICONexApp.isConnect=" + ICONexApp.isConnect);
+                                if (ICONexApp.isConnect) {
+                                    IconConnect iconConnect = new IconConnect(SplashActivity.this, request);
+                                    if (ICONexApp.mWallets.size() > 0)
+                                        iconConnect.startConnectActivity();
+                                    else
+                                        IconConnect.broadcastError(SplashActivity.this, request,
+                                                new ErrorCodes.Error(ErrorCodes.ERR_EMPTY, getString(R.string.descEmpty)));
+                                } else
+                                    checkPermission();
                             }
                         });
                 versionCheck.execute();
@@ -89,7 +100,8 @@ public class SplashActivity extends AppCompatActivity {
                 StartAuthenticate startAuthenticate = new StartAuthenticate();
                 startAuthenticate.execute();
             } else {
-                startActivity(connectMethod);
+                startActivity(new Intent(SplashActivity.this, MainActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
             }
         } else {
             startActivity(new Intent(SplashActivity.this, IntroActivity.class)
@@ -147,30 +159,8 @@ public class SplashActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            startActivity(connectMethod);
+            startActivity(new Intent(SplashActivity.this, MainActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
-    }
-
-    private void startActivity(MyConstants.ConnectMethod method) {
-        switch (method) {
-            case BIND:
-                startActivity(new Intent(this, SelectWalletActivity.class));
-                break;
-
-            case SIGN:
-                break;
-
-            case SendICX:
-                break;
-
-            case SendIRC:
-                break;
-
-            default:
-                startActivity(new Intent(SplashActivity.this, MainActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
-        }
-
-        finish();
     }
 }

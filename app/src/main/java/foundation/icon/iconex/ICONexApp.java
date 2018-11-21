@@ -60,6 +60,14 @@ public class ICONexApp extends Application {
     // ========== Preference ================
     public static String version = "";
 
+    // ======== ICON Connect ========
+    public static final String ICON_CONNECT = "ICON_CONNECT";
+    public static boolean isConnect = false;
+
+    // ======== Developer Mode ========
+    public static final String DEVELOPER = "DEVELOPER";
+    public static boolean isDeveloper = false;
+
     static {
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
     }

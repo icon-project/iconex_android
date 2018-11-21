@@ -35,7 +35,6 @@ import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
@@ -979,28 +978,62 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             return false;
         }
 
-        if (address.startsWith("hx")) {
-            address = address.substring(2);
-            if (address.length() != 40) {
+        if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+            if (!(address.startsWith("hx") || address.startsWith("cx"))) {
                 lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtAddrWarning.setVisibility(View.VISIBLE);
                 txtAddrWarning.setText(getString(R.string.errCheckAddress));
-
                 return false;
             }
-        } else if (address.contains(" ")) {
+        }
+
+        if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
+            if (!address.startsWith("hx")) {
+                lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+                txtAddrWarning.setVisibility(View.VISIBLE);
+                txtAddrWarning.setText(getString(R.string.errCheckAddress));
+                return false;
+            }
+
+        }
+
+        address = address.substring(2);
+        if (address.length() != 40) {
             lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
             txtAddrWarning.setText(getString(R.string.errCheckAddress));
-
-            return false;
-        } else {
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errCheckAddress));
-
             return false;
         }
+
+        if (address.contains(" ")) {
+            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+            txtAddrWarning.setVisibility(View.VISIBLE);
+            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+            return false;
+        }
+
+//        if (address.startsWith("hx")) {
+//            address = address.substring(2);
+//            if (address.length() != 40) {
+//                lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+//                txtAddrWarning.setVisibility(View.VISIBLE);
+//                txtAddrWarning.setText(getString(R.string.errCheckAddress));
+//
+//                return false;
+//            }
+//        } else if (address.contains(" ")) {
+//            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+//            txtAddrWarning.setVisibility(View.VISIBLE);
+//            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+//
+//            return false;
+//        } else {
+//            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+//            txtAddrWarning.setVisibility(View.VISIBLE);
+//            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+//
+//            return false;
+//        }
 
         if (editAddress.hasFocus())
             lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));
@@ -1008,6 +1041,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             lineAddress.setBackgroundColor(getResources().getColor(R.color.editNormal));
         editAddress.setSelection(editAddress.getText().toString().length());
         txtAddrWarning.setVisibility(View.GONE);
+
         return true;
     }
 
@@ -1077,7 +1111,11 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 public void onResponse(retrofit2.Call<LCResponse> call, Response<LCResponse> response) {
                     if (response.isSuccessful()) {
                         String result = response.body().getResult().getAsString();
-                        stepPriceLoop = ConvertUtil.hexStringToBigInt(result, 18);
+                        try {
+                            stepPriceLoop = ConvertUtil.hexStringToBigInt(result, 18);
+                        } catch (Exception e) {
+
+                        }
                         String icx = ConvertUtil.getValue(stepPriceLoop, 18);
                         String mIcx = icx.indexOf(".") < 0 ? icx : icx.replaceAll("0*$", "").replaceAll("\\.$", "");
                         stepPriceICX = ConvertUtil.valueToBigInteger(icx, 18);

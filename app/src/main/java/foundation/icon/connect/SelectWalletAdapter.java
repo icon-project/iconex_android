@@ -87,7 +87,6 @@ public class SelectWalletAdapter extends RecyclerView.Adapter<SelectWalletAdapte
                 @Override
                 public void onClick(View v) {
                     selectedWallet = getAdapterPosition();
-                    Log.d(TAG, "selectedWallet=" + selectedWallet);
                     mListener.onSelect();
                     notifyDataSetChanged();
                 }

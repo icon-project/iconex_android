@@ -157,7 +157,12 @@ public class NetworkService extends Service {
                                 if (response.errorBody() == null) {
                                     String id = response.body().getID();
                                     String hexBalance = response.body().getResult().getAsString();
-                                    String balance = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
+                                    String balance = null;
+                                    try {
+                                        balance = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
+                                    } catch (Exception e) {
+                                        mBalanceCallback.onReceiveException(id, address, e.getMessage());
+                                    }
 
                                     mBalanceCallback.onReceiveICXBalance(id, address, balance);
                                 } else {
@@ -216,7 +221,12 @@ public class NetworkService extends Service {
                                 if (response.errorBody() == null) {
                                     String id = response.body().getID();
                                     String hexBalance = response.body().getResult().getAsString();
-                                    String balance = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
+                                    String balance = null;
+                                    try {
+                                        balance = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
+                                    } catch (Exception e) {
+                                        mBalanceCallback.onReceiveException(id, address, e.getMessage());
+                                    }
 
                                     mBalanceCallback.onReceiveICXBalance(id, address, balance);
                                 } else {

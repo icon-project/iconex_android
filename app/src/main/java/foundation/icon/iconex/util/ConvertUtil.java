@@ -57,7 +57,7 @@ public class ConvertUtil {
         }
     }
 
-    public static BigInteger hexStringToBigInt(String value, int dec) {
+    public static BigInteger hexStringToBigInt(String value, int dec) throws Exception{
         BigInteger decimals = getDecimals(dec);
         if (value.startsWith("0x")) {
             value = hexToFloat(value, dec, decimals);

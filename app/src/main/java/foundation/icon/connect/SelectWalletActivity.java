@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,6 +20,7 @@ import java.util.List;
 import foundation.icon.iconex.ICONexApp;
 import foundation.icon.iconex.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
@@ -37,6 +37,9 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
     private boolean mBound = false;
 
     private List<Wallet> mList;
+
+    private int reqId;
+    private RequestData request;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -104,6 +107,11 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_wallet);
 
+        if (getIntent() != null) {
+            reqId = getIntent().getIntExtra("id", -1);
+            request = (RequestData) getIntent().getExtras().get("request");
+        }
+
         ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.selectWallet));
         findViewById(R.id.btn_close).setOnClickListener(this);
         btnConfirm = findViewById(R.id.btn_confirm);
@@ -136,20 +144,51 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
+        Intent intent;
+        ResponseData resData;
+
         switch (v.getId()) {
             case R.id.btn_close:
-                // close;
+                Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+                dialog.setMessage(getString(R.string.msgCancelBind));
+                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                    @Override
+                    public void onOk() {
+                        Intent intent = new Intent()
+                                .setClassName(request.getCaller(), request.getReceiver())
+                                .setAction(foundation.icon.connect.Constants.C_ACTION)
+                                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+                        ResponseData resData = new ResponseData(reqId, ErrorCodes.ERR_USER_CANCEL, "User Cancel");
+                        intent.putExtra("data", resData.getResponse());
+
+                        ICONexApp.isConnect = false;
+                        sendBroadcast(intent);
+
+                        finishAffinity();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+                dialog.show();
                 break;
             case R.id.btn_confirm:
                 String address = listAdapter.getSelected();
-                Intent intent = new Intent();
-                intent.setClassName("foundation.icon.iconconnectsample", "foundation.icon.iconconnectsample.ResponseReceiver");
-                intent.setAction("ICON_CONNECT.response");
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.putExtra("response", address);
+                intent = new Intent()
+                        .setClassName(request.getCaller(), request.getReceiver())
+                        .setAction(foundation.icon.connect.Constants.C_ACTION)
+                        .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+                resData = new ResponseData(reqId, foundation.icon.connect.Constants.SUCCESS, address);
+                intent.putExtra("data", resData.getResponse());
+
+                ICONexApp.isConnect = false;
                 sendBroadcast(intent);
 
-                finish();
+                finishAffinity();
                 break;
         }
     }

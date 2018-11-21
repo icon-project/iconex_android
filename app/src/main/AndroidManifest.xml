@@ -146,16 +146,28 @@
             android:name=".wallet.menu.appInfo.AppInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity android:name="foundation.icon.connect.SelectWalletActivity"
+        <activity
+            android:name="foundation.icon.connect.SelectWalletActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="foundation.icon.connect.EnterPasswordActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustNothing" />
+        <activity
+            android:name="foundation.icon.connect.SendTxActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
 
         <service
             android:name=".service.NetworkService"
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name="foundation.icon.connect.ConnectReceiver"
+        <receiver
+            android:name="foundation.icon.connect.ConnectReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

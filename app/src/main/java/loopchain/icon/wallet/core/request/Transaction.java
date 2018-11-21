@@ -29,13 +29,15 @@ public class Transaction extends RequestData {
         params.addProperty("nid", builder.nid);
         params.addProperty("nonce", builder.nonce);
 
-        SendTransactionSigner signer;
-        signer = new SendTransactionSigner(this);
+        if (builder.hexPrivateKey != null) {
+            SendTransactionSigner signer;
+            signer = new SendTransactionSigner(this);
 
-        String txHash = signer.getTxHash();
-        String signature = signer.getSignature(txHash, builder.hexPrivateKey);
+            String txHash = signer.getTxHash();
+            String signature = signer.getSignature(txHash, builder.hexPrivateKey);
 
-        params.addProperty("signature", signature);
+            params.addProperty("signature", signature);
+        }
 
         if (builder.dataType != null)
             params.addProperty("dataType", builder.dataType);
@@ -107,18 +109,23 @@ public class Transaction extends RequestData {
 
     public static class Builder {
         private final int id;
-        private final String nid;
-        private final String hexPrivateKey;
 
         private String from;
         private String to;
         private String value;
         private String stepLimit;
         private String timestamp;
+        private String nid;
         private String nonce;
         private String dataType;
         private String data;
         private String dataTo;
+
+        private String hexPrivateKey;
+
+        public Builder() {
+            this.id = -1;
+        }
 
         public Builder(int id, String nid, String hexPrivateKey) {
             this.id = id;
@@ -156,6 +163,11 @@ public class Transaction extends RequestData {
             return this;
         }
 
+        public Builder nid(String nid) {
+            this.nid = nid;
+            return this;
+        }
+
         public Builder nonce(String nonce) {
             this.nonce = nonce;
             return this;
@@ -168,6 +180,11 @@ public class Transaction extends RequestData {
 
         public Builder data(String data) {
             this.data = data;
+            return this;
+        }
+
+        public Builder privKey(String privKey) {
+            this.hexPrivateKey = privKey;
             return this;
         }
 

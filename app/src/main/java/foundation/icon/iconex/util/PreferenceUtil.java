@@ -29,6 +29,7 @@ public class PreferenceUtil {
     private final String PREF_MAX_STEP = "MAX_STEP";
     private final String PREF_INPUT_PRICE = "INPUT_PRICE";
     private final String PREF_CONTRACT_CALL = "CONTRACT_CALL";
+    private final String PREF_DEVELOPER = "DEVELOPER";
 
     public PreferenceUtil(Context context) {
         mContext = context;
@@ -150,6 +151,16 @@ public class PreferenceUtil {
         editor.apply();
     }
 
+    public boolean isDeveloper() {
+        return mPreference.getBoolean(PREF_DEVELOPER, false);
+    }
+
+    public void setDeveloper(boolean isDeveloper) {
+        SharedPreferences.Editor editor = mPreference.edit();
+        editor.putBoolean(PREF_DEVELOPER, isDeveloper);
+        editor.apply();
+    }
+
     public String getContractCall() {
         return mPreference.getString(PREF_CONTRACT_CALL, "0");
     }
@@ -158,7 +169,7 @@ public class PreferenceUtil {
         ICONexApp.isLocked = getLocked();
         ICONexApp.useFingerprint = getUseFingerprint();
         ICONexApp.language = getLanguage();
-//        ICONexApp.network = getNetwork();
-        ICONexApp.network = MyConstants.NETWORK_MAIN;
+        ICONexApp.network = getNetwork();
+        ICONexApp.isDeveloper = isDeveloper();
     }
 }

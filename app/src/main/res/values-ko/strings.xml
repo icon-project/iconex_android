@@ -21,6 +21,7 @@
     <string name="input">입력</string>
     <string name="delete">삭제</string>
     <string name="modified">수정</string>
+    <string name="fold">접기</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -464,7 +465,29 @@
     <string name="networkNotWorking">네트워크에 접속 할 수 없습니다.</string>
     <string name="networkRetry">연결 상태 확인 후 다시 시도해주세요.</string>
 
+    <!-- Developer -->
+    <string name="selectNetwork">네트워크 선택</string>
+
     <!-- ICON Connect -->
     <string name="selectWallet">지갑 선택</string>
+    <string name="txData">Tx Data</string>
+
+    <string name="msgCancelBind">지갑 선택을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
+    <string name="msgCancelPassword">지갑 비밀번호 입력을 취소하시겠습니까?/n이용 중이던 앱으로 돌아갑니다.</string>
+    <string name="msgSendCancel">송금을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
+
+    <!-- ICON Connect Error Description -->
+    <string name="descUserCancel">사용자 취소</string>
+    <string name="descParseError">Parsing 중 에러 발생. 올바른 형색의 JSON 이 아님</string>
+    <string name="descInvalidRequest">정해진 규격의 JSON 이 아님</string>
+    <string name="descInvalidMethod">사용할 수 없는 Method</string>
+    <string name="descNotFoundCaller">Caller 를 찾을 수 없음</string>
+    <string name="descEmpty">사용할 수 있는 ICX 지갑 없음</string>
+    <string name="descNotFoundParameter">해당 %s 파마리터를 찾을 수 없음</string>
+    <string name="descNoWalletFound">해당 주소의 지갑이 없음</string>
+    <string name="descSameAddress">송금하는 주소와 같을 수 없음</string>
+    <string name="descInsufficientBalance">잔액 부족</string>
+    <string name="descInsufficientBalanceForFee">수수료 부족</string>
+    <string name="descSignFailed">Sign 실패</string>
 
 </resources>
