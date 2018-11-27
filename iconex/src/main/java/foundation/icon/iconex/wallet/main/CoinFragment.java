@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import foundation.icon.iconex.ICONexApp;
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
@@ -33,8 +33,8 @@ import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 import loopchain.icon.wallet.service.crypto.PKIUtils;
 
-import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
-import static foundation.icon.iconex.MyConstants.NO_BALANCE;
+import static foundation.icon.MyConstants.EXCHANGE_USD;
+import static foundation.icon.MyConstants.NO_BALANCE;
 
 public class CoinFragment extends Fragment {
 

@@ -14,7 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import foundation.icon.iconex.ICONexApp;
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.service.ServiceConstants;

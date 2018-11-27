@@ -12,16 +12,16 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 
-import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
-import static foundation.icon.iconex.MyConstants.NO_BALANCE;
+import static foundation.icon.MyConstants.EXCHANGE_USD;
+import static foundation.icon.MyConstants.NO_BALANCE;
 
 /**
  * Created by js on 2018. 4. 21..

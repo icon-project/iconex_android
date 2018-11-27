@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 
 /**

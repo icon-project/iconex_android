@@ -1,6 +1,5 @@
 package foundation.icon.connect;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -21,8 +20,7 @@ import org.json.JSONObject;
 import java.math.BigInteger;
 import java.util.Locale;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
@@ -53,7 +51,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
-import static foundation.icon.iconex.ICONexApp.network;
+import static foundation.icon.ICONexApp.network;
 
 public class SendTxActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = SendTxActivity.class.getSimpleName();
@@ -174,7 +172,6 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
         editLimit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -265,7 +262,7 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
 
             setRemain();
         } catch (Exception e) {
-            IconConnect.broadcastError(SendTxActivity.this, requestData, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER, "value"));
+            IconexConnect.sendError(SendTxActivity.this, requestData, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER, "value"));
         }
     }
 
@@ -276,22 +273,12 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.btn_close:
                 Basic2ButtonDialog cancleDialog = new Basic2ButtonDialog(this);
-                cancleDialog.setMessage(getString(R.string.msgCancelBind));
+                cancleDialog.setMessage(getString(R.string.msgSendCancel));
                 cancleDialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                     @Override
                     public void onOk() {
-                        Intent intent = new Intent()
-                                .setClassName(requestData.getCaller(), requestData.getReceiver())
-                                .setAction(foundation.icon.connect.Constants.C_ACTION)
-                                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-                        ResponseData resData = new ResponseData(id, ErrorCodes.ERR_USER_CANCEL, ErrorCodes.MSG_USR_CANCEL);
-                        intent.putExtra("data", resData.getResponse());
-
-                        ICONexApp.isConnect = false;
-                        sendBroadcast(intent);
-
-                        finishAffinity();
+                        IconexConnect.sendError(SendTxActivity.this, requestData,
+                                new ErrorCodes.Error(ErrorCodes.ERR_USER_CANCEL, ErrorCodes.MSG_USER_CANCEL));
                     }
 
                     @Override
@@ -598,33 +585,12 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
         iconService.sendTransaction(signedTransaction).execute(new foundation.icon.icx.Callback<Bytes>() {
             @Override
             public void onSuccess(Bytes result) {
-                Intent intent = new Intent();
-                intent.setClassName(requestData.getCaller(), requestData.getReceiver())
-                        .setAction(Constants.C_ACTION)
-                        .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-                ResponseData resData = new ResponseData(id, foundation.icon.connect.Constants.SUCCESS, result.toHexString(true));
-                intent.putExtra("data", resData.getResponse());
-
-                sendBroadcast(intent);
-
-                ICONexApp.isConnect = false;
-                finishAffinity();
+                IconexConnect.sendResponse(SendTxActivity.this, requestData, result.toHexString(true));
             }
 
             @Override
             public void onFailure(Exception exception) {
-                Intent intent = new Intent();
-                intent.setClassName(requestData.getCaller(), requestData.getReceiver())
-                        .setAction(Constants.C_ACTION)
-                        .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-                ResponseData resData = new ResponseData(id, ErrorCodes.ERR_NETWORK, "Network Error");
-                intent.putExtra("data", resData.getResponse());
-
-                sendBroadcast(intent);
-
-                finishAffinity();
+                IconexConnect.sendError(SendTxActivity.this, requestData, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK, ErrorCodes.MSG_NETWORK));
             }
         });
     }
@@ -663,33 +629,12 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
         iconService.sendTransaction(signedTransaction).execute(new foundation.icon.icx.Callback<Bytes>() {
             @Override
             public void onSuccess(Bytes result) {
-                Intent intent = new Intent();
-                intent.setClassName(requestData.getCaller(), requestData.getReceiver())
-                        .setAction(Constants.C_ACTION)
-                        .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-                ResponseData resData = new ResponseData(id, foundation.icon.connect.Constants.SUCCESS, result.toHexString(true));
-                intent.putExtra("data", resData.getResponse());
-
-                sendBroadcast(intent);
-
-                ICONexApp.isConnect = false;
-                finishAffinity();
+                IconexConnect.sendResponse(SendTxActivity.this, requestData, result.toHexString(true));
             }
 
             @Override
             public void onFailure(Exception exception) {
-                Intent intent = new Intent();
-                intent.setClassName(requestData.getCaller(), requestData.getReceiver())
-                        .setAction(Constants.C_ACTION)
-                        .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-                ResponseData resData = new ResponseData(id, ErrorCodes.ERR_NETWORK, "Network Error");
-                intent.putExtra("data", resData.getResponse());
-
-                sendBroadcast(intent);
-
-                finishAffinity();
+                IconexConnect.sendError(SendTxActivity.this, requestData, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK, ErrorCodes.MSG_NETWORK));
             }
         });
     }
@@ -718,5 +663,26 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
                     .build();
             iconService = new IconService(new HttpProvider(httpClient, url));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Basic2ButtonDialog cancleDialog = new Basic2ButtonDialog(this);
+        cancleDialog.setMessage(getString(R.string.msgSendCancel));
+        cancleDialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            @Override
+            public void onOk() {
+                IconexConnect.sendError(SendTxActivity.this, requestData,
+                        new ErrorCodes.Error(ErrorCodes.ERR_USER_CANCEL, ErrorCodes.MSG_USER_CANCEL));
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+        cancleDialog.show();
     }
 }

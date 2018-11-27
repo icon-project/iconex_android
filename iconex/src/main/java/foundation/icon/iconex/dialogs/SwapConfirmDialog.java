@@ -15,7 +15,7 @@ import org.web3j.crypto.Credentials;
 
 import java.math.BigInteger;
 
-import foundation.icon.iconex.ICONexApp;
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.wallet.Wallet;
 

@@ -8,8 +8,8 @@ import android.os.AsyncTask;
 
 import com.google.gson.JsonObject;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.service.response.VSResponse;
@@ -17,7 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static foundation.icon.iconex.ICONexApp.network;
+import static foundation.icon.ICONexApp.network;
 
 /**
  * Created by js on 2018. 5. 29..

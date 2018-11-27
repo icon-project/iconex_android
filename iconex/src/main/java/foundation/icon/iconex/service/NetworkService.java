@@ -33,8 +33,8 @@ import java.util.Map;
 
 import ethereum.contract.MyContract;
 import ethereum.contract.MyTransactionManager;
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.request.Transaction;
@@ -45,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static foundation.icon.iconex.ICONexApp.network;
+import static foundation.icon.ICONexApp.network;
 
 public class NetworkService extends Service {
 

@@ -10,8 +10,8 @@ import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 
 /**
  * Created by js on 2018. 5. 8..

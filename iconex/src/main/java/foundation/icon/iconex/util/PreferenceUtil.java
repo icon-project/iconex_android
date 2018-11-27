@@ -3,8 +3,8 @@ package foundation.icon.iconex.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 
 /**
  * Created by js on 2018. 4. 22..

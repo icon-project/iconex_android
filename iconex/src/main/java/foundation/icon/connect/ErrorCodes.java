@@ -23,7 +23,7 @@ public class ErrorCodes {
     public static final int ERR_NETWORK = -9999;
 
     // =========== Codes ===========
-    public static final String MSG_USR_CANCEL = "Operation canceled by user.";
+    public static final String MSG_USER_CANCEL = "Operation canceled by user.";
     public static final String MSG_PARSE = "Parse error. (Invalid JSON type)";
     public static final String MSG_INVALID_RQ = "Invalid request.";
     public static final String MSG_INVALID_M = "Invalid method.";

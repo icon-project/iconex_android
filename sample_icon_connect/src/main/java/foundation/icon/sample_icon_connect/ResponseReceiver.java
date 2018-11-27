@@ -16,7 +16,7 @@ public class ResponseReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         JSONObject response = getResponse(intent.getStringExtra("data"));
 
-        if (action.equals("ICON_CONNECT")) {
+        if (action.equals(SampleApp.ACTION_CONNECT)) {
             int id = -1;
             int code = -1;
             String result;

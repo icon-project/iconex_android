@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.service.NetworkService;
@@ -154,18 +154,8 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
                 dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                     @Override
                     public void onOk() {
-                        Intent intent = new Intent()
-                                .setClassName(request.getCaller(), request.getReceiver())
-                                .setAction(foundation.icon.connect.Constants.C_ACTION)
-                                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-                        ResponseData resData = new ResponseData(reqId, ErrorCodes.ERR_USER_CANCEL, "User Cancel");
-                        intent.putExtra("data", resData.getResponse());
-
-                        ICONexApp.isConnect = false;
-                        sendBroadcast(intent);
-
-                        finishAffinity();
+                        IconexConnect.sendError(SelectWalletActivity.this, request,
+                                new ErrorCodes.Error(ErrorCodes.ERR_USER_CANCEL, ErrorCodes.MSG_USER_CANCEL));
                     }
 
                     @Override
@@ -177,18 +167,7 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.btn_confirm:
                 String address = listAdapter.getSelected();
-                intent = new Intent()
-                        .setClassName(request.getCaller(), request.getReceiver())
-                        .setAction(foundation.icon.connect.Constants.C_ACTION)
-                        .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-                resData = new ResponseData(reqId, foundation.icon.connect.Constants.SUCCESS, address);
-                intent.putExtra("data", resData.getResponse());
-
-                ICONexApp.isConnect = false;
-                sendBroadcast(intent);
-
-                finishAffinity();
+                IconexConnect.sendResponse(SelectWalletActivity.this, request, address);
                 break;
         }
     }
@@ -224,5 +203,26 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onSelect() {
         btnConfirm.setEnabled(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+        dialog.setMessage(getString(R.string.msgCancelBind));
+        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            @Override
+            public void onOk() {
+                IconexConnect.sendError(SelectWalletActivity.this, request,
+                        new ErrorCodes.Error(ErrorCodes.ERR_USER_CANCEL, ErrorCodes.MSG_USER_CANCEL));
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+        dialog.show();
     }
 }

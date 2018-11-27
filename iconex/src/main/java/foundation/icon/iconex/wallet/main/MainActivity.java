@@ -33,8 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
@@ -54,9 +54,9 @@ import foundation.icon.iconex.wallet.menu.language.SettingLanguageActivity;
 import foundation.icon.iconex.wallet.menu.lock.SettingLockActivity;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.iconex.MyConstants.EXCHANGE_BTC;
-import static foundation.icon.iconex.MyConstants.EXCHANGE_ETH;
-import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
+import static foundation.icon.MyConstants.EXCHANGE_BTC;
+import static foundation.icon.MyConstants.EXCHANGE_ETH;
+import static foundation.icon.MyConstants.EXCHANGE_USD;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, DrawerMenuFragment.OnMenuSelectListener,

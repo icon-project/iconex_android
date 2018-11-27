@@ -1,7 +1,9 @@
-package foundation.icon.iconex;
+package foundation.icon;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -15,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import foundation.icon.connect.Constants;
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.intro.auth.AuthActivity;
@@ -61,8 +64,9 @@ public class ICONexApp extends Application {
     public static String version = "";
 
     // ======== ICON Connect ========
-    public static final String ICON_CONNECT = "ICON_CONNECT";
+    public static final String ICONEX_CONNECT = "ICONEX_CONNECT";
     public static boolean isConnect = false;
+    public static Constants.Method connectMethod = Constants.Method.NONE;
 
     // ======== Developer Mode ========
     public static final String DEVELOPER = "DEVELOPER";
@@ -175,6 +179,7 @@ public class ICONexApp extends Application {
                 PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
                 boolean beingLock = preferenceUtil.getBeingLock();
                 Log.d(TAG, "Foreground beingLock=" + beingLock);
+                Log.d(TAG, "activity=" + activity.getLocalClassName());
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
                     if (activity.getLocalClassName().equals("wallet.transfer.ICONTransferActivity")

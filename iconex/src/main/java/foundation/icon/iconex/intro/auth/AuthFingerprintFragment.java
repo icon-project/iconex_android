@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import foundation.icon.iconex.ICONexApp;
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.Utils;
 

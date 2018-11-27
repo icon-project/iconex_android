@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.NetworkService;
 import loopchain.icon.wallet.core.Constants;

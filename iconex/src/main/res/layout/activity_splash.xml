@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorMain"
-    tools:context="foundation.icon.iconex.SplashActivity">
+    tools:context="foundation.icon.iconex.foundation.icon.SplashActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

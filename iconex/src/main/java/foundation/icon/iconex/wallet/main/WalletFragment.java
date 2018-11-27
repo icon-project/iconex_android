@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.BottomSheetMenu;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
@@ -45,7 +45,7 @@ import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 import loopchain.icon.wallet.service.crypto.PKIUtils;
 
-import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
+import static foundation.icon.MyConstants.EXCHANGE_USD;
 
 public class WalletFragment extends Fragment implements View.OnClickListener {
 

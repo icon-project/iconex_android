@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
-        android:name=".ICONexApp"
+        android:name="foundation.icon.ICONexApp"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
@@ -31,7 +31,8 @@
             android:value="AIzaSyBJQyG3bTgjsDyPn8_-IvxmQ37xHcjDA0g" />
 
         <activity
-            android:name=".SplashActivity"
+            android:name="foundation.icon.SplashActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -171,7 +172,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="ICON_CONNECT" />
+                <action android:name="ICONEX_CONNECT" />
             </intent-filter>
         </receiver>
     </application>

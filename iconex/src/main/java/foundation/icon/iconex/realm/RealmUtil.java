@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.realm.data.CoinNToken;
@@ -22,7 +22,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.iconex.MyConstants.CoinType.ICX;
+import static foundation.icon.MyConstants.CoinType.ICX;
 
 /**
  * Created by js on 2018. 3. 5..

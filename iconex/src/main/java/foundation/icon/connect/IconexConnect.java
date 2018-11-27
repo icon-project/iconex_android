@@ -13,8 +13,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
@@ -31,10 +31,10 @@ import foundation.icon.icx.transport.jsonrpc.RpcValue;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-import static foundation.icon.iconex.ICONexApp.network;
+import static foundation.icon.ICONexApp.network;
 
-public class IconConnect {
-    private static final String TAG = IconConnect.class.getSimpleName();
+public class IconexConnect {
+    private static final String TAG = IconexConnect.class.getSimpleName();
 
     private final Activity parent;
     private IconService iconService;
@@ -57,7 +57,7 @@ public class IconConnect {
 
     private BigInteger icxBalance;
 
-    public IconConnect(Activity parent, RequestData request) {
+    public IconexConnect(Activity parent, RequestData request) {
         this.parent = parent;
         this.request = request;
         parser = RequestParser.newInstance(parent);
@@ -79,7 +79,7 @@ public class IconConnect {
                 try {
                     address = parser.validateParameters(method, parser.getParams(parser.getData(request.getData())));
                 } catch (Exception e) {
-                    broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_RQ, ErrorCodes.MSG_INVALID_RQ));
+                    sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_RQ, ErrorCodes.MSG_INVALID_RQ));
                     parent.finishAffinity();
                 }
 
@@ -93,14 +93,14 @@ public class IconConnect {
                             toAddress = params.getString("to");
 
                             if (boundWallet.getAddress().equals(toAddress))
-                                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_SAME_ADDRESS, "Same address"));
+                                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_SAME_ADDRESS, "Same address"));
                             else if (toAddress.startsWith("hx")
                                     || toAddress.startsWith("cx")) {
                                 if (toAddress.substring(2).length() < 40)
-                                    broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER,
+                                    sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER,
                                             String.format(Locale.getDefault(), ErrorCodes.MSG_INVALID_PARAM, address)));
                             } else
-                                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER,
+                                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER,
                                         String.format(Locale.getDefault(), ErrorCodes.MSG_INVALID_PARAM, address)));
 
                         } catch (JSONException e) {
@@ -135,7 +135,7 @@ public class IconConnect {
                 ICONexApp.isConnect = false;
                 parent.finishAffinity();
             } else
-                broadcastError(parent, request, e);
+                sendError(parent, request, e);
         }
     }
 
@@ -172,7 +172,7 @@ public class IconConnect {
 
             @Override
             public void onFailure(Exception exception) {
-                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
+                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
                         String.format(Locale.getDefault(), ErrorCodes.MSG_NETWORK, exception.getMessage())));
             }
         });
@@ -209,7 +209,7 @@ public class IconConnect {
 
             @Override
             public void onFailure(Exception exception) {
-                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
+                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
                         String.format(Locale.getDefault(), ErrorCodes.MSG_NETWORK, exception.getMessage())));
             }
         });
@@ -245,7 +245,7 @@ public class IconConnect {
 
             @Override
             public void onFailure(Exception exception) {
-                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
+                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
                         String.format(Locale.getDefault(), ErrorCodes.MSG_NETWORK, exception.getMessage())));
             }
         });
@@ -291,7 +291,7 @@ public class IconConnect {
 
                             @Override
                             public void onFailure(Exception exception) {
-                                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
+                                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
                                         String.format(Locale.getDefault(), ErrorCodes.MSG_NETWORK, exception.getMessage())));
                             }
                         });
@@ -299,7 +299,7 @@ public class IconConnect {
 
                     @Override
                     public void onFailure(Exception exception) {
-                        broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
+                        sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
                                 String.format(Locale.getDefault(), ErrorCodes.MSG_NETWORK, exception.getMessage())));
                     }
                 });
@@ -307,7 +307,7 @@ public class IconConnect {
 
             @Override
             public void onFailure(Exception exception) {
-                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER,
+                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER,
                         String.format(Locale.getDefault(), ErrorCodes.MSG_INVALID_PARAM, "contractAddress")));
             }
         });
@@ -340,9 +340,9 @@ public class IconConnect {
                     amount = ConvertUtil.hexStringToBigInt(value, decimals);
 
                     if (balance.compareTo(BigInteger.ZERO) == 0)
-                        broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE, String.format(ErrorCodes.MSG_INSUFFICIENT)));
+                        sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE, String.format(ErrorCodes.MSG_INSUFFICIENT)));
                     else if (balance.compareTo(amount) < 0)
-                        broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE, String.format(ErrorCodes.MSG_INSUFFICIENT)));
+                        sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE, String.format(ErrorCodes.MSG_INSUFFICIENT)));
                     else {
                         for (int i = 0; i < boundWallet.getWalletEntries().size(); i++) {
                             WalletEntry entry = boundWallet.getWalletEntries().get(i);
@@ -372,14 +372,14 @@ public class IconConnect {
                         }
                     }
                 } catch (Exception e) {
-                    broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER, "value"));
+                    sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER, "value"));
                     parent.finishAffinity();
                 }
             }
 
             @Override
             public void onFailure(Exception exception) {
-                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
+                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
                         String.format(Locale.getDefault(), ErrorCodes.MSG_NETWORK, exception.getMessage())));
             }
         });
@@ -395,11 +395,11 @@ public class IconConnect {
                 amount = ConvertUtil.hexStringToBigInt(value, decimals);
 
                 if (icxBalance.compareTo(BigInteger.ZERO) == 0)
-                    broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE, ErrorCodes.MSG_INSUFFICIENT));
+                    sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE, ErrorCodes.MSG_INSUFFICIENT));
                 else if (icxBalance.compareTo(txFee) < 0)
-                    broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE_FOR_FEE, ErrorCodes.MSG_INSUFFICIENT_FEE));
+                    sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE_FOR_FEE, ErrorCodes.MSG_INSUFFICIENT_FEE));
                 else if (icxBalance.compareTo(amount.add(txFee)) < 0)
-                    broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE_FOR_FEE, ErrorCodes.MSG_INSUFFICIENT_FEE));
+                    sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INSUFFICIENT_BALANCE_FOR_FEE, ErrorCodes.MSG_INSUFFICIENT_FEE));
                 else if (method == Constants.Method.SendToken)
                     getTokenBalance();
                 else {
@@ -425,7 +425,7 @@ public class IconConnect {
                     parent.finish();
                 }
             } catch (Exception e) {
-                broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER,
+                sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_PARAMETER,
                         String.format(Locale.getDefault(), ErrorCodes.MSG_INVALID_PARAM, "value")));
                 parent.finishAffinity();
             }
@@ -433,7 +433,7 @@ public class IconConnect {
 
         @Override
         public void onFailure(Exception exception) {
-            broadcastError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
+            sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK,
                     String.format(Locale.getDefault(), ErrorCodes.MSG_NETWORK, exception.getMessage())));
         }
     };
@@ -464,19 +464,36 @@ public class IconConnect {
         }
     }
 
-    public static void broadcastError(Activity activity, RequestData request, ErrorCodes.Error e) {
+    public static void sendResponse(Activity activity, RequestData request, String result) {
+        RequestParser parser = RequestParser.newInstance(activity);
+        Intent intent = new Intent()
+                .setClassName(request.getCaller(), request.getReceiver())
+                .setAction(foundation.icon.connect.Constants.C_ACTION)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+        ResponseData resData = new ResponseData(parser.getId(request.getData()), Constants.SUCCESS, result);
+        intent.putExtra("data", resData.getResponse());
+
+        ICONexApp.isConnect = false;
+        ICONexApp.connectMethod = Constants.Method.NONE;
+        activity.sendBroadcast(intent);
+
+        activity.finishAffinity();
+    }
+
+    public static void sendError(Activity activity, RequestData request, ErrorCodes.Error e) {
         RequestParser parser = RequestParser.newInstance(activity);
         Intent intent = new Intent().setClassName(request.getCaller(), request.getReceiver())
                 .setAction(Constants.C_ACTION)
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 
-        ResponseData response = new ResponseData(parser.getId(request.getData()),
-                e.getCode(), e.getResult());
+        ResponseData response = new ResponseData(parser.getId(request.getData()), e.getCode(), e.getResult());
         intent.putExtra("data", response.getResponse());
 
+        ICONexApp.isConnect = false;
+        ICONexApp.connectMethod = Constants.Method.NONE;
         activity.sendBroadcast(intent);
 
-        ICONexApp.isConnect = false;
         activity.finishAffinity();
     }
 }

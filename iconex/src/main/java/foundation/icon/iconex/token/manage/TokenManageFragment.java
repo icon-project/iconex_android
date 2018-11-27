@@ -38,8 +38,8 @@ import java.util.Random;
 
 import ethereum.contract.MyContract;
 import ethereum.contract.MyTransactionManager;
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
@@ -58,7 +58,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static foundation.icon.iconex.ICONexApp.network;
+import static foundation.icon.ICONexApp.network;
 
 public class TokenManageFragment extends Fragment implements View.OnClickListener {
 

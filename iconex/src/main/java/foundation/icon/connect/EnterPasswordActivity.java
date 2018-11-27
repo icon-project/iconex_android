@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ import org.spongycastle.util.encoders.Hex;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
@@ -35,7 +34,6 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
-import foundation.icon.icx.Callback;
 import foundation.icon.icx.IconService;
 import foundation.icon.icx.data.Address;
 import foundation.icon.icx.transport.http.HttpProvider;
@@ -45,7 +43,7 @@ import loopchain.icon.wallet.service.crypto.SendTransactionSigner;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-import static foundation.icon.iconex.ICONexApp.network;
+import static foundation.icon.ICONexApp.network;
 
 public class EnterPasswordActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = EnterPasswordActivity.class.getSimpleName();
@@ -204,7 +202,7 @@ public class EnterPasswordActivity extends AppCompatActivity implements View.OnC
                 SendTransactionSigner signer = new SendTransactionSigner(mTx);
                 txtTxHash.setText(signer.getTxHash());
             } catch (ErrorCodes.Error e) {
-                broadcastError(e);
+                IconexConnect.sendError(EnterPasswordActivity.this, request, e);
             }
         } else {
             layoutTxHash.setVisibility(View.GONE);
@@ -225,7 +223,8 @@ public class EnterPasswordActivity extends AppCompatActivity implements View.OnC
                 cancelDialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                     @Override
                     public void onOk() {
-                        broadcastError(new ErrorCodes.Error(ErrorCodes.ERR_USER_CANCEL, getString(R.string.descUserCancel)));
+                        IconexConnect.sendError(EnterPasswordActivity.this, request,
+                                new ErrorCodes.Error(ErrorCodes.ERR_USER_CANCEL, ErrorCodes.MSG_USER_CANCEL));
                     }
 
                     @Override
@@ -252,19 +251,10 @@ public class EnterPasswordActivity extends AppCompatActivity implements View.OnC
                     try {
                         signature = getSignature(mTx);
                     } catch (ErrorCodes.Error e) {
-                        broadcastError(e);
+                        IconexConnect.sendError(EnterPasswordActivity.this, request, e);
                     }
 
-                    intent = new Intent()
-                            .setClassName(request.getCaller(), request.getReceiver())
-                            .setAction(Constants.C_ACTION)
-                            .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-                    response = new ResponseData(id, Constants.SUCCESS, signature);
-                    intent.putExtra("data", response.getResponse());
-
-                    sendBroadcast(intent);
-                    finish();
+                    IconexConnect.sendResponse(EnterPasswordActivity.this, request, signature);
                 } else {
                     startActivity(new Intent(this, SendTxActivity.class)
                             .putExtra("id", id)
@@ -338,19 +328,6 @@ public class EnterPasswordActivity extends AppCompatActivity implements View.OnC
         }
 
         return signature;
-    }
-
-    private void broadcastError(ErrorCodes.Error err) {
-        Intent intent = new Intent()
-                .setClassName(request.getCaller(), request.getReceiver())
-                .setAction(Constants.C_ACTION)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-
-        ResponseData response = new ResponseData(id, err.getCode(), err.getResult());
-        intent.putExtra("data", response.getResponse());
-
-        sendBroadcast(intent);
-        finish();
     }
 
     class GetBalance extends AsyncTask<Void, BigInteger, BigInteger> {
@@ -437,5 +414,26 @@ public class EnterPasswordActivity extends AppCompatActivity implements View.OnC
                 btnConfirm.setEnabled(false);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Basic2ButtonDialog cancleDialog = new Basic2ButtonDialog(this);
+        cancleDialog.setMessage(getString(R.string.msgCancelPassword));
+        cancleDialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            @Override
+            public void onOk() {
+                IconexConnect.sendError(EnterPasswordActivity.this, request,
+                        new ErrorCodes.Error(ErrorCodes.ERR_USER_CANCEL, ErrorCodes.MSG_USER_CANCEL));
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+        cancleDialog.show();
     }
 }

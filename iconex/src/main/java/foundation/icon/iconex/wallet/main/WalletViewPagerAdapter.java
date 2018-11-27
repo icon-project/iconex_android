@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 
-import foundation.icon.iconex.ICONexApp;
+import foundation.icon.ICONexApp;
 
 /**
  * Created by js on 2018. 3. 6..

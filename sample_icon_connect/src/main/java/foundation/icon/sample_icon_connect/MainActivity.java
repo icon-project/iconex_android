@@ -134,8 +134,8 @@ public class MainActivity extends Activity {
         String data = Base64.encodeToString(params.toString().getBytes(), Base64.NO_WRAP);
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
-                .setAction("ICON_CONNECT")
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .setAction(SampleApp.ACTION_CONNECT)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_icon_connect")
                 .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
         String data = Base64.encodeToString(action.toString().getBytes(), Base64.NO_WRAP);
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
-                .setAction("ICON_CONNECT")
+                .setAction(SampleApp.ACTION_CONNECT)
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_icon_connect")
@@ -180,8 +180,8 @@ public class MainActivity extends Activity {
         String data = Base64.encodeToString(action.toString().getBytes(), Base64.NO_WRAP);
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
-                .setAction("ICON_CONNECT")
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .setAction(SampleApp.ACTION_CONNECT)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_icon_connect")
                 .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
@@ -204,7 +204,7 @@ public class MainActivity extends Activity {
         String data = Base64.encodeToString(action.toString().getBytes(), Base64.NO_WRAP);
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
-                .setAction("ICON_CONNECT")
+                .setAction(SampleApp.ACTION_CONNECT)
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_icon_connect")

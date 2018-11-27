@@ -1,4 +1,4 @@
-package foundation.icon.iconex;
+package foundation.icon;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,15 +11,17 @@ import android.util.Log;
 
 import java.util.Locale;
 
+import foundation.icon.connect.Constants;
 import foundation.icon.connect.ErrorCodes;
-import foundation.icon.connect.IconConnect;
+import foundation.icon.connect.IconexConnect;
 import foundation.icon.connect.RequestData;
+import foundation.icon.iconex.R;
 import foundation.icon.iconex.intro.IntroActivity;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
 import foundation.icon.iconex.wallet.main.MainActivity;
 
-import static foundation.icon.iconex.ICONexApp.language;
+import static foundation.icon.ICONexApp.language;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -34,10 +36,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        if (getIntent().getBooleanExtra(ICONexApp.ICON_CONNECT, false)) {
-            ICONexApp.isConnect = true;
+        if (ICONexApp.isConnect)
             request = (RequestData) getIntent().getExtras().get("request");
-        }
     }
 
     @Override
@@ -59,12 +59,16 @@ public class SplashActivity extends AppCompatActivity {
                             public void onPass() {
                                 Log.d(TAG, "ICONexApp.isConnect=" + ICONexApp.isConnect);
                                 if (ICONexApp.isConnect) {
-                                    IconConnect iconConnect = new IconConnect(SplashActivity.this, request);
-                                    if (ICONexApp.mWallets.size() > 0)
-                                        iconConnect.startConnectActivity();
-                                    else
-                                        IconConnect.broadcastError(SplashActivity.this, request,
-                                                new ErrorCodes.Error(ErrorCodes.ERR_EMPTY, getString(R.string.descEmpty)));
+                                    if (ICONexApp.connectMethod == Constants.Method.NONE) {
+                                        IconexConnect iconexConnect = new IconexConnect(SplashActivity.this, request);
+                                        if (ICONexApp.mWallets.size() > 0)
+                                            iconexConnect.startConnectActivity();
+                                        else
+                                            IconexConnect.sendError(SplashActivity.this, request,
+                                                    new ErrorCodes.Error(ErrorCodes.ERR_EMPTY, getString(R.string.descEmpty)));
+                                    } else {
+                                        finish();
+                                    }
                                 } else
                                     checkPermission();
                             }

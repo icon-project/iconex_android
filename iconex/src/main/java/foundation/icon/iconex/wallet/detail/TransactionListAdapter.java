@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import foundation.icon.iconex.ICONexApp;
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -30,8 +30,8 @@ import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.iconex.ICONexApp.network;
-import static foundation.icon.iconex.MyConstants.EXCHANGE_USD;
+import static foundation.icon.ICONexApp.network;
+import static foundation.icon.MyConstants.EXCHANGE_USD;
 
 /**
  * Created by js on 2018. 3. 13..

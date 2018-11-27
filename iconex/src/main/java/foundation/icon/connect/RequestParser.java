@@ -12,11 +12,10 @@ import com.google.gson.JsonParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigInteger;
 import java.util.Locale;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.util.ConvertUtil;
 
 public class RequestParser {
     private static final String TAG = RequestParser.class.getSimpleName();
@@ -62,20 +61,27 @@ public class RequestParser {
             String method = requestData.getString("method");
             switch (method) {
                 case "bind":
+                    ICONexApp.connectMethod = Constants.Method.BIND;
                     return Constants.Method.BIND;
 
                 case "sign":
+                    ICONexApp.connectMethod = Constants.Method.SIGN;
                     return Constants.Method.SIGN;
 
                 case "sendICX":
+                    ICONexApp.connectMethod = Constants.Method.SendICX;
                     return Constants.Method.SendICX;
 
                 case "sendToken":
+                    ICONexApp.connectMethod = Constants.Method.SendToken;
                     return Constants.Method.SendToken;
+                default:
+                    ICONexApp.connectMethod = Constants.Method.NONE;
             }
 
             throw new ErrorCodes.Error(ErrorCodes.ERR_INVALID_METHOD, mContext.getString(R.string.descInvalidMethod));
         } catch (JSONException e) {
+            ICONexApp.connectMethod = Constants.Method.NONE;
             throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, mContext.getString(R.string.descParseError));
         }
     }

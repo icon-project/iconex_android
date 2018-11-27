@@ -31,7 +31,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -40,9 +40,9 @@ import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
 
-import static foundation.icon.iconex.ICONexApp.network;
-import static foundation.icon.iconex.MyConstants.SYMBOL_ETH;
-import static foundation.icon.iconex.MyConstants.SYMBOL_ICON;
+import static foundation.icon.ICONexApp.network;
+import static foundation.icon.MyConstants.SYMBOL_ETH;
+import static foundation.icon.MyConstants.SYMBOL_ICON;
 
 /**
  * Created by js on 2018. 3. 15..

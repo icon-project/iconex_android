@@ -1,4 +1,4 @@
-package foundation.icon.iconex;
+package foundation.icon;
 
 /**
  * Created by js on 2018. 3. 7..

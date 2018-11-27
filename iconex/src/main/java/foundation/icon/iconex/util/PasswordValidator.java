@@ -1,6 +1,6 @@
 package foundation.icon.iconex.util;
 
-import foundation.icon.iconex.MyConstants;
+import foundation.icon.MyConstants;
 
 /**
  * Created by js on 2018. 3. 22..

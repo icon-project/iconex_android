@@ -474,7 +474,7 @@
     <string name="txData">Tx Data</string>
 
     <string name="msgCancelBind">지갑 선택을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
-    <string name="msgCancelPassword">지갑 비밀번호 입력을 취소하시겠습니까?/n이용 중이던 앱으로 돌아갑니다.</string>
+    <string name="msgCancelPassword">지갑 비밀번호 입력을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
     <string name="msgSendCancel">송금을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
 
     <!-- ICON Connect Error Description -->
