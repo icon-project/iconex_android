@@ -466,7 +466,10 @@
     <string name="networkRetry">연결 상태 확인 후 다시 시도해주세요.</string>
 
     <!-- Developer -->
+    <string name="modeDeveloper">개발자 모드</string>
     <string name="selectNetwork">네트워크 선택</string>
+    <string name="networkMain">Main</string>
+    <string name="networkTest">Test</string>
 
     <!-- ICON Connect -->
     <string name="selectWallet">지갑 선택</string>

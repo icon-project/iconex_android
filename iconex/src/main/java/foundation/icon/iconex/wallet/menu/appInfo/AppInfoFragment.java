@@ -20,7 +20,7 @@ public class AppInfoFragment extends Fragment {
 
     TextView txtCurrent, txtLatest;
     Button btnUpdate;
-    ViewGroup OSS, np;
+    ViewGroup OSS, developer;
 
     public AppInfoFragment() {
         // Required empty public constructor
@@ -62,12 +62,12 @@ public class AppInfoFragment extends Fragment {
             }
         });
 
-        np = v.findViewById(R.id.network_provider);
-        np.setOnClickListener(new View.OnClickListener() {
+        developer = v.findViewById(R.id.mode_developer);
+        developer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null)
-                    mListener.onClickNP();
+                    mListener.onClickDeveloper();
             }
         });
 
@@ -95,6 +95,8 @@ public class AppInfoFragment extends Fragment {
             btnUpdate.setEnabled(true);
         else
             btnUpdate.setEnabled(false);
+
+        setDeveloperMode();
     }
 
     @Override
@@ -114,6 +116,13 @@ public class AppInfoFragment extends Fragment {
         mListener = null;
     }
 
+    public void setDeveloperMode() {
+        if (ICONexApp.isDeveloper)
+            developer.setVisibility(View.VISIBLE);
+        else
+            developer.setVisibility(View.GONE);
+    }
+
     private OnAppInfoListener mListener;
 
     public interface OnAppInfoListener {
@@ -121,6 +130,6 @@ public class AppInfoFragment extends Fragment {
 
         void onClickOSS();
 
-        void onClickNP();
+        void onClickDeveloper();
     }
 }

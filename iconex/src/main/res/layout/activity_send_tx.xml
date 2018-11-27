@@ -53,6 +53,7 @@
                     android:orientation="vertical">
 
                     <RelativeLayout
+                        android:id="@+id/btn_network"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingEnd="10dp"

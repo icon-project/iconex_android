@@ -18,16 +18,21 @@ import com.google.gson.JsonObject;
 import org.json.JSONObject;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.widgets.MyEditText;
@@ -70,6 +75,9 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
     private BigInteger minLimit;
     private BigInteger maxLimit;
 
+    private ViewGroup layoutNetwork, btnNetwork;
+    private TextView txtNetwork;
+
     private ViewGroup infoLimit, infoPrice, infoFee;
 
     private TextView txtSend, txtAmount, txtTransAmount, txtTo, txtFee, txtTransFee, txtRemainAmount, txtRemain, txtTransRemain;
@@ -111,6 +119,11 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
         ((TextView) findViewById(R.id.txt_send_amount)).setText(String.format(Locale.getDefault(), getString(R.string.sendAmount), txData.getSymbol()));
         ((TextView) findViewById(R.id.txt_send_fee)).setText(String.format(Locale.getDefault(), getString(R.string.estiFee), "ICX"));
         ((TextView) findViewById(R.id.txt_remain_amount)).setText(String.format(Locale.getDefault(), getString(R.string.estiRemain), txData.getSymbol()));
+
+        layoutNetwork = findViewById(R.id.layout_network);
+        btnNetwork = findViewById(R.id.btn_network);
+        btnNetwork.setOnClickListener(this);
+        txtNetwork = findViewById(R.id.txt_network);
 
         txtSend = findViewById(R.id.txt_send_amount);
         txtAmount = findViewById(R.id.txt_amount);
@@ -225,6 +238,19 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
 
+        if (ICONexApp.isDeveloper) {
+            layoutNetwork.setVisibility(View.VISIBLE);
+            switch (ICONexApp.network) {
+                case MyConstants.NETWORK_MAIN:
+                    txtNetwork.setText("Main");
+                    break;
+
+                case MyConstants.NETWORK_TEST:
+                    txtNetwork.setText("Test");
+                    break;
+            }
+        }
+
         parser = RequestParser.newInstance(this);
         try {
             params = parser.getParams(parser.getData(requestData.getData()));
@@ -287,6 +313,19 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
                 cancleDialog.show();
+                break;
+
+            case R.id.btn_network:
+                BottomSheetMenuDialog menuDialog = new BottomSheetMenuDialog(this, getString(R.string.selectNetwork),
+                        BottomSheetMenuDialog.SHEET_TYPE.BASIC);
+                List<String> networks = new ArrayList<>();
+                networks.add(getString(R.string.networkMain));
+                networks.add(getString(R.string.networkTest));
+
+                menuDialog.setBasicData(networks);
+                menuDialog.setOnItemClickListener(mItemListener);
+
+                menuDialog.show();
                 break;
 
             case R.id.del_step_limit:
@@ -664,6 +703,32 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
             iconService = new IconService(new HttpProvider(httpClient, url));
         }
     }
+
+    private BottomSheetMenuDialog.OnItemClickListener mItemListener = new BottomSheetMenuDialog.OnItemClickListener() {
+        @Override
+        public void onBasicItem(String item) {
+            PreferenceUtil preferenceUtil = new PreferenceUtil(SendTxActivity.this);
+            if (item.equals(getString(R.string.networkMain))) {
+                txtNetwork.setText(getString(R.string.networkMain));
+                ICONexApp.network = MyConstants.NETWORK_MAIN;
+                preferenceUtil.setNetwork(ICONexApp.network);
+            } else {
+                txtNetwork.setText(getString(R.string.networkTest));
+                ICONexApp.network = MyConstants.NETWORK_TEST;
+                preferenceUtil.setNetwork(ICONexApp.network);
+            }
+        }
+
+        @Override
+        public void onCoinItem(int position) {
+
+        }
+
+        @Override
+        public void onMenuItem(String tag) {
+
+        }
+    };
 
     @Override
     public void onBackPressed() {

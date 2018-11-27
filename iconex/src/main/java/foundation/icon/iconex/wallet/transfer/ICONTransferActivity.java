@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -26,6 +27,8 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.JsonObject;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -37,6 +40,7 @@ import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.service.NetworkService;
@@ -72,6 +76,9 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     private TextView txtTransSend;
     private Button btnPlus10, btnPlus100, btnPlus1000, btnTheWhole;
     private Button btnContacts, btnScan, btnInput;
+
+    private ViewGroup layoutNetwork, btnNetwork;
+    private TextView txtNetwork;
 
     private TextView txtStepICX, txtStepGloop, txtStepTrans;
 
@@ -204,6 +211,11 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 .setText(String.format(getString(R.string.estiRemain), mWalletEntry.getSymbol()));
         btnBack = findViewById(R.id.btn_back);
         btnBack.setOnClickListener(this);
+
+        layoutNetwork = findViewById(R.id.layout_network);
+        btnNetwork = findViewById(R.id.btn_network);
+        btnNetwork.setOnClickListener(this);
+        txtNetwork = findViewById(R.id.txt_network);
 
         if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN))
             findViewById(R.id.layout_input_data).setVisibility(View.GONE);
@@ -574,6 +586,19 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     public void onResume() {
         super.onResume();
 
+        if (ICONexApp.isDeveloper) {
+            layoutNetwork.setVisibility(View.VISIBLE);
+            switch (ICONexApp.network) {
+                case MyConstants.NETWORK_MAIN:
+                    txtNetwork.setText(getString(R.string.networkMain));
+                    break;
+
+                case MyConstants.NETWORK_TEST:
+                    txtNetwork.setText(getString(R.string.networkTest));
+                    break;
+            }
+        }
+
         balance = new BigInteger(mWalletEntry.getBalance());
 
         ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
@@ -600,6 +625,20 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             case R.id.btn_back:
                 finish();
                 break;
+
+            case R.id.btn_network:
+                BottomSheetMenuDialog networkDialog = new BottomSheetMenuDialog(this, getString(R.string.selectNetwork),
+                        BottomSheetMenuDialog.SHEET_TYPE.BASIC);
+                List<String> networks = new ArrayList<>();
+                networks.add(getString(R.string.networkMain));
+                networks.add(getString(R.string.networkTest));
+
+                networkDialog.setBasicData(networks);
+                networkDialog.setOnItemClickListener(mItemListener);
+
+                networkDialog.show();
+                break;
+
             case R.id.btn_plus_10:
                 addPlus(10);
                 setSendEnable();
@@ -1223,6 +1262,32 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
         }
     }
+
+    private BottomSheetMenuDialog.OnItemClickListener mItemListener = new BottomSheetMenuDialog.OnItemClickListener() {
+        @Override
+        public void onBasicItem(String item) {
+            txtNetwork.setText(item);
+            PreferenceUtil preferenceUtil = new PreferenceUtil(ICONTransferActivity.this);
+            if (item.equals(getString(R.string.networkMain))) {
+                ICONexApp.network = MyConstants.NETWORK_MAIN;
+                preferenceUtil.setNetwork(ICONexApp.network);
+
+            } else {
+                ICONexApp.network = MyConstants.NETWORK_TEST;
+                preferenceUtil.setNetwork(ICONexApp.network);
+            }
+        }
+
+        @Override
+        public void onCoinItem(int position) {
+
+        }
+
+        @Override
+        public void onMenuItem(String tag) {
+
+        }
+    };
 
     @Override
     public void onSetData(InputData data) {
