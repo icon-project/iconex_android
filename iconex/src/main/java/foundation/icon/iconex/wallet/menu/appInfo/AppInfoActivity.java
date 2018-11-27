@@ -6,15 +6,18 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.ServiceConstants;
 
-public class AppInfoActivity extends AppCompatActivity implements AppInfoFragment.OnAppInfoListener {
+public class AppInfoActivity extends AppCompatActivity implements AppInfoFragment.OnAppInfoListener, DeveloperFragment.DeveloperOnclick {
+    private static final String TAG = AppInfoActivity.class.getSimpleName();
 
     private FragmentManager fragmentManager;
+    private AppInfoFragment infoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +32,11 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoFragmen
             }
         });
 
+        infoFragment = AppInfoFragment.newInstance();
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, AppInfoFragment.newInstance());
-        transaction.addToBackStack(null);
+        transaction.add(R.id.container, infoFragment);
+        transaction.addToBackStack("info");
         transaction.commit();
     }
 
@@ -68,14 +72,23 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoFragmen
     }
 
     @Override
-    public void onClickNP() {
-        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.networkProvider));
+    public void onClickDeveloper() {
+        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.modeDeveloper));
         findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_back);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, NetworkProviderFragment.newInstance());
+        transaction.add(R.id.container, DeveloperFragment.newInstance());
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onOff() {
+        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.appInfo));
+        findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_close);
+        fragmentManager.popBackStackImmediate();
+
+        infoFragment.setDeveloperMode();
     }
 
     @Override

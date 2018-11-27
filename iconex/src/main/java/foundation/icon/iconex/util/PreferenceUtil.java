@@ -171,5 +171,10 @@ public class PreferenceUtil {
         ICONexApp.language = getLanguage();
         ICONexApp.network = getNetwork();
         ICONexApp.isDeveloper = isDeveloper();
+
+        if (!ICONexApp.isDeveloper) {
+            ICONexApp.network = MyConstants.NETWORK_MAIN;
+            setNetwork(MyConstants.NETWORK_MAIN);
+        }
     }
 }

@@ -88,6 +88,13 @@ public class MainActivity extends Activity {
             }
         });
 
+        findViewById(R.id.btn_developer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendDeveloper();
+            }
+        });
+
         txtAddress = findViewById(R.id.txt_bound);
         txtAddress.setTextIsSelectable(true);
         if (SampleApp.from != null) {
@@ -157,7 +164,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_icon_connect")
                 .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
@@ -205,7 +212,29 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
+                .putExtra("data", data)
+                .putExtra("caller", "foundation.icon.sample_icon_connect")
+                .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
+
+        sendBroadcast(intent);
+    }
+
+    private void sendDeveloper() {
+        JSONObject params = new JSONObject();
+
+        try {
+            params.put("id", 9999);
+            params.put("method", "bind");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String data = Base64.encodeToString(params.toString().getBytes(), Base64.NO_WRAP);
+        Intent intent = new Intent()
+                .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
+                .setAction(SampleApp.ACTION_DEVELOPER)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_icon_connect")
                 .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
