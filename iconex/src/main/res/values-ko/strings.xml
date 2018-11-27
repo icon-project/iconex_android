@@ -1,0 +1,493 @@
+<resources>
+    <string name="app_name">ICONex</string>
+
+    <!-- Common -->
+    <string name="cancel">취소</string>
+    <string name="confirm">확인</string>
+    <string name="back">이전</string>
+    <string name="next">다음</string>
+    <string name="complete">완료</string>
+    <string name="yes">네</string>
+    <string name="no">아니요</string>
+    <string name="edit">편집</string>
+    <string name="change">변경</string>
+    <string name="copy">복사</string>
+    <string name="close">닫기</string>
+    <string name="add">추가</string>
+    <string name="use">사용</string>
+    <string name="load">가져오기</string>
+    <string name="retry">재시도</string>
+    <string name="view">보기</string>
+    <string name="input">입력</string>
+    <string name="delete">삭제</string>
+    <string name="modified">수정</string>
+    <string name="fold">접기</string>
+
+    <string name="unitUSD">USD</string>
+    <string name="unitBTC">BTC</string>
+    <string name="unitICX">ICX</string>
+    <string name="unitETH">ETH</string>
+
+    <string name="withdraw">송금</string>
+    <string name="deposit">입금</string>
+
+    <string name="errNoAddress">주소를 입력해주세요.</string>
+
+    <!-- Copy -->
+    <string name="msgCopyPrivateKey">개인 키가 복사되었습니다.</string>
+    <string name="msgCopyAddress">주소가 복사되었습니다.</string>
+    <string name="msgCopyTxID">거래 ID가 복사되었습니다.</string>
+
+    <!-- Splash -->
+    <string name="copyright">\@2018 ICON Foundation</string>
+    <string name="intro1">ICONex는 ICX와ETH를 비롯하여\nICON Network에 연결된 다양한 암호화폐의\n지갑을 만들고 관리할 수 있습니다.</string>
+    <string name="intro2">Reserved Balance를 기반으로\nICON에 연결된 다양한 암호화폐와 ICX의 편리한\n보관 및 송금이 가능합니다.</string>
+    <string name="createWallet">지갑 만들기</string>
+    <string name="LoadWallet">지갑 가져오기</string>
+    <string name="hintWalletPassword">비밀번호 입력</string>
+
+    <!-- Create Wallet -->
+    <string name="titleCreateWallet">지갑 만들기</string>
+    <string name="cancelCreateWallet">지갑 만들기를 취소하시겠습니까?</string>
+    <string name="selectCoin">코인 선택</string>
+    <string name="information">정보 입력</string>
+    <string name="stepDownload">Keystore\n다운로드</string>
+    <string name="savePrivateKey">개인 키\n저장</string>
+    <string name="step1Header">선택한 코인의 지갑이 생성됩니다.</string>
+    <string name="step1Sub">지갑 생성 후, 해당 코인 기반의 토큰을 추가하실 수 있습니다.</string>
+    <string name="step1SelectCoin">코인 종류를 선택해주세요.</string>
+    <string name="coin_icx">ICON (ICX)</string>
+    <string name="coin_eth">Ethereum (ETH)</string>
+    <string name="step2Header">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
+    <string name="step2Sub">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
+    <string name="enterInfoHeader">새 지갑 이름과 비밀번호를 생성해주세요.</string>
+    <string name="hintWalletAlias">지갑 이름 입력 (8자)</string>
+    <string name="hintCreateWalletPassword">비밀번호 입력 (영문, 숫자, 특수문자 혼용 8자 이상)</string>
+    <string name="hintWalletPasswordConfirm">비밀번호 확인</string>
+    <string name="createPasswordWarning">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
+    <string name="step3Header">지갑 백업 파일(Keystore)은 지갑의 고유 정보인 개인 키(Private Key)를 담고 있는 파일이며, 지갑 백업 파일에는 비밀번호가 설정되어 있습니다.</string>
+    <string name="step3Sub1">지갑 백업 파일과 비밀번호가 있으면 지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 수 있습니다.</string>
+    <string name="step3Sub2">지갑을 만든 후 ‘지갑 백업’에서도 다운로드할 수 있습니다.</string>
+    <string name="walletDownloadGuide">지갑 백업 파일을 다운로드 하세요.</string>
+    <string name="walletDownload">지갑 백업 파일(Keystore 파일) 다운로드</string>
+    <string name="walletBackupDownload">지갑 백업 파일 다운로드</string>
+    <string name="backupKeyStoreFileConfirm">지갑 백업 파일은 어떠한 경우에도\n외부 공유가 되어서는 안됩니다.\n다운로드 하시겠습니까?</string>
+    <string name="noBackupKeyStoreFileConfirm">지갑 백업 파일을 다운로드 하지 않고\n다음 단계로 진행하시겠습니까?</string>
+    <string name="keyStoreDownloadAccomplished">파일이 \'%s\'에 다운로드 되었습니다.</string>
+    <string name="step4Header">개인 키(Private Key)는 지갑의 고유 정보이며,\n비밀번호가 설정되어 있지 않습니다.</string>
+    <string name="step4Sub1">개인 키만 알고 있으면 지갑 실행 및 복구가 가능하므로 타인에게 노출되지 않도록 각별한 관리가 필요합니다.</string>
+    <string name="step4Sub2">지갑을 만든 후 ‘지갑 백업’에서도 확인할 수 있습니다.</string>
+    <string name="privateKey">개인 키</string>
+    <string name="copyPrivateKey">개인 키 복사</string>
+    <string name="viewWalletInfo">지갑 정보 보기</string>
+
+    <string name="errAliasEmpty">지갑 이름을 입력해주세요.</string>
+    <string name="errPwdEmpty">비밀번호를 입력해주세요.</string>
+    <string name="errCheckEmpty">비밀번호를 확인해주세요.</string>
+
+    <!-- Load Wallet -->
+    <string name="titleLoadWallet">지갑 가져오기</string>
+    <string name="cancelLoadWallet">지갑 가져오기를 취소하시겠습니까?</string>
+    <string name="loadWalletHeader">지갑을 가져올 방법을 선택해주세요.</string>
+    <string name="loadByKeystore">지갑 백업 파일(Keystore 파일)</string>
+    <string name="loadByPrivateKey">개인 키</string>
+    <string name="selectKeyStore">지갑 백업 파일 선택</string>
+    <string name="loadKeystoreHeader">지갑 백업 파일(Keystore 파일) 선택 후 비밀번호를 입력해주세요.</string>
+    <string name="loadKeystoreSub">다른 기기에 지갑 백업 파일이 저장되어 있는 경우, 백업 파일을 이 기기로 옮기거나 클라우드 서비스에 업로드한 다음 백업 파일을 선택해주세요.</string>
+    <string name="loadKeystore">지갑 백업 파일(Keystore파일) 선택</string>
+    <string name="invalidKeyStoreFile">올바른 지갑 파일 형식이 아닙니다.</string>
+    <string name="errPassword">비밀번호를 다시 확인해주세요.</string>
+    <string name="enterWalletAliasHeader">새 지갑의 이름을 입력해주세요.</string>
+    <string name="errNoKeystoreFile">지갑 백업 파일을 선택해주세요.</string>
+    <string name="errPrivateKey">개인 키를 다시 확인해주세요.</string>
+    <string name="hintEnterWalletAlias">지갑 이름 입력 (8자)</string>
+
+    <string name="loadByPrivateKeyHeader">개인 키를 입력해주세요.</string>
+    <string name="loadByPrivateKeySub">각 개인 키에 해당하는 코인을 선택해야만 보유한 코인 수량이 정상적으로 표시됩니다.</string>
+    <string name="enterPrivateKey">개인 키 입력</string>
+
+    <string name="titleLoadBundle">묶음 지갑 가져오기</string>
+    <string name="loadBundleHeader">묶음 지갑을 가져오는 경우, 이미 등록된 지갑은 제외하고 지갑들이 추가됩니다.\n\n묶음 지갑을 가져오시겠습니까?</string>
+    <string name="loadBundleDetailed">새로 추가되는 지갑들의 비밀번호는 묶음 지갑 비밀번호와 동일합니다.</string>
+    <string name="loadBundleTotal">총 %d개의 지갑 중</string>
+    <string name="loadBundleRegistered">이미 등록된 지갑은 %d개 입니다.</string>
+    <string name="registeredWallet">등록된 지갑</string>
+
+    <string name="enterWalletAliasAndPassword">새 지갑의 이름과 비밀번호를 입력해주세요.</string>
+    <string name="walletPasswordGuide1">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
+    <string name="walletPasswordGuide2">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
+
+    <!-- Warning -->
+    <string name="duplicateWalletAlias">같은 이름의 지갑이 이미 존재합니다.</string>
+    <string name="duplicateWalletAddress">같은 주소의 지갑이 이미 존재합니다.</string>
+    <string name="errAtLeast">8자 이상으로 입력해주세요.</string>
+    <string name="errPasswordPatternMatch">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
+    <string name="errSerialChar">동일한 문자를 3자 이상 연속해서 입력할 수 없습니다.</string>
+    <string name="errWhiteSpace">공백 없이 입력해주세요.</string>
+    <string name="errPasswordNotMatched">비밀번호가 일치하지 않습니다.</string>
+
+    <!-- Main -->
+    <string name="appbarSelectorWallets">지갑 별</string>
+    <string name="appbarSelectorCoinsNTokens">코인&amp;토큰 별</string>
+    <string name="totalAssetValuationAmount">전체 자산 평가 금액</string>
+    <string name="infoTotalAsset">USD 환산금액이 표시되지 않은 토큰은 전체\n자산 평가금액에서 제외됩니다. 평가금액은\n참고용으로만 활용해주세요.</string>
+
+    <!-- Main Side Menu -->
+    <string name="exportWalletBundle">지갑 묶어서 내보내기</string>
+    <string name="settingLock">잠금 설정</string>
+    <string name="settingLanguage">언어</string>
+    <string name="appInfo">앱 정보</string>
+    <string name="ICONexDisclaimers">ICONex 이용 면책 조항</string>
+
+    <string name="currentVersion">현재 버전</string>
+    <string name="latestVersion">최신 버전</string>
+    <string name="update">업데이트</string>
+
+    <string name="openSource">오픈소스 라이선스</string>
+    <string name="networkProvider">Network Provider</string>
+
+    <string name="disclaimersHeader">ICX 공식 wallet \"ICONex\"의 이용자는 \"ICONex\"를 다운로드하여 이용함과 동시에 아래 면책 조항에 대한 구속력이 발생함을 알려드립니다.</string>
+    <string name="disclaimersContents">1.  ICONex이용자가 ICONex 이용 과정에서 생성한 개인 키는 사용자의 모바일 기기에 저장되며, ICON Foundation에서는 ICONex이용자의 개인 키를 별도로 보관ㆍ관리하고 있지 않습니다. ICONex 이용자는 본인이 생성한 개인 키에 대한 보관 및 관리의 책임이 있으며, 바이러스, 해킹, 분실 등 각종 원인으로ICONex이용자가 개인키를 이용할 수 없게 된 경우 ICON Foundation은 이에 대한 일체의 책임을 부담하지 않습니다.\n\n2.  ICON Foundation은 ICONex의 무결성, 안정성, 정확성, 보안성 등에 대하여 보증하지 않으며, 현재 버전의 ICONex를 ‘그 자체로’ 제공합니다.  ICON Foundation은 더 안정적이고 편리한 서비스를 제공하기 위하여 ICONex에 대하여 지속적으로 테스트와 업데이트를 시행하고 있으나, 이러한 노력에도 불구하고 예기치 못한 문제가 발생할 가능성은 항상 존재합니다. ICON Foundation은 오작동, 해킹, 분실, 바이러스 감염 등을 포함한 일체의 예기치 못한 문제에 대하여 책임을 부담하지 않습니다.\n\n3.  ICON Foundation은 천재지변 또는 이에 준하는 불가항력으로 인하여 ICONex 서비스를 제공할 수 없는 경우에는 이에 대한 책임을 부담하지 않습니다.\n\n4.  ICON Foundation은 ICONex 이용자가 ICONex를 매개로 하여 제3자와 거래 등을 한 경우 이와 관련하여 책임을 부담하지 않습니다.\n\n5.  ICON Foundation은 ICONex 이용과 관련하여 불법행위, 계약, 보증, 무과실 책임, 부주의로 인한 어떠한 형태의 책임을 부담하는 경우라 하더라도, 간접적, 결과적, 특수적, 징벌적 또는 이와 유사한 손해에 대해서는 일체의 책임을 부담하지 않습니다.\n\n6.  ICONex는 한국어와 영어를 기본 언어로 지원합니다. 기본으로 제공하는 언어 외에 다른 언어로 번역 시 이로 인해 의미가 잘못 전달되어 발생한 문제에 대해서는 ICON Foundation에게 책임이 없습니다.\n\n※ ICONex와 관련된 모든 저작권은 ICON Foundation에 있습니다. (Copyright © 2018 ICON Foundation)</string>
+
+    <!-- Wallet Detail -->
+    <string name="txRecords">거래 내역</string>
+    <string name="all">전체</string>
+    <string name="pending">대기</string>
+    <string name="manageWallet">지갑 관리</string>
+    <string name="selectUnitOfEvaluation">평가금액 단위 선택</string>
+    <string name="selectCoinNToken">코인&amp;토큰 선택</string>
+    <string name="searchOption">보기 옵션</string>
+    <string name="walletAddress">지갑 주소</string>
+    <string name="copyAddress">주소 복사</string>
+    <string name="noTransaction">거래 내역이 없습니다.</string>
+    <string name="txID">거래 ID</string>
+    <string name="viewTxInfo">거래 정보 확인</string>
+    <string name="infoTx">ICX 출금 신청 후 처리되지 않은 거래는 자동 취소되며 출금액과 수수료는 모두 복구됩니다.</string>
+    <string name="txEther">이더리움 거래 내역</string>
+    <string name="etherscan">Etherscan</string>
+
+    <string name="txState">거래 상태</string>
+    <string name="txType">거래 유형</string>
+
+    <!-- Wallet Manage Menu -->
+    <string name="menuManageToken">토큰 관리</string>
+    <string name="menuBackupWallet">지갑 백업</string>
+    <string name="menuChangePwd">지갑 비밀번호 변경</string>
+    <string name="menuDeleteWallet">지갑 삭제</string>
+
+    <!-- Token Manage -->
+    <string name="tokenManageTitle">토큰 관리</string>
+    <string name="addToken">토큰 추가</string>
+    <string name="deleteToken">토큰 삭제</string>
+    <string name="noTokens">등록 토큰이 없습니다.</string>
+
+    <string name="tokenAddress">주소 (Address)</string>
+    <string name="tokenName">토큰 이름 (Token Name)</string>
+    <string name="tokenSymbol">토큰 기호 (Token Symbol)</string>
+    <string name="tokenDecimals">소수 자리 수 (Number of Decimals)</string>
+
+    <string name="msgNoToken">목록에 토큰이 없다면 직접 입력하여 추가해주세요.</string>
+    <string name="enterTokenInfo">토큰 정보 입력</string>
+
+    <string name="msgTokenDelete">%s 을(를)\n삭제하시겠습니까?</string>
+    <string name="msgTokenCancelMod">토큰 정보 수정을\n취소하시겠습니까?</string>
+
+    <string name="hintTokenName">토큰 이름 입력</string>
+    <string name="hintTokenSymbol">토큰 기호 입력 (영문 또는 숫자)</string>
+    <string name="hintTokenDecimals">숫자 입력</string>
+
+    <string name="errContractAddress">주소가 올바르지 않습니다. 다시 확인해주세요.</string>
+    <string name="errTokenName">토큰 이름을 입력해주세요.</string>
+    <string name="errTokenSymbol">토큰 기호를 입력해주세요.</string>
+    <string name="errTokenDecimals">소수 자리를 입력해주세요.</string>
+    <string name="errTokenDuplication">이미 보유하고 있는 코인입니다.</string>
+    <string name="errTokenInfo">토큰 정보를 가져올 수 없습니다.</string>
+
+    <!-- Transfer -->
+    <string name="possessionAmount">보유 수량 (%s)</string>
+    <string name="sendAmount">송금 수량 (%s)</string>
+    <string name="hintSendAmount">코인 수량 입력</string>
+    <string name="toAddress">송금 받는 주소</string>
+    <string name="receivingAddress">받는 주소</string>
+    <string name="hintToAddress">주소 입력</string>
+    <string name="plus10">+10</string>
+    <string name="plus100">+100</string>
+    <string name="plus1000">+1000</string>
+    <string name="plusMax">전체</string>
+    <string name="selectAddress">주소 선택</string>
+    <string name="scanTheQRCode">QR코드 스캔</string>
+    <string name="sendFee">송금 수수료(%s)</string>
+    <string name="exchange_usd">%s  USD</string>
+
+    <string name="icxStepLimit">Step 한도</string>
+    <string name="icxStepPrice">Step 가격</string>
+    <string name="icxStepSymbol">loop</string>
+    <string name="hintICXStepLimit">Step 한도 입력 (숫자)</string>
+
+    <string name="data">데이터</string>
+    <string name="inputType">입력 타입</string>
+    <string name="hintUtfData">Hello ICON</string>
+    <string name="hintHexData">0x1234...</string>
+    <string name="cancelEnterData">데이터 입력을 취소하시겠습니까?</string>
+    <string name="errMinStep">%s 보다 높은 Step 한도를 입력해주세요.</string>
+    <string name="errMaxStep">%s 보다 낮은 Step 한도를 입력해주세요.</string>
+    <string name="errIcxOwnNotEnough">수수료를 지불할 ICX가 부족합니다.</string>
+    <string name="dataMaxSize">/%d KB</string>
+
+    <string name="selectInputType">입력 타입</string>
+
+    <string name="hintGasLimit">가스 한도 입력</string>
+    <string name="estiFee">예상 최대 수수료 (%s)</string>
+    <string name="estiRemain">송금 후 예상 잔액 (%s)</string>
+
+    <string name="errCantWithdraw">코인 보유량이 없습니다.\n입금 후 송금해 주세요.</string>
+    <string name="errNonZero">0보다 많은 코인 수량을 입력해주세요.</string>
+    <string name="errNotEnough">보유 수량보다 적게 입력해주세요.</string>
+    <string name="errNeedFee">송금 수수료가 부족합니다.</string>
+    <string name="errCheckAddress">송금 받는 주소를 다시 확인해주세요.</string>
+    <string name="errSameAddress">송금하는 주소와 같을 수 없습니다.</string>
+
+    <string name="errEthOwnNotEnough">이더리움 계좌 잔액이 부족하여 토큰을 송금할 수 없습니다.</string>
+    <string name="errInvalidData">데이터를 다시 확인해주세요.</string>
+
+    <string name="confirmTxInfo">수량과 주소를\n한번 더 확인해주세요.</string>
+
+    <string name="gasLimit">가스 한도</string>
+    <string name="gasPrice">가스 가격</string>
+    <string name="gwei">Gwei</string>
+    <string name="ethData">데이터 (선택 입력)</string>
+
+    <string name="slow">느림</string>
+    <string name="fast">빠름</string>
+
+    <string name="msgStepLimit">Step 한도는 Transaction 실행에 지불할 용의가 있는 Step의 최대량을 의미합니다. Step 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 Step만 소진합니다. 즉, Step 한도는 최대치만 설정 가능하며 실제 소진되는 Step량은 유동적입니다.</string>
+    <string name="msgStepPrice">Step 한 단위 당 지불하는 가격입니다.\n\nStep 가격은 loop로 지불하며 1 loop는 0.000000000000000001(10-18) ICX로 고정되어 있습니다. ICON 거래 수수료는 스마트 컨트랙트 기능 사용 횟수, 블록체인 데이터베이스 사용량, 거래 데이터 크기 등에 따라 부과됩니다.</string>
+    <string name="msgICXEstimateFee">Transaction 실행 시 발생할 수 있는 최대 수수료로서, Step 한도와 Step 가격을 곱한 값입니다.</string>
+    <string name="msgIcxData">사용자가 원하는 데이터를 입력하여 송금할 수 있습니다. 입력한 데이터의 크기에 따라 수수료가 부과됩니다.</string>
+    <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할\n용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
+    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서\n1 Gwei = 0.000000001 ETH로\n고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
+    <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로\n가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
+    <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 송금할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 송금이 불가하며 수수료만\n차감될 수 있습니다.</string>
+    <string name="msgDeleteData">입력된 데이터를 삭제하시겠습니까?</string>
+
+    <string name="errNoSendAmount">송금할 수량을 입력해주세요.</string>
+    <string name="errNoStepLimit">Step 한도를 입력해주세요.</string>
+    <string name="errGasLimitEmpty">가스 한도를 입력해주세요.</string>
+    <string name="errOverByteLimit">입력 한도 %dKB를 초과합니다</string>
+
+    <string name="msgDoneRequestTransfer">송금 요청이 완료되었습니다.</string>
+    <string name="errTransferFailed">오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
+
+    <!-- Contacts -->
+    <string name="contactsTitle">주소 선택</string>
+    <string name="contacts">주소록</string>
+    <string name="contactsRecent">최근 거래</string>
+    <string name="contactsWallet">내 지갑</string>
+    <string name="addContacts">주소록 추가</string>
+    <string name="modContacts">주소록 수정</string>
+    <string name="hintContactsName">주소록 이름 입력 (8자)</string>
+    <string name="hintICXAddress">ICX 주소 입력</string>
+    <string name="hintETHAddress">ETH 주소 입력</string>
+    <string name="noContacts">등록된 주소록이 없습니다.</string>
+    <string name="noRecent">최근 거래 내역이 없습니다.</string>
+    <string name="noWallet">송금 가능한 지갑이 없습니다.</string>
+    <string name="noName">이름 없음</string>
+
+    <string name="msgDeleteContact">선택한 주소를\n삭제하시겠습니까?</string>
+
+    <string name="errNoAddressName">주소록 이름을 입력해주세요.</string>
+    <string name="errDuplicateContactsName">같은 이름의 주소가 이미 존재합니다.</string>
+    <string name="errDuplicateContactsAddr">같은 주소의 지갑이 이미 존재합니다.</string>
+    <string name="errWrongAddress">올바른 %s 주소가 아닙니다.</string>
+
+    <!-- Backup -->
+    <string name="titleBackup">지갑 백업</string>
+    <string name="headerBackup">\‘지갑 백업 파일(Keystore 파일) 다운로드\’ 또는 \‘개인 키 저장\’으로 백업을 진행할 수 있습니다.</string>
+    <string name="subjectDownload">지갑 백업 파일 다운로드</string>
+    <string name="downloadKeystore">Keystore 다운로드</string>
+    <string name="downDetailed1">지갑 백업 파일(Keystore)은 지갑의 고유 정보인 개인 키(Private Key)를 담고 있는 파일이며, 지갑 백업 파일에는 비밀번호가 설정되어 있습니다.</string>
+    <string name="downDetailed2">지갑 백업 파일과 비밀번호가 있으면 지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 수 있습니다. </string>
+    <string name="subjectPrivatKey">개인키 저장</string>
+    <string name="priDetailed1">개인 키(Private Key)는 지갑의 고유 정보이며, 비밀번호가 설정되어 있지 않습니다. </string>
+    <string name="priDetailed2">개인 키만 알고 있으면 지갑 실행 및 복구가 가능하므로 타인에게 노출되지 않도록 각별한 관리가 필요합니다.</string>
+
+    <!-- Change Wallet Password -->
+    <string name="titleChangeWalletPwd">비밀번호 변경</string>
+    <string name="changeWalletPwdHeader">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
+    <string name="changeWalletPwdDetailed">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
+    <string name="changeWalletPwdGuide">현재 비밀번호와 변경할 비밀번호 입력</string>
+    <string name="hintOldWalletPwd">현재 비밀번호 입력</string>
+    <string name="hintNewWalletPwd">새 비밀번호 입력</string>
+    <string name="hintNewWalletPwdConfirm">새 비밀번호 확인</string>
+    <string name="doneChangeWalletPwd">비밀번호가 변경되었습니다.</string>
+
+    <!-- Export bundle -->
+    <string name="titleExportBundle">지갑 묶어서 내보내기</string>
+    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요. 선택한 지갑마다 지갑별 비밀번호 확인이 필요합니다.</string>
+    <string name="exportBundleDetailed1">지갑 묶어서 내보내기는 선택한 지갑 파일을 묶어서 하나의 파일로 백업하는 기능입니다.</string>
+    <string name="exportBundleEdtailed2">지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 경우 지갑 백업파일이 필요합니다.</string>
+    <string name="countSelectedWallet">%d 개 지갑 선택</string>
+
+    <string name="bundlePwdHeader">묶음 지갑의 비밀번호를 생성하고 묶음 지갑 백업 파일을 다운로드해주세요.</string>
+    <string name="bundlePwdDetailed1">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
+    <string name="bundlePwdDetailed2">지갑 백업 파일(Keystore\)은 지갑의 고유 정보인 개인 키(Private Key)를 담고 있는 파일이며, 사용을 위해서는 설정한 비밀번호를 입력해야 합니다.</string>
+    <string name="bundlePwd">묶음 지갑 비밀번호</string>
+    <string name="bundleDownload">묶음 지갑 백업 파일 다운로드</string>
+
+    <string name="msgBundleNotice">묶어서 내보낼 때, 묶음 지갑 비밀번호를\n새로 만들어야 합니다. 기존 지갑들의 비밀번호는 묶음 지갑의 비밀번호로 바뀝니다. 계속 진행하시겠습니까?</string>
+
+    <!-- App lock -->
+    <string name="appLockFingerprintGuide">잠금 해제를 위해\n지문 센서에 손가락을 올려주세요.</string>
+    <string name="unlockByLockNum">잠금번호로 잠금 해제</string>
+    <string name="enterLockNum">잠금 번호 입력</string>
+    <string name="forgotLockNumGuide">잠금 번호를 잊으셨나요?</string>
+    <string name="titleResetLockNum">잠금 번호 재설정</string>
+    <string name="resetLockNumGuide">지갑을 선택하면 비밀번호 확인 후 잠금 번호를 재설정 할 수 있습니다.</string>
+
+    <string name="titleCheckFingerprint">지문 확인</string>
+    <string name="fingerprintGuide">지문 센서에 손가락을 올려주세요.</string>
+    <string name="fingerprint_not_recognized">지문을 인식할 수 없습니다.\n다시 시도해 주세요.</string>
+
+    <string name="titleAppLock">잠금 설정</string>
+    <string name="appLockHeader">잠금 번호를 사용하시겠습니까?</string>
+    <string name="appLockDetailed">잠금 번호 사용 시 ICONex를 실행할 때마다 잠금 번호를 확인하여, 내 지갑 정보가 노출되는 것을 방지합니다. 잠금 번호를 잊은 경우, 지갑 비밀번호 확인 후 잠금 번호를 재설정 할 수 있습니다.</string>
+    <string name="useLockNum">잠금 번호 사용</string>
+    <string name="resetLockNum">잠금 번호 변경</string>
+    <string name="unlockFingerprint">지문으로 잠금 해제</string>
+
+    <string name="titleFingerprintLock">지문으로 잠금 해제 안내</string>
+    <string name="fingerprintLockHeader">지문으로 잠금 해제를 사용하겠습니까?</string>
+    <string name="fingerprintLockDetailed">ICONex 앱을 실행할 때 지문을 사용하여 빠르게 잠금 해제가 가능합니다.\n\n휴대폰에 등록되어 있는 모든 지문으로 잠금 해제를 할 수 있습니다. 다른 사람의 지문이 등록되어 있는지 확인해주세요.</string>
+
+    <string name="titleSetLockNum">잠금 번호 설정</string>
+    <string name="lockNumGuide">잠금 번호 6자리를 입력해주세요.</string>
+    <string name="checkLockNumGuide">다시 한 번 잠금 번호를 입력해주세요.</string>
+    <string name="titleChangeLockNum">잠금 번호 변경</string>
+    <string name="currentLockNum">현재 잠금 번호 6자리를 입력해주세요.</string>
+    <string name="newLockNum">새로 변경할 잠금 번호 6자리를 입력해주세요.</string>
+
+    <string name="authMsgRecoverFingerprintAuth">지문으로 잠금 해제 사용이 중지되었습니다. 사용 설정을 하시겠습니까?</string>
+
+    <string name="errNoKeyguard">휴대폰의 설정에서 화면 잠금 설정 후 \"지문으로 잠금 해제\" 기능을 사용할 수 있습니다.</string>
+    <string name="errNoEnrolledFingerprint">지문 정보가 등록되어 있지 않습니다.\n휴대폰의 설정화면에서 지문 등록 후 다시 시도해주세요.</string>
+    <string name="errCheckLockNum">잠금 번호가 일치하지 않습니다.\n설정할 잠금 번호 입력부터 다시 시도해주세요.</string>
+    <string name="errCurrentLockNum">잠금 번호가 일치 하지 않습니다.</string>
+    <string name="errRetryLockNum">잠금 번호를 다시 확인해주세요.</string>
+    <string name="errInvalidatedByBiometricEnrollment">등록되어 있는 지문 정보가 변경되어 지문 인증을 사용할 수 없습니다. 잠금 번호로 로그인 후, 지문 사용 여부를 다시 설정해주세요.</string>
+
+    <string name="errFingerprintLockOut">Fingerprint scan is currently locked. You can reactivate the fingerprint scan by entering your mobile</string>
+
+    <!-- Language -->
+    <string name="titleLanguage">언어 설정</string>
+    <string name="korean">한국어</string>
+    <string name="english">English</string>
+
+    <!-- Token Swap -->
+    <string name="swap">스왑</string>
+
+    <string name="swapStep1">스왑 안내</string>
+    <string name="swapStep1a">스왑 안내\n1/2</string>
+    <string name="swapStep1b">스왑 안내\n2/2</string>
+    <string name="swapStep2">정보 입력</string>
+    <string name="swapStep3">Keystore\n다운로드</string>
+    <string name="swapStep4">개인 키\n저장</string>
+    <string name="swapStep5">스왑 요청</string>
+
+    <string name="titleSwap">토큰 스왑</string>
+    <string name="titleSwapInstructions">토큰 스왑 안내</string>
+    <string name="titleCreateSwapWallet">토큰 스왑 지갑 만들기</string>
+    <string name="titleRequestSwap">토큰 스왑 요청</string>
+    <string name="swapHeader1">현재 이더리움 네트워크 상에 있는 ICX ERC20 토큰들을 ICON의 메인넷으로 스왑할 수 있습니다.</string>
+    <string name="swapDetailed1">새 ICX 코인 지갑 생성 후 토큰 스왑이 진행됩니다.</string>
+    <string name="swapExistICXWallet">이전에 스왑용으로 생성한 ICX 지갑이 있습니다. \"%s\"(으)로 토큰 스왑이 진행됩니다.</string>
+    <string name="swapGuideHeader">주의 사항을 확인해주세요</string>
+    <string name="swapGuideDetailed1">안내를 따라 진행하시면 토큰 스왑용 ICX 지갑이 새로 만들어집니다. (스왑용 지갑의 개인 키는 기존 이더리움 지갑의 개인 키와 동일)</string>
+    <string name="swapGuideDetailed2">지갑의 이름은 토큰 스왑을 위해 생성한 지갑임을 명확하게 알 수 있도록 설정해주세요.</string>
+    <string name="swapGuideDetailed3">마이이더월렛 등 개인지갑에 토큰을 보유하신 경우, Keystore 파일 또는 개인 키로 해당 지갑을 가져오면 자동으로 ICX 토큰이 추가되며 스왑 버튼이 생성됩니다.</string>
+    <string name="ICONexCreateWalletManual">[매뉴얼] ICONex 지갑 생성</string>
+    <string name="swapGuideDetailed4">거래소에 보유한 토큰의 스왑은 거래소 상에서 별도의 절차 없이 진행됩니다. 거래소 지갑의 토큰을 스왑 목적으로 송금하는 일이 없도록 각별히 유의하시기 바랍니다.</string>
+    <string name="maunalConfirm">안내를 읽었으며, 토큰 스왑을 진행합니다.</string>
+
+    <string name="swapPrecautionsH">주의 사항을 확인해주세요.</string>
+    <string name="swapPrecautionsD1">사용자는 스왑할 ERC20 토큰의 양을 직접 설정할 수 있으며, 스왑이 완료된 이후에는 어떠한 경우에도 다시 원상태로 복구할 수 없습니다.</string>
+    <string name="swapPrecautionsD2">스왑 요청 후, ICX는 정해진 시각에 자동 지급됩니다. 지급 날짜 및 시각은 상황에 따라 달라질 수 있으므로 아래 링크를 통해 확인해 주세요.</string>
+    <string name="swapPrecautionsD3">ICONex에서 스왑이 완료된 ICX 코인이라도 ICX 코인 지갑을 지원하지 않는 거래소로 송금할 수 없습니다.</string>
+    <string name="swapPolicy">ICX 토큰 스왑 FAQ</string>
+    <string name="confirmPrecautions">주의 사항을 확인했습니다.</string>
+
+    <string name="swapRequestPrecaution">스왑할 수량을 입력하고 스왑 요청을 완료해주세요. 스왑이 완료된 이후에는 어떠한 경우에도 다시 원상태로 복구할 수 없습니다.</string>
+    <string name="erc20TokenSwapAddress">토큰 스왑 주소</string>
+    <string name="erc20TokenDetailed1">ICON의 ERC20 토큰 스왑 전용 주소이며, 자동으로\n입력됩니다.</string>
+    <string name="erc20TokenDetailed2">ICON 공식 채널에 해당 스왑 주소가 안내되어 있으니 안전을 위해 입력된 스왑 주소가 정확한지 대조해 주시길 바랍니다.</string>
+
+    <string name="receiveICXAddress">ICX 코인 받는 주소</string>
+    <string name="receiveICXDetailed1">새로 생성된 스왑용 ICX 지갑의 주소이며, “ICX 코인 받는 주소”로 ICX가 정해진 시각에 자동 지급됩니다.</string>
+
+    <string name="swapBalance">보유 수량 (ICX)</string>
+    <string name="swapSendAmount">스왑할 토큰 수량 (ICX)</string>
+    <string name="hintSwapAmount">토큰 수량 입력</string>
+    <string name="properGasLimit">적정 가스 한도</string>
+    <string name="properGasPrice">적정 가스 가격</string>
+    <string name="swapRemain">송금 후 예상 잔액 (ICX)</string>
+    <string name="properGasInfo">적정 가스 한도 및 가격은 토큰 스왑에 적합하도록 계산하여\n설정된 값입니다.</string>
+
+    <string name="swapMsgCreateWalletCancel">지갑 생성 및 토큰 스왑을\n취소하시겠습니까?</string>
+    <string name="swapMsgCancel">토큰 스왑을 취소하시겠습니까?\n다음에 다시 스왑 버튼을 눌러 나머지 절차를 진행하실 수 있습니다.</string>
+    <string name="swapMsgHasNoToken">스왑 가능한 ICX 토큰이 없습니다.</string>
+    <string name="swapMsgNotEnoughFee">스왑 수수료 지불을 위한 ETH 잔액이 없습니다.\n입금 후 진행해 주세요.</string>
+
+    <string name="swapConfirmTitle">스왑 수량과 \"ICX 코인 받는 주소\"를 한번 더 확인해주세요.</string>
+    <string name="swapConfirmAmount">스왑 수량 (ICX)</string>
+    <string name="swapConfirmFee">수수료 (ETH)</string>
+    <string name="swapReceiveAddress">받는 주소</string>
+    <string name="swapRequest">스왑 요청</string>
+
+    <string name="swapRequestDone">스왑 요청이 완료되었습니다.\n\nICX 지급 날짜 및 시각은 상황에 따라 달라질 수 있으므로 아래 링크를 통해 확인해 주세요.</string>
+
+    <!-- Util -->
+    <string name="txDeposit">+ %s</string>
+    <string name="txWithdraw">- %s</string>
+
+    <!-- Dialog -->
+    <string name="modWalletAlias">지갑 이름 변경</string>
+    <string name="enterWalletPassword">지갑 비밀번호 입력</string>
+    <string name="removeWallet">지갑을 삭제하시겠습니까?</string>
+    <string name="warningRemoveWallet">삭제하시려는 지갑에 잔액이 남아있습니다. 지갑 백업이 되어있지 않으면 잔액 복구가 불가능합니다.\n그래도 삭제하시겠습니까?</string>
+    <string name="updateNecessary">ICONex 최신 버전으로 업데이트를 진행해 주세요.</string>
+
+    <string name="permissionStorageDenied">저장소에 대한 권한을 허용하지 않으면 지갑 백업 파일을 다운로드 할 수 없습니다.\n(휴대폰의 설정 > 앱 권한 설정에서 저장소 권한을 허용할 수 있습니다.)</string>
+    <string name="permissionCameraDenied">카메라에 대한 권한을 허용하지 않으면\nQR 코드 스캔을 사용 할 수 없습니다.\n(휴대폰의 설정 > 앱 권한 설정에서 카메라 권한을 허용할 수 있습니다.)</string>
+
+    <!-- Message -->
+    <string name="warningPrivateKey">개인 키 만으로 지갑 실행, 송금이 가능하므로 어떠한 경우에도 외부 공유가 되어서는 안됩니다.</string>
+
+    <!-- Network -->
+    <string name="networkNotWorking">네트워크에 접속 할 수 없습니다.</string>
+    <string name="networkRetry">연결 상태 확인 후 다시 시도해주세요.</string>
+
+    <!-- Developer -->
+    <string name="selectNetwork">네트워크 선택</string>
+
+    <!-- ICON Connect -->
+    <string name="selectWallet">지갑 선택</string>
+    <string name="txData">Tx Data</string>
+
+    <string name="msgCancelBind">지갑 선택을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
+    <string name="msgCancelPassword">지갑 비밀번호 입력을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
+    <string name="msgSendCancel">송금을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
+
+    <!-- ICON Connect Error Description -->
+    <string name="descUserCancel">사용자 취소</string>
+    <string name="descParseError">Parsing 중 에러 발생. 올바른 형색의 JSON 이 아님</string>
+    <string name="descInvalidRequest">정해진 규격의 JSON 이 아님</string>
+    <string name="descInvalidMethod">사용할 수 없는 Method</string>
+    <string name="descNotFoundCaller">Caller 를 찾을 수 없음</string>
+    <string name="descEmpty">사용할 수 있는 ICX 지갑 없음</string>
+    <string name="descNotFoundParameter">해당 %s 파마리터를 찾을 수 없음</string>
+    <string name="descNoWalletFound">해당 주소의 지갑이 없음</string>
+    <string name="descSameAddress">송금하는 주소와 같을 수 없음</string>
+    <string name="descInsufficientBalance">잔액 부족</string>
+    <string name="descInsufficientBalanceForFee">수수료 부족</string>
+    <string name="descSignFailed">Sign 실패</string>
+
+</resources>
