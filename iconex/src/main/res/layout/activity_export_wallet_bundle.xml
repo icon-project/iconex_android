@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.wallet.menu.bundle.ExportWalletBundleActivity">
+    tools:context="foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity">
 
     <include
         layout="@layout/layout_appbar_close"

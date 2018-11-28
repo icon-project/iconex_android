@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.wallet.menu.lock.SettingLockActivity">
+    tools:context="foundation.icon.iconex.menu.lock.SettingLockActivity">
 
     <include
         layout="@layout/layout_appbar_close"

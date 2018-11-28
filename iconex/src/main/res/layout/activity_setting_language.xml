@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.wallet.menu.language.SettingLanguageActivity">
+    tools:context="foundation.icon.iconex.menu.language.SettingLanguageActivity">
 
     <include
         layout="@layout/layout_appbar_close"

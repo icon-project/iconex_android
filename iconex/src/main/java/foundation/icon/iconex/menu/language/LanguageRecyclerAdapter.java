@@ -1,7 +1,6 @@
-package foundation.icon.iconex.wallet.menu.language;
+package foundation.icon.iconex.menu.language;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Locale;
 
 import foundation.icon.iconex.R;
 

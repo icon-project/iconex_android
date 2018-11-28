@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context="foundation.icon.iconex.wallet.menu.bundle.MakeBundleFragment">
+    tools:context="foundation.icon.iconex.menu.bundle.MakeBundleFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_wallets"

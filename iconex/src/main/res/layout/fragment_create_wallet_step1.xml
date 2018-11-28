@@ -2,14 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:clickable="true"
     android:focusable="true"
     tools:context="foundation.icon.iconex.wallet.create.CreateWalletStep1Fragment">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/layout_step1_listview_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
     <ListView
         android:id="@+id/list_view_coin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/header"
         android:background="@color/colorWhite"
         android:clipToPadding="false"
         android:divider="@null"

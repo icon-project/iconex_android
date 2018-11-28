@@ -40,7 +40,7 @@ import foundation.icon.iconex.util.KeyStoreIO;
 import foundation.icon.iconex.wallet.create.CreateWalletStep2Fragment;
 import foundation.icon.iconex.wallet.create.CreateWalletStep3Fragment;
 import foundation.icon.iconex.wallet.create.CreateWalletStep4Fragment;
-import foundation.icon.iconex.wallet.menu.ViewWalletInfoActivity;
+import foundation.icon.iconex.menu.ViewWalletInfoActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 

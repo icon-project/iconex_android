@@ -76,7 +76,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wallet.menu.WalletAddressCodeActivity"
+            android:name=".menu.WalletAddressCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -94,20 +94,20 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wallet.menu.WalletBackUpActivity"
+            android:name=".menu.WalletBackUpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wallet.menu.ViewWalletInfoActivity"
+            android:name=".menu.ViewWalletInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wallet.menu.WalletPwdChangeActivity"
+            android:name=".menu.WalletPwdChangeActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
-            android:name=".wallet.menu.bundle.ExportWalletBundleActivity"
+            android:name=".menu.bundle.ExportWalletBundleActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
@@ -122,12 +122,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
-            android:name=".wallet.menu.lock.SettingLockActivity"
+            android:name=".menu.lock.SettingLockActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
-            android:name=".wallet.menu.language.SettingLanguageActivity"
+            android:name=".menu.language.SettingLanguageActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -144,7 +144,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wallet.menu.appInfo.AppInfoActivity"
+            android:name=".menu.appInfo.AppInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

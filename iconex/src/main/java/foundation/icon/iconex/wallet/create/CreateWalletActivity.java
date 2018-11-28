@@ -29,7 +29,7 @@ import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.KeyStoreIO;
 import foundation.icon.iconex.wallet.main.MainActivity;
-import foundation.icon.iconex.wallet.menu.ViewWalletInfoActivity;
+import foundation.icon.iconex.menu.ViewWalletInfoActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 

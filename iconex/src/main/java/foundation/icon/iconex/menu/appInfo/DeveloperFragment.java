@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu.appInfo;
+package foundation.icon.iconex.menu.appInfo;
 
 import android.content.Context;
 import android.os.Bundle;

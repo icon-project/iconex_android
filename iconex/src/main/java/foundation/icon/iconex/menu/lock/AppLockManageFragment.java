@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu.lock;
+package foundation.icon.iconex.menu.lock;
 
 import android.app.KeyguardManager;
 import android.content.Context;

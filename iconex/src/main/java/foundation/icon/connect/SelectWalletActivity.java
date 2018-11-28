@@ -207,8 +207,6 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
         Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
         dialog.setMessage(getString(R.string.msgCancelBind));
         dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:paddingEnd="24dp"
     android:paddingStart="24dp"
-    tools:context="foundation.icon.iconex.wallet.menu.lock.AppLockManageFragment">
+    tools:context="foundation.icon.iconex.menu.lock.AppLockManageFragment">
 
     <LinearLayout
         android:id="@+id/layout_header"

@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu;
+package foundation.icon.iconex.menu;
 
 import android.Manifest;
 import android.content.ClipData;

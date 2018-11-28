@@ -12,7 +12,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.wallet.main.MainActivity;
-import foundation.icon.iconex.wallet.menu.lock.SettingLockActivity;
+import foundation.icon.iconex.menu.lock.SettingLockActivity;
 
 public class AuthActivity extends AppCompatActivity implements AuthFingerprintFragment.OnFingerprintLockListener,
         AuthLockNumFragment.OnLockNumAuthListener, UserVerificationFragment.OnVerificationListener {

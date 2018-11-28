@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.wallet.menu.appInfo.AppInfoFragment">
+    tools:context="foundation.icon.iconex.menu.appInfo.AppInfoFragment">
 
     <ImageView
         android:layout_width="72dp"

@@ -37,10 +37,7 @@ public class CreateWalletStep1Fragment extends Fragment {
 
     public static CreateWalletStep1Fragment newInstance() {
         CreateWalletStep1Fragment fragment = new CreateWalletStep1Fragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -63,12 +60,6 @@ public class CreateWalletStep1Fragment extends Fragment {
         });
 
         listViewCoin = v.findViewById(R.id.list_view_coin);
-
-        View listViewHeader = getActivity().getLayoutInflater().inflate(R.layout.layout_step1_listview_header, null);
-        listViewHeader.setClickable(false);
-        listViewHeader.setFocusable(false);
-        listViewHeader.setLongClickable(false);
-        listViewCoin.addHeaderView(listViewHeader);
 
         ItemCoin ICX = new ItemCoin(getString(R.string.coin_icx), Constants.KS_COINTYPE_ICX);
         coinType = ICX.getCoinType();
