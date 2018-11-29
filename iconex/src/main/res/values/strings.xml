@@ -473,14 +473,14 @@
     <string name="networkTest">Test</string>
 
     <!-- ICON Connect -->
-    <string name="selectWallet">지갑 선택</string>
+    <string name="selectWallet">Select Wallet</string>
     <string name="txData">Tx Data</string>
 
-    <string name="msgCancelBind">지갑 선택을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
-    <string name="msgCancelPassword">지갑 비밀번호 입력을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
-    <string name="msgSendCancel">송금을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
+    <string name="msgCancelBind">Cancel select wallet?\nYou will return to previous app.</string>
+    <string name="msgCancelPassword">Cancel enter password?\nYou will return to previous app.</string>
+    <string name="msgSendCancel">Cancel Transfer?\nYou will return to previous app.</string>
 
-    <string name="connSendSuccess">송금 요청이 완료되었습니다. 거래내역은 내 지갑 상세페이지 또는 ICON Tracker에서 조회 가능합니다.</string>
-    <string name="connSendFailed">오류가 발생했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="connSendSuccess">Transfer Request Complete.\nYou can check the transaction history on ICON Tracker Go to ICON Tracker.</string>
+    <string name="connSendFailed">Error occurred. Please try again.</string>
 
 </resources>
