@@ -418,8 +418,6 @@ public class EnterPasswordActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
         Basic2ButtonDialog cancleDialog = new Basic2ButtonDialog(this);
         cancleDialog.setMessage(getString(R.string.msgCancelPassword));
         cancleDialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {

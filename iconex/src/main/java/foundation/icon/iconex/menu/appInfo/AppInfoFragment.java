@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu.appInfo;
+package foundation.icon.iconex.menu.appInfo;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.Utils;
 
 public class AppInfoFragment extends Fragment {
@@ -88,14 +89,7 @@ public class AppInfoFragment extends Fragment {
             txtCurrent.setText("-");
         }
 
-        txtLatest.setText(String.format(Locale.getDefault(), "%s %s", getString(R.string.latestVersion), ICONexApp.version));
-
-        Utils.RES_VERSION resVersion = Utils.versionCheck(getActivity(), null);
-        if (resVersion == Utils.RES_VERSION.NEW)
-            btnUpdate.setEnabled(true);
-        else
-            btnUpdate.setEnabled(false);
-
+        versionCheck();
         setDeveloperMode();
     }
 
@@ -121,6 +115,27 @@ public class AppInfoFragment extends Fragment {
             developer.setVisibility(View.VISIBLE);
         else
             developer.setVisibility(View.GONE);
+    }
+
+    public void versionCheck() {
+        VersionCheck versionCheck = new VersionCheck(getActivity(), new VersionCheck.VersionCheckCallback() {
+            @Override
+            public void onNeedUpdate() {
+
+            }
+
+            @Override
+            public void onPass() {
+                txtLatest.setText(String.format(Locale.getDefault(), "%s %s", getString(R.string.latestVersion), ICONexApp.version));
+
+                Utils.RES_VERSION resVersion = Utils.versionCheck(getActivity(), null);
+                if (resVersion == Utils.RES_VERSION.NEW)
+                    btnUpdate.setEnabled(true);
+                else
+                    btnUpdate.setEnabled(false);
+            }
+        });
+        versionCheck.execute();
     }
 
     private OnAppInfoListener mListener;

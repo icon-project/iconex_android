@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu.appInfo;
+package foundation.icon.iconex.menu.appInfo;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -88,6 +87,7 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoFragmen
         findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_close);
         fragmentManager.popBackStackImmediate();
 
+        infoFragment.versionCheck();
         infoFragment.setDeveloperMode();
     }
 

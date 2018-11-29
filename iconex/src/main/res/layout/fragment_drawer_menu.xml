@@ -5,7 +5,7 @@
     android:background="@color/colorWhite"
     android:clickable="true"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.wallet.menu.DrawerMenuFragment">
+    tools:context="foundation.icon.iconex.menu.DrawerMenuFragment">
 
     <Button
         android:id="@+id/btn_close"

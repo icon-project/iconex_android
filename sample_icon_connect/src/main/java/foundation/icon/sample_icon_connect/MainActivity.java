@@ -142,11 +142,13 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
+                .addFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES|Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_icon_connect")
                 .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
 
+        Log.d(TAG, "sendBroadcast");
+        Log.d(TAG, "action=" + intent.getAction());
         sendBroadcast(intent);
     }
 

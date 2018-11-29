@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu.bundle;
+package foundation.icon.iconex.menu.bundle;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;

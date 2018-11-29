@@ -480,6 +480,9 @@
     <string name="msgCancelPassword">지갑 비밀번호 입력을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
     <string name="msgSendCancel">송금을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
 
+    <string name="connSendSuccess">송금 요청이 완료되었습니다. 거래내역은 내 지갑 상세페이지 또는 ICON Tracker에서 조회 가능합니다.</string>
+    <string name="connSendFailed">오류가 발생했습니다. 잠시 후 다시 시도해주세요.</string>
+
     <!-- ICON Connect Error Description -->
     <string name="descUserCancel">사용자 취소</string>
     <string name="descParseError">Parsing 중 에러 발생. 올바른 형색의 JSON 이 아님</string>

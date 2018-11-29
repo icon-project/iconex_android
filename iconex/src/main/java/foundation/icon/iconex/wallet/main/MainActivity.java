@@ -47,11 +47,11 @@ import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.create.CreateWalletActivity;
 import foundation.icon.iconex.wallet.load.LoadWalletActivity;
-import foundation.icon.iconex.wallet.menu.DrawerMenuFragment;
-import foundation.icon.iconex.wallet.menu.appInfo.AppInfoActivity;
-import foundation.icon.iconex.wallet.menu.bundle.ExportWalletBundleActivity;
-import foundation.icon.iconex.wallet.menu.language.SettingLanguageActivity;
-import foundation.icon.iconex.wallet.menu.lock.SettingLockActivity;
+import foundation.icon.iconex.menu.DrawerMenuFragment;
+import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
+import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
+import foundation.icon.iconex.menu.language.SettingLanguageActivity;
+import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.MyConstants.EXCHANGE_BTC;

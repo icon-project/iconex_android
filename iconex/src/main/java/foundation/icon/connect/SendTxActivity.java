@@ -1,5 +1,6 @@
 package foundation.icon.connect;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -624,12 +625,22 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
         iconService.sendTransaction(signedTransaction).execute(new foundation.icon.icx.Callback<Bytes>() {
             @Override
             public void onSuccess(Bytes result) {
-                IconexConnect.sendResponse(SendTxActivity.this, requestData, result.toHexString(true));
+                BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+                dialog.setMessage(getString(R.string.connSendSuccess));
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        IconexConnect.sendResponse(SendTxActivity.this, requestData, result.toHexString(true));
+                    }
+                });
+                dialog.show();
             }
 
             @Override
             public void onFailure(Exception exception) {
-                IconexConnect.sendError(SendTxActivity.this, requestData, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK, ErrorCodes.MSG_NETWORK));
+                BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+                dialog.setMessage(getString(R.string.connSendFailed));
+                dialog.show();
             }
         });
     }
@@ -668,12 +679,22 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
         iconService.sendTransaction(signedTransaction).execute(new foundation.icon.icx.Callback<Bytes>() {
             @Override
             public void onSuccess(Bytes result) {
-                IconexConnect.sendResponse(SendTxActivity.this, requestData, result.toHexString(true));
+                BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+                dialog.setMessage(getString(R.string.connSendSuccess));
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        IconexConnect.sendResponse(SendTxActivity.this, requestData, result.toHexString(true));
+                    }
+                });
+                dialog.show();
             }
 
             @Override
             public void onFailure(Exception exception) {
-                IconexConnect.sendError(SendTxActivity.this, requestData, new ErrorCodes.Error(ErrorCodes.ERR_NETWORK, ErrorCodes.MSG_NETWORK));
+                BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+                dialog.setMessage(getString(R.string.connSendFailed));
+                dialog.show();
             }
         });
     }
@@ -732,8 +753,6 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
         Basic2ButtonDialog cancleDialog = new Basic2ButtonDialog(this);
         cancleDialog.setMessage(getString(R.string.msgSendCancel));
         cancleDialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {

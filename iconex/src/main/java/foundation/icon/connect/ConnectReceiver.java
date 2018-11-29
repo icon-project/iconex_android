@@ -20,10 +20,12 @@ public class ConnectReceiver extends BroadcastReceiver {
         String caller = intent.getStringExtra("caller");
         String receiver = intent.getStringExtra("receiver");
 
+
+
         if (action.equals(ICONEX_CONNECT)) {
             ICONexApp.isConnect = true;
             context.startActivity(new Intent(context, SplashActivity.class)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                     .putExtra("request", new RequestData(data, caller, receiver)));
         } else if (action.equals(DEVELOPER)) {
             ICONexApp.isDeveloper = true;
@@ -31,7 +33,7 @@ public class ConnectReceiver extends BroadcastReceiver {
             preferenceUtil.setDeveloper(ICONexApp.isDeveloper);
 
             context.startActivity(new Intent(context, SplashActivity.class)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
         }
     }
 }

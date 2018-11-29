@@ -6,7 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.wallet.menu.appInfo.OSSFragment">
+    tools:context="foundation.icon.iconex.menu.appInfo.OSSFragment">
 
     <WebView
         android:id="@+id/webview"

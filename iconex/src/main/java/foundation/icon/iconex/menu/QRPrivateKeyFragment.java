@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu;
+package foundation.icon.iconex.menu;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -22,7 +22,6 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
 
 public class QRPrivateKeyFragment extends Fragment {
 

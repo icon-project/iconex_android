@@ -17,6 +17,7 @@ import foundation.icon.connect.IconexConnect;
 import foundation.icon.connect.RequestData;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.intro.IntroActivity;
+import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
 import foundation.icon.iconex.wallet.main.MainActivity;
@@ -99,6 +100,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void checkPermission() {
+        Log.d(TAG, "checkPermission");
         if (ICONexApp.mWallets.size() > 0) {
             if (ICONexApp.isLocked) {
                 StartAuthenticate startAuthenticate = new StartAuthenticate();
@@ -163,7 +165,7 @@ public class SplashActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            startActivity(new Intent(SplashActivity.this, MainActivity.class)
+            startActivity(new Intent(SplashActivity.this, AuthActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
     }

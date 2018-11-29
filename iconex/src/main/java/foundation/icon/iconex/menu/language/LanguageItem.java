@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu.language;
+package foundation.icon.iconex.menu.language;
 
 /**
  * Created by js on 2018. 4. 22..

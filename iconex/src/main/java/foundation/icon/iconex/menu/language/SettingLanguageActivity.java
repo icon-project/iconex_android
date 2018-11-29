@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.menu.language;
+package foundation.icon.iconex.menu.language;
 
 import android.content.Intent;
 import android.content.res.Configuration;
