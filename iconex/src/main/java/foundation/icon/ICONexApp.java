@@ -178,8 +178,6 @@ public class ICONexApp extends Application {
 
                 PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
                 boolean beingLock = preferenceUtil.getBeingLock();
-                Log.d(TAG, "Foreground beingLock=" + beingLock);
-                Log.d(TAG, "activity=" + activity.getLocalClassName());
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
                     if (activity.getLocalClassName().equals("wallet.transfer.ICONTransferActivity")
@@ -194,11 +192,9 @@ public class ICONexApp extends Application {
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     .putExtra(AuthActivity.ARG_APP_STATUS, AppStatus.RETURNED_TO_FOREGROUND));
                         } else {
-                            Log.d(TAG, "remove time callback");
                             lockTimeLimiter.removeCallbacks(mLockTimeLimitTask);
                         }
                     } else {
-                        Log.d(TAG, "remove time callback");
                         lockTimeLimiter.removeCallbacks(mLockTimeLimitTask);
                     }
 
@@ -247,7 +243,6 @@ public class ICONexApp extends Application {
     private Runnable mLockTimeLimitTask = new Runnable() {
         @Override
         public void run() {
-            Log.d(TAG, "*** Time Lock Task Executed!!");
             PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
             preferenceUtil.saveBeingLock(true);
         }

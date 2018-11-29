@@ -34,7 +34,8 @@ public class ResponseReceiver extends BroadcastReceiver {
                         SampleApp.from = result;
 
                     LocalBroadcastManager.getInstance(context.getApplicationContext()).sendBroadcast(new Intent(SampleApp.LOCAL_ACTION)
-                            .putExtra("id", id));
+                            .putExtra("id", id)
+                            .putExtra("result", result));
                     break;
                 default:
                     LocalBroadcastManager.getInstance(context.getApplicationContext()).sendBroadcast(new Intent(SampleApp.LOCAL_ACTION)

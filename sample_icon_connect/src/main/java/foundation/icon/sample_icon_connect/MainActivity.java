@@ -252,7 +252,7 @@ public class MainActivity extends Activity {
                 int id = intent.getIntExtra("id", -1);
                 switch (id) {
                     case 1234:
-                        txtAddress.setText(SampleApp.from);
+                        txtAddress.setText(intent.getStringExtra("result"));
                         txtAddress.setVisibility(View.VISIBLE);
                         break;
 

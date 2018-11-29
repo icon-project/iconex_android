@@ -334,8 +334,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     editAddress.requestFocus();
                     int[] location = new int[2];
                     btnPlus10.getLocationInWindow(location);
-                    Log.d(TAG, "x=" + location[0] + ", y=" + location[1]);
-                    Log.d(TAG, "appbar getBottom=" + findViewById(R.id.appbar).getBottom());
                     scroll.smoothScrollTo(0, location[1] - findViewById(R.id.appbar).getBottom());
                 }
                 return false;
@@ -415,8 +413,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
                     int[] location = new int[2];
                     btnContacts.getLocationInWindow(location);
-                    Log.d(TAG, "x=" + location[0] + ", y=" + location[1]);
-                    Log.d(TAG, "appbar getBottom=" + findViewById(R.id.appbar).getBottom());
                     scroll.smoothScrollTo(0, scroll.getScrollY() + location[1] - findViewById(R.id.appbar).getBottom());
                 }
                 return false;

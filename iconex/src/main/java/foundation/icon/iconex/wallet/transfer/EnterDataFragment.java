@@ -256,9 +256,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                         }
                     } else {
                         String dataStr = editData.getText().toString();
-                        Log.d(TAG, "Hex.toHexString Start");
                         String hexStr = Hex.toHexString(dataStr.getBytes());
-                        Log.d(TAG, "Hex.toHexString End");
                         data.setData(Utils.checkPrefix(hexStr));
                         getStepCost();
                     }

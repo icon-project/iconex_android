@@ -383,11 +383,8 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
                     editPriv.setSelection(editPriv.getText().toString().length());
                     checkPrivKey(editPriv.getText().toString());
                 } else {
-                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
             } else {
-//                statusMessage.setText(String.format(getString(R.string.barcode_error),
-//                        CommonStatusCodes.getStatusCodeString(resultCode)));
             }
 
         } else {

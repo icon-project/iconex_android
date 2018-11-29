@@ -186,8 +186,6 @@ public class SendConfirmDialog extends Dialog {
                         ConvertUtil.valueToBigInteger(txInfo.getSendAmount(), 18),
                         txInfo.getData())).send();
 
-                Log.d(TAG, "EstimateGas ETH = " + estimateGas.getAmountUsed());
-
                 if (new BigInteger(txInfo.getLimit()).compareTo(estimateGas.getAmountUsed()) < 0) {
                     return NOT_ENOUGH;
                 }
@@ -259,7 +257,6 @@ public class SendConfirmDialog extends Dialog {
                                 new org.web3j.abi.datatypes.generated.Uint256(ConvertUtil.valueToBigInteger(txInfo.getSendAmount(), 18))),
                         Collections.<TypeReference<?>>emptyList());
                 String data = FunctionEncoder.encode(function);
-                Log.d(TAG, "Data=" + data);
                 EthGetTransactionCount nonce = web3j.ethGetTransactionCount(MyConstants.PREFIX_HEX + txInfo.getFromAddress(), DefaultBlockParameterName.LATEST).send();
                 EthEstimateGas estimateGas = web3j.ethEstimateGas(Transaction.createFunctionCallTransaction(MyConstants.PREFIX_HEX + txInfo.getFromAddress(),
                         nonce.getTransactionCount(),
@@ -269,7 +266,6 @@ public class SendConfirmDialog extends Dialog {
                         BigInteger.ZERO,
                         data)).send();
 
-                Log.d(TAG, "EstimateGas ERC20 = " + estimateGas.getAmountUsed());
                 BigInteger minLimit = estimateGas.getAmountUsed().add(estimateGas.getAmountUsed().divide(new BigInteger("2")));
 
                 if (new BigInteger(txInfo.getLimit()).compareTo(minLimit) < 0) {

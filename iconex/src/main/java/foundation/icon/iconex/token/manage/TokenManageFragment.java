@@ -772,11 +772,6 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                 JsonObject token = tokens.get(i).getAsJsonObject();
                 String tokenContract = token.get("address").getAsString();
                 if (tokenContract.equalsIgnoreCase(contract)) {
-                    Log.d(TAG, "Address=" + tokenContract);
-                    Log.d(TAG, "Symbol=" + token.get("symbol").getAsString());
-                    Log.d(TAG, "decimal=" + token.get("decimal").getAsInt());
-                    Log.d(TAG, "type=" + token.get("type").getAsString());
-
                     editSym.setText(token.get("symbol").getAsString());
                     defaultSym = token.get("symbol").getAsString();
                     delSym.setVisibility(View.INVISIBLE);
@@ -946,19 +941,10 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                     if (response.isSuccessful()) {
                         tokens = response.body().getAsJsonArray();
 
-                        Log.d(TAG, "Tokens=" + tokens);
-                        Log.d(TAG, "Tokens size=" + tokens.size());
-
-                        Log.d(TAG, "Contract=" + contract);
-
                         for (int i = 0; i < tokens.size(); i++) {
                             JsonObject token = tokens.get(i).getAsJsonObject();
                             String tokenContract = token.get("address").getAsString();
                             if (tokenContract.equalsIgnoreCase(contract)) {
-                                Log.d(TAG, "Address=" + tokenContract);
-                                Log.d(TAG, "Symbol=" + token.get("symbol").getAsString());
-                                Log.d(TAG, "decimal=" + token.get("decimal").getAsInt());
-                                Log.d(TAG, "type=" + token.get("type").getAsString());
 
                                 editSym.setText(token.get("symbol").getAsString());
                                 defaultSym = token.get("symbol").getAsString();

@@ -58,7 +58,6 @@ public class SplashActivity extends AppCompatActivity {
 
                             @Override
                             public void onPass() {
-                                Log.d(TAG, "ICONexApp.isConnect=" + ICONexApp.isConnect);
                                 if (ICONexApp.isConnect) {
                                     if (ICONexApp.connectMethod == Constants.Method.NONE) {
                                         IconexConnect iconexConnect = new IconexConnect(SplashActivity.this, request);
@@ -66,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
                                             iconexConnect.startConnectActivity();
                                         else
                                             IconexConnect.sendError(SplashActivity.this, request,
-                                                    new ErrorCodes.Error(ErrorCodes.ERR_EMPTY, getString(R.string.descEmpty)));
+                                                    new ErrorCodes.Error(ErrorCodes.ERR_EMPTY, ErrorCodes.MSG_EMTPY));
                                     } else {
                                         finish();
                                     }
@@ -100,7 +99,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void checkPermission() {
-        Log.d(TAG, "checkPermission");
         if (ICONexApp.mWallets.size() > 0) {
             if (ICONexApp.isLocked) {
                 StartAuthenticate startAuthenticate = new StartAuthenticate();

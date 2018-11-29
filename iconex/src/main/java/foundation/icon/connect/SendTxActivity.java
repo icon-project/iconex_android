@@ -1,6 +1,7 @@
 package foundation.icon.connect;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -365,10 +367,13 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
                 dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
                     @Override
                     public void onOk() {
-                        if (method == Constants.Method.SendICX)
-                            sendIcxTx();
-                        else
-                            sendTokenTx();
+                        if (method == Constants.Method.SendICX) {
+                            SendIcx sendIcx = new SendIcx();
+                            sendIcx.execute();
+                        } else {
+                            SendToken sendToken = new SendToken();
+                            sendToken.execute();
+                        }
                     }
                 });
                 dialog.show();
@@ -597,106 +602,144 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
 
     private IconService iconService;
 
-    private void sendIcxTx() {
-        initIconService();
+    private class SendIcx extends AsyncTask<Void, String, String> {
 
-        foundation.icon.icx.Wallet wallet = KeyWallet.load(new Bytes(strPrivateKey));
+        Transaction transaction;
+        foundation.icon.icx.Wallet wallet;
 
-        BigInteger networkId = new BigInteger(Integer.toString(network));
-        Address fromAddress = new Address(from);
-        Address toAddress = new Address(txtTo.getText().toString());
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-        BigInteger value = IconAmount.of(txtAmount.getText().toString(), IconAmount.Unit.ICX).toLoop();
-        BigInteger stepLimit = new BigInteger(editLimit.getText().toString());
-        long timestamp = System.currentTimeMillis() * 1000L;
-        BigInteger nonce = new BigInteger("1");
+            initIconService();
 
-        Transaction transaction = TransactionBuilder.newBuilder()
-                .nid(networkId)
-                .from(fromAddress)
-                .to(toAddress)
-                .value(value)
-                .stepLimit(stepLimit)
-                .timestamp(new BigInteger(Long.toString(timestamp)))
-                .nonce(nonce)
-                .build();
+            wallet = KeyWallet.load(new Bytes(strPrivateKey));
 
-        SignedTransaction signedTransaction = new SignedTransaction(transaction, wallet);
-        iconService.sendTransaction(signedTransaction).execute(new foundation.icon.icx.Callback<Bytes>() {
-            @Override
-            public void onSuccess(Bytes result) {
-                BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+            BigInteger networkId = new BigInteger(Integer.toString(network));
+            Address fromAddress = new Address(from);
+            Address toAddress = new Address(txtTo.getText().toString());
+
+            BigInteger value = IconAmount.of(txtAmount.getText().toString(), IconAmount.Unit.ICX).toLoop();
+            BigInteger stepLimit = new BigInteger(editLimit.getText().toString());
+            long timestamp = System.currentTimeMillis() * 1000L;
+            BigInteger nonce = new BigInteger("1");
+
+            transaction = TransactionBuilder.newBuilder()
+                    .nid(networkId)
+                    .from(fromAddress)
+                    .to(toAddress)
+                    .value(value)
+                    .stepLimit(stepLimit)
+                    .timestamp(new BigInteger(Long.toString(timestamp)))
+                    .nonce(nonce)
+                    .build();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            SignedTransaction signedTransaction = new SignedTransaction(transaction, wallet);
+
+            Bytes result;
+            try {
+                result = iconService.sendTransaction(signedTransaction).execute();
+            } catch (IOException e) {
+                return null;
+            }
+
+            return result.toHexString(true);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+            if (result != null) {
                 dialog.setMessage(getString(R.string.connSendSuccess));
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        IconexConnect.sendResponse(SendTxActivity.this, requestData, result.toHexString(true));
+                        IconexConnect.sendResponse(SendTxActivity.this, requestData, result);
                     }
                 });
                 dialog.show();
-            }
-
-            @Override
-            public void onFailure(Exception exception) {
-                BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+            } else {
                 dialog.setMessage(getString(R.string.connSendFailed));
                 dialog.show();
             }
-        });
+        }
     }
 
-    private void sendTokenTx() {
-        initIconService();
+    private class SendToken extends AsyncTask<Void, String, String> {
+        Transaction transaction;
+        foundation.icon.icx.Wallet wallet;
 
-        foundation.icon.icx.Wallet wallet = KeyWallet.load(new Bytes(strPrivateKey));
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-        BigInteger networkId = new BigInteger(Integer.toString(network));
-        Address fromAddress = wallet.getAddress();
-        Address toAddress = new Address(txtTo.getText().toString());
-        BigInteger value = IconAmount.of(txtAmount.getText().toString(), txData.getDecimals()).toLoop();
-        BigInteger stepLimit = new BigInteger(editLimit.getText().toString());
-        long timestamp = System.currentTimeMillis() * 1000L;
-        BigInteger nonce = new BigInteger("1");
-        String methodName = "transfer";
+            initIconService();
 
-        RpcObject params = new RpcObject.Builder()
-                .put("_to", new RpcValue(toAddress))
-                .put("_value", new RpcValue(value))
-                .build();
+            wallet = KeyWallet.load(new Bytes(strPrivateKey));
 
-        Transaction transaction = TransactionBuilder.newBuilder()
-                .nid(networkId)
-                .from(fromAddress)
-                .to(new Address(contractAddress))
-                .stepLimit(stepLimit)
-                .timestamp(new BigInteger(Long.toString(timestamp)))
-                .nonce(nonce)
-                .call(methodName)
-                .params(params)
-                .build();
+            BigInteger networkId = new BigInteger(Integer.toString(network));
+            Address fromAddress = wallet.getAddress();
+            Address toAddress = new Address(txtTo.getText().toString());
+            BigInteger value = IconAmount.of(txtAmount.getText().toString(), txData.getDecimals()).toLoop();
+            BigInteger stepLimit = new BigInteger(editLimit.getText().toString());
+            long timestamp = System.currentTimeMillis() * 1000L;
+            BigInteger nonce = new BigInteger("1");
+            String methodName = "transfer";
 
-        SignedTransaction signedTransaction = new SignedTransaction(transaction, wallet);
-        iconService.sendTransaction(signedTransaction).execute(new foundation.icon.icx.Callback<Bytes>() {
-            @Override
-            public void onSuccess(Bytes result) {
-                BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+            RpcObject params = new RpcObject.Builder()
+                    .put("_to", new RpcValue(toAddress))
+                    .put("_value", new RpcValue(value))
+                    .build();
+
+            transaction = TransactionBuilder.newBuilder()
+                    .nid(networkId)
+                    .from(fromAddress)
+                    .to(new Address(contractAddress))
+                    .stepLimit(stepLimit)
+                    .timestamp(new BigInteger(Long.toString(timestamp)))
+                    .nonce(nonce)
+                    .call(methodName)
+                    .params(params)
+                    .build();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            SignedTransaction signedTransaction = new SignedTransaction(transaction, wallet);
+            Bytes result;
+            try {
+                result = iconService.sendTransaction(signedTransaction).execute();
+            } catch (IOException e) {
+                return null;
+            }
+
+            return result.toHexString(true);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+            if (result != null) {
                 dialog.setMessage(getString(R.string.connSendSuccess));
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        IconexConnect.sendResponse(SendTxActivity.this, requestData, result.toHexString(true));
+                        IconexConnect.sendResponse(SendTxActivity.this, requestData, result);
                     }
                 });
                 dialog.show();
-            }
-
-            @Override
-            public void onFailure(Exception exception) {
-                BasicDialog dialog = new BasicDialog(SendTxActivity.this);
+            } else {
                 dialog.setMessage(getString(R.string.connSendFailed));
                 dialog.show();
             }
-        });
+        }
     }
 
     private void initIconService() {

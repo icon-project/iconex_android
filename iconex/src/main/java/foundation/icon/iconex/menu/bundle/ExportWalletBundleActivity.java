@@ -66,11 +66,6 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
         mBundle = bundle;
         mPrivSet = privSet;
 
-        for (Map.Entry<String, String> entry : mPrivSet.entrySet()) {
-            Log.i(TAG, "*** PrivateKey Set");
-            Log.i(TAG, "Key=" + entry.getKey() + ", Value=" + entry.getValue());
-        }
-
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
     }
 
