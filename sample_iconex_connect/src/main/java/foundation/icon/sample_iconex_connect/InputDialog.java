@@ -1,4 +1,4 @@
-package foundation.icon.sample_icon_connect;
+package foundation.icon.sample_iconex_connect;
 
 import android.app.Dialog;
 import android.content.Context;
