@@ -71,5 +71,8 @@ dependencies {
     implementation 'org.web3j:core:3.3.1-android'
     implementation 'org.slf4j:slf4j-nop:1.7.25'
 
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
+
     implementation 'foundation.icon:icon-sdk:0.9.8'
 }

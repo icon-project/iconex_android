@@ -25,9 +25,9 @@ import java.io.Serializable;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
@@ -117,11 +117,6 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnOldDel.setVisibility(View.VISIBLE);
-                    if (s.charAt(s.length() - 1) == ' ') {
-                        editOldPwd.setText(s.subSequence(0, s.length() - 1));
-                        if (editOldPwd.getText().toString().length() > 0)
-                            editOldPwd.setSelection(editOldPwd.getText().toString().length());
-                    }
                 } else {
                     btnOldDel.setVisibility(View.INVISIBLE);
                     hideWarning(editOldPwd, lineOld, txtOldWarning);

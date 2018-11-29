@@ -110,12 +110,6 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
                                 beforeStr = s.toString();
                             }
                         }
-                    } else {
-                        if (s.charAt(s.length() - 1) == ' ') {
-                            editText.setText(s.subSequence(0, s.length() - 1));
-                            if (editText.getText().toString().length() > 0)
-                                editText.setSelection(editText.getText().toString().length());
-                        }
                     }
                 } else {
                     btnDel.setVisibility(View.INVISIBLE);
