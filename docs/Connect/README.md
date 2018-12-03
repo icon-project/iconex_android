@@ -15,7 +15,7 @@ ICONex Connect is a simple protocol for supporting 3rd party applications who wa
 | caller | String | From Package name |
 | receiver | String | From Receiver class name |
 
-```
+```Java
 JSONObject action = new JSONObject();
 try {
     action.put("id", 1234);
@@ -57,7 +57,7 @@ try {
 * [Value Types](https://github.com/icon-project/icon-rpc-server/blob/master/docs/icon-json-rpc-v3.md#value-types)
 
 ## API Convention
-```
+```Java
 // Request
 {
     "id": $INT1,
@@ -102,7 +102,7 @@ Selected wallet's address.
 
 #### Example
 
-```
+```Java
 //Request
 {
     "id": 1234,
@@ -147,7 +147,7 @@ Signature of transaction hash.
 
 #### Example
 
-```
+```Java
 // Request
 {
     "id": 1234,
@@ -197,7 +197,7 @@ Transaction hash
 
 #### Example
 
-```
+```Java
 // Request
 {
     "id": 1234,
@@ -241,7 +241,7 @@ Transaction hash
 
 #### Example
 
-```
+```Java
 // Request
 {
     "id": 1234,
