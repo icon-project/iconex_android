@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,14 +23,14 @@ import java.util.List;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.menu.ViewWalletInfoActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.KeyStoreIO;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.MainActivity;
-import foundation.icon.iconex.menu.ViewWalletInfoActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -132,12 +133,16 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
         wallet.setCoinType(coinType);
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
         pagerAdapter.clearEdit();
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
     public void onStep2Done(String name, String pwd) {
         createKeyStore = new CreateKeyStore();
         createKeyStore.execute(name, pwd);
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
@@ -210,12 +215,13 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
 
     @Override
     public void onStep3Back() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
     }
 
     @Override
     public void onStep2Back() {
-
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         if (createKeyStore != null) {
             createKeyStore.cancel(true);
         }

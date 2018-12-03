@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -39,7 +38,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     private View lineAlias, linePwd, lineCheck;
     private TextView txtAliasWarning, txtPwdWarning, txtCheckWarnig;
     private Button btnAliasDel, btnPwdDel, btnCheckDel;
-    private Button btnPwdView, btnCheckView;
 
     private Button btnPrev, btnNext;
     private ProgressBar progress;
@@ -365,10 +363,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         btnCheckDel = view.findViewById(R.id.btn_check_delete);
         btnCheckDel.setOnClickListener(this);
 
-        btnPwdView = view.findViewById(R.id.btn_pwd_view);
-        btnPwdView.setOnClickListener(this);
-        btnCheckView = view.findViewById(R.id.btn_check_view);
-        btnCheckView.setOnClickListener(this);
         return view;
     }
 
@@ -402,28 +396,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
             case R.id.btn_check_delete:
                 editCheck.setText("");
-                break;
-
-            case R.id.btn_pwd_view:
-                if (btnPwdView.isSelected()) {
-                    btnPwdView.setSelected(false);
-                    editPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                } else {
-                    btnPwdView.setSelected(true);
-                    editPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
-                editPwd.setSelection(editPwd.getText().toString().length());
-                break;
-
-            case R.id.btn_check_view:
-                if (btnCheckView.isSelected()) {
-                    btnCheckView.setSelected(false);
-                    editCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                } else {
-                    btnCheckView.setSelected(true);
-                    editCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
-                editCheck.setSelection(editCheck.getText().toString().length());
                 break;
         }
     }

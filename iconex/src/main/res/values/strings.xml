@@ -467,8 +467,8 @@
     <string name="networkRetry">Check your mobile data or Wi-Fi and try again</string>
 
     <!-- Developer -->
-    <string name="modeDeveloper">개발자 모드</string>
-    <string name="selectNetwork">네트워크 선택</string>
+    <string name="modeDeveloper">Developer mode</string>
+    <string name="selectNetwork">Select network</string>
     <string name="networkMain">Main</string>
     <string name="networkTest">Test</string>
 
