@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "foundation.icon.sample_icon_connect"
+        applicationId "foundation.icon.sample_iconex_connect"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 2

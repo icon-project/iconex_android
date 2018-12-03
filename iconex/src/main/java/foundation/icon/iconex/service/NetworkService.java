@@ -464,7 +464,6 @@ public class NetworkService extends Service {
                             mTransferCallback.onReceiveError(tx.getFrom(), resCode);
                         }
                     } else {
-                        Log.d(TAG, response.raw().request().body().toString());
                         mTransferCallback.onReceiveError(tx.getFrom(), 9999);
                     }
                 }

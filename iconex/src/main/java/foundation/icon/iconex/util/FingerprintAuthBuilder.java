@@ -51,7 +51,6 @@ public class FingerprintAuthBuilder {
             mKeyStore = KeyStore.getInstance("AndroidKeyStore");
         } catch (KeyStoreException e) {
             e.printStackTrace();
-            Log.e(TAG, "Failed to get an instance of KeyStore");
         }
 
         try {
@@ -59,7 +58,6 @@ public class FingerprintAuthBuilder {
                     .getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
         } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             e.printStackTrace();
-            Log.e(TAG, "Failed to get an instance of KeyGenerator");
         }
 
         try {
@@ -102,7 +100,6 @@ public class FingerprintAuthBuilder {
         try {
             byte[] encrypted = cipher.doFinal(SECRET_MESSAGE.getBytes());
         } catch (BadPaddingException | IllegalBlockSizeException e) {
-            Log.e(TAG, "Failed to encrypt the data with the generated key." + e.getMessage());
         }
     }
 

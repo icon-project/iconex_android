@@ -311,7 +311,7 @@ public class EnterPasswordActivity extends AppCompatActivity implements View.OnC
                 tx.getBuilder().data(params.getString("data"));
 
         } catch (JSONException e) {
-            throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, getString(R.string.descParseError));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, ErrorCodes.MSG_PARSE);
         }
 
         return tx;
@@ -324,7 +324,7 @@ public class EnterPasswordActivity extends AppCompatActivity implements View.OnC
             SendTransactionSigner signer = new SendTransactionSigner(tx);
             signature = signer.getSignature(signer.getTxHash(), Hex.toHexString(mPrivateKey));
         } catch (Exception e1) {
-            throw new ErrorCodes.Error(ErrorCodes.ERR_SIGN_FAILED, getString(R.string.descSignFailed));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_SIGN_FAILED, ErrorCodes.MSG_SIGN_FAILED);
         }
 
         return signature;

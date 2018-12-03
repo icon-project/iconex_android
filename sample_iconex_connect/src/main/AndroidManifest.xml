@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="foundation.icon.sample_icon_connect">
+    package="foundation.icon.sample_iconex_connect">
 
     <application
         android:allowBackup="true"
@@ -8,7 +8,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="foundation.icon.sample_iconex_connect.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,7 +17,7 @@
         </activity>
 
         <receiver
-            android:name=".ResponseReceiver"
+            android:name="foundation.icon.sample_iconex_connect.ResponseReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

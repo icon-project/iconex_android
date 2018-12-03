@@ -167,13 +167,11 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
 
     @Override
     public void onHelp(int helpMsgId, String help) {
-        Log.d(TAG, "onHelp : helpMsgId=" + helpMsgId + ", " + "helpString=" + help);
         txtHelper.setText(help);
     }
 
     @Override
     public void onError(int errMsgId, String error) {
-        Log.d(TAG, "onError : errorMsgId=" + errMsgId + ", " + "ErrorString=" + error);
         helper.stopFingerprintAuthListening();
         mListener.onByLockNum(MyConstants.FingerprintState.PASSCODE);
     }

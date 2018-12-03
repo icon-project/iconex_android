@@ -63,10 +63,6 @@ public class IrcListAdapter extends RecyclerView.Adapter {
         if (holder instanceof ViewItemHolder) {
             IrcToken token = list.get(position);
 
-            Log.d(TAG, "position=" + position);
-            Log.d(TAG, "contractAddr=" + token.getContractAddress());
-            Log.d(TAG, "contain=" + ownTokens.contains(token.getContractAddress()));
-
             ((ViewItemHolder) holder).txtIrc.setText(list.get(position).getName());
             ((ViewItemHolder) holder).txtAddress.setText(list.get(position).getContractAddress());
 

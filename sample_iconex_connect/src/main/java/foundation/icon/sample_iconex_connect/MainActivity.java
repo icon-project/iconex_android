@@ -1,4 +1,4 @@
-package foundation.icon.sample_icon_connect;
+package foundation.icon.sample_iconex_connect;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -144,8 +144,8 @@ public class MainActivity extends Activity {
                 .setAction(SampleApp.ACTION_CONNECT)
                 .addFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES|Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_icon_connect")
-                .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
+                .putExtra("caller", "foundation.icon.sample_iconex_connect")
+                .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
 
         Log.d(TAG, "sendBroadcast");
         Log.d(TAG, "action=" + intent.getAction());
@@ -168,8 +168,8 @@ public class MainActivity extends Activity {
                 .setAction(SampleApp.ACTION_CONNECT)
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_icon_connect")
-                .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
+                .putExtra("caller", "foundation.icon.sample_iconex_connect")
+                .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
 
         sendBroadcast(intent);
     }
@@ -192,8 +192,8 @@ public class MainActivity extends Activity {
                 .setAction(SampleApp.ACTION_CONNECT)
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_icon_connect")
-                .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
+                .putExtra("caller", "foundation.icon.sample_iconex_connect")
+                .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
 
         sendBroadcast(intent);
     }
@@ -216,8 +216,8 @@ public class MainActivity extends Activity {
                 .setAction(SampleApp.ACTION_CONNECT)
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_icon_connect")
-                .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
+                .putExtra("caller", "foundation.icon.sample_iconex_connect")
+                .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
 
         sendBroadcast(intent);
     }
@@ -236,10 +236,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_DEVELOPER)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
-                .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_icon_connect")
-                .putExtra("receiver", "foundation.icon.sample_icon_connect.ResponseReceiver");
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES);
 
         sendBroadcast(intent);
     }
@@ -252,7 +249,7 @@ public class MainActivity extends Activity {
                 int id = intent.getIntExtra("id", -1);
                 switch (id) {
                     case 1234:
-                        txtAddress.setText(SampleApp.from);
+                        txtAddress.setText(intent.getStringExtra("result"));
                         txtAddress.setVisibility(View.VISIBLE);
                         break;
 

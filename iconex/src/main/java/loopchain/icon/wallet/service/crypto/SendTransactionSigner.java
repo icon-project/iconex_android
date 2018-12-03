@@ -41,8 +41,6 @@ public class SendTransactionSigner {
             }
         }
 
-        Log.d(TAG, "tbs=" + tbs);
-
         return tbs.getBytes();
     }
 

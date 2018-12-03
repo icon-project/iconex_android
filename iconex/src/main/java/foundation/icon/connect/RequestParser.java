@@ -38,15 +38,15 @@ public class RequestParser {
         String receiver = request.getReceiver();
 
         if (caller == null || caller.isEmpty())
-            throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND_CALLER, mContext.getString(R.string.descNotFoundCaller));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND_CALLER, ErrorCodes.MSG_NOT_FOUND_CALLER);
 
         checkCaller(caller, receiver);
 
         if (receiver == null || receiver.isEmpty())
-            throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND_CALLER, mContext.getString(R.string.descNotFoundCaller));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND_CALLER, ErrorCodes.MSG_NOT_FOUND_CALLER);
 
         if (data == null || data.isEmpty())
-            throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, mContext.getString(R.string.descParseError));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, ErrorCodes.MSG_PARSE);
 
         return SUCCESS;
     }
@@ -55,7 +55,7 @@ public class RequestParser {
         JSONObject requestData = getData(data);
 
         if (requestData == null)
-            throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, mContext.getString(R.string.descParseError));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, ErrorCodes.MSG_PARSE);
 
         try {
             String method = requestData.getString("method");
@@ -79,10 +79,10 @@ public class RequestParser {
                     ICONexApp.connectMethod = Constants.Method.NONE;
             }
 
-            throw new ErrorCodes.Error(ErrorCodes.ERR_INVALID_METHOD, mContext.getString(R.string.descInvalidMethod));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_INVALID_METHOD, ErrorCodes.MSG_INVALID_M);
         } catch (JSONException e) {
             ICONexApp.connectMethod = Constants.Method.NONE;
-            throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, mContext.getString(R.string.descParseError));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, ErrorCodes.MSG_PARSE);
         }
     }
 
@@ -109,41 +109,41 @@ public class RequestParser {
         String address;
         if (!params.has("version") || params.isNull("version"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "version"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "version"));
 
         if (!params.has("from") || params.isNull("from"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "from"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "from"));
 
         if (!params.has("to") || params.isNull("to"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "to"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "to"));
 
         if (!params.has("value") || params.isNull("value"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "value"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "value"));
 
         if (!params.has("stepLimit") || params.isNull("stepLimit"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "stepLimit"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "stepLimit"));
 
         if (!params.has("timestamp") || params.isNull("timestamp"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "timestamp"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "timestamp"));
 
         if (!params.has("nid") || params.isNull("nid"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "nid"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "nid"));
 
         if (!params.has("nonce") || params.isNull("nonce"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "nonce"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "nonce"));
 
         try {
             address = params.getString("from");
         } catch (JSONException e) {
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "from"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "from"));
         }
 
         return address;
@@ -154,21 +154,21 @@ public class RequestParser {
 
         if (!params.has("from") || params.isNull("from"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "from"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "from"));
 
         if (!params.has("to") || params.isNull("to"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "to"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "to"));
 
         if (!params.has("value") || params.isNull("value"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "value"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "value"));
 
         try {
             address = params.getString("from");
         } catch (JSONException e) {
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "from"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "from"));
         }
 
         return address;
@@ -179,24 +179,24 @@ public class RequestParser {
 
         if (!params.has("from") || params.isNull("from"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "from"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "from"));
 
         if (!params.has("to") || params.isNull("to"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "to"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "to"));
 
         if (!params.has("value") || params.isNull("value"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "value"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "value"));
 
         if (!params.has("contractAddress") || params.isNull("contractAddress"))
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "contractAddress"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "contractAddress"));
         try {
             address = params.getString("from");
         } catch (JSONException e) {
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
-                    String.format(Locale.getDefault(), mContext.getString(R.string.descNotFoundParameter), "from"));
+                    String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "from"));
         }
 
         return address;
@@ -224,7 +224,7 @@ public class RequestParser {
     }
 
     public JSONObject getParams(JSONObject data) {
-        JSONObject jsonData = null;
+        JSONObject jsonData;
         try {
             jsonData = data.getJSONObject("params");
         } catch (JSONException e) {
@@ -248,9 +248,9 @@ public class RequestParser {
                     return SUCCESS;
             }
 
-            throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND_CALLER, mContext.getString(R.string.descNotFoundCaller));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND_CALLER, ErrorCodes.MSG_NOT_FOUND_CALLER);
         } catch (PackageManager.NameNotFoundException e) {
-            throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND_CALLER, mContext.getString(R.string.descNotFoundCaller));
+            throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND_CALLER, ErrorCodes.MSG_NOT_FOUND_CALLER);
         }
     }
 
