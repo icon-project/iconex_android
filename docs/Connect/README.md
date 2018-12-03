@@ -43,7 +43,7 @@ sendBroadcast(intent);
 | --- | ---- | ----------- |
 | data | String | Base64 encoded string of JSON Object |
 
-```
+```Java
 String data = intent.getStringExtra("data);
 byte[] base64Response = Base64.decode(resp, Base64.NO_WRAP);
 
