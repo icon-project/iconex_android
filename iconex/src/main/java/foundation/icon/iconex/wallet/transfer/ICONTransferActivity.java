@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +27,7 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +56,19 @@ import foundation.icon.iconex.wallet.contacts.ContactsActivity;
 import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 import foundation.icon.iconex.widgets.MyEditText;
+import foundation.icon.icx.IconService;
+import foundation.icon.icx.data.Address;
+import foundation.icon.icx.transport.http.HttpProvider;
+import foundation.icon.icx.transport.jsonrpc.RpcItem;
+import foundation.icon.icx.transport.jsonrpc.RpcObject;
+import foundation.icon.icx.transport.jsonrpc.RpcValue;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.request.Transaction;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import loopchain.icon.wallet.service.crypto.PKIUtils;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,6 +79,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
     private ScrollView scroll;
     private Button btnBack;
+    private TextView txtBalance;
     private MyEditText editSend, editAddress, editLimit;
     private View lineSend, lineAddress, lineLimit;
     private TextView txtSendWarning, txtAddrWarning, txtLimitWarning;
@@ -201,7 +212,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         scroll = findViewById(R.id.scroll);
 
         ((TextView) findViewById(R.id.txt_title)).setText(mWallet.getAlias());
-        ((TextView) findViewById(R.id.txt_possession))
+        ((TextView) findViewById(R.id.txt_sub_balance))
                 .setText(String.format(getString(R.string.possessionAmount), mWalletEntry.getSymbol()));
         ((TextView) findViewById(R.id.txt_send_amount))
                 .setText(String.format(getString(R.string.sendAmount), mWalletEntry.getSymbol()));
@@ -219,6 +230,8 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
         if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN))
             findViewById(R.id.layout_input_data).setVisibility(View.GONE);
+
+        txtBalance = findViewById(R.id.txt_balance);
 
         lineSend = findViewById(R.id.line_send_amount);
         lineAddress = findViewById(R.id.line_to_address);
@@ -593,22 +606,12 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     txtNetwork.setText(getString(R.string.networkTest));
                     break;
             }
-        }
+        } else
+            layoutNetwork.setVisibility(View.GONE);
 
         balance = new BigInteger(mWalletEntry.getBalance());
 
-        ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
-        String strPrice = ICONexApp.EXCHANGE_TABLE.get(mWalletEntry.getSymbol().toLowerCase() + "usd");
-        if (strPrice != null) {
-            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()))
-                    * Double.parseDouble(strPrice);
-
-            String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
-            ((TextView) findViewById(R.id.txt_trans_balance))
-                    .setText(String.format(getString(R.string.exchange_usd), strBalanceUSD));
-
-            setRemain(editSend.getText().toString());
-        }
+        setBalance(balance);
     }
 
     @Override
@@ -804,12 +807,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                                     .dataTo(editAddress.getText().toString())
                                     .build();
                         }
-
-//                        RecentSendInfo pending = new RecentSendInfo();
-//                        pending.setAmount(editSend.getText().toString());
-//                        pending.setDate(timestamp);
-//                        pending.setSymbol(mWalletEntry.getSymbol());
-//                        pending.
 
                         mService.requestICXTransaction(tx);
                     }
@@ -1272,6 +1269,14 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 ICONexApp.network = MyConstants.NETWORK_TEST;
                 preferenceUtil.setNetwork(ICONexApp.network);
             }
+
+            if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                IcxGetBalance icxGetBalance = new IcxGetBalance();
+                icxGetBalance.execute();
+            } else {
+                TokenGetBalance tokenGetBalance = new TokenGetBalance();
+                tokenGetBalance.execute();
+            }
         }
 
         @Override
@@ -1284,6 +1289,123 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
         }
     };
+
+    private class IcxGetBalance extends AsyncTask<Void, BigInteger, BigInteger> {
+        @Override
+        protected BigInteger doInBackground(Void... voids) {
+            String url;
+            switch (ICONexApp.network) {
+                case MyConstants.NETWORK_TEST:
+                    url = ServiceConstants.TRUSTED_HOST_TEST + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
+                    break;
+
+                default:
+                    url = ServiceConstants.TRUSTED_HOST_MAIN + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
+                    break;
+            }
+
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            OkHttpClient httpClient = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .build();
+            IconService iconService = new IconService(new HttpProvider(httpClient, url));
+
+            Address address = new Address(mWalletEntry.getAddress());
+            BigInteger result;
+
+            try {
+                result = iconService.getBalance(address).execute();
+            } catch (IOException e) {
+                return null;
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(BigInteger result) {
+            super.onPostExecute(result);
+
+            setBalance(result);
+        }
+    }
+
+    private class TokenGetBalance extends AsyncTask<Void, BigInteger, BigInteger> {
+        @Override
+        protected BigInteger doInBackground(Void... voids) {
+            String url;
+            switch (ICONexApp.network) {
+                case MyConstants.NETWORK_TEST:
+                    url = ServiceConstants.TRUSTED_HOST_TEST + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
+                    break;
+
+                default:
+                    url = ServiceConstants.TRUSTED_HOST_MAIN + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
+                    break;
+            }
+
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            OkHttpClient httpClient = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .build();
+            IconService iconService = new IconService(new HttpProvider(httpClient, url));
+
+            Address owner = new Address(mWalletEntry.getAddress());
+            Address score = new Address(mWalletEntry.getContractAddress());
+
+            RpcObject params = new RpcObject.Builder()
+                    .put("_owner", new RpcValue(owner))
+                    .build();
+
+            foundation.icon.icx.Call<RpcItem> call = new foundation.icon.icx.Call.Builder()
+                    .from(owner)
+                    .to(score)
+                    .method("balanceOf")
+                    .params(params)
+                    .build();
+
+            RpcItem result;
+            try {
+                result = iconService.call(call).execute();
+            } catch (IOException e) {
+                return null;
+            }
+
+            return result.asInteger();
+        }
+
+        @Override
+        protected void onPostExecute(BigInteger result) {
+            super.onPostExecute(result);
+
+            setBalance(result);
+        }
+    }
+
+    private void setBalance(BigInteger balance) {
+        this.balance = balance;
+
+        if (balance == null) {
+            txtBalance.setText(MyConstants.NO_BALANCE);
+            mWalletEntry.setBalance(MyConstants.NO_BALANCE);
+        } else {
+            txtBalance.setText(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
+            mWalletEntry.setBalance(balance.toString());
+        }
+
+        String strPrice = ICONexApp.EXCHANGE_TABLE.get(mWalletEntry.getSymbol().toLowerCase() + "usd");
+        if (strPrice != null) {
+            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()))
+                    * Double.parseDouble(strPrice);
+
+            String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
+            ((TextView) findViewById(R.id.txt_trans_balance))
+                    .setText(String.format(getString(R.string.exchange_usd), strBalanceUSD));
+
+            setRemain(editSend.getText().toString());
+        }
+    }
 
     @Override
     public void onSetData(InputData data) {

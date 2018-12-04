@@ -179,7 +179,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         scroll = findViewById(R.id.scroll);
 
         ((TextView) findViewById(R.id.txt_title)).setText(mWallet.getAlias());
-        ((TextView) findViewById(R.id.txt_possession))
+        ((TextView) findViewById(R.id.txt_sub_balance))
                 .setText(String.format(getString(R.string.possessionAmount), mWalletEntry.getSymbol()));
         ((TextView) findViewById(R.id.txt_send_amount))
                 .setText(String.format(getString(R.string.sendAmount), mWalletEntry.getSymbol()));
