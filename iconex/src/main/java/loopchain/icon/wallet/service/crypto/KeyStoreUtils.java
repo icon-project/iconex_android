@@ -779,12 +779,6 @@ public class KeyStoreUtils {
             newAddress = PKIUtils.makeEtherAddress(publicKey);
             return Utils.checkPrefix(address).equals(Utils.checkPrefix(newAddress));
         }
-
-//        System.out.println("KS validate address");
-//        System.out.println("KS Address=" + address);
-//        System.out.println("KS Recover address=" + newAddress);
-
-//        return address.equals(newAddress);
     }
 
     public static boolean validatePassword(String pwd, JsonObject keyStore) {

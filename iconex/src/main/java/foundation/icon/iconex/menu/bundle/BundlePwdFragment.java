@@ -8,7 +8,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,7 +35,6 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
     private View linePwd, lineCheck;
     private TextView txtPwdWarning, txtCheckWarning;
     private Button btnPwdDel, btnCheckDel;
-    private Button btnPwdView, btnCheckView;
 
     private Button btnExport;
 
@@ -206,11 +204,6 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
         btnCheckDel = v.findViewById(R.id.btn_check_delete);
         btnCheckDel.setOnClickListener(this);
 
-        btnPwdView = v.findViewById(R.id.btn_pwd_view);
-        btnPwdView.setOnClickListener(this);
-        btnCheckView = v.findViewById(R.id.btn_check_view);
-        btnCheckView.setOnClickListener(this);
-
         btnExport = v.findViewById(R.id.btn_export);
         btnExport.setOnClickListener(this);
 
@@ -226,28 +219,6 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
             case R.id.btn_check_delete:
                 editCheck.setText("");
-                break;
-
-            case R.id.btn_pwd_view:
-                if (btnPwdView.isSelected()) {
-                    btnPwdView.setSelected(false);
-                    editPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                } else {
-                    btnPwdView.setSelected(true);
-                    editPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
-                editPwd.setSelection(editPwd.getText().toString().length());
-                break;
-
-            case R.id.btn_check_view:
-                if (btnCheckView.isSelected()) {
-                    btnCheckView.setSelected(false);
-                    editCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                } else {
-                    btnCheckView.setSelected(true);
-                    editCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
-                editCheck.setSelection(editCheck.getText().toString().length());
                 break;
 
             case R.id.btn_export:

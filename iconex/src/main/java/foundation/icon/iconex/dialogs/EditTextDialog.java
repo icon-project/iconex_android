@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.dialog_edit_text);
 
@@ -109,12 +111,6 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
                             } else {
                                 beforeStr = s.toString();
                             }
-                        }
-                    } else {
-                        if (s.charAt(s.length() - 1) == ' ') {
-                            editText.setText(s.subSequence(0, s.length() - 1));
-                            if (editText.getText().toString().length() > 0)
-                                editText.setSelection(editText.getText().toString().length());
                         }
                     }
                 } else {

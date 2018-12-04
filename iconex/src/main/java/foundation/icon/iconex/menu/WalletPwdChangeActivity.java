@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,9 +24,9 @@ import java.io.Serializable;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
@@ -43,7 +42,6 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
     private View lineOld, linePwd, lineCheck;
     private TextView txtOldWarning, txtPwdWarning, txtCheckWarnig;
     private Button btnOldDel, btnPwdDel, btnCheckDel;
-    private Button btnPwdView, btnCheckView;
     private Button btnChange;
 
     private ViewGroup appbar;
@@ -117,11 +115,6 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnOldDel.setVisibility(View.VISIBLE);
-                    if (s.charAt(s.length() - 1) == ' ') {
-                        editOldPwd.setText(s.subSequence(0, s.length() - 1));
-                        if (editOldPwd.getText().toString().length() > 0)
-                            editOldPwd.setSelection(editOldPwd.getText().toString().length());
-                    }
                 } else {
                     btnOldDel.setVisibility(View.INVISIBLE);
                     hideWarning(editOldPwd, lineOld, txtOldWarning);
@@ -316,11 +309,6 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
         btnCheckDel = findViewById(R.id.btn_check_delete);
         btnCheckDel.setOnClickListener(this);
 
-        btnPwdView = findViewById(R.id.btn_pwd_view);
-        btnPwdView.setOnClickListener(this);
-        btnCheckView = findViewById(R.id.btn_check_view);
-        btnCheckView.setOnClickListener(this);
-
         btnChange = findViewById(R.id.btn_change);
         btnChange.setOnClickListener(this);
 
@@ -356,28 +344,6 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
 
             case R.id.btn_check_delete:
                 editCheck.setText("");
-                break;
-
-            case R.id.btn_pwd_view:
-                if (btnPwdView.isSelected()) {
-                    btnPwdView.setSelected(false);
-                    editPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                } else {
-                    btnPwdView.setSelected(true);
-                    editPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
-                editPwd.setSelection(editPwd.getText().toString().length());
-                break;
-
-            case R.id.btn_check_view:
-                if (btnCheckView.isSelected()) {
-                    btnCheckView.setSelected(false);
-                    editCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                } else {
-                    btnCheckView.setSelected(true);
-                    editCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
-                editCheck.setSelection(editCheck.getText().toString().length());
                 break;
 
             case R.id.btn_change:
