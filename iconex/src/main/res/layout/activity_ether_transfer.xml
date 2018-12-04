@@ -34,7 +34,7 @@
                 android:paddingStart="24dp">
 
                 <TextView
-                    android:id="@+id/txt_possession"
+                    android:id="@+id/txt_sub_balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
