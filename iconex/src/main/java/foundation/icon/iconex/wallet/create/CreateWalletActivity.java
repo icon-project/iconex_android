@@ -149,6 +149,7 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
     public void onStep3Next() {
 
         if (isDownloaded) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
         } else {
             Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
@@ -156,6 +157,7 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
             dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                 @Override
                 public void onOk() {
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
                     viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
                 }
 
