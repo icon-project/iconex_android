@@ -39,15 +39,13 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoFragmen
         transaction.commit();
     }
 
-    private void setFragment() {
-
-    }
-
     private void onBack() {
         if (fragmentManager.getBackStackEntryCount() > 1) {
             ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.appInfo));
             findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_close);
             fragmentManager.popBackStackImmediate();
+
+            infoFragment.versionCheck();
         } else {
             finish();
         }
@@ -97,6 +95,8 @@ public class AppInfoActivity extends AppCompatActivity implements AppInfoFragmen
             ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.appInfo));
             findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_close);
             fragmentManager.popBackStackImmediate();
+
+            infoFragment.versionCheck();
         } else {
             finish();
         }

@@ -88,17 +88,17 @@ public class Utils {
         if (Integer.parseInt(mVersion[0]) < Integer.parseInt(all[0]))
             return RES_VERSION.NEW;
         else if (Integer.parseInt(mVersion[1]) < Integer.parseInt(all[1])) {
-            if (Integer.parseInt(mVersion[0]) >= Integer.parseInt(all[0]))
+            if (Integer.parseInt(mVersion[0]) <= Integer.parseInt(all[0]))
                 return RES_VERSION.NEW;
             else {
                 if (Integer.parseInt(mVersion[2]) < Integer.parseInt(all[2])) {
-                    if (Integer.parseInt(mVersion[1]) >= Integer.parseInt(all[1]))
+                    if (Integer.parseInt(mVersion[1]) <= Integer.parseInt(all[1]))
                         return RES_VERSION.NEW;
                 }
             }
         } else {
             if (Integer.parseInt(mVersion[2]) < Integer.parseInt(all[2])) {
-                if (Integer.parseInt(mVersion[1]) >= Integer.parseInt(all[1]))
+                if (Integer.parseInt(mVersion[1]) <= Integer.parseInt(all[1]))
                     return RES_VERSION.NEW;
             }
         }

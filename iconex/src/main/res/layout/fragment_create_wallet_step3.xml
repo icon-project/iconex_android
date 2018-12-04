@@ -18,7 +18,7 @@
 
         <Button
             android:id="@+id/btn_prev"
-            style="?borderlessButtonStyle"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -32,7 +32,7 @@
 
         <Button
             android:id="@+id/btn_next"
-            style="?borderlessButtonStyle"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginStart="6dp"
@@ -61,7 +61,7 @@
             android:fontFamily="@font/noto_sans_bold"
             android:text="@string/step3Header"
             android:textColor="@color/colorText"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                 android:gravity="start|center_vertical"
                 android:text="@string/step3Sub1"
                 android:textColor="@color/colorText70"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -106,7 +106,7 @@
                 android:gravity="start|center_vertical"
                 android:text="@string/step3Sub2"
                 android:textColor="@color/colorText70"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <TextView
@@ -115,7 +115,7 @@
             android:layout_marginTop="30dp"
             android:text="@string/walletDownload"
             android:textColor="@color/colorText"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <Button
             android:id="@+id/btn_back_up"
