@@ -62,7 +62,6 @@ public class InputDialog extends Dialog implements View.OnClickListener {
                 editTimestamp.setVisibility(View.GONE);
                 editNid.setVisibility(View.GONE);
                 editNonce.setVisibility(View.GONE);
-                editMessage.setVisibility(View.GONE);
                 editScore.setVisibility(View.GONE);
                 editDataType.setVisibility(View.GONE);
                 editData.setVisibility(View.GONE);
