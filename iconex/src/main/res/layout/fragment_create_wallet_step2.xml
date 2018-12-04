@@ -17,7 +17,7 @@
 
         <Button
             android:id="@+id/btn_prev"
-            style="?borderlessButtonStyle"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -37,7 +37,7 @@
 
             <Button
                 android:id="@+id/btn_next"
-                style="?borderlessButtonStyle"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_colored_rounded_button_a"
@@ -75,7 +75,7 @@
             android:fontFamily="@font/noto_sans_bold"
             android:text="@string/step2Header"
             android:textColor="@color/colorText"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -98,7 +98,7 @@
                 android:gravity="start|center_vertical"
                 android:text="@string/step2Sub"
                 android:textColor="@color/colorText70"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -120,7 +120,7 @@
             android:fontFamily="@font/noto_sans_bold"
             android:text="@string/enterWalletAliasAndPassword"
             android:textColor="#262626"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -177,13 +177,14 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/duplicateWalletAlias"
                 android:textColor="@color/colorWarning"
-                android:textSize="10sp"
+                android:textSize="10dp"
                 android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -199,7 +200,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="6dp"
                     android:layout_marginStart="10dp"
-                    android:layout_toStartOf="@+id/layout_button_1"
+                    android:layout_toStartOf="@+id/btn_pwd_delete"
                     android:background="@color/colorWhite"
                     android:fontFamily="@font/noto_sans_medium"
                     android:hint="@string/hintWalletPassword"
@@ -209,36 +210,14 @@
                     android:textColorHint="@color/colorText20"
                     android:textSize="14dp" />
 
-                <LinearLayout
-                    android:id="@+id/layout_button_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <Button
+                    android:id="@+id/btn_pwd_delete"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="3dp"
                     android:layout_marginEnd="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_pwd_delete"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="@drawable/ic_input_delete"
-                        android:visibility="invisible" />
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="10dp"
-                        android:background="#33979797" />
-
-                    <Button
-                        android:id="@+id/btn_pwd_view"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/bg_button_visibility" />
-                </LinearLayout>
+                    android:background="@drawable/ic_input_delete"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <View
@@ -255,7 +234,7 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/errPassword"
                 android:textColor="@color/colorWarning"
-                android:textSize="10sp"
+                android:textSize="10dp"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -278,7 +257,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="6dp"
                     android:layout_marginStart="10dp"
-                    android:layout_toStartOf="@+id/layout_button_2"
+                    android:layout_toStartOf="@+id/btn_check_delete"
                     android:background="@color/colorWhite"
                     android:fontFamily="@font/noto_sans_medium"
                     android:hint="@string/hintWalletPasswordConfirm"
@@ -288,36 +267,14 @@
                     android:textColorHint="@color/colorText20"
                     android:textSize="14dp" />
 
-                <LinearLayout
-                    android:id="@+id/layout_button_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <Button
+                    android:id="@+id/btn_check_delete"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="3dp"
                     android:layout_marginEnd="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_check_delete"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="@drawable/ic_input_delete"
-                        android:visibility="invisible" />
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="10dp"
-                        android:background="#33979797" />
-
-                    <Button
-                        android:id="@+id/btn_check_view"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/bg_button_visibility" />
-                </LinearLayout>
+                    android:background="@drawable/ic_input_delete"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <View
@@ -334,7 +291,7 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/errPassword"
                 android:textColor="@color/colorWarning"
-                android:textSize="10sp"
+                android:textSize="10dp"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

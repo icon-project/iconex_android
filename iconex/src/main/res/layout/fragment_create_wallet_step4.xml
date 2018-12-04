@@ -81,7 +81,7 @@
             android:fontFamily="@font/noto_sans_bold"
             android:text="@string/step4Header"
             android:textColor="@color/colorText"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -137,7 +137,7 @@
             android:fontFamily="@font/noto_sans_bold"
             android:text="@string/privateKey"
             android:textColor="@color/colorText"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <RelativeLayout

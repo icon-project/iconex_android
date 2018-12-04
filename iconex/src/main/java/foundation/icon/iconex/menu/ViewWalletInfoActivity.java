@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,9 +77,13 @@ public class ViewWalletInfoActivity extends AppCompatActivity {
                 if (position == 0) {
                     indicator1.setSelected(true);
                     indicator2.setSelected(false);
+
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
                 } else {
                     indicator1.setSelected(false);
                     indicator2.setSelected(true);
+
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
 
                     if (!wasShown) {
                         BasicDialog dialog = new BasicDialog(ViewWalletInfoActivity.this);
@@ -111,6 +116,9 @@ public class ViewWalletInfoActivity extends AppCompatActivity {
 
         adapter = new WalletInfoViewPager(getSupportFragmentManager(), mAddress, mPrivKey);
         viewPager.setAdapter(adapter);
+
+        indicator1.setSelected(true);
+        indicator2.setSelected(false);
     }
 
     private String getDate() {

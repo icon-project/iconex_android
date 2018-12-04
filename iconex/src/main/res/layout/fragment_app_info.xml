@@ -43,6 +43,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:background="@drawable/bg_button_b"
+        android:enabled="false"
         android:gravity="center"
         android:text="@string/update"
         android:textAllCaps="false"
