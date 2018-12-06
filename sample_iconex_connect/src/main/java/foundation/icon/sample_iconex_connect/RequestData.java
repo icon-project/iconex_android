@@ -9,7 +9,6 @@ public class RequestData {
     private String timestamp;
     private String nid;
     private String nonce;
-    private String message;
     private String contractAddress;
     private String dataType;
     private String data;
@@ -23,7 +22,6 @@ public class RequestData {
         this.timestamp = builder.timestamp;
         this.nid = builder.nid;
         this.nonce = builder.nonce;
-        this.message = builder.message;
         this.contractAddress = builder.contractAddress;
         this.dataType = builder.dataType;
         this.data = builder.data;
@@ -61,10 +59,6 @@ public class RequestData {
         return nonce;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
     public String getContractAddress() {
         return contractAddress;
     }
@@ -86,7 +80,6 @@ public class RequestData {
         private String timestamp;
         private String nid;
         private String nonce;
-        private String message;
         private String contractAddress;
         private String dataType;
         private String data;
@@ -128,11 +121,6 @@ public class RequestData {
 
         public Builder nonce(String nonce) {
             this.nonce = nonce;
-            return this;
-        }
-
-        public Builder message(String message) {
-            this.message = message;
             return this;
         }
 

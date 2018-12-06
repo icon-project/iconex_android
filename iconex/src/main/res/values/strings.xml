@@ -21,7 +21,7 @@
     <string name="input">Add</string>
     <string name="delete">Delete</string>
     <string name="modified">Edit</string>
-    <string name="fold">접기</string>
+    <string name="fold">Fold</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>

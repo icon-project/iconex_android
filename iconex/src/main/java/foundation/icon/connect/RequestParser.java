@@ -12,10 +12,10 @@ import com.google.gson.JsonParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.Locale;
 
 import foundation.icon.ICONexApp;
-import foundation.icon.iconex.R;
 
 public class RequestParser {
     private static final String TAG = RequestParser.class.getSimpleName();
@@ -164,6 +164,44 @@ public class RequestParser {
             throw new ErrorCodes.Error(ErrorCodes.ERR_NOT_FOUND,
                     String.format(Locale.getDefault(), ErrorCodes.MSG_NOT_FOUND, "value"));
 
+        if (params.has("dataType") && !params.isNull("dataType")) {
+            String dataType = null;
+            try {
+                dataType = params.getString("dataType");
+            } catch (JSONException e) {
+                // To do nothing.
+            }
+
+            if (dataType != null && !dataType.isEmpty()) {
+                try {
+                    String data = params.getString("data");
+                    if (data.isEmpty())
+                        throw new JSONException("empty");
+                } catch (JSONException e) {
+                    throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, ErrorCodes.MSG_PARSE);
+                }
+            }
+        }
+
+        if (params.has("data") && !params.isNull("data")) {
+            String data = null;
+            try {
+                data = params.getString("data");
+            } catch (JSONException e) {
+                // To do nothing.
+            }
+
+            if (data != null && !data.isEmpty()) {
+                try {
+                    String dataType = params.getString("dataType");
+                    if (dataType.isEmpty())
+                        throw new JSONException("empty");
+                } catch (JSONException e) {
+                    throw new ErrorCodes.Error(ErrorCodes.ERR_PARSE, ErrorCodes.MSG_PARSE);
+                }
+            }
+        }
+
         try {
             address = params.getString("from");
         } catch (JSONException e) {
@@ -259,33 +297,85 @@ public class RequestParser {
 
         try {
             JSONObject params = getParams(requestData);
-
+            Iterator<?> keys = params.keys();
+            String key;
             sb.append("{").append("\n");
-            while (params.keys().hasNext()) {
-                String key = params.keys().next();
-                if (key.equals("data")) {
-                    JSONObject data = params.getJSONObject("data");
-                    JSONObject dataParmas = data.getJSONObject("params");
-
-                    sb.append("\t\"data: \": {\n")
-                            .append("\t\t\"method\": ").append("\"" + data.getString("method") + "\"\n")
-                            .append("\t\t\"parmas\": {\n");
-
-                    while (dataParmas.keys().hasNext()) {
-                        String dataKey = dataParmas.keys().next();
-                        sb.append("\t\t\t\"" + dataKey + "\": ").append("\"" + dataParmas.getString(dataKey) + "\"\n");
-                    }
-
-                    sb.append("\t\t}\n");
-                    sb.append("\t}\n");
+            while (keys.hasNext()) {
+                key = (String) keys.next();
+                if (!key.equals("data") && !key.equals("dataType")) {
+                    sb.append("\t\"" + key + "\": "
+                            + "\"" + params.getString(key) + "\"\n");
                 } else {
-                    sb.append("\t\"" + key + "\": ").append("\"" + params.getString("version") + "\"\n");
+                    sb.append(dataToString(requestData));
                 }
             }
-
             sb.append("}");
         } catch (JSONException e) {
+            return "";
+        }
 
+        return sb.toString();
+    }
+
+    public String dataToString(JSONObject requestData) {
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            JSONObject params = getParams(requestData);
+
+            String dataType = params.getString("dataType");
+            String data = params.getString("data");
+
+            sb.append("\t\"dataType\": \"" + dataType + "\"\n");
+
+            if (data.startsWith("0x")) {
+                sb.append("\t\"data\": \"" + data + "\"\n");
+            } else {
+                JSONObject dataObj;
+                try {
+                    dataObj = new JSONObject(data);
+                } catch (JSONException e) {
+                    try {
+                        JsonObject gson = new JsonParser().parse(data).getAsJsonObject();
+                        dataObj = new JSONObject(gson.toString());
+                    } catch (Exception e1) {
+                        return "";
+                    }
+                }
+
+                Iterator<?> keys = dataObj.keys();
+
+                sb.append("\t\"data\": {\n");
+                while (keys.hasNext()) {
+                    String key = (String) keys.next();
+                    if (!key.equals("params")) {
+                        sb.append("\t\t\"" + key + "\": \"" + dataObj.getString(key) + "\"");
+                        if (dataObj.keys().hasNext())
+                            sb.append(",\n");
+                        else
+                            sb.append("\n");
+                    } else {
+                        JSONObject dataParams = dataObj.getJSONObject("params");
+                        Iterator<?> paramKeys = dataParams.keys();
+
+                        sb.append("\t\t\"params\": {");
+                        while (paramKeys.hasNext()) {
+                            String paramKey = (String) paramKeys.next();
+                            sb.append("\t\t\t\"" + paramKey + "\": \"" +
+                                    dataParams.getString(paramKey) + "\"");
+
+                            if (dataObj.keys().hasNext())
+                                sb.append(",\n");
+                            else
+                                sb.append("\n");
+                        }
+                        sb.append("\t\t}\n");
+                    }
+                }
+                sb.append("\t}\n");
+            }
+        } catch (JSONException e) {
+            return "";
         }
 
         return sb.toString();

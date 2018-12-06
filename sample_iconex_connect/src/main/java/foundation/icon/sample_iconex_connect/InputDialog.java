@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 
+import org.bouncycastle.util.encoders.Hex;
+
 public class InputDialog extends Dialog implements View.OnClickListener {
 
     private final Context context;
@@ -42,7 +44,6 @@ public class InputDialog extends Dialog implements View.OnClickListener {
         editNonce = findViewById(R.id.edit_nonce);
         editMessage = findViewById(R.id.edit_message);
         editScore = findViewById(R.id.edit_score);
-        editScore.setText(SampleApp.score);
         editDataType = findViewById(R.id.edit_data_type);
         editData = findViewById(R.id.edit_data);
 
@@ -51,6 +52,14 @@ public class InputDialog extends Dialog implements View.OnClickListener {
 
         switch (method) {
             case Sign:
+                editVersion.setText(SampleApp.version);
+                editFrom.setText(SampleApp.from);
+                editTo.setText(SampleApp.to);
+                editValue.setText(SampleApp.value);
+                editStepLimit.setText(SampleApp.stepLimit);
+                editTimestamp.setText(SampleApp.timestamp);
+                editNid.setText(SampleApp.nid);
+                editNonce.setText(SampleApp.nonce);
                 editMessage.setVisibility(View.GONE);
                 editScore.setVisibility(View.GONE);
                 break;
@@ -62,10 +71,14 @@ public class InputDialog extends Dialog implements View.OnClickListener {
                 editTimestamp.setVisibility(View.GONE);
                 editNid.setVisibility(View.GONE);
                 editNonce.setVisibility(View.GONE);
-                editMessage.setVisibility(View.GONE);
                 editScore.setVisibility(View.GONE);
-                editDataType.setVisibility(View.GONE);
-                editData.setVisibility(View.GONE);
+                editMessage.setVisibility(View.GONE);
+
+                editFrom.setText(SampleApp.from);
+                editTo.setText(SampleApp.to);
+                editValue.setText(SampleApp.value);
+                editDataType.setText("message");
+                editData.setText("0x" + Hex.toHexString("Hello ICONex Connect".getBytes()));
                 break;
 
             case SendToken:
@@ -78,6 +91,11 @@ public class InputDialog extends Dialog implements View.OnClickListener {
                 editNonce.setVisibility(View.GONE);
                 editDataType.setVisibility(View.GONE);
                 editData.setVisibility(View.GONE);
+                editScore.setText(SampleApp.score);
+
+                editTo.setText(SampleApp.to);
+                editValue.setText(SampleApp.value);
+                editScore.setText(SampleApp.score);
                 break;
         }
     }
@@ -119,7 +137,8 @@ public class InputDialog extends Dialog implements View.OnClickListener {
                         .from(SampleApp.from)
                         .to(editTo.getText().toString())
                         .value(editValue.getText().toString())
-                        .message(editMessage.getText().toString())
+                        .dataType(editDataType.getText().toString())
+                        .data(editData.getText().toString())
                         .build();
 
             case SendToken:
