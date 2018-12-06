@@ -498,6 +498,7 @@
                         android:textSize="12dp" />
 
                     <ImageButton
+                        android:id="@+id/img_arrow"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginStart="15dp"
@@ -515,14 +516,6 @@
                 android:paddingEnd="24dp"
                 android:paddingStart="24dp"
                 android:paddingTop="6dp"
-                android:text="DataType : &quot;Calll&quot;
-                Data : {
-            &quot;method&quot;: &quot;acceptScore&quot;,
-            &quot;params&quot;: {
-            &quot;txHash&quot;: &quot;0x87db0f31094f46b1920c0ab70d0d7f8aca0b9b4676f32346afbec60531a186b5&quot;
-            }
-            }
-            "
                 android:textColor="@color/colorText"
                 android:textSize="12dp" />
         </LinearLayout>

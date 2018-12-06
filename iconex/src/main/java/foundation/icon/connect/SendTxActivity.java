@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -78,6 +81,7 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
     private BigInteger minLimit;
     private BigInteger maxLimit;
 
+    private ScrollView scroll;
     private ViewGroup layoutNetwork, btnNetwork;
     private TextView txtNetwork;
 
@@ -89,13 +93,19 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
     private TextView txtLimitWarning;
     private Button btnDelLimit;
     private View lineLimit;
-    private ViewGroup layoutTxData, btnOpen;
+
+    private ViewGroup layoutTxData;
+    private TextView txtOpenState;
+    private ImageView imgArrow;
     private TextView txtTxData;
 
     private Button btnSend;
 
     private String trPrice;
     private String tokenPrice;
+
+    private String dataType;
+    private String data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +126,8 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
             maxLimit = txData.getMaxLimit();
             strPrivateKey = getIntent().getStringExtra("privateKey");
         }
+
+        scroll = findViewById(R.id.scroll);
 
         ((TextView) findViewById(R.id.txt_title)).setText(txData.getAlias());
         findViewById(R.id.btn_close).setOnClickListener(this);
@@ -227,8 +239,9 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
         infoFee.setOnClickListener(this);
 
         layoutTxData = findViewById(R.id.layout_tx_data);
-        btnOpen = findViewById(R.id.btn_open);
-        btnOpen.setOnClickListener(this);
+        findViewById(R.id.btn_open).setOnClickListener(this);
+        txtOpenState = findViewById(R.id.txt_open_state);
+        imgArrow = findViewById(R.id.img_arrow);
         txtTxData = findViewById(R.id.txt_tx_data);
 
         btnSend = findViewById(R.id.btn_send);
@@ -260,8 +273,6 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
             from = params.getString("from");
             txtAmount.setText(ConvertUtil.getValue(ConvertUtil.hexStringToBigInt(params.getString("value"), txData.getDecimals()), txData.getDecimals()));
 
-            editLimit.setText(minLimit.toString());
-
             txtTo.setText(params.getString("to"));
 
             String icx = ConvertUtil.getValue(txData.getStepPrice(), 18);
@@ -278,16 +289,26 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
             else
                 txtStepTrans.setText(String.format(Locale.getDefault(), "%.2f", Double.parseDouble(value) * Double.parseDouble(trPrice)));
 
-            if (!params.has("data")) {
-                layoutTxData.setVisibility(GONE);
-                txtTxData.setVisibility(GONE);
-            } else {
-                layoutTxData.setVisibility(View.VISIBLE);
-                txtTxData.setText(parser.paramsToString(parser.getData(requestData.getData())));
-            }
-
             if (method == Constants.Method.SendToken)
                 contractAddress = params.getString("contractAddress");
+
+            dataType = params.getString("dataType");
+            data = params.getString("data");
+            if (dataType.isEmpty()) {
+                layoutTxData.setVisibility(GONE);
+                txtTxData.setVisibility(GONE);
+
+                dataType = null;
+                data = null;
+            } else {
+                layoutTxData.setVisibility(View.VISIBLE);
+                txtTxData.setVisibility(View.VISIBLE);
+
+                txtTxData.setText(parser.dataToString(parser.getData(requestData.getData())));
+                minLimit = minLimit.multiply(BigInteger.valueOf(2));
+            }
+
+            editLimit.setText(minLimit.toString());
 
             setRemain();
         } catch (Exception e) {
@@ -377,6 +398,24 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
                 dialog.show();
+                break;
+
+            case R.id.btn_open:
+                if (txtTxData.getVisibility() == View.VISIBLE) {
+                    txtTxData.setVisibility(GONE);
+                    txtOpenState.setText(getString(R.string.view));
+                    imgArrow.setBackgroundResource(R.drawable.ic_arrow_down);
+                } else {
+                    txtTxData.setVisibility(View.VISIBLE);
+                    txtOpenState.setText(getString(R.string.fold));
+                    imgArrow.setBackgroundResource(R.drawable.ic_arrow_up);
+                    txtTxData.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                        @Override
+                        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                            scroll.fullScroll(View.FOCUS_DOWN);
+                        }
+                    });
+                }
                 break;
         }
     }
@@ -624,15 +663,28 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
             long timestamp = System.currentTimeMillis() * 1000L;
             BigInteger nonce = new BigInteger("1");
 
-            transaction = TransactionBuilder.newBuilder()
-                    .nid(networkId)
-                    .from(fromAddress)
-                    .to(toAddress)
-                    .value(value)
-                    .stepLimit(stepLimit)
-                    .timestamp(new BigInteger(Long.toString(timestamp)))
-                    .nonce(nonce)
-                    .build();
+            if (dataType == null) {
+                transaction = TransactionBuilder.newBuilder()
+                        .nid(networkId)
+                        .from(fromAddress)
+                        .to(toAddress)
+                        .value(value)
+                        .stepLimit(stepLimit)
+                        .timestamp(new BigInteger(Long.toString(timestamp)))
+                        .nonce(nonce)
+                        .build();
+            } else if (dataType.equals("message")) {
+                transaction = TransactionBuilder.newBuilder()
+                        .nid(networkId)
+                        .from(fromAddress)
+                        .to(toAddress)
+                        .value(value)
+                        .stepLimit(stepLimit)
+                        .timestamp(new BigInteger(Long.toString(timestamp)))
+                        .nonce(nonce)
+                        .message(new String(Hex.decode(data.substring(2))))
+                        .build();
+            }
         }
 
         @Override

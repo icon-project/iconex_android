@@ -20,8 +20,6 @@ public class ConnectReceiver extends BroadcastReceiver {
         String caller = intent.getStringExtra("caller");
         String receiver = intent.getStringExtra("receiver");
 
-
-
         if (action.equals(ICONEX_CONNECT)) {
             ICONexApp.isConnect = true;
             context.startActivity(new Intent(context, SplashActivity.class)

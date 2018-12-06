@@ -75,12 +75,13 @@ public class IconexConnect {
                         .putExtra("request", request));
                 parent.finish();
             } else {
-                String address = null;
+                String address;
                 try {
                     address = parser.validateParameters(method, parser.getParams(parser.getData(request.getData())));
-                } catch (Exception e) {
-                    sendError(parent, request, new ErrorCodes.Error(ErrorCodes.ERR_INVALID_RQ, ErrorCodes.MSG_INVALID_RQ));
+                } catch (ErrorCodes.Error e) {
+                    sendError(parent, request, e);
                     parent.finishAffinity();
+                    return;
                 }
 
                 boundWallet = findWallet(address);
