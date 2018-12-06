@@ -5,6 +5,7 @@ ICONex is a wallet where you can keep not only ICX but also other various crypto
 
 
 ## Dependencies
+* [icon-sdk-java](https://github.com/icon-project/icon-sdk-java) for ICONex service
 * [OkHttp](http://square.github.io/okhttp/) for Http connections
 * [Realm](https://realm.io/) for database
 * [Retrofit](http://square.github.io/retrofit/) for Http API
@@ -12,6 +13,7 @@ ICONex is a wallet where you can keep not only ICX but also other various crypto
 * [Spongy Castle](https://rtyley.github.io/spongycastle/) for crypto
 * [Web3j](https://github.com/web3j/web3j) for Ethereum network
 * [ZXing](https://github.com/zxing/zxing) for generate QR Code
+* [RxAndroid](https://github.com/ReactiveX/RxAndroid) for Reactive
 
 ## Requirement
 * Android Studio
@@ -29,7 +31,7 @@ ICONex for Android supports developer mode since version 1.5.0
 ### How to
 * Require 3rd party app or Web pages
 * Using communication protocol [ICONex connect](https://github.com/icon-project/iconex_android/tree/develop/docs/Connect)
-* Just set action "DEVELOPER"
+* Set action, "DEVELOPER" to broadcast Intent.
 ``` Java
 Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
