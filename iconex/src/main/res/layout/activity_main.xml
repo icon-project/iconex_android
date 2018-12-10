@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="end">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="foundation.icon.iconex.wallet.main.MainActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorMain"
+            app:elevation="0dp">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|snap">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/layout_appbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="15dp"
+                        android:paddingStart="12dp"
+                        android:paddingTop="15dp">
+
+                        <Button
+                            android:id="@+id/btn_menu"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/ic_appbar_menu" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/btn_selector_wallets"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="110dp"
+                                android:layout_height="26dp"
+                                android:background="@drawable/main_appbar_selector_left"
+                                android:fontFamily="@font/noto_sans_medium"
+                                android:gravity="center"
+                                android:text="@string/appbarSelectorWallets"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_main_appbar_selector"
+                                android:textSize="12dp" />
+
+                            <Button
+                                android:id="@+id/btn_selector_coins_n_tokens"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="110dp"
+                                android:layout_height="26dp"
+                                android:layout_marginStart="-1dp"
+                                android:background="@drawable/main_appbar_selector_right"
+                                android:fontFamily="@font/noto_sans_medium"
+                                android:gravity="center"
+                                android:text="@string/appbarSelectorCoinsNTokens"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_main_appbar_selector"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_asset"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/layout_appbar"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/btn_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/noto_sans_regular"
+                                android:gravity="center"
+                                android:text="@string/totalAssetValuationAmount"
+                                android:textColor="@color/colorWhite50"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:layout_marginStart="4dp"
+                                android:src="@drawable/ic_info" />
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="40dp"
+                            android:paddingStart="40dp">
+
+                            <TextView
+                                android:id="@+id/txt_total_asset"
+                                android:layout_width="match_parent"
+                                android:layout_height="56dp"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="@font/nanum_square_regular"
+                                android:gravity="center"
+                                android:letterSpacing="-0.04"
+                                android:text="-"
+                                android:textColor="@color/colorWhite" />
+
+                            <RelativeLayout
+                                android:id="@+id/layout_asset_progress"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:layout_centerInParent="true"
+                                android:background="@color/colorMain"
+                                android:minHeight="169dp">
+
+                                <ProgressBar
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_centerInParent="true"
+                                    android:indeterminateDrawable="@drawable/anim_loading" />
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="31dp"
+                            android:layout_marginTop="9dp"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/btn_select_usd"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="44dp"
+                                android:layout_height="18dp"
+                                android:background="@drawable/bg_white_rounded_button"
+                                android:fontFamily="@font/noto_sans_medium"
+                                android:gravity="center"
+                                android:text="@string/unitUSD"
+                                android:textColor="@color/text_main_appbar_selector"
+                                android:textSize="11dp" />
+
+                            <Button
+                                android:id="@+id/btn_select_btc"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="44dp"
+                                android:layout_height="18dp"
+                                android:layout_marginStart="7dp"
+                                android:background="@drawable/bg_white_rounded_button"
+                                android:fontFamily="@font/noto_sans_medium"
+                                android:gravity="center"
+                                android:text="@string/unitBTC"
+                                android:textColor="@color/text_main_appbar_selector"
+                                android:textSize="11dp" />
+
+                            <Button
+                                android:id="@+id/btn_select_eth"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="44dp"
+                                android:layout_height="18dp"
+                                android:layout_marginStart="7dp"
+                                android:background="@drawable/bg_white_rounded_button"
+                                android:fontFamily="@font/noto_sans_medium"
+                                android:gravity="center"
+                                android:text="@string/unitETH"
+                                android:textColor="@color/text_main_appbar_selector"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_wallets"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:scrollbars="none"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+        </android.support.design.widget.AppBarLayout>
+
+        <foundation.icon.iconex.widgets.CustomViewPager
+            android:id="@+id/view_pager_wallets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager_coins"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </android.support.design.widget.CoordinatorLayout>
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/menu_view"-->
+    <!--android:layout_width="290dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="start"-->
+    <!--android:background="@color/colorWhite"-->
+    <!--android:orientation="vertical"-->
+    <!--tools:contefoundation.icon.iconex.wallet.menu.DrawerMenuFragmentment">-->
+
+    <!--<Button-->
+    <!--android:id="@+id/btn_close"-->
+    <!--android:layout_width="24dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:layout_gravity="end"-->
+    <!--android:layout_marginEnd="24dp"-->
+    <!--android:layout_marginTop="16dp"-->
+    <!--android:background="@drawable/ic_sidemenu_close" />-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="14dp"-->
+    <!--android:orientation="vertical"-->
+    <!--android:paddingEnd="36dp"-->
+    <!--android:paddingStart="24dp">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="98dp"-->
+    <!--android:layout_height="26dp"-->
+    <!--android:src="@drawable/logo_iconex_sidemenu" />-->
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="2dp"-->
+    <!--android:layout_marginTop="20dp"-->
+    <!--android:background="@color/colorText" />-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/menu_create_wallet"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:layout_marginTop="15dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="24dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:src="@drawable/ic_side_wallet_make" />-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="12dp"-->
+    <!--android:lineSpacingExtra="10sp"-->
+    <!--android:text="@string/titleCreateWallet"-->
+    <!--android:textColor="@color/colorText"-->
+    <!--android:textSize="14sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/menu_import_wallet"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="24dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:src="@drawable/ic_side_wallet_import" />-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="12dp"-->
+    <!--android:lineSpacingExtra="10sp"-->
+    <!--android:text="@string/titleLoadWallet"-->
+    <!--android:textColor="@color/colorText"-->
+    <!--android:textSize="14sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/menu_export_wallet_bundle"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="24dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:src="@drawable/ic_side_request" />-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="12dp"-->
+    <!--android:lineSpacingExtra="10sp"-->
+    <!--android:text="@string/exportWalletBundle"-->
+    <!--android:textColor="@color/colorText"-->
+    <!--android:textSize="14sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="2dp"-->
+    <!--android:layout_marginTop="15dp"-->
+    <!--android:background="@color/colorText" />-->
+    <!--</LinearLayout>-->
+
+    <!--<ScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical"-->
+    <!--android:paddingEnd="24dp"-->
+    <!--android:paddingStart="24dp">-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/menu_setting_lock"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:layout_marginTop="15dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="24dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:src="@drawable/ic_side_lock" />-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="12dp"-->
+    <!--android:lineSpacingExtra="10sp"-->
+    <!--android:text="@string/settingLock"-->
+    <!--android:textColor="@color/colorText"-->
+    <!--android:textSize="14sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/menu_setting_language"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="24dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:src="@drawable/ic_side_language" />-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="12dp"-->
+    <!--android:lineSpacingExtra="10sp"-->
+    <!--android:text="@string/settingLanguage"-->
+    <!--android:textColor="@color/colorText"-->
+    <!--android:textSize="14sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/menu_disclaimers"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="24dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:src="@drawable/ic_side_article" />-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="12dp"-->
+    <!--android:lineSpacingExtra="10sp"-->
+    <!--android:text="@string/iCONexDisclaimers"-->
+    <!--android:textColor="@color/colorText"-->
+    <!--android:textSize="14sp" />-->
+    <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
+    <!--</ScrollView>-->
+    <!--</LinearLayout>-->
+
+    <FrameLayout
+        android:id="@+id/fragment_address"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/fragment_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite90"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/anim_loading" />
+
+    </RelativeLayout>
+</android.support.v4.widget.DrawerLayout>
+
