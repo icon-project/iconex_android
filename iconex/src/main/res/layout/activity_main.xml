@@ -21,13 +21,15 @@
             app:elevation="0dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll|snap">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/layout_appbar"
@@ -79,14 +81,56 @@
                                 android:textColor="@color/text_main_appbar_selector"
                                 android:textSize="12dp" />
                         </LinearLayout>
-
                     </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_refresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/img_refresh_circle"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_refresh_01" />
+
+                            <ImageView
+                                android:id="@+id/img_refresh_orbit"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_refresh_02" />
+
+                            <ProgressBar
+                                android:id="@+id/prog_refresh"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:indeterminateDrawable="@drawable/anim_loading"
+                                android:visibility="invisible" />
+                        </RelativeLayout>
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layout_asset"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/layout_appbar"
                         android:layout_marginTop="12dp"
                         android:gravity="center_horizontal"
                         android:orientation="vertical">
@@ -193,7 +237,7 @@
                                 android:textSize="11dp" />
                         </LinearLayout>
                     </LinearLayout>
-                </RelativeLayout>
+                </LinearLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
 
             <android.support.v7.widget.RecyclerView
