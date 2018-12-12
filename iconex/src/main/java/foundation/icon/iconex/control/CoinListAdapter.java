@@ -35,7 +35,7 @@ public class CoinListAdapter extends BaseAdapter {
 
     @Override
     public ItemCoin getItem(int position) {
-        return mCoinList.get(position - 1);
+        return mCoinList.get(position);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CoinListAdapter extends BaseAdapter {
         ItemCoin coin;
         for (int i = 0; i < mCoinList.size(); i++) {
             coin = mCoinList.get(i);
-            if (i + 1 == position)
+            if (i == position)
                 coin.setChecked(true);
             else
                 coin.setChecked(false);

@@ -475,7 +475,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:fontFamily="@font/noto_sans_regular"
-                    android:text="Tx Data"
+                    android:text="Data"
                     android:textColor="@color/colorText"
                     android:textSize="14dp" />
 

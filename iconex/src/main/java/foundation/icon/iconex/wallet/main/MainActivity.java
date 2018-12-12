@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
@@ -19,12 +20,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.math.BigInteger;
@@ -40,6 +43,11 @@ import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.TitleMsgDialog;
 import foundation.icon.iconex.intro.auth.AuthActivity;
+import foundation.icon.iconex.menu.DrawerMenuFragment;
+import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
+import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
+import foundation.icon.iconex.menu.language.SettingLanguageActivity;
+import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -47,11 +55,6 @@ import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.create.CreateWalletActivity;
 import foundation.icon.iconex.wallet.load.LoadWalletActivity;
-import foundation.icon.iconex.menu.DrawerMenuFragment;
-import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
-import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
-import foundation.icon.iconex.menu.language.SettingLanguageActivity;
-import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.MyConstants.EXCHANGE_BTC;
@@ -63,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private AppBarLayout appbar;
+    private CollapsingToolbarLayout collapsing;
 
     private Button btnWalletsView, btnCoinsView;
     private Button btnMenu;
@@ -92,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CoinViewPagerAdapter coinViewPagerAdapter = null;
 
     private AppBarLayout appBarLayout;
-    private ViewGroup layoutRefresh;
     private int appbarPosition = 0;
 
     private ViewGroup layoutLoading;
@@ -116,6 +121,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean isForeground = true;
     private boolean isFingerprintInvalidated = false;
+
+    private boolean canPullDown = false;
+
+    private LinearLayout layoutRefresh;
 
     private enum ViewType {
         WALLETS,
@@ -343,13 +352,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         isFingerprintInvalidated = getIntent().getBooleanExtra(AuthActivity.EXTRA_INVALIDATED, false);
 
+        collapsing = findViewById(R.id.collapsing);
+
         appBarLayout = findViewById(R.id.appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int totalRange = appBarLayout.getTotalScrollRange();
+                Log.d(TAG, "AppBar Total Range=" + totalRange);
+                Log.d(TAG, "verticalOffset=" + verticalOffset);
+
                 appbarPosition = verticalOffset;
+                if (appbarPosition == 0)
+                    canPullDown = false;
+                else
+                    canPullDown = true;
             }
         });
+
+        layoutRefresh = findViewById(R.id.layout_refresh);
 
         btnInfo = findViewById(R.id.btn_info);
         btnInfo.setOnClickListener(this);
@@ -913,11 +934,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         hideSideMenu();
     }
 
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-//        Log.i(TAG, "### Main dispatchTouchEvent!!!");
-        this.mDetector.onTouchEvent(ev);
+        int action = ev.getAction();
+
+        switch (action) {
+            case MotionEvent.ACTION_MOVE:
+                mDetector.onTouchEvent(ev);
+                break;
+        }
+
         return super.dispatchTouchEvent(ev);
     }
 
@@ -929,6 +955,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onDown(MotionEvent e) {
+        Log.d(TAG, "onDown");
         return false;
     }
 
