@@ -940,7 +940,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (action) {
             case MotionEvent.ACTION_MOVE:
-                this.mDetector.onTouchEvent(ev);
+                mDetector.onTouchEvent(ev);
                 break;
         }
 
@@ -949,13 +949,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
-//        if (canPullDown && distanceY < 0 && distanceY > -100) {
-//            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layoutRefresh.getLayoutParams();
-//            layoutParams.height = Float.floatToIntBits(layoutParams.height + distanceY);
-//            Log.d(TAG, "height" + layoutParams.height);
-//            layoutRefresh.setLayoutParams(layoutParams);
-//        }
 
         return true;
     }
