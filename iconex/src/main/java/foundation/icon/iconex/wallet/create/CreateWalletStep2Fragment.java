@@ -36,7 +36,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
     private MyEditText editAlias, editPwd, editCheck;
     private View lineAlias, linePwd, lineCheck;
-    private TextView txtAliasWarning, txtPwdWarning, txtCheckWarnig;
+    private TextView txtAliasWarning, txtPwdWarning, txtCheckWarning;
     private Button btnAliasDel, btnPwdDel, btnCheckDel;
 
     private Button btnPrev, btnNext;
@@ -45,7 +45,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     private InputMethodManager mImm;
     private OnKeyPreImeListener mOnKeyPreImeListener;
 
-    private String beforeStr;
+    private String beforeStr, beforePwd, beforeCheck;
 
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
@@ -145,6 +145,9 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                 if (s.length() > 0) {
                     if (s.toString().trim().isEmpty()) {
                         editAlias.setText("");
+                    } else if (s.charAt(0) == ' ') {
+                        editAlias.setText(beforeStr);
+                        editAlias.setSelection(editAlias.getText().toString().length());
                     } else {
                         btnAliasDel.setVisibility(View.VISIBLE);
                         if (Utils.checkByteLength(s.toString()) > 16) {
@@ -241,6 +244,11 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                         editPwd.setText(s.subSequence(0, s.length() - 1));
                         if (editPwd.getText().toString().length() > 0)
                             editPwd.setSelection(editPwd.getText().toString().length());
+                    } else if (s.toString().contains(" ")) {
+                        editPwd.setText(beforePwd);
+                        editPwd.setSelection(beforePwd.length());
+                    } else {
+                        beforePwd = s.toString();
                     }
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
@@ -288,17 +296,17 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                     lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
                     if (editCheck.getText().toString().isEmpty()) {
-                        showWarning(lineCheck, txtCheckWarnig, getString(R.string.errCheckEmpty));
+                        showWarning(lineCheck, txtCheckWarning, getString(R.string.errCheckEmpty));
                         btnNext.setEnabled(false);
                     } else {
                         if (editPwd.getText().toString().isEmpty()) {
-                            showWarning(lineCheck, txtCheckWarnig, getString(R.string.errPasswordNotMatched));
+                            showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
                         } else {
                             boolean result = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(), editCheck.getText().toString());
                             if (!result) {
-                                showWarning(lineCheck, txtCheckWarnig, getString(R.string.errPasswordNotMatched));
+                                showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
                             } else {
-                                hideWarning(editCheck, lineCheck, txtCheckWarnig);
+                                hideWarning(editCheck, lineCheck, txtCheckWarning);
                             }
                         }
                     }
@@ -319,10 +327,15 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                         editCheck.setText(s.subSequence(0, s.length() - 1));
                         if (editCheck.getText().toString().length() > 0)
                             editCheck.setSelection(editCheck.getText().toString().length());
+                    } else if (s.toString().contains(" ")) {
+                        editCheck.setText(beforeCheck);
+                        editCheck.setSelection(beforeCheck.length());
+                    } else {
+                        beforeCheck = s.toString();
                     }
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
-                    txtCheckWarnig.setVisibility(View.GONE);
+                    txtCheckWarning.setVisibility(View.GONE);
                     if (editCheck.isFocused())
                         lineCheck.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -350,7 +363,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
         txtAliasWarning = view.findViewById(R.id.txt_alias_warning);
         txtPwdWarning = view.findViewById(R.id.txt_pwd_warning);
-        txtCheckWarnig = view.findViewById(R.id.txt_check_warning);
+        txtCheckWarning = view.findViewById(R.id.txt_check_warning);
 
         lineAlias = view.findViewById(R.id.line_alias);
         linePwd = view.findViewById(R.id.line_pwd);
@@ -508,12 +521,12 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         if (!editCheck.getText().toString().isEmpty()) {
             matched = checkPasswordMatch(pwd, checkPwd);
             if (!matched) {
-                showWarning(lineCheck, txtCheckWarnig, getString(R.string.errPasswordNotMatched));
+                showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
             } else {
-                hideWarning(editCheck, lineCheck, txtCheckWarnig);
+                hideWarning(editCheck, lineCheck, txtCheckWarning);
             }
         } else {
-            showWarning(lineCheck, txtCheckWarnig, getString(R.string.errCheckEmpty));
+            showWarning(lineCheck, txtCheckWarning, getString(R.string.errCheckEmpty));
             btnNext.setEnabled(false);
             return;
         }
@@ -537,7 +550,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
         txtAliasWarning.setVisibility(View.GONE);
         txtPwdWarning.setVisibility(View.GONE);
-        txtCheckWarnig.setVisibility(View.GONE);
+        txtCheckWarning.setVisibility(View.GONE);
 
         progress.setVisibility(View.GONE);
         btnNext.setEnabled(false);
