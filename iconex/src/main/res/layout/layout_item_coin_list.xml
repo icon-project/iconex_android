@@ -27,7 +27,7 @@
             android:layout_marginStart="10dp"
             android:fontFamily="@font/noto_sans_medium"
             android:textColor="@color/colorText"
-            android:textSize="16sp"
+            android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="@id/radio_selected"
             app:layout_constraintStart_toEndOf="@id/radio_selected"
             app:layout_constraintTop_toTopOf="@id/radio_selected"

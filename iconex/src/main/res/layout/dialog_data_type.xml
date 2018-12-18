@@ -22,7 +22,7 @@
             android:layout_centerInParent="true"
             android:fontFamily="@font/noto_sans_medium"
             android:gravity="center"
-            android:lineSpacingExtra="8sp"
+            android:lineSpacingExtra="8dp"
             android:text="@string/selectInputType"
             android:textColor="@color/colorText"
             android:textSize="16dp" />
@@ -62,10 +62,10 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/noto_sans_medium"
             android:gravity="start|center_vertical"
-            android:lineSpacingExtra="10sp"
+            android:lineSpacingExtra="10dp"
             android:text="@string/inputType"
             android:textColor="@color/colorText"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -17,7 +17,7 @@
         android:maxLines="1"
         android:text="---"
         android:textColor="@color/colorText"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <View
         android:layout_width="match_parent"

@@ -30,7 +30,7 @@
             android:fontFamily="@font/noto_sans_medium"
             android:text="COIN"
             android:textColor="@color/colorText"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/txt_date"
@@ -41,7 +41,7 @@
             android:fontFamily="@font/nanum_square_regular"
             android:text="DATE"
             android:textColor="@color/colorText50"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <View
             android:layout_width="match_parent"

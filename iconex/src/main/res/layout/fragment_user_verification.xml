@@ -16,9 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingEnd="24dp"
         android:paddingStart="24dp"
-        android:paddingTop="30dp">
+        android:paddingTop="30dp"
+        android:paddingEnd="24dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -39,8 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layoutManager="LinearLayoutManager" />
-
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
     </LinearLayout>
-
 </LinearLayout>

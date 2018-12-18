@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:background="@color/colorMain"
-    android:paddingBottom="16dp"
-    android:paddingEnd="12dp"
     android:paddingStart="12dp"
-    android:paddingTop="16dp">
+    android:paddingTop="16dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="16dp">
 
     <Button
         android:id="@+id/btn_back"
@@ -24,7 +24,7 @@
         android:fontFamily="@font/noto_sans_medium"
         android:gravity="center"
         android:textColor="@color/colorWhite"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <Button
         android:id="@+id/btn_menu"
@@ -33,5 +33,4 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:background="@drawable/ic_appbar_more_vert" />
-
 </RelativeLayout>

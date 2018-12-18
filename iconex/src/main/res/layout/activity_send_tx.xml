@@ -419,7 +419,7 @@
                     android:gravity="end"
                     android:text="0  USD"
                     android:textColor="@color/colorText50"
-                    android:textSize="10sp" />
+                    android:textSize="10dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -459,7 +459,7 @@
                     android:gravity="end"
                     android:text="0  USD"
                     android:textColor="@color/colorText50"
-                    android:textSize="10sp" />
+                    android:textSize="10dp" />
             </LinearLayout>
 
             <RelativeLayout

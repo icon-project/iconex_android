@@ -21,7 +21,7 @@
             android:gravity="center_horizontal"
             android:text="@string/walletAddress"
             android:textColor="@color/colorText"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RelativeLayout
             android:layout_width="200dp"
@@ -51,7 +51,7 @@
             android:gravity="center"
             android:text="Address"
             android:textColor="@color/colorText"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <Button
             android:id="@+id/btn_copy"

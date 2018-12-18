@@ -18,7 +18,7 @@
         android:maxLines="1"
         android:text="ICON"
         android:textColor="@color/colorText"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/txt_symbol"
@@ -30,7 +30,7 @@
         android:fontFamily="@font/noto_sans_light"
         android:text="@string/unitICX"
         android:textColor="@color/colorText"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/txt_balance"
@@ -43,7 +43,7 @@
         android:fontFamily="@font/nanum_square_bold"
         android:text="-.-"
         android:textColor="@color/colorText"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <View
         android:layout_width="match_parent"
