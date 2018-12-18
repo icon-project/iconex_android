@@ -103,6 +103,9 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
                 if (s.length() > 0) {
                     if (s.toString().trim().isEmpty()) {
                         editName.setText("");
+                    } else if (s.charAt(0) == ' ') {
+                        editName.setText(beforeStr);
+                        editName.setSelection(beforeStr.length());
                     } else {
                         if (Utils.checkByteLength(s.toString()) > 16) {
                             editName.setText(beforeStr);

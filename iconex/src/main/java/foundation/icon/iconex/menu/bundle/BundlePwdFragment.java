@@ -42,6 +42,8 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
     private OnBundlePwdListener mListener;
 
+    private String beforePwd, beforeCheck;
+
     public BundlePwdFragment() {
         // Required empty public constructor
     }
@@ -76,19 +78,31 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                     linePwd.setBackgroundColor(getResources().getColor(R.color.editActivated));
                 } else {
                     linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    int pwdResult = PasswordValidator.validatePassword(editPwd.getText().toString());
-                    if (pwdResult == PasswordValidator.EMPTY) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
-                    } else if (pwdResult == PasswordValidator.LEAST_8) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
-                    } else if (pwdResult == PasswordValidator.HAS_WHITE_SPACE) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
-                    } else if (pwdResult == PasswordValidator.NOT_MATCH_PATTERN) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
-                    } else if (pwdResult == PasswordValidator.SERIAL_CHAR) {
-                        showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
-                    } else {
-                        hideWarning(editPwd, linePwd, txtPwdWarning);
+
+                    int result = PasswordValidator.validatePassword(editPwd.getText().toString());
+                    switch (result) {
+                        case PasswordValidator.EMPTY:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                            break;
+
+                        case PasswordValidator.LEAST_8:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+                            break;
+
+                        case PasswordValidator.NOT_MATCH_PATTERN:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
+                            break;
+
+                        case PasswordValidator.HAS_WHITE_SPACE:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
+                            break;
+
+                        case PasswordValidator.SERIAL_CHAR:
+                            showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
+                            break;
+
+                        default:
+                            hideWarning(editPwd, linePwd, txtPwdWarning);
                     }
                 }
             }
@@ -103,9 +117,20 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnPwdDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editPwd.setText(s.subSequence(0, s.length() - 1));
+                        if (editPwd.getText().toString().length() > 0)
+                            editPwd.setSelection(editPwd.getText().toString().length());
+                    } else if (s.toString().contains(" ")) {
+                        editPwd.setText(beforePwd);
+                        editPwd.setSelection(beforePwd.length());
+                    } else {
+                        beforePwd = s.toString();
+                    }
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
                     txtPwdWarning.setVisibility(View.GONE);
+
                     if (editPwd.isFocused())
                         linePwd.setBackgroundColor(getResources().getColor(R.color.editActivated));
                     else
@@ -120,12 +145,6 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
             }
         });
-        editPwd.setOnEditTouchListener(new MyEditText.OnEditTouchListener() {
-            @Override
-            public void onTouch() {
-                showInputMode(editPwd);
-            }
-        });
 
         editCheck = v.findViewById(R.id.edit_check);
         editCheck.setOnKeyPreImeListener(mKeyPreImeListener);
@@ -137,14 +156,20 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                     lineCheck.setBackgroundColor(getResources().getColor(R.color.editActivated));
                 } else {
                     lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
+
                     if (editCheck.getText().toString().isEmpty()) {
                         showWarning(lineCheck, txtCheckWarning, getString(R.string.errCheckEmpty));
+                        btnExport.setEnabled(false);
                     } else {
-                        boolean checkResult = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(), editCheck.getText().toString());
-                        if (!checkResult)
+                        if (editPwd.getText().toString().isEmpty()) {
                             showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
-                        else {
-                            hideWarning(editCheck, lineCheck, txtCheckWarning);
+                        } else {
+                            boolean result = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(), editCheck.getText().toString());
+                            if (!result) {
+                                showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
+                            } else {
+                                hideWarning(editCheck, lineCheck, txtCheckWarning);
+                            }
                         }
                     }
                 }
@@ -160,6 +185,16 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     btnCheckDel.setVisibility(View.VISIBLE);
+                    if (s.charAt(s.length() - 1) == ' ') {
+                        editCheck.setText(s.subSequence(0, s.length() - 1));
+                        if (editCheck.getText().toString().length() > 0)
+                            editCheck.setSelection(editCheck.getText().toString().length());
+                    } else if (s.toString().contains(" ")) {
+                        editCheck.setText(beforeCheck);
+                        editCheck.setSelection(beforeCheck.length());
+                    } else {
+                        beforeCheck = s.toString();
+                    }
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
                     txtCheckWarning.setVisibility(View.GONE);

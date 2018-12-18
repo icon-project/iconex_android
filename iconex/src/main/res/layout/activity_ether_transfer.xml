@@ -64,7 +64,7 @@
                     android:gravity="end|center_vertical"
                     android:text="0.00  USD"
                     android:textColor="@color/colorText50"
-                    android:textSize="10sp" />
+                    android:textSize="10dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -486,7 +486,7 @@
                             android:fontFamily="@font/noto_sans_regular"
                             android:text="@string/slow"
                             android:textColor="@color/colorText50"
-                            android:textSize="10sp" />
+                            android:textSize="10dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -495,7 +495,7 @@
                             android:fontFamily="@font/noto_sans_regular"
                             android:text="@string/fast"
                             android:textColor="@color/colorText50"
-                            android:textSize="10sp" />
+                            android:textSize="10dp" />
                     </RelativeLayout>
 
                     <SeekBar
@@ -737,7 +737,7 @@
                     android:gravity="end"
                     android:text="0  USD"
                     android:textColor="@color/colorText50"
-                    android:textSize="10sp" />
+                    android:textSize="10dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -777,7 +777,7 @@
                     android:gravity="end"
                     android:text="0  USD"
                     android:textColor="@color/colorText50"
-                    android:textSize="10sp" />
+                    android:textSize="10dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

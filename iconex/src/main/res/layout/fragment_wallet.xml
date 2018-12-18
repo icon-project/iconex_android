@@ -15,14 +15,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/bg_white_box"
         android:elevation="16dp"
         android:minHeight="352dp"
-        android:paddingBottom="24dp"
-        android:paddingStart="24dp">
+        android:paddingStart="24dp"
+        android:paddingBottom="24dp">
 
         <RelativeLayout
             android:id="@+id/layout_wallet_header"
@@ -38,7 +38,7 @@
                 android:fontFamily="@font/noto_sans_medium"
                 android:text="Wallet"
                 android:textColor="@color/colorText"
-                android:textSize="18sp" />
+                android:textSize="18dp" />
 
             <Button
                 android:id="@+id/btn_wallet_menu"
@@ -69,8 +69,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="35dp"
                 android:gravity="bottom|end"
                 android:orientation="horizontal">
@@ -131,7 +131,7 @@
             android:layout_above="@+id/line_bottom"
             android:layout_below="@id/view_line"
             android:orientation="vertical"
-            app:layoutManager="LinearLayoutManager" />
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
         <View
             android:id="@+id/line_bottom"

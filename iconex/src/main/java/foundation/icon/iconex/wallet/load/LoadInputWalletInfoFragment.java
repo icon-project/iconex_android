@@ -42,7 +42,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
     private InputMethodManager mImm;
 
-    private String beforeStr;
+    private String beforeStr, beforePwd, beforeCheck;
 
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
@@ -113,6 +113,9 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                 if (s.length() > 0) {
                     if (s.toString().trim().isEmpty()) {
                         editAlias.setText("");
+                    } else if (s.charAt(0) == ' ') {
+                        editAlias.setText(beforeStr);
+                        editAlias.setSelection(beforeStr.length());
                     } else {
                         btnAliasDel.setVisibility(View.VISIBLE);
                         if (Utils.checkByteLength(s.toString()) > 16) {
@@ -208,7 +211,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                         editPwd.setText(s.subSequence(0, s.length() - 1));
                         if (editPwd.getText().toString().length() > 0)
                             editPwd.setSelection(editPwd.getText().toString().length());
-                    }
+                    } else if (s.toString().contains(" ")) {
+                        editPwd.setText(beforePwd);
+                        editPwd.setSelection(beforePwd.length());
+                    } else
+                        beforePwd = s.toString();
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
                     txtPwdWarning.setVisibility(View.GONE);
@@ -284,7 +291,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                         editCheck.setText(s.subSequence(0, s.length() - 1));
                         if (editCheck.getText().toString().length() > 0)
                             editCheck.setSelection(editCheck.getText().toString().length());
-                    }
+                    } else if (s.toString().contains(" ")) {
+                        editCheck.setText(beforeCheck);
+                        editCheck.setSelection(beforeCheck.length());
+                    } else
+                        beforeCheck = s.toString();
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
                     txtCheckWarnig.setVisibility(View.GONE);

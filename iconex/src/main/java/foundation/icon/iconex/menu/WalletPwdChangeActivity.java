@@ -51,6 +51,8 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
     private InputMethodManager mImm;
     private byte[] mPrivateKey;
 
+    private String beforePwd, beforeCheck;
+
     public static final int RESULT_CODE = 3333;
 
     @Override
@@ -197,7 +199,11 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                         editPwd.setText(s.subSequence(0, s.length() - 1));
                         if (editPwd.getText().toString().length() > 0)
                             editPwd.setSelection(editPwd.getText().toString().length());
-                    }
+                    } else if (s.toString().contains(" ")) {
+                        editPwd.setText(beforePwd);
+                        editPwd.setSelection(beforePwd.length());
+                    } else
+                        beforePwd = s.toString();
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
                     hideWarning(editPwd, linePwd, txtPwdWarning);
@@ -269,7 +275,11 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                         editCheck.setText(s.subSequence(0, s.length() - 1));
                         if (editCheck.getText().toString().length() > 0)
                             editCheck.setSelection(editCheck.getText().toString().length());
-                    }
+                    } else if (s.toString().contains(" ")) {
+                        editCheck.setText(beforeCheck);
+                        editCheck.setSelection(beforeCheck.length());
+                    } else
+                        beforeCheck = s.toString();
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
                     hideWarning(editCheck, lineCheck, txtCheckWarnig);

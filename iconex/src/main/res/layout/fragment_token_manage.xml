@@ -98,7 +98,7 @@
                     android:fontFamily="@font/noto_sans_regular"
                     android:text="@string/errContractAddress"
                     android:textColor="@color/colorWarning"
-                    android:textSize="10sp"
+                    android:textSize="10dp"
                     android:visibility="invisible" />
 
                 <!-- Token Name -->
@@ -159,7 +159,7 @@
                     android:fontFamily="@font/noto_sans_regular"
                     android:text="@string/errTokenName"
                     android:textColor="@color/colorWarning"
-                    android:textSize="10sp"
+                    android:textSize="10dp"
                     android:visibility="invisible" />
 
                 <!-- Token Symbol -->
@@ -219,7 +219,7 @@
                     android:fontFamily="@font/noto_sans_regular"
                     android:text="@string/errTokenSymbol"
                     android:textColor="@color/colorWarning"
-                    android:textSize="10sp"
+                    android:textSize="10dp"
                     android:visibility="invisible" />
 
                 <!-- Token Decimals -->
@@ -272,7 +272,7 @@
                     android:fontFamily="@font/noto_sans_regular"
                     android:text="@string/errTokenDecimals"
                     android:textColor="@color/colorWarning"
-                    android:textSize="10sp"
+                    android:textSize="10dp"
                     android:visibility="invisible" />
 
                 <Button

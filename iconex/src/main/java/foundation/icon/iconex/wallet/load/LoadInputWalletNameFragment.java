@@ -83,6 +83,9 @@ public class LoadInputWalletNameFragment extends Fragment implements View.OnClic
                 if (s.length() > 0) {
                     if (s.toString().trim().isEmpty()) {
                         editAlias.setText("");
+                    } else if (s.charAt(0) == ' ') {
+                        editAlias.setText(beforeStr);
+                        editAlias.setSelection(beforeStr.length());
                     } else {
                         if (Utils.checkByteLength(s.toString()) > 16) {
                             editAlias.setText(beforeStr);

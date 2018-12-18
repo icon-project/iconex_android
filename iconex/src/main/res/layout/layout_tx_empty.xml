@@ -14,5 +14,4 @@
         android:text="@string/noTransaction"
         android:textColor="@color/colorText50"
         android:textSize="14dp" />
-
 </RelativeLayout>

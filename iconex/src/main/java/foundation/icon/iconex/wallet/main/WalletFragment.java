@@ -31,19 +31,17 @@ import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.intro.IntroActivity;
+import foundation.icon.iconex.menu.WalletBackUpActivity;
+import foundation.icon.iconex.menu.WalletPwdChangeActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
-import foundation.icon.iconex.token.swap.TokenSwapActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
-import foundation.icon.iconex.menu.WalletBackUpActivity;
-import foundation.icon.iconex.menu.WalletPwdChangeActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
-import loopchain.icon.wallet.service.crypto.PKIUtils;
 
 import static foundation.icon.MyConstants.EXCHANGE_USD;
 
@@ -465,24 +463,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                         startActivity(new Intent(getActivity(), WalletBackUpActivity.class)
                                 .putExtra("walletInfo", (Serializable) mWallet)
                                 .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
-                    } else if (result == EditTextDialog.RESULT_PWD.SWAP) {
-
-                        try {
-                            Intent swapIntent = new Intent(getActivity(), TokenSwapActivity.class);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_WALLET, (Serializable) mWallet);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_TOKEN, (Serializable) mToken);
-                            String ICXAddr = PKIUtils.makeAddressFromPrivateKey(bytePrivKey, Constants.KS_COINTYPE_ICX);
-                            if (hasSwapWallet(ICXAddr))
-                                swapIntent.putExtra(TokenSwapActivity.ARG_TYPE, TokenSwapActivity.TYPE_SWAP.EXIST);
-                            else
-                                swapIntent.putExtra(TokenSwapActivity.ARG_TYPE, TokenSwapActivity.TYPE_SWAP.NO_WALLET);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_ICX_ADDR, ICXAddr);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_PRIV, Hex.toHexString(bytePrivKey));
-
-                            startActivityForResult(swapIntent, RC_SWAP);
-                        } catch (Exception e) {
-                            // TODO: 2018. 5. 16. Notice error
-                        }
                     } else {
                         RealmUtil.removeWallet(mWallet.getAddress());
                         try {
@@ -526,11 +506,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 } else {
                     ((MainActivity) getActivity()).refreshNameView();
                 }
-                break;
-
-            case RC_SWAP:
-                if (resultCode == TokenSwapActivity.RES_CREATED)
-                    ((MainActivity) getActivity()).notifyWalletChanged();
                 break;
 
             default:

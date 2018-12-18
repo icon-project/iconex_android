@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:background="@color/colorMain"
-    android:paddingBottom="16dp"
-    android:paddingEnd="24dp"
     android:paddingStart="12dp"
-    android:paddingTop="16dp">
+    android:paddingTop="16dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="16dp">
 
     <Button
         android:id="@+id/btn_close"
@@ -23,11 +23,11 @@
         android:layout_centerInParent="true"
         android:fontFamily="@font/noto_sans_medium"
         android:gravity="center"
-        android:lineSpacingExtra="9sp"
+        android:lineSpacingExtra="9dp"
         android:singleLine="true"
         android:text="Title"
         android:textColor="@color/colorWhite"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/txt_mod"

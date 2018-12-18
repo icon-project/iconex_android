@@ -37,7 +37,7 @@
                 android:layout_centerHorizontal="true"
                 android:text="@string/walletAddress"
                 android:textColor="@color/colorText"
-                android:textSize="18sp" />
+                android:textSize="18dp" />
 
             <ImageView
                 android:id="@+id/img_qrcode"
@@ -68,7 +68,7 @@
                 android:gravity="center"
                 android:text="address"
                 android:textColor="@color/colorText"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <Button
                 android:id="@+id/btn_copy"

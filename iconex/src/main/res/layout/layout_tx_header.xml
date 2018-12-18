@@ -1,41 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorMain"
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/btn_select_coin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="9dp"
         android:background="@drawable/bg_white_rounded_button_s"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:paddingBottom="4dp"
         android:paddingEnd="9dp"
         android:paddingStart="12dp"
         android:paddingTop="4dp">
-
-        <TextView
-            android:id="@+id/txt_selected_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="ICON"
-            android:textColor="@color/colorMain"
-            android:textSize="13sp" />
 
         <ImageView
             android:id="@+id/img_drop_down"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_marginStart="4dp"
-            android:background="@drawable/ic_dropdown_color" />
-    </LinearLayout>
+            android:background="@drawable/ic_dropdown_color"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_selected_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt_selected_name" />
+
+        <TextView
+            android:id="@+id/txt_selected_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="ICONajsdflk;jqpweijfa;lskdfjaposidufqpowieujfsalkdjflaksdfjalkdsf"
+            android:textColor="@color/colorMain"
+            android:textSize="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/img_drop_down"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/txt_selected_symbol"
@@ -46,7 +58,7 @@
         android:gravity="center"
         android:text="ICX"
         android:textColor="@color/colorWhite50"
-        android:textSize="13sp" />
+        android:textSize="13dp" />
 
     <TextView
         android:id="@+id/txt_asset"
@@ -76,7 +88,7 @@
             android:gravity="center"
             android:text="-"
             android:textColor="@color/colorWhite"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <LinearLayout
             android:id="@+id/btn_select_exchange"
@@ -99,7 +111,7 @@
                 android:gravity="center"
                 android:text="ICON"
                 android:textColor="@color/colorMain"
-                android:textSize="11sp" />
+                android:textSize="11dp" />
 
             <ImageView
                 android:id="@+id/img_drop_down1"
@@ -139,7 +151,7 @@
                 android:gravity="center"
                 android:text="@string/withdraw"
                 android:textColor="#ffffff"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -165,7 +177,7 @@
                 android:gravity="center"
                 android:text="@string/deposit"
                 android:textColor="#ffffff"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -191,7 +203,7 @@
                 android:fontFamily="@font/noto_sans_medium"
                 android:text="@string/txRecords"
                 android:textColor="@color/colorText"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
             <ImageView
                 android:layout_width="13dp"

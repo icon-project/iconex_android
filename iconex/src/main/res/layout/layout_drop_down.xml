@@ -16,7 +16,7 @@
         android:layout_toStartOf="@+id/img_drop_down"
         android:fontFamily="@font/noto_sans_medium"
         android:textColor="@color/colorText"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <ImageView
         android:id="@+id/img_drop_down"

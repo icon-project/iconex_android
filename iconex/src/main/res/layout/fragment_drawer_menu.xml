@@ -53,10 +53,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:fontFamily="@font/noto_sans_regular"
-                android:lineSpacingExtra="10sp"
+                android:lineSpacingExtra="10dp"
                 android:text="@string/titleCreateWallet"
                 android:textColor="@color/colorText"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,10 +76,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:fontFamily="@font/noto_sans_regular"
-                android:lineSpacingExtra="10sp"
+                android:lineSpacingExtra="10dp"
                 android:text="@string/titleLoadWallet"
                 android:textColor="@color/colorText"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -99,10 +99,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:fontFamily="@font/noto_sans_regular"
-                android:lineSpacingExtra="10sp"
+                android:lineSpacingExtra="10dp"
                 android:text="@string/exportWalletBundle"
                 android:textColor="@color/colorText"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <View
@@ -141,10 +141,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:fontFamily="@font/noto_sans_regular"
-                    android:lineSpacingExtra="10sp"
+                    android:lineSpacingExtra="10dp"
                     android:text="@string/settingLock"
                     android:textColor="@color/colorText"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -164,10 +164,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:fontFamily="@font/noto_sans_regular"
-                    android:lineSpacingExtra="10sp"
+                    android:lineSpacingExtra="10dp"
                     android:text="@string/settingLanguage"
                     android:textColor="@color/colorText"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <RelativeLayout
@@ -192,10 +192,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:fontFamily="@font/noto_sans_regular"
-                        android:lineSpacingExtra="10sp"
+                        android:lineSpacingExtra="10dp"
                         android:text="@string/appInfo"
                         android:textColor="@color/colorText"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/new_version"
@@ -238,10 +238,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:fontFamily="@font/noto_sans_regular"
-                    android:lineSpacingExtra="10sp"
+                    android:lineSpacingExtra="10dp"
                     android:text="@string/ICONexDisclaimers"
                     android:textColor="@color/colorText"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

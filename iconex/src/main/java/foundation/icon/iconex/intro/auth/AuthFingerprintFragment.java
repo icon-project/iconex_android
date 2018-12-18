@@ -8,7 +8,6 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,8 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
     private FingerprintManager fm;
     private FingerprintAuthBuilder fab;
     private FingerprintAuthHelper helper;
+
+    private BasicDialog dialog;
 
     public AuthFingerprintFragment() {
         // Required empty public constructor
@@ -73,7 +74,8 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
     public void onResume() {
         super.onResume();
 
-        BasicDialog dialog = new BasicDialog(getActivity());
+        if (dialog == null)
+            dialog = new BasicDialog(getActivity());
 
         if (!keyguardManager.isKeyguardSecure()) {
             if (!dialog.isShowing()) {

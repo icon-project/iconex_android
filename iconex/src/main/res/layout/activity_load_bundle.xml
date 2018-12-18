@@ -24,7 +24,7 @@
         android:paddingEnd="24dp"
         android:paddingStart="24dp"
         android:paddingTop="30dp"
-        app:layoutManager="LinearLayoutManager" />
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
     <LinearLayout
         android:layout_width="match_parent"

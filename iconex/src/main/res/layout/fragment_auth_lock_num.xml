@@ -25,7 +25,7 @@
             android:gravity="center_horizontal"
             android:text="@string/enterLockNum"
             android:textColor="@color/colorWhite50"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -255,11 +255,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/forgotLockNumGuide"
                 android:textColor="@color/colorWhite50"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </RelativeLayout>
-        <!--<android.support.v4.widget.Space-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1" />-->
     </LinearLayout>
 </RelativeLayout>
