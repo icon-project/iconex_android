@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
-import foundation.icon.iconex.token.swap.TokenSwapActivity;
 import foundation.icon.iconex.util.KeyStoreIO;
 
 public class CreateWalletStep3Fragment extends Fragment implements View.OnClickListener {
@@ -115,8 +113,7 @@ public class CreateWalletStep3Fragment extends Fragment implements View.OnClickL
                 public void onOk() {
                     if (getActivity() instanceof CreateWalletActivity)
                         isAccomplished = ((CreateWalletActivity) getActivity()).backupKeyStoreFile();
-                    else
-                        isAccomplished = ((TokenSwapActivity) getActivity()).backupKeyStoreFile();
+
                     if (isAccomplished) {
                         BasicDialog dialog = new BasicDialog(getActivity());
                         dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));

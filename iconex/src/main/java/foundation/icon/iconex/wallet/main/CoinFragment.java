@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import org.spongycastle.util.encoders.Hex;
-
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -24,14 +22,12 @@ import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
-import foundation.icon.iconex.token.swap.TokenSwapActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
-import loopchain.icon.wallet.service.crypto.PKIUtils;
 
 import static foundation.icon.MyConstants.EXCHANGE_USD;
 import static foundation.icon.MyConstants.NO_BALANCE;
@@ -282,26 +278,6 @@ public class CoinFragment extends Fragment {
 
                 bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
                 if (bytePrivKey != null) {
-                    if (result == EditTextDialog.RESULT_PWD.SWAP) {
-
-                        try {
-                            Intent swapIntent = new Intent(getActivity(), TokenSwapActivity.class);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_WALLET, (Serializable) mWallet);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_TOKEN, (Serializable) mToken);
-                            String address = PKIUtils.makeAddressFromPrivateKey(bytePrivKey, Constants.KS_COINTYPE_ICX);
-                            if (hasSwapWallet(address))
-                                swapIntent.putExtra(TokenSwapActivity.ARG_TYPE, TokenSwapActivity.TYPE_SWAP.EXIST);
-                            else
-                                swapIntent.putExtra(TokenSwapActivity.ARG_TYPE, TokenSwapActivity.TYPE_SWAP.NO_WALLET);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_ICX_ADDR, address);
-                            swapIntent.putExtra(TokenSwapActivity.ARG_PRIV, Hex.toHexString(bytePrivKey));
-
-                            startActivityForResult(swapIntent, RC_SWAP);
-                        } catch (Exception e) {
-                            // TODO: 2018. 5. 16. Notice error
-                        }
-                    }
-
                     editTextDialog.dismiss();
                 } else {
                     editTextDialog.setError(getString(R.string.errPassword));
@@ -329,11 +305,6 @@ public class CoinFragment extends Fragment {
                     ((MainActivity) getActivity()).notifyWalletChanged();
                 } else
                     ((MainActivity) getActivity()).refreshNameView();
-                break;
-
-            case RC_SWAP:
-                if (resultCode == TokenSwapActivity.RES_CREATED)
-                    ((MainActivity) getActivity()).notifyWalletChanged();
                 break;
 
             default:
