@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -983,6 +982,13 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isEmpty() {
+        return editAddr.getText().toString().trim().isEmpty()
+                && editName.getText().toString().trim().isEmpty()
+                && editSym.getText().toString().isEmpty()
+                && editDec.getText().toString().trim().isEmpty();
     }
 
     private enum EDIT_STATUS {

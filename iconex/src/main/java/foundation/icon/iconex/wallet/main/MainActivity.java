@@ -334,7 +334,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
 
-        mService.stopGetBalance();
+        if (mService != null)
+            mService.stopGetBalance();
 
         // Unbind from the service
         isForeground = false;
@@ -350,6 +351,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (getIntent().getExtras() != null) {
+            MyConstants.MainPopUp popUp = (MyConstants.MainPopUp) getIntent().getExtras().get("popup");
+            if (popUp == MyConstants.MainPopUp.BUNDLE) {
+                BasicDialog dialog = new BasicDialog(this);
+                dialog.setMessage(getString(R.string.msgLoadBundle));
+                dialog.show();
+            }
+        }
+
         isFingerprintInvalidated = getIntent().getBooleanExtra(AuthActivity.EXTRA_INVALIDATED, false);
 
         collapsing = findViewById(R.id.collapsing);
@@ -359,8 +369,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 int totalRange = appBarLayout.getTotalScrollRange();
-                Log.d(TAG, "AppBar Total Range=" + totalRange);
-                Log.d(TAG, "verticalOffset=" + verticalOffset);
 
                 appbarPosition = verticalOffset;
                 if (appbarPosition == 0)

@@ -1,9 +1,7 @@
 package foundation.icon;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -167,10 +165,12 @@ public class ICONexApp extends Application {
 
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
+            Log.d(TAG, "onActivityCreated=" + activity.getLocalClassName());
         }
 
         @Override
         public void onActivityStarted(Activity activity) {
+            Log.d(TAG, "onActivityStarted=" + activity.getLocalClassName());
             if (++running == 1) {
                 // running activity is 1,
                 // app must be returned from background just now (or first launch)

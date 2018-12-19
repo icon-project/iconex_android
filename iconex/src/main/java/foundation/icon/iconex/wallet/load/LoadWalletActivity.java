@@ -295,7 +295,8 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
                 try {
                     addBundle();
                     startActivity(new Intent(LoadWalletActivity.this, MainActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .putExtra("popup", MyConstants.MainPopUp.BUNDLE));
                     finish();
                 } catch (Exception e) {
                     // TODO: 2018. 5. 5. Notify to user that load has failed.

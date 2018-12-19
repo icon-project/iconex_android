@@ -224,40 +224,7 @@ public class CoinFragment extends Fragment {
 
             @Override
             public void onRequestSwap(Wallet wallet) {
-                mWallet = wallet;
-                WalletEntry own = wallet.getWalletEntries().get(0);
 
-                for (WalletEntry entry : wallet.getWalletEntries()) {
-                    if (entry.getSymbol().equals(Constants.KS_COINTYPE_ICX))
-                        mToken = entry;
-                }
-
-                BasicDialog dialog = new BasicDialog(getActivity());
-                try {
-                    BigInteger tBalance = new BigInteger(mToken.getBalance());
-                    if (tBalance.equals(BigInteger.ZERO)) {
-                        dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                        dialog.show();
-                        return;
-                    }
-
-                    BigInteger eBalance = new BigInteger(own.getBalance());
-                    if (eBalance.equals(BigInteger.ZERO)) {
-                        dialog.setMessage(getString(R.string.swapMsgNotEnoughFee));
-                        dialog.show();
-                        return;
-                    }
-
-                    editTextDialog = new EditTextDialog(getActivity(), getString(R.string.enterWalletPassword));
-                    editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                    editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                    editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.SWAP);
-                    editTextDialog.setOnPasswordCallback(mPasswordDialogCallback);
-                    editTextDialog.show();
-                } catch (Exception e) {
-                    dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                    dialog.show();
-                }
             }
         });
         recyclerView.setAdapter(adapter);

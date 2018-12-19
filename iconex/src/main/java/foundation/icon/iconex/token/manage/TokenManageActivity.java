@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import loopchain.icon.wallet.core.Constants;
 
 public class TokenManageActivity extends AppCompatActivity implements View.OnClickListener, TokenListFragment.OnTokenListClickListener,
@@ -98,6 +98,28 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                             }
                         });
                         dialog.setMessage(getString(R.string.msgTokenCancelMod));
+                        dialog.show();
+                    } else if (!addFragment.isEmpty()) {
+                        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+                        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                            @Override
+                            public void onOk() {
+                                fragmentManager.popBackStackImmediate();
+                                txtTitle.setText(getString(R.string.tokenManageTitle));
+
+                                btnEdit.setSelected(false);
+                                btnEdit.setText(getString(R.string.edit));
+                                btnEdit.setVisibility(View.INVISIBLE);
+
+                                listFragment.tokenNotifyDataChanged();
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        });
+                        dialog.setMessage(getString(R.string.msgTokenCancelAdd));
                         dialog.show();
                     } else {
                         fragmentManager.popBackStackImmediate();
@@ -233,6 +255,28 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                     }
                 });
                 dialog.setMessage(getString(R.string.msgTokenCancelMod));
+                dialog.show();
+            } else if (!addFragment.isEmpty()) {
+                Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                    @Override
+                    public void onOk() {
+                        fragmentManager.popBackStackImmediate();
+                        txtTitle.setText(getString(R.string.tokenManageTitle));
+
+                        btnEdit.setSelected(false);
+                        btnEdit.setText(getString(R.string.edit));
+                        btnEdit.setVisibility(View.INVISIBLE);
+
+                        listFragment.tokenNotifyDataChanged();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+                dialog.setMessage(getString(R.string.msgTokenCancelAdd));
                 dialog.show();
             } else {
                 fragmentManager.popBackStackImmediate();

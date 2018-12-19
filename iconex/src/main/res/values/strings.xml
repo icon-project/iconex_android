@@ -113,6 +113,8 @@
     <string name="loadBundleRegistered">%d wallets</string>
     <string name="registeredWallet">Registered</string>
 
+    <string name="msgLoadBundle">Wallet bundle is loaded. The password of each wallet is the same as the wallet bundle password and it can be changed from wallet menu.</string>
+
     <string name="enterWalletAliasAndPassword">Please enter the new wallet name and the password.</string>
     <string name="walletPasswordGuide1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
     <string name="walletPasswordGuide2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
@@ -191,6 +193,7 @@
     <string name="enterTokenInfo">Enter Token Info</string>
 
     <string name="msgTokenDelete">Do you want to delete\n%s ?</string>
+    <string name="msgTokenCancelAdd">Are you sure you wnat to cancel?</string>
     <string name="msgTokenCancelMod">Are you sure you want to cancel?</string>
 
     <string name="hintTokenName">Enter token name</string>
@@ -276,6 +279,12 @@
     <string name="errGasLimitEmpty">Please enter gas limit.</string>
     <string name="errOverByteLimit">This exceeds input limit %dKB</string>
 
+    <string name="errIncorrectICXAddr">Incorrect ICX address</string>
+    <string name="errIncorrectETHAddr">Incorrect ETH address</string>
+
+    <string name="errICXFee">Insufficient ICX balance for transaction fee</string>
+    <string name="errETHFee">Insufficient ETH balance for transaction fee</string>
+
     <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
     <string name="errTransferFailed">Error occurred.\nPlease try again.</string>
 
@@ -300,6 +309,9 @@
     <string name="errDuplicateContactsName">This wallet name already exists.</string>
     <string name="errDuplicateContactsAddr">This account already exists.</string>
     <string name="errWrongAddress">Incorrect %s Address.</string>
+
+    <string name="errDupICXAddress">This ICX account already exist.</string>
+    <string name="errDupETHAddress">This ETH account already exist.</string>
 
     <!-- Backup -->
     <string name="titleBackup">Backup Wallet</string>
@@ -382,68 +394,6 @@
     <string name="titleLanguage">Language</string>
     <string name="korean">한국어</string>
     <string name="english">English</string>
-
-    <!-- Token Swap -->
-    <string name="swap">Swap</string>
-
-    <string name="swapStep1">Instructions</string>
-    <string name="swapStep1a">Instructions\n1/2</string>
-    <string name="swapStep1b">Instructions\n2/2</string>
-    <string name="swapStep2">Wallet\nInfo</string>
-    <string name="swapStep3">Keystore\nFile</string>
-    <string name="swapStep4">Private\nKey</string>
-    <string name="swapStep5">Request\nSwap</string>
-
-    <string name="titleSwap">Token Swap</string>
-    <string name="titleSwapInstructions">Token Swap Instructions</string>
-    <string name="titleCreateSwapWallet">Create Wallet for Token Swap</string>
-    <string name="titleRequestSwap">Request Token Swap</string>
-    <string name="swapHeader1">ICX ERC20 tokens on the Ethereum network can now be swapped and transferred to ICON\'s Mainnet</string>
-    <string name="swapDetailed1">Token swap will take place after generating your new ICX coin wallet.</string>
-    <string name="swapExistICXWallet">You have created the wallet for token swap before. Swapped ICX coins will be added to the \"%s\"</string>
-    <string name="swapGuideHeader">Please refer to the following precautions</string>
-    <string name="swapGuideDetailed1">If you follow the instructions the ICX wallet for token swap will be created. (The private key of the ICX wallet for token swap will be identical to the private key of your previous Ethereum wallet.)</string>
-    <string name="swapGuideDetailed2">Please make sure that you name the wallet so that you can distinguish the wallet for token swap from other wallets.</string>
-    <string name="swapGuideDetailed3">If you have stored your tokens in your private wallet such as MyEtherWallet, please load the ETH wallet using the Keystore or private key. Then, the ICX tokens will be added automatically to your ETH wallet and \"Swap\" button will be created.</string>
-    <string name="ICONexCreateWalletManual">[Manual] ICONex Wallet Creation</string>
-    <string name="swapGuideDetailed4">We do not support token swaps for addresses listed on the exchange. In this regard, please take caution for token swaps within the exchange.</string>
-    <string name="maunalConfirm">I have read the instructions, and agree to continue with the token swap.</string>
-
-    <string name="swapPrecautionsH">Please refer to the following precautions.</string>
-    <string name="swapPrecautionsD1">Users can appoint the number of ERC20 tokens willing to swap, and once the swap has taken place it cannot be reversed.</string>
-    <string name="swapPrecautionsD2">After the swap has been completed, ICX distributions will take place automatically at a designated time. However, schedule is subject to change so please refer to the following information.</string>
-    <string name="swapPrecautionsD3">You may not be able to transfer swapped ICX coins to the exchanges that do not support ICX coin wallets.</string>
-    <string name="swapPolicy">ICX Token Swap FAQ</string>
-    <string name="confirmPrecautions">I have read the precautions.</string>
-
-    <string name="swapRequestPrecaution">Please enter the swap amount and complete the token swap request. Once the swap has taken place it cannot be reversed.</string>
-    <string name="erc20TokenSwapAddress">Token Swap Address</string>
-    <string name="erc20TokenDetailed1">This swap address is for ICON\'s token swap only and is automatically entered</string>
-    <string name="erc20TokenDetailed2">Please refer to ICON\'s official channel regarding the swap address as we recommend double checking the swap address</string>
-
-    <string name="receiveICXAddress">Address for ICX coin</string>
-    <string name="receiveICXDetailed1">This is your new ICX wallet address and ICX will be sent automatically at a designated time to \"Address for ICX coin\".</string>
-
-    <string name="swapBalance">Balance (ICX)</string>
-    <string name="swapSendAmount">Swap Amount (ICX)</string>
-    <string name="hintSwapAmount">Enter swap amount</string>
-    <string name="properGasLimit">Gas Limit</string>
-    <string name="properGasPrice">Gas Price</string>
-    <string name="swapRemain">Estimated Balance (ICX)</string>
-    <string name="properGasInfo">Gas limit and gas price are optimized for the token swap</string>
-
-    <string name="swapMsgCreateWalletCancel">Cancel creating wallet and token swap?</string>
-    <string name="swapMsgCancel">Cancel token swap?\nYou may press the swap button later to proceed with the remaining steps.</string>
-    <string name="swapMsgHasNoToken">You have 0 ICX tokens\navailable for token swap.\nPlease check your balance.</string>
-    <string name="swapMsgNotEnoughFee">Please check your ETH balance. ETH is needed for token swap transaction fee.</string>
-
-    <string name="swapConfirmTitle">Check the amount and the receiving address once again</string>
-    <string name="swapConfirmAmount">Swap Amount (ICX)</string>
-    <string name="swapConfirmFee">Max Fee (ETH)</string>
-    <string name="swapReceiveAddress">Receiving Address</string>
-    <string name="swapRequest">Swap</string>
-
-    <string name="swapRequestDone">Request for swap has been completed.\n\nICX distribution schedule is subject to change so please refer to the following information.</string>
 
     <!-- Util -->
     <string name="txDeposit">+ %s</string>

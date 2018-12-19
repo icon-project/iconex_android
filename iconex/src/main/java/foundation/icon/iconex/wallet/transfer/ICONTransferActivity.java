@@ -662,7 +662,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                         editSend.setText("");
                         lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                         txtSendWarning.setVisibility(View.VISIBLE);
-                        txtSendWarning.setText(getString(R.string.errNeedFee));
+                        txtSendWarning.setText(getString(R.string.errICXFee));
                     } else {
                         BigInteger allIcx = balance.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
                         editSend.setText(ConvertUtil.getValue(allIcx, mWalletEntry.getDefaultDec()));
@@ -956,7 +956,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             } else if (canICX.compareTo(sendAmount) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNeedFee));
+                txtSendWarning.setText(getString(R.string.errICXFee));
 
                 return false;
             }
@@ -983,7 +983,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             } else if (ownBalance.compareTo(canICX) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNeedFee));
+                txtSendWarning.setText(getString(R.string.errICXFee));
 
                 return false;
             }
@@ -1014,7 +1014,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             if (!(address.startsWith("hx") || address.startsWith("cx"))) {
                 lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errCheckAddress));
+                txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
                 return false;
             }
         }
@@ -1023,7 +1023,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             if (!address.startsWith("hx")) {
                 lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errCheckAddress));
+                txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
                 return false;
             }
 
@@ -1033,39 +1033,16 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         if (address.length() != 40) {
             lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+            txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
             return false;
         }
 
         if (address.contains(" ")) {
             lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+            txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
             return false;
         }
-
-//        if (address.startsWith("hx")) {
-//            address = address.substring(2);
-//            if (address.length() != 40) {
-//                lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-//                txtAddrWarning.setVisibility(View.VISIBLE);
-//                txtAddrWarning.setText(getString(R.string.errCheckAddress));
-//
-//                return false;
-//            }
-//        } else if (address.contains(" ")) {
-//            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-//            txtAddrWarning.setVisibility(View.VISIBLE);
-//            txtAddrWarning.setText(getString(R.string.errCheckAddress));
-//
-//            return false;
-//        } else {
-//            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-//            txtAddrWarning.setVisibility(View.VISIBLE);
-//            txtAddrWarning.setText(getString(R.string.errCheckAddress));
-//
-//            return false;
-//        }
 
         if (editAddress.hasFocus())
             lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));

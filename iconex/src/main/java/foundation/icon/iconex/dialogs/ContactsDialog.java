@@ -320,7 +320,7 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
                         if (contacts.getAddress().equals(address)) {
                             lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
                             txtAddrWarning.setVisibility(View.VISIBLE);
-                            txtAddrWarning.setText(mContext.getString(R.string.errDuplicateContactsAddr));
+                            txtAddrWarning.setText(mContext.getString(R.string.errDupICXAddress));
                             return false;
                         }
                     }
@@ -344,7 +344,7 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
                         if (contacts.getAddress().equals(address)) {
                             lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
                             txtAddrWarning.setVisibility(View.VISIBLE);
-                            txtAddrWarning.setText(mContext.getString(R.string.errDuplicateContactsAddr));
+                            txtAddrWarning.setText(mContext.getString(R.string.errDupETHAddress));
                             return false;
                         }
                     }

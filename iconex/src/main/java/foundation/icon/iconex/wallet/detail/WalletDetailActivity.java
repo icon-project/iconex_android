@@ -751,32 +751,6 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         public void onSwap() {
-            BasicDialog dialog = new BasicDialog(WalletDetailActivity.this);
-            try {
-                BigInteger tBalance = new BigInteger(selectedEntry.getBalance());
-                if (tBalance.equals(BigInteger.ZERO)) {
-                    dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                    dialog.show();
-                    return;
-                }
-
-                BigInteger eBalance = new BigInteger(mWallet.getWalletEntries().get(0).getBalance());
-                if (eBalance.equals(BigInteger.ZERO)) {
-                    dialog.setMessage(getString(R.string.swapMsgNotEnoughFee));
-                    dialog.show();
-                    return;
-                }
-
-                editTextDialog = new EditTextDialog(WalletDetailActivity.this, getString(R.string.enterWalletPassword));
-                editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.SWAP);
-                editTextDialog.setOnPasswordCallback(mPasswordDialogCallback);
-                editTextDialog.show();
-            } catch (Exception e) {
-                dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                dialog.show();
-            }
         }
 
         @Override
