@@ -250,8 +250,8 @@
     <string name="errCheckAddress">송금 받는 주소를 다시 확인해주세요.</string>
     <string name="errSameAddress">송금하는 주소와 같을 수 없습니다.</string>
 
-    <string name="errIncorrectICXAddr">Incorrect ICX address</string>
-    <string name="errIncorrectETHAddr">Incorrect ETH address</string>
+    <string name="errIncorrectICXAddr">올바른 ICX 주소가 아닙니다.</string>
+    <string name="errIncorrectETHAddr">올바른 ETH 주소가 아닙니다.</string>
 
     <string name="errEthOwnNotEnough">이더리움 계좌 잔액이 부족하여 토큰을 송금할 수 없습니다.</string>
     <string name="errInvalidData">데이터를 다시 확인해주세요.</string>

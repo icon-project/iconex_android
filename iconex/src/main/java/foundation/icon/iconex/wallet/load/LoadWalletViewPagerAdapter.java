@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import java.util.HashMap;
+
 /**
  * Created by js on 2018. 2. 26..
  */
@@ -38,19 +40,23 @@ public class LoadWalletViewPagerAdapter extends FragmentStatePagerAdapter {
         if (TYPE == LOAD_TYPE.KEYSTORE) {
             switch (position) {
                 case 1:
-                    selectKeyStoreFragment = SelectKeyStoreFragment.newInstance();
+                    if (selectKeyStoreFragment == null)
+                        selectKeyStoreFragment = SelectKeyStoreFragment.newInstance();
                     return selectKeyStoreFragment;
                 case 2:
-                    loadInputWalletNameFragment = LoadInputWalletNameFragment.newInstance();
+                    if (loadInputWalletNameFragment == null)
+                        loadInputWalletNameFragment = LoadInputWalletNameFragment.newInstance();
                     return loadInputWalletNameFragment;
             }
         } else {
             switch (position) {
                 case 1:
-                    inputPrivateKeyFragment = LoadInputPrivateKeyFragment.newInstance();
+                    if (inputPrivateKeyFragment == null)
+                        inputPrivateKeyFragment = LoadInputPrivateKeyFragment.newInstance();
                     return inputPrivateKeyFragment;
                 case 2:
-                    inputWalletInfoFragment = LoadInputWalletInfoFragment.newInstance();
+                    if (inputWalletInfoFragment == null)
+                        inputWalletInfoFragment = LoadInputWalletInfoFragment.newInstance();
                     return inputWalletInfoFragment;
 
             }
@@ -62,6 +68,37 @@ public class LoadWalletViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return NUM_PAGE;
+    }
+
+    public HashMap<String, Fragment> getFragments() {
+        HashMap<String, Fragment> fragments = new HashMap<>();
+        if (selectKeyStoreFragment != null)
+            fragments.put("keystore", selectKeyStoreFragment);
+
+        if (loadInputWalletNameFragment != null)
+            fragments.put("name", loadInputWalletNameFragment);
+
+        if (inputPrivateKeyFragment != null)
+            fragments.put("private", inputPrivateKeyFragment);
+
+        if (inputWalletInfoFragment != null)
+            fragments.put("info", inputWalletInfoFragment);
+
+        return fragments;
+    }
+
+    public void setFragments(HashMap<String, Fragment> fragments) {
+        if (fragments.containsKey("keystore"))
+            selectKeyStoreFragment = (SelectKeyStoreFragment) fragments.get("keystore");
+
+        if (fragments.containsKey("name"))
+            loadInputWalletNameFragment = (LoadInputWalletNameFragment) fragments.get("name");
+
+        if (fragments.containsKey("private"))
+            inputPrivateKeyFragment = (LoadInputPrivateKeyFragment) fragments.get("private");
+
+        if (fragments.containsKey("info"))
+            inputWalletInfoFragment = (LoadInputWalletInfoFragment) fragments.get("info");
     }
 
     public void setKeyStore(String coinType, String keyStore) {

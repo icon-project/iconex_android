@@ -89,10 +89,6 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
                     int aliasValidate = checkAlias(editAlias.getText().toString());
                     switch (aliasValidate) {
-                        case ALIAS_EMPTY:
-                            showWarning(lineAlias, txtAliasWarning, getString(R.string.errAliasEmpty));
-                            break;
-
                         case ALIAS_DUP:
                             showWarning(lineAlias, txtAliasWarning, getString(R.string.duplicateWalletAlias));
                             break;
@@ -171,9 +167,6 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
                     int result = PasswordValidator.validatePassword(editPwd.getText().toString());
                     switch (result) {
-                        case PasswordValidator.EMPTY:
-                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
-                            break;
 
                         case PasswordValidator.LEAST_8:
                             showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
@@ -260,9 +253,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                 } else {
                     lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-                    if (editCheck.getText().toString().isEmpty()) {
-                        showWarning(lineCheck, txtCheckWarnig, getString(R.string.errCheckEmpty));
-                    } else {
+                    if (!editCheck.getText().toString().isEmpty()) {
                         if (editPwd.getText().toString().isEmpty()) {
                             showWarning(lineCheck, txtCheckWarnig, getString(R.string.errPasswordNotMatched));
                         } else {

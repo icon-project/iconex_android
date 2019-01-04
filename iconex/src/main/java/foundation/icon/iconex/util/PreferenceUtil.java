@@ -23,7 +23,6 @@ public class PreferenceUtil {
     private final String PREF_BEING_LOCK = "BEING_LOCK";
     private final String PREF_LOCK_NUM = "LOCK_NUM";
     private final String PREF_FINGERPRINT = "FINGERPRINT";
-    private final String PREF_LANGUAGE = "LANGUAGE";
     private final String PREF_NETWORK = "NETWORK";
     private final String PREF_DEFAULT_LIMIT = "DEFAULT_LIMIT";
     private final String PREF_MAX_STEP = "MAX_STEP";
@@ -84,16 +83,6 @@ public class PreferenceUtil {
 
     public boolean getUseFingerprint() {
         return mPreference.getBoolean(PREF_FINGERPRINT, false);
-    }
-
-    public void saveLanguage(String code) {
-        SharedPreferences.Editor editor = mPreference.edit();
-        editor.putString(PREF_LANGUAGE, code);
-        editor.apply();
-    }
-
-    public String getLanguage() {
-        return mPreference.getString(PREF_LANGUAGE, "");
     }
 
     public void setNetwork(int network) {
@@ -168,7 +157,6 @@ public class PreferenceUtil {
     public void loadPreference() {
         ICONexApp.isLocked = getLocked();
         ICONexApp.useFingerprint = getUseFingerprint();
-        ICONexApp.language = getLanguage();
         ICONexApp.network = getNetwork();
         ICONexApp.isDeveloper = isDeveloper();
 

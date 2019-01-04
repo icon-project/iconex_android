@@ -2,6 +2,7 @@ package foundation.icon.iconex.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import foundation.icon.MyConstants;
  */
 
 public class Utils {
+
+    private static final String TAG = Utils.class.getSimpleName();
 
     public static int checkByteLength(String msg) {
         int strCnt = 0;
@@ -73,6 +76,9 @@ public class Utils {
         } catch (Exception e) {
             return RES_VERSION.NONE;
         }
+
+        if (ICONexApp.version.isEmpty())
+            return RES_VERSION.NONE;
 
         String[] all = ICONexApp.version.split("\\.");
         String[] hav2;

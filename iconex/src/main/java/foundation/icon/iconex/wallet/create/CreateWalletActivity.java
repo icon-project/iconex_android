@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -19,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import foundation.icon.MyConstants;
@@ -55,6 +57,25 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            HashMap<String, Fragment> map = new HashMap<>();
+            if (getSupportFragmentManager().getFragment(savedInstanceState, "step1") != null)
+                map.put("step1", getSupportFragmentManager().getFragment(savedInstanceState, "step1"));
+            if (getSupportFragmentManager().getFragment(savedInstanceState, "step2") != null)
+                map.put("step2", getSupportFragmentManager().getFragment(savedInstanceState, "step2"));
+            if (getSupportFragmentManager().getFragment(savedInstanceState, "step3") != null)
+                map.put("step3", getSupportFragmentManager().getFragment(savedInstanceState, "step3"));
+            if (getSupportFragmentManager().getFragment(savedInstanceState, "step4") != null)
+                map.put("step4", getSupportFragmentManager().getFragment(savedInstanceState, "step4"));
+
+            pagerAdapter = new CreateWalletViewPagerAdapter(getSupportFragmentManager());
+            pagerAdapter.setFragments(map);
+
+        } else {
+            pagerAdapter = new CreateWalletViewPagerAdapter(getSupportFragmentManager());
+        }
+
         setContentView(R.layout.activity_create_wallet);
 
         ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.titleCreateWallet));
@@ -83,7 +104,6 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
         });
 
         viewPager = findViewById(R.id.step_view_pager);
-        pagerAdapter = new CreateWalletViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -125,6 +145,21 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
         });
 
         wallet = new Wallet();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        HashMap<String, Fragment> map = pagerAdapter.getFragments();
+        if (map.containsKey("step1"))
+            getSupportFragmentManager().putFragment(outState, "step1", map.get("step1"));
+        if (map.containsKey("step2"))
+            getSupportFragmentManager().putFragment(outState, "step2", map.get("step2"));
+        if (map.containsKey("step3"))
+            getSupportFragmentManager().putFragment(outState, "step3", map.get("step3"));
+        if (map.containsKey("step4"))
+            getSupportFragmentManager().putFragment(outState, "step4", map.get("step4"));
     }
 
     @Override

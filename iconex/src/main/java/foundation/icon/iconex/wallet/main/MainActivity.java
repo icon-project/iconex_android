@@ -46,7 +46,6 @@ import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.menu.DrawerMenuFragment;
 import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
-import foundation.icon.iconex.menu.language.SettingLanguageActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
@@ -924,8 +923,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (menu == DrawerMenuFragment.SIDE_MENU.SETTING_LOCK) {
             startActivity(new Intent(this, SettingLockActivity.class)
                     .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.DEFAULT));
-        } else if (menu == DrawerMenuFragment.SIDE_MENU.SETTING_LANGUAGE) {
-            startActivity(new Intent(this, SettingLanguageActivity.class));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.APP_INFO) {
             startActivity(new Intent(this, AppInfoActivity.class));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.ICONex_DISCLAIMER) {

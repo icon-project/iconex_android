@@ -1,15 +1,10 @@
 package foundation.icon;
 
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import java.util.Locale;
 
 import foundation.icon.connect.Constants;
 import foundation.icon.connect.ErrorCodes;
@@ -21,8 +16,6 @@ import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
 import foundation.icon.iconex.wallet.main.MainActivity;
-
-import static foundation.icon.ICONexApp.language;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -76,26 +69,6 @@ public class SplashActivity extends AppCompatActivity {
                 versionCheck.execute();
             }
         }, 500);
-
-        Locale locale;
-
-        if (language.isEmpty()) {
-            if (Locale.getDefault().getLanguage().equals(MyConstants.LOCALE_KO))
-                language = MyConstants.LOCALE_KO;
-            else
-                language = MyConstants.LOCALE_EN;
-        }
-
-        locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Resources resources = getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
     }
 
     private void checkPermission() {

@@ -267,13 +267,13 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
     }
 
     private boolean validateName(String name) {
-        if (name.trim().length() == 0) {
-            lineName.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
-            txtNameWarning.setText(mContext.getString(R.string.errNoAddressName));
-            txtNameWarning.setVisibility(View.VISIBLE);
-
-            return false;
-        }
+//        if (name.trim().length() == 0) {
+//            lineName.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
+//            txtNameWarning.setText(mContext.getString(R.string.errNoAddressName));
+//            txtNameWarning.setVisibility(View.VISIBLE);
+//
+//            return false;
+//        }
 
         if (mCoinType.equals(loopchain.icon.wallet.core.Constants.KS_COINTYPE_ICX)) {
             for (Contacts contacts : ICONexApp.ICXContacts) {

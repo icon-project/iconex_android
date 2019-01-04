@@ -144,7 +144,8 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
                     lineAddr.setBackgroundColor(getResources().getColor(R.color.editActivated));
                 } else {
                     lineAddr.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    validateAddress(editAddr.getText().toString());
+                    if (!editAddr.getText().toString().isEmpty())
+                        validateAddress(editAddr.getText().toString());
                 }
             }
         });

@@ -51,7 +51,7 @@ public class ICONexApp extends Application {
     // ========== App Lock ================
     public static boolean isLocked = false;
     public static boolean useFingerprint = false;
-    public static String language = "";
+//    public static String language = "";
 
     private Handler lockTimeLimiter = new Handler();
 
@@ -88,8 +88,6 @@ public class ICONexApp extends Application {
 
         loadPreferences();
 
-        setLanguage();
-
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
     }
 
@@ -113,27 +111,6 @@ public class ICONexApp extends Application {
     private void loadPreferences() {
         PreferenceUtil mPreference = new PreferenceUtil(getApplicationContext());
         mPreference.loadPreference();
-    }
-
-    private void setLanguage() {
-        Locale locale;
-
-        if (language.isEmpty()) {
-            if (Locale.getDefault().getLanguage().equals(MyConstants.LOCALE_KO))
-                language = MyConstants.LOCALE_KO;
-            else
-                language = MyConstants.LOCALE_EN;
-        }
-
-        locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Resources resources = getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
 
     public static AppStatus mAppStatus = AppStatus.BACKGROUND;
