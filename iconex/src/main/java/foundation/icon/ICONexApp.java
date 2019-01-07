@@ -3,17 +3,13 @@ package foundation.icon;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import foundation.icon.connect.Constants;
 import foundation.icon.iconex.control.Contacts;
@@ -59,6 +55,7 @@ public class ICONexApp extends Application {
     public static int network = 0;
 
     // ========== Preference ================
+    public static boolean permissionConfirm = false;
     public static String version = "";
 
     // ======== ICON Connect ========
@@ -142,12 +139,10 @@ public class ICONexApp extends Application {
 
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
-            Log.d(TAG, "onActivityCreated=" + activity.getLocalClassName());
         }
 
         @Override
         public void onActivityStarted(Activity activity) {
-            Log.d(TAG, "onActivityStarted=" + activity.getLocalClassName());
             if (++running == 1) {
                 // running activity is 1,
                 // app must be returned from background just now (or first launch)

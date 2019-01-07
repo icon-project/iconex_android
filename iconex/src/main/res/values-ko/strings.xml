@@ -22,6 +22,9 @@
     <string name="delete">삭제</string>
     <string name="modified">수정</string>
     <string name="fold">접기</string>
+    <string name="none">없음</string>
+    <string name="camera">카메라</string>
+    <string name="storage">저장공간</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -420,6 +423,15 @@
     <string name="selectNetwork">네트워크 선택</string>
     <string name="networkMain">Main</string>
     <string name="networkTest">Test</string>
+
+    <!-- Permission notice -->
+    <string name="noticeTitle">앱 접근 권한 안내</string>
+    <string name="requiredPermission">[ 필수 접근 권한 ]</string>
+    <string name="optionalPermission">[ 선택 접근 권한 ]</string>
+    <string name="permissionCamera">지갑 주소 또는 Private Key의 QR 코드를 읽기 위해 사용합니다.</string>
+    <string name="permissionStorage">지갑 백업 파일(Keystore 파일)을 저장하고 불러오기 위해 사용합니다.</string>
+    <string name="permissionDetailed1">선택 접근 권한에 동의하지 않아도 서비스 이용이 가능하나, 일부 기능 이용은 제한될 수 있습니다.</string>
+    <string name="permissionDetailed2">휴대폰의 \"설정\" > \"앱\" 권한"에서 권한 설정이 가능합니다.</string>
 
     <!-- ICON Connect -->
     <string name="selectWallet">지갑 선택</string>

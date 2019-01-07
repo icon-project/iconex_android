@@ -2,7 +2,6 @@ package foundation.icon.iconex.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -190,8 +189,6 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onReceiveTransactionList(int totalData, JsonArray txList) {
             txTotalData = totalData;
-            Log.d(TAG, "TxTotal=" + totalData);
-//            WalletDetailActivity.this.txList = new ArrayList<>();
             TxItem txItem;
             for (int i = 0; i < txList.size(); i++) {
                 txItem = new TxItem();

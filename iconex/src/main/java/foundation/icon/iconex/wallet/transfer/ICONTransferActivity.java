@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -313,11 +312,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
                             txtTransSend.setText(String.format("%s USD", strTransUSD));
                         }
-
-//                        if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
-//                            getIrcStepLimit();
-//                            editLimit.setText(minStep.toString());
-//                        }
                         setRemain(amount);
                     }
                 } else {
@@ -1212,9 +1206,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
                     if (response.isSuccessful()) {
                         try {
-                            Log.d(TAG, "result=" + response.body().getResult().getAsString());
                             maxStep = new BigInteger(Utils.remove0x(response.body().getResult().getAsString()), 16);
-                            Log.d(TAG, "maxStep=" + maxStep.toString());
                             preferenceUtil.setMaxStep(maxStep.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1393,8 +1385,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         btnInput.setText(getString(R.string.view));
         btnInput.setSelected(true);
 
-        Log.d(TAG, "Hex string=" + this.data.getData());
-
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         fragmentManager.popBackStackImmediate();
@@ -1439,7 +1429,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     editAddress.setText(barcode.displayValue);
                     setSendEnable();
                 } else {
-                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
             }
         }

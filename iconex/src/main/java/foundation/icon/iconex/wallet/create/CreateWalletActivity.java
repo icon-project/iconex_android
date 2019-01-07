@@ -153,13 +153,20 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
 
         HashMap<String, Fragment> map = pagerAdapter.getFragments();
         if (map.containsKey("step1"))
-            getSupportFragmentManager().putFragment(outState, "step1", map.get("step1"));
+            if (map.get("step1").isAdded())
+                getSupportFragmentManager().putFragment(outState, "step1", map.get("step1"));
+
         if (map.containsKey("step2"))
-            getSupportFragmentManager().putFragment(outState, "step2", map.get("step2"));
+            if (map.get("step2").isAdded())
+                getSupportFragmentManager().putFragment(outState, "step2", map.get("step2"));
+
         if (map.containsKey("step3"))
-            getSupportFragmentManager().putFragment(outState, "step3", map.get("step3"));
+            if (map.get("step3").isAdded())
+                getSupportFragmentManager().putFragment(outState, "step3", map.get("step3"));
+
         if (map.containsKey("step4"))
-            getSupportFragmentManager().putFragment(outState, "step4", map.get("step4"));
+            if (map.get("step4").isAdded())
+                getSupportFragmentManager().putFragment(outState, "step4", map.get("step4"));
     }
 
     @Override

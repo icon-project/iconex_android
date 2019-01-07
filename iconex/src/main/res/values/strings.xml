@@ -22,6 +22,9 @@
     <string name="delete">Delete</string>
     <string name="modified">Edit</string>
     <string name="fold">Fold</string>
+    <string name="none">None</string>
+    <string name="camera">Camera</string>
+    <string name="storage">Storage</string>
 
     <string name="unitUSD">USD</string>
     <string name="unitBTC">BTC</string>
@@ -421,6 +424,15 @@
     <string name="selectNetwork">Select network</string>
     <string name="networkMain">Main</string>
     <string name="networkTest">Test</string>
+
+    <!-- Permission notice -->
+    <string name="noticeTitle">App Permissions</string>
+    <string name="requiredPermission">[ Required ]</string>
+    <string name="optionalPermission">[ Optional ]</string>
+    <string name="permissionCamera">Read QR codes of wallet addresses or private keys.</string>
+    <string name="permissionStorage">Store and restore Keystore files of your wallets.</string>
+    <string name="permissionDetailed1">If you deny these permissions, you may no longer use some features of your device.</string>
+    <string name="permissionDetailed2">You can change these access permission in \"Setting\" > \"App permissions\"</string>
 
     <!-- ICON Connect -->
     <string name="selectWallet">Select Wallet</string>

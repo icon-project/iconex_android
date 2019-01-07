@@ -2,7 +2,6 @@ package foundation.icon.iconex.util;
 
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 

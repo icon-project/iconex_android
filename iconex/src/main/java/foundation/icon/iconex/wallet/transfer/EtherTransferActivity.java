@@ -11,7 +11,6 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -1212,7 +1211,6 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                             && validateAddress(editAddress.getText().toString());
                     btnSend.setEnabled(result);
                 } else {
-                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
             } else {
 

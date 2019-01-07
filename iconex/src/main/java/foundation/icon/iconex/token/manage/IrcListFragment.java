@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,10 +120,6 @@ public class IrcListFragment extends Fragment implements View.OnClickListener {
             String name = token.get("name").getAsString();
             String symbol = token.get("symbol").getAsString();
             int decimal = token.get("decimals").getAsInt();
-
-            Log.d(TAG, "Address=" + score);
-            Log.d(TAG, "Symbol=" + symbol);
-            Log.d(TAG, "Decimals=" + decimal);
 
             irc = new IrcToken(address, score, name, symbol, decimal);
             list.add(irc);

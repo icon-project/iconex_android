@@ -1,5 +1,6 @@
 package foundation.icon;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,10 +12,12 @@ import foundation.icon.connect.ErrorCodes;
 import foundation.icon.connect.IconexConnect;
 import foundation.icon.connect.RequestData;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.PermissionConfirmDialog;
 import foundation.icon.iconex.intro.IntroActivity;
 import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
+import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.wallet.main.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
@@ -63,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
                                         finish();
                                     }
                                 } else
-                                    checkPermission();
+                                    checkPermissionConfirm();
                             }
                         });
                 versionCheck.execute();
@@ -71,7 +74,25 @@ public class SplashActivity extends AppCompatActivity {
         }, 500);
     }
 
-    private void checkPermission() {
+    private void checkPermissionConfirm() {
+        PermissionConfirmDialog dialog = new PermissionConfirmDialog(this, R.style.AppTheme);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                PreferenceUtil preferenceUtil = new PreferenceUtil(SplashActivity.this);
+                preferenceUtil.setPermissionConfirm(true);
+
+                startActivity();
+            }
+        });
+
+        if (!ICONexApp.permissionConfirm)
+            dialog.show();
+        else
+            startActivity();
+    }
+
+    private void startActivity() {
         if (ICONexApp.mWallets.size() > 0) {
             if (ICONexApp.isLocked) {
                 StartAuthenticate startAuthenticate = new StartAuthenticate();
@@ -85,31 +106,6 @@ public class SplashActivity extends AppCompatActivity {
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
             finish();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST: {
-                if (ICONexApp.mWallets.size() > 0) {
-                    if (ICONexApp.isLocked) {
-                        StartAuthenticate startAuthenticate = new StartAuthenticate();
-                        startAuthenticate.execute();
-                    } else {
-                        startActivity(new Intent(SplashActivity.this, MainActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                        finish();
-                    }
-                } else {
-                    startActivity(new Intent(SplashActivity.this, IntroActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
-
-                    finish();
-                }
-                return;
-            }
         }
     }
 

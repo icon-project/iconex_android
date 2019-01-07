@@ -18,6 +18,7 @@ public class PreferenceUtil {
 
     private final String PREF_NAME = "MY_PREFERENCE";
 
+    private final String PREF_PERMISSIONS = "PERMISSIONS";
     private final String PREF_UUID = "UUID";
     private final String PREF_LOCKED = "LOCKED";
     private final String PREF_BEING_LOCK = "BEING_LOCK";
@@ -33,6 +34,16 @@ public class PreferenceUtil {
     public PreferenceUtil(Context context) {
         mContext = context;
         mPreference = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    public void setPermissionConfirm(boolean confirm) {
+        SharedPreferences.Editor editor = mPreference.edit();
+        editor.putBoolean(PREF_PERMISSIONS, confirm);
+        editor.apply();
+    }
+
+    public boolean getPermissionConfrim() {
+        return mPreference.getBoolean(PREF_PERMISSIONS, false);
     }
 
     public void saveUUID(String uuid) {
@@ -155,6 +166,7 @@ public class PreferenceUtil {
     }
 
     public void loadPreference() {
+        ICONexApp.permissionConfirm = getPermissionConfrim();
         ICONexApp.isLocked = getLocked();
         ICONexApp.useFingerprint = getUseFingerprint();
         ICONexApp.network = getNetwork();

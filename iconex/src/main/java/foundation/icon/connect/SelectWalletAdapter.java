@@ -3,7 +3,6 @@ package foundation.icon.connect;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +104,6 @@ public class SelectWalletAdapter extends RecyclerView.Adapter<SelectWalletAdapte
 
     public String getSelected() {
         if (selectedWallet >= 0) {
-            Log.d(TAG, "getSelectedWallet=" + selectedWallet);
             return mList.get(selectedWallet).getAddress();
         }
 
