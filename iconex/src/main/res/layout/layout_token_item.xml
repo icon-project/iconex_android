@@ -8,23 +8,27 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:background="#ededed" />
 
     <TextView
         android:id="@+id/txt_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="24dp"
+        android:layout_toStartOf="@+id/arrow"
+        android:ellipsize="end"
         android:fontFamily="@font/noto_sans_medium"
+        android:maxLines="1"
         android:text="Token"
         android:textColor="@color/colorText"
         android:textSize="16dp" />
 
     <ImageView
+        android:id="@+id/arrow"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentEnd="true"

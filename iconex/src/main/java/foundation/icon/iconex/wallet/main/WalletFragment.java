@@ -377,33 +377,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onRequestSwap(WalletEntry own, WalletEntry coin) {
-                mToken = coin;
-                BasicDialog dialog = new BasicDialog(getActivity());
-                try {
-                    BigInteger tBalance = new BigInteger(coin.getBalance());
-                    if (tBalance.equals(BigInteger.ZERO)) {
-                        dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                        dialog.show();
-                        return;
-                    }
 
-                    BigInteger eBalance = new BigInteger(own.getBalance());
-                    if (eBalance.equals(BigInteger.ZERO)) {
-                        dialog.setMessage(getString(R.string.swapMsgNotEnoughFee));
-                        dialog.show();
-                        return;
-                    }
-
-                    editTextDialog = new EditTextDialog(getActivity(), getString(R.string.enterWalletPassword));
-                    editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                    editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                    editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.SWAP);
-                    editTextDialog.setOnPasswordCallback(mPasswordDialogCallback);
-                    editTextDialog.show();
-                } catch (Exception e) {
-                    dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                    dialog.show();
-                }
             }
         });
         entryRecyclerView.setAdapter(entryRecyclerAdapter);

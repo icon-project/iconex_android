@@ -1,28 +1,24 @@
 package foundation.icon;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import java.util.Locale;
 
 import foundation.icon.connect.Constants;
 import foundation.icon.connect.ErrorCodes;
 import foundation.icon.connect.IconexConnect;
 import foundation.icon.connect.RequestData;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.PermissionConfirmDialog;
 import foundation.icon.iconex.intro.IntroActivity;
 import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
+import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.wallet.main.MainActivity;
-
-import static foundation.icon.ICONexApp.language;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -70,35 +66,33 @@ public class SplashActivity extends AppCompatActivity {
                                         finish();
                                     }
                                 } else
-                                    checkPermission();
+                                    checkPermissionConfirm();
                             }
                         });
                 versionCheck.execute();
             }
         }, 500);
-
-        Locale locale;
-
-        if (language.isEmpty()) {
-            if (Locale.getDefault().getLanguage().equals(MyConstants.LOCALE_KO))
-                language = MyConstants.LOCALE_KO;
-            else
-                language = MyConstants.LOCALE_EN;
-        }
-
-        locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Resources resources = getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
     }
 
-    private void checkPermission() {
+    private void checkPermissionConfirm() {
+        PermissionConfirmDialog dialog = new PermissionConfirmDialog(this, R.style.AppTheme);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                PreferenceUtil preferenceUtil = new PreferenceUtil(SplashActivity.this);
+                preferenceUtil.setPermissionConfirm(true);
+
+                startActivity();
+            }
+        });
+
+        if (!ICONexApp.permissionConfirm)
+            dialog.show();
+        else
+            startActivity();
+    }
+
+    private void startActivity() {
         if (ICONexApp.mWallets.size() > 0) {
             if (ICONexApp.isLocked) {
                 StartAuthenticate startAuthenticate = new StartAuthenticate();
@@ -112,31 +106,6 @@ public class SplashActivity extends AppCompatActivity {
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
             finish();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST: {
-                if (ICONexApp.mWallets.size() > 0) {
-                    if (ICONexApp.isLocked) {
-                        StartAuthenticate startAuthenticate = new StartAuthenticate();
-                        startAuthenticate.execute();
-                    } else {
-                        startActivity(new Intent(SplashActivity.this, MainActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                        finish();
-                    }
-                } else {
-                    startActivity(new Intent(SplashActivity.this, IntroActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
-
-                    finish();
-                }
-                return;
-            }
         }
     }
 

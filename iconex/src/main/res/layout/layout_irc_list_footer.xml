@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    android:paddingEnd="24dp"
-    android:paddingStart="24dp">
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,10 +21,11 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_b"
         android:gravity="center"
         android:text="@string/enterTokenInfo"
+        android:textAllCaps="false"
         android:textColor="@color/button_text"
-        android:textSize="13dp"
-        android:background="@drawable/bg_button_b"/>
+        android:textSize="13dp" />
 
 </LinearLayout>

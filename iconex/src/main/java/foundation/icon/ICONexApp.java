@@ -1,21 +1,15 @@
 package foundation.icon;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import foundation.icon.connect.Constants;
 import foundation.icon.iconex.control.Contacts;
@@ -53,7 +47,7 @@ public class ICONexApp extends Application {
     // ========== App Lock ================
     public static boolean isLocked = false;
     public static boolean useFingerprint = false;
-    public static String language = "";
+//    public static String language = "";
 
     private Handler lockTimeLimiter = new Handler();
 
@@ -61,6 +55,7 @@ public class ICONexApp extends Application {
     public static int network = 0;
 
     // ========== Preference ================
+    public static boolean permissionConfirm = false;
     public static String version = "";
 
     // ======== ICON Connect ========
@@ -90,8 +85,6 @@ public class ICONexApp extends Application {
 
         loadPreferences();
 
-        setLanguage();
-
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
     }
 
@@ -115,27 +108,6 @@ public class ICONexApp extends Application {
     private void loadPreferences() {
         PreferenceUtil mPreference = new PreferenceUtil(getApplicationContext());
         mPreference.loadPreference();
-    }
-
-    private void setLanguage() {
-        Locale locale;
-
-        if (language.isEmpty()) {
-            if (Locale.getDefault().getLanguage().equals(MyConstants.LOCALE_KO))
-                language = MyConstants.LOCALE_KO;
-            else
-                language = MyConstants.LOCALE_EN;
-        }
-
-        locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Resources resources = getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
 
     public static AppStatus mAppStatus = AppStatus.BACKGROUND;

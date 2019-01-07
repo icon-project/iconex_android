@@ -20,7 +20,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,7 +45,6 @@ import foundation.icon.iconex.intro.auth.AuthActivity;
 import foundation.icon.iconex.menu.DrawerMenuFragment;
 import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
-import foundation.icon.iconex.menu.language.SettingLanguageActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
@@ -334,7 +332,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
 
-        mService.stopGetBalance();
+        if (mService != null)
+            mService.stopGetBalance();
 
         // Unbind from the service
         isForeground = false;
@@ -350,6 +349,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (getIntent().getExtras() != null) {
+            MyConstants.MainPopUp popUp = (MyConstants.MainPopUp) getIntent().getExtras().get("popup");
+            if (popUp == MyConstants.MainPopUp.BUNDLE) {
+                BasicDialog dialog = new BasicDialog(this);
+                dialog.setMessage(getString(R.string.msgLoadBundle));
+                dialog.show();
+            }
+        }
+
         isFingerprintInvalidated = getIntent().getBooleanExtra(AuthActivity.EXTRA_INVALIDATED, false);
 
         collapsing = findViewById(R.id.collapsing);
@@ -359,8 +367,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 int totalRange = appBarLayout.getTotalScrollRange();
-                Log.d(TAG, "AppBar Total Range=" + totalRange);
-                Log.d(TAG, "verticalOffset=" + verticalOffset);
 
                 appbarPosition = verticalOffset;
                 if (appbarPosition == 0)
@@ -916,8 +922,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (menu == DrawerMenuFragment.SIDE_MENU.SETTING_LOCK) {
             startActivity(new Intent(this, SettingLockActivity.class)
                     .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.DEFAULT));
-        } else if (menu == DrawerMenuFragment.SIDE_MENU.SETTING_LANGUAGE) {
-            startActivity(new Intent(this, SettingLanguageActivity.class));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.APP_INFO) {
             startActivity(new Intent(this, AppInfoActivity.class));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.ICONex_DISCLAIMER) {
@@ -955,7 +959,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onDown(MotionEvent e) {
-        Log.d(TAG, "onDown");
         return false;
     }
 

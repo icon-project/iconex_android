@@ -32,6 +32,7 @@
 
         <activity
             android:name="foundation.icon.SplashActivity"
+            android:configChanges="fontScale"
             android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -42,122 +43,138 @@
         </activity>
         <activity
             android:name=".intro.auth.AuthActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".intro.ResetPasscodeActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".intro.IntroActivity"
+            android:configChanges="fontScale|locale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".wallet.create.CreateWalletActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".wallet.load.LoadWalletActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
             android:name=".dialogs.BottomItemSelectActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
         <activity
             android:name=".wallet.main.MainActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".wallet.detail.WalletDetailActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".menu.WalletAddressCodeActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".wallet.transfer.ICONTransferActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
             android:name=".barcode.BarcodeCaptureActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:label="Read Barcode"
             android:screenOrientation="portrait" />
         <activity
             android:name=".wallet.contacts.ContactsActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".menu.WalletBackUpActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".menu.ViewWalletInfoActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".menu.WalletPwdChangeActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
             android:name=".menu.bundle.ExportWalletBundleActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
             android:name=".wallet.transfer.EtherTransferActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
             android:name=".token.manage.TokenManageActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
             android:name=".menu.lock.SettingLockActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
-        <activity
-            android:name=".menu.language.SettingLanguageActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".wallet.load.LoadBundleActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".token.swap.TokenSwapActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
-        <activity
             android:name=".service.NetworkErrorActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".menu.appInfo.AppInfoActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="foundation.icon.connect.SelectWalletActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="foundation.icon.connect.EnterPasswordActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible|adjustNothing" />
         <activity
             android:name="foundation.icon.connect.SendTxActivity"
+            android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />

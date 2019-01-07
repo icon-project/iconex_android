@@ -105,10 +105,6 @@ public class DrawerMenuFragment extends Fragment implements View.OnClickListener
                 mListener.onMenuClicked(SIDE_MENU.SETTING_LOCK);
                 break;
 
-            case R.id.menu_setting_language:
-                mListener.onMenuClicked(SIDE_MENU.SETTING_LANGUAGE);
-                break;
-
             case R.id.menu_app_info:
                 mListener.onMenuClicked(SIDE_MENU.APP_INFO);
                 break;
@@ -134,7 +130,6 @@ public class DrawerMenuFragment extends Fragment implements View.OnClickListener
         IMPORT_WALLET,
         EXPORT_WALLET_BUNDLE,
         SETTING_LOCK,
-        SETTING_LANGUAGE,
         APP_INFO,
         ICONex_DISCLAIMER
     }

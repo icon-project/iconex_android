@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 
 /**
  * Created by js on 2018. 5. 27..

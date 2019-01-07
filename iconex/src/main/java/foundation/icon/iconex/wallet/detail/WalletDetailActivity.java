@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -190,8 +189,6 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onReceiveTransactionList(int totalData, JsonArray txList) {
             txTotalData = totalData;
-            Log.d(TAG, "TxTotal=" + totalData);
-//            WalletDetailActivity.this.txList = new ArrayList<>();
             TxItem txItem;
             for (int i = 0; i < txList.size(); i++) {
                 txItem = new TxItem();
@@ -751,32 +748,6 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         public void onSwap() {
-            BasicDialog dialog = new BasicDialog(WalletDetailActivity.this);
-            try {
-                BigInteger tBalance = new BigInteger(selectedEntry.getBalance());
-                if (tBalance.equals(BigInteger.ZERO)) {
-                    dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                    dialog.show();
-                    return;
-                }
-
-                BigInteger eBalance = new BigInteger(mWallet.getWalletEntries().get(0).getBalance());
-                if (eBalance.equals(BigInteger.ZERO)) {
-                    dialog.setMessage(getString(R.string.swapMsgNotEnoughFee));
-                    dialog.show();
-                    return;
-                }
-
-                editTextDialog = new EditTextDialog(WalletDetailActivity.this, getString(R.string.enterWalletPassword));
-                editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.SWAP);
-                editTextDialog.setOnPasswordCallback(mPasswordDialogCallback);
-                editTextDialog.show();
-            } catch (Exception e) {
-                dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                dialog.show();
-            }
         }
 
         @Override

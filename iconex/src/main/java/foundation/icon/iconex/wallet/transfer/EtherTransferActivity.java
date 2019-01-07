@@ -11,7 +11,6 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -706,7 +705,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                         editSend.setText("");
                         lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                         txtSendWarning.setVisibility(View.VISIBLE);
-                        txtSendWarning.setText(getString(R.string.errNeedFee));
+                        txtSendWarning.setText(getString(R.string.errETHFee));
                     } else {
                         editSend.setText(ConvertUtil.getValue(balance.subtract(bigFee), mWalletEntry.getDefaultDec()));
                         setSendEnable();
@@ -958,7 +957,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             if (sendAmount.equals(BigInteger.ZERO)) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNonZero));
+                txtSendWarning.setText(getString(R.string.errETHFee));
 
                 return false;
             } else if (balance.compareTo(sendAmount) < 0) {
@@ -970,7 +969,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             } else if (canICX.compareTo(sendAmount) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNeedFee));
+                txtSendWarning.setText(getString(R.string.errETHFee));
 
                 return false;
             }
@@ -981,7 +980,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             if (sendAmount.equals(BigInteger.ZERO)) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNonZero));
+                txtSendWarning.setText(getString(R.string.errETHFee));
 
                 return false;
             } else if (balance.compareTo(sendAmount) < 0) {
@@ -993,7 +992,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             } else if (ownBalance.compareTo(fee) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errEthOwnNotEnough));
+                txtSendWarning.setText(getString(R.string.errETHFee));
 
                 return false;
             }
@@ -1025,20 +1024,20 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             if (address.length() != 40) {
                 lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errCheckAddress));
+                txtAddrWarning.setText(getString(R.string.errIncorrectETHAddr));
 
                 return false;
             }
         } else if (address.contains(" ")) {
             lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+            txtAddrWarning.setText(getString(R.string.errIncorrectETHAddr));
 
             return false;
         } else {
             lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+            txtAddrWarning.setText(getString(R.string.errIncorrectETHAddr));
 
             return false;
         }
@@ -1212,7 +1211,6 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                             && validateAddress(editAddress.getText().toString());
                     btnSend.setEnabled(result);
                 } else {
-                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
             } else {
 

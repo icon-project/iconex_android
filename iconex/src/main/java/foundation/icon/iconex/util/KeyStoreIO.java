@@ -2,7 +2,6 @@ package foundation.icon.iconex.util;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

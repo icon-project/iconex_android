@@ -2,7 +2,6 @@ package foundation.icon.connect;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -161,13 +160,11 @@ public class IconexConnect {
         iconService.call(call).execute(new Callback<RpcItem>() {
             @Override
             public void onSuccess(RpcItem result) {
-                Log.d(TAG, "getStepPrice=" + result.asString());
                 try {
                     stepPrice = ConvertUtil.hexStringToBigInt(result.toString(), 18);
                 } catch (Exception e) {
 
                 }
-                Log.d(TAG, "stepPrice=" + stepPrice.toString());
                 getStepCosts(method);
             }
 
@@ -194,11 +191,8 @@ public class IconexConnect {
             public void onSuccess(RpcItem result) {
                 RpcObject object = result.asObject();
                 defaultLimit = object.getItem("default").asInteger();
-                Log.d(TAG, "default=" + defaultLimit.toString());
                 contractCall = object.getItem("contractCall").asInteger();
-                Log.d(TAG, "contractCall=" + contractCall.toString());
                 inputLimit = object.getItem("input").asInteger();
-                Log.d(TAG, "input=" + inputLimit.toString());
 
                 if (method == Constants.Method.SendICX)
                     txFee = stepPrice.multiply(defaultLimit);
@@ -235,7 +229,6 @@ public class IconexConnect {
             @Override
             public void onSuccess(RpcItem result) {
                 try {
-                    Log.d(TAG, "getMaxLimit result=" + result.asInteger());
                     maxLimit = result.asInteger();
 
                     getBalance();

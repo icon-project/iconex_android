@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,7 +15,6 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
@@ -122,8 +120,6 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
 
             bundle.add(wallet);
         }
-
-        Log.d(TAG, "Bundle=" + bundle.toString());
 
         try {
             KeyStoreIO.exportBundle(bundle);

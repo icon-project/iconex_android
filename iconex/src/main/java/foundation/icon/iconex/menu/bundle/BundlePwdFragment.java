@@ -81,10 +81,6 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
                     int result = PasswordValidator.validatePassword(editPwd.getText().toString());
                     switch (result) {
-                        case PasswordValidator.EMPTY:
-                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
-                            break;
-
                         case PasswordValidator.LEAST_8:
                             showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
                             break;
@@ -158,7 +154,6 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                     lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
                     if (editCheck.getText().toString().isEmpty()) {
-                        showWarning(lineCheck, txtCheckWarning, getString(R.string.errCheckEmpty));
                         btnExport.setEnabled(false);
                     } else {
                         if (editPwd.getText().toString().isEmpty()) {

@@ -2,6 +2,7 @@ package foundation.icon.iconex.wallet.load;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -11,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -48,6 +50,23 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        viewPagerAdapter = new LoadWalletViewPagerAdapter(getSupportFragmentManager());
+
+        if (savedInstanceState != null) {
+            HashMap<String, Fragment> fragments = new HashMap<>();
+            if (getSupportFragmentManager().getFragment(savedInstanceState, "keystore") != null)
+                fragments.put("keystore", getSupportFragmentManager().getFragment(savedInstanceState, "keystore"));
+            if (getSupportFragmentManager().getFragment(savedInstanceState, "name") != null)
+                fragments.put("name", getSupportFragmentManager().getFragment(savedInstanceState, "name"));
+            if (getSupportFragmentManager().getFragment(savedInstanceState, "private") != null)
+                fragments.put("private", getSupportFragmentManager().getFragment(savedInstanceState, "private"));
+            if (getSupportFragmentManager().getFragment(savedInstanceState, "info") != null)
+                fragments.put("info", getSupportFragmentManager().getFragment(savedInstanceState, "info"));
+
+            viewPagerAdapter.setFragments(fragments);
+        }
+
         setContentView(R.layout.activity_load_wallet);
 
         ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.titleLoadWallet));
@@ -76,7 +95,23 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
         });
 
         viewPager = findViewById(R.id.load_view_pager);
-        viewPager.setAdapter(new LoadWalletViewPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(viewPagerAdapter);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        HashMap<String, Fragment> fragments = viewPagerAdapter.getFragments();
+
+        if (fragments.containsKey("keystore"))
+            getSupportFragmentManager().putFragment(outState, "keystore", fragments.get("keystore"));
+        if (fragments.containsKey("name"))
+            getSupportFragmentManager().putFragment(outState, "name", fragments.get("name"));
+        if (fragments.containsKey("private"))
+            getSupportFragmentManager().putFragment(outState, "private", fragments.get("private"));
+        if (fragments.containsKey("info"))
+            getSupportFragmentManager().putFragment(outState, "info", fragments.get("info"));
     }
 
     private ArrayList<BundleItem> makeList() {
@@ -295,7 +330,8 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
                 try {
                     addBundle();
                     startActivity(new Intent(LoadWalletActivity.this, MainActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .putExtra("popup", MyConstants.MainPopUp.BUNDLE));
                     finish();
                 } catch (Exception e) {
                     // TODO: 2018. 5. 5. Notify to user that load has failed.

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -147,8 +146,6 @@ public class MainActivity extends Activity {
                 .putExtra("caller", "foundation.icon.sample_iconex_connect")
                 .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
 
-        Log.d(TAG, "sendBroadcast");
-        Log.d(TAG, "action=" + intent.getAction());
         sendBroadcast(intent);
     }
 
@@ -244,7 +241,6 @@ public class MainActivity extends Activity {
     private class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("MainActivity", "onReceive!!");
             if (intent.getAction().equals(SampleApp.LOCAL_ACTION)) {
                 int id = intent.getIntExtra("id", -1);
                 switch (id) {
