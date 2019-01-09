@@ -1,7 +1,5 @@
 package foundation.icon.iconex.util;
 
-import android.util.Log;
-
 import java.math.BigInteger;
 
 /**

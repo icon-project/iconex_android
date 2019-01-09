@@ -21,13 +21,15 @@
             app:elevation="0dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll|snap">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/layout_appbar"
@@ -79,14 +81,56 @@
                                 android:textColor="@color/text_main_appbar_selector"
                                 android:textSize="12dp" />
                         </LinearLayout>
-
                     </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_refresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/img_refresh_circle"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_refresh_01" />
+
+                            <ImageView
+                                android:id="@+id/img_refresh_orbit"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_refresh_02" />
+
+                            <ProgressBar
+                                android:id="@+id/prog_refresh"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:indeterminateDrawable="@drawable/anim_loading"
+                                android:visibility="invisible" />
+                        </RelativeLayout>
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layout_asset"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/layout_appbar"
                         android:layout_marginTop="12dp"
                         android:gravity="center_horizontal"
                         android:orientation="vertical">
@@ -105,7 +149,7 @@
                                 android:gravity="center"
                                 android:text="@string/totalAssetValuationAmount"
                                 android:textColor="@color/colorWhite50"
-                                android:textSize="13sp" />
+                                android:textSize="13dp" />
 
                             <ImageView
                                 android:layout_width="13dp"
@@ -193,7 +237,7 @@
                                 android:textSize="11dp" />
                         </LinearLayout>
                     </LinearLayout>
-                </RelativeLayout>
+                </LinearLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -219,198 +263,6 @@
             android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </android.support.design.widget.CoordinatorLayout>
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/menu_view"-->
-    <!--android:layout_width="290dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_gravity="start"-->
-    <!--android:background="@color/colorWhite"-->
-    <!--android:orientation="vertical"-->
-    <!--tools:contefoundation.icon.iconex.wallet.menu.DrawerMenuFragmentment">-->
-
-    <!--<Button-->
-    <!--android:id="@+id/btn_close"-->
-    <!--android:layout_width="24dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:layout_gravity="end"-->
-    <!--android:layout_marginEnd="24dp"-->
-    <!--android:layout_marginTop="16dp"-->
-    <!--android:background="@drawable/ic_sidemenu_close" />-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="14dp"-->
-    <!--android:orientation="vertical"-->
-    <!--android:paddingEnd="36dp"-->
-    <!--android:paddingStart="24dp">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="98dp"-->
-    <!--android:layout_height="26dp"-->
-    <!--android:src="@drawable/logo_iconex_sidemenu" />-->
-
-    <!--<View-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="2dp"-->
-    <!--android:layout_marginTop="20dp"-->
-    <!--android:background="@color/colorText" />-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/menu_create_wallet"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="60dp"-->
-    <!--android:layout_marginTop="15dp"-->
-    <!--android:gravity="center_vertical"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="24dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:src="@drawable/ic_side_wallet_make" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginStart="12dp"-->
-    <!--android:lineSpacingExtra="10sp"-->
-    <!--android:text="@string/titleCreateWallet"-->
-    <!--android:textColor="@color/colorText"-->
-    <!--android:textSize="14sp" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/menu_import_wallet"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="60dp"-->
-    <!--android:gravity="center_vertical"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="24dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:src="@drawable/ic_side_wallet_import" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginStart="12dp"-->
-    <!--android:lineSpacingExtra="10sp"-->
-    <!--android:text="@string/titleLoadWallet"-->
-    <!--android:textColor="@color/colorText"-->
-    <!--android:textSize="14sp" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/menu_export_wallet_bundle"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="60dp"-->
-    <!--android:gravity="center_vertical"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="24dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:src="@drawable/ic_side_request" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginStart="12dp"-->
-    <!--android:lineSpacingExtra="10sp"-->
-    <!--android:text="@string/exportWalletBundle"-->
-    <!--android:textColor="@color/colorText"-->
-    <!--android:textSize="14sp" />-->
-    <!--</LinearLayout>-->
-
-    <!--<View-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="2dp"-->
-    <!--android:layout_marginTop="15dp"-->
-    <!--android:background="@color/colorText" />-->
-    <!--</LinearLayout>-->
-
-    <!--<ScrollView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical"-->
-    <!--android:paddingEnd="24dp"-->
-    <!--android:paddingStart="24dp">-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/menu_setting_lock"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="60dp"-->
-    <!--android:layout_marginTop="15dp"-->
-    <!--android:gravity="center_vertical"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="24dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:src="@drawable/ic_side_lock" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginStart="12dp"-->
-    <!--android:lineSpacingExtra="10sp"-->
-    <!--android:text="@string/settingLock"-->
-    <!--android:textColor="@color/colorText"-->
-    <!--android:textSize="14sp" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/menu_setting_language"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="60dp"-->
-    <!--android:gravity="center_vertical"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="24dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:src="@drawable/ic_side_language" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginStart="12dp"-->
-    <!--android:lineSpacingExtra="10sp"-->
-    <!--android:text="@string/settingLanguage"-->
-    <!--android:textColor="@color/colorText"-->
-    <!--android:textSize="14sp" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/menu_disclaimers"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="60dp"-->
-    <!--android:gravity="center_vertical"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="24dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:src="@drawable/ic_side_article" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginStart="12dp"-->
-    <!--android:lineSpacingExtra="10sp"-->
-    <!--android:text="@string/iCONexDisclaimers"-->
-    <!--android:textColor="@color/colorText"-->
-    <!--android:textSize="14sp" />-->
-    <!--</LinearLayout>-->
-    <!--</LinearLayout>-->
-    <!--</ScrollView>-->
-    <!--</LinearLayout>-->
 
     <FrameLayout
         android:id="@+id/fragment_address"

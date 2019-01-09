@@ -12,7 +12,6 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 
-import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -82,6 +81,9 @@ public class BundleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 itemHolder.txtSymbol.setTextColor(mContext.getResources().getColor(R.color.colorText30));
                 itemHolder.txtRegistered.setVisibility(View.VISIBLE);
             } else {
+                itemHolder.txtAlias.setTextColor(mContext.getResources().getColor(R.color.colorText));
+                itemHolder.txtBalance.setTextColor(mContext.getResources().getColor(R.color.colorText));
+                itemHolder.txtSymbol.setTextColor(mContext.getResources().getColor(R.color.colorText));
                 itemHolder.txtRegistered.setVisibility(View.GONE);
             }
         }
@@ -145,7 +147,7 @@ public class BundleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         String strTotal = getColoredSpanned(mContext.getString(R.string.loadBundleTotal, total), "#262626");
         String strRegisterd = getColoredSpanned(mContext.getString(R.string.loadBundleRegistered, registered), "#1aaaba");
 
-        if (ICONexApp.language.equals(MyConstants.LOCALE_KO))
+        if (Locale.getDefault().getLanguage().equals(MyConstants.LOCALE_KO))
             view.setText(Html.fromHtml(strTotal + " " + strRegisterd));
         else
             view.setText(Html.fromHtml(strRegisterd + " " + strTotal));

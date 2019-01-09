@@ -25,6 +25,6 @@
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
             android:orientation="vertical"
-            app:layoutManager="LinearLayoutManager" />
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
     </foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout>
 </LinearLayout>

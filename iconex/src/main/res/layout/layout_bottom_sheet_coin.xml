@@ -8,15 +8,17 @@
 
     <TextView
         android:id="@+id/txt_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
+        android:ellipsize="end"
         android:fontFamily="@font/noto_sans_medium"
+        android:maxLines="1"
         android:text="ICON"
         android:textColor="@color/colorText"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/txt_symbol"
@@ -28,7 +30,7 @@
         android:fontFamily="@font/noto_sans_light"
         android:text="@string/unitICX"
         android:textColor="@color/colorText"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/txt_balance"
@@ -41,7 +43,7 @@
         android:fontFamily="@font/nanum_square_bold"
         android:text="-.-"
         android:textColor="@color/colorText"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <View
         android:layout_width="match_parent"

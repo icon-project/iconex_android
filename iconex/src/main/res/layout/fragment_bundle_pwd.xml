@@ -20,7 +20,7 @@
             android:fontFamily="@font/noto_sans_bold"
             android:text="@string/bundlePwdHeader"
             android:textColor="@color/colorText"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -42,7 +42,7 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/bundlePwdDetailed1"
                 android:textColor="@color/colorText"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,7 +64,7 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/bundlePwdDetailed2"
                 android:textColor="@color/colorText"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:text="@string/bundlePwd"
             android:textColor="@color/colorText"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -140,7 +140,7 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/errPassword"
                 android:textColor="@color/colorWarning"
-                android:textSize="10sp"
+                android:textSize="10dp"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -198,7 +198,7 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/errPassword"
                 android:textColor="@color/colorWarning"
-                android:textSize="10sp"
+                android:textSize="10dp"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

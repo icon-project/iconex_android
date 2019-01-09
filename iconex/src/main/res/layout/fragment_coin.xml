@@ -38,7 +38,7 @@
                 android:fontFamily="@font/noto_sans_medium"
                 android:text="Wallet"
                 android:textColor="@color/colorText"
-                android:textSize="18sp" />
+                android:textSize="18dp" />
         </RelativeLayout>
 
         <RelativeLayout

@@ -13,7 +13,7 @@
         android:clipToPadding="false"
         android:orientation="vertical"
         android:paddingBottom="72dp"
-        app:layoutManager="LinearLayoutManager" />
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
     <RelativeLayout
         android:layout_width="match_parent"

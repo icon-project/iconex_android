@@ -22,6 +22,5 @@
         android:fontFamily="@font/noto_sans_medium"
         android:gravity="center_horizontal"
         android:textColor="@color/colorWhite"
-        android:textSize="18sp" />
-
+        android:textSize="18dp" />
 </RelativeLayout>

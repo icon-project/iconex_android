@@ -15,15 +15,18 @@
 
         <TextView
             android:id="@+id/txt_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_detail"
+            android:ellipsize="end"
             android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:maxLines="1"
             android:text="Name"
             android:textColor="@color/colorText"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
         <ImageView
             android:id="@+id/btn_detail"
@@ -90,7 +93,7 @@
                     android:gravity="end"
                     android:text="-"
                     android:textColor="@color/colorMain"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/txt_trans_unit"

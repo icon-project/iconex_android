@@ -20,7 +20,7 @@
             android:gravity="center"
             android:text="@string/confirmTxInfo"
             android:textColor="@color/colorText"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <View
@@ -38,7 +38,7 @@
             android:gravity="start|center_vertical"
             android:text="Send amount"
             android:textColor="#262626"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/txt_send_amount"
@@ -50,7 +50,7 @@
             android:letterSpacing="-0.05"
             android:text="-.-"
             android:textColor="@color/colorMain"
-            android:textSize="11sp" />
+            android:textSize="11dp" />
 
         <TextView
             android:id="@+id/txt_fee"
@@ -61,7 +61,7 @@
             android:gravity="start|center_vertical"
             android:text="FEE"
             android:textColor="@color/colorText"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/txt_fee_amount"
@@ -73,7 +73,7 @@
             android:letterSpacing="-0.05"
             android:text="-.-"
             android:textColor="@color/colorMain"
-            android:textSize="11sp" />
+            android:textSize="11dp" />
 
         <View
             android:layout_width="match_parent"
@@ -89,7 +89,7 @@
             android:gravity="start|center_vertical"
             android:text="@string/receivingAddress"
             android:textColor="@color/colorText"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/txt_to_address"
@@ -101,7 +101,7 @@
             android:gravity="center_horizontal"
             android:text="Address"
             android:textColor="@color/colorMain"
-            android:textSize="11sp"
+            android:textSize="11dp"
             android:textStyle="bold" />
     </LinearLayout>
 

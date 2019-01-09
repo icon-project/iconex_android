@@ -17,7 +17,7 @@
         android:fontFamily="@font/noto_sans_bold"
         android:text="@string/loadByPrivateKeyHeader"
         android:textColor="@color/colorText"
-        android:textSize="14sp"
+        android:textSize="14dp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -44,7 +44,7 @@
             android:gravity="start|center_vertical"
             android:text="@string/loadByPrivateKeySub"
             android:textColor="@color/colorText70"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
     </LinearLayout>
 
     <TextView
@@ -58,7 +58,7 @@
         android:fontFamily="@font/noto_sans_bold"
         android:text="@string/selectCoin"
         android:textColor="@color/colorText"
-        android:textSize="14sp"
+        android:textSize="14dp"
         android:textStyle="bold" />
 
     <foundation.icon.iconex.widgets.DropdownLayout
@@ -90,7 +90,7 @@
             android:paddingStart="24dp"
             android:text="@string/privateKey"
             android:textColor="@color/colorText"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <RelativeLayout
@@ -174,7 +174,7 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/errPassword"
                 android:textColor="@color/colorWarning"
-                android:textSize="10sp"
+                android:textSize="10dp"
                 android:visibility="invisible" />
         </RelativeLayout>
 

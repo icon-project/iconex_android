@@ -2,7 +2,6 @@ package foundation.icon.iconex.wallet.main;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,7 @@ public class WalletNameRecyclerAdapter extends RecyclerView.Adapter<WalletNameRe
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.myTextView.getLayoutParams();
         if (position == 0) {
             layoutParams.setMargins((int) mContext.getResources().getDimension(R.dimen.dp16), 0, 0, 0);
-        } else if (position == mData.size()-1) {
+        } else if (position == mData.size() - 1) {
             layoutParams.setMargins(0, 0, (int) mContext.getResources().getDimension(R.dimen.dp16), 0);
         } else {
             layoutParams.setMargins((int) mContext.getResources().getDimension(R.dimen.dp6), 0, 0, 0);

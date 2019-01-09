@@ -12,8 +12,8 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="end"
-        android:layout_marginEnd="24dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/ic_sidemenu_close" />
 
     <LinearLayout
@@ -21,8 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:orientation="vertical"
-        android:paddingEnd="36dp"
-        android:paddingStart="24dp">
+        android:paddingStart="24dp"
+        android:paddingEnd="36dp">
 
         <ImageView
             android:layout_width="98dp"
@@ -53,10 +53,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:fontFamily="@font/noto_sans_regular"
-                android:lineSpacingExtra="10sp"
+                android:lineSpacingExtra="10dp"
                 android:text="@string/titleCreateWallet"
                 android:textColor="@color/colorText"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,10 +76,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:fontFamily="@font/noto_sans_regular"
-                android:lineSpacingExtra="10sp"
+                android:lineSpacingExtra="10dp"
                 android:text="@string/titleLoadWallet"
                 android:textColor="@color/colorText"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -99,10 +99,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:fontFamily="@font/noto_sans_regular"
-                android:lineSpacingExtra="10sp"
+                android:lineSpacingExtra="10dp"
                 android:text="@string/exportWalletBundle"
                 android:textColor="@color/colorText"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <View
@@ -120,8 +120,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingEnd="24dp"
-            android:paddingStart="24dp">
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
 
             <LinearLayout
                 android:id="@+id/menu_setting_lock"
@@ -141,10 +141,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:fontFamily="@font/noto_sans_regular"
-                    android:lineSpacingExtra="10sp"
+                    android:lineSpacingExtra="10dp"
                     android:text="@string/settingLock"
                     android:textColor="@color/colorText"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -152,7 +152,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -164,10 +165,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:fontFamily="@font/noto_sans_regular"
-                    android:lineSpacingExtra="10sp"
+                    android:lineSpacingExtra="10dp"
                     android:text="@string/settingLanguage"
                     android:textColor="@color/colorText"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <RelativeLayout
@@ -192,10 +193,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:fontFamily="@font/noto_sans_regular"
-                        android:lineSpacingExtra="10sp"
+                        android:lineSpacingExtra="10dp"
                         android:text="@string/appInfo"
                         android:textColor="@color/colorText"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/new_version"
@@ -238,10 +239,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:fontFamily="@font/noto_sans_regular"
-                    android:lineSpacingExtra="10sp"
+                    android:lineSpacingExtra="10dp"
                     android:text="@string/ICONexDisclaimers"
                     android:textColor="@color/colorText"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

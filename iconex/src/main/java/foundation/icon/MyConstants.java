@@ -103,4 +103,8 @@ public class MyConstants {
         NO_ENROLLED,
         PASSCODE
     }
+
+    public enum MainPopUp {
+        BUNDLE
+    }
 }

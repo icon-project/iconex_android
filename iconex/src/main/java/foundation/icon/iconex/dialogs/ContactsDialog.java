@@ -103,6 +103,9 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
                 if (s.length() > 0) {
                     if (s.toString().trim().isEmpty()) {
                         editName.setText("");
+                    } else if (s.charAt(0) == ' ') {
+                        editName.setText(beforeStr);
+                        editName.setSelection(beforeStr.length());
                     } else {
                         if (Utils.checkByteLength(s.toString()) > 16) {
                             editName.setText(beforeStr);
@@ -264,13 +267,13 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
     }
 
     private boolean validateName(String name) {
-        if (name.trim().length() == 0) {
-            lineName.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
-            txtNameWarning.setText(mContext.getString(R.string.errNoAddressName));
-            txtNameWarning.setVisibility(View.VISIBLE);
-
-            return false;
-        }
+//        if (name.trim().length() == 0) {
+//            lineName.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
+//            txtNameWarning.setText(mContext.getString(R.string.errNoAddressName));
+//            txtNameWarning.setVisibility(View.VISIBLE);
+//
+//            return false;
+//        }
 
         if (mCoinType.equals(loopchain.icon.wallet.core.Constants.KS_COINTYPE_ICX)) {
             for (Contacts contacts : ICONexApp.ICXContacts) {
@@ -317,7 +320,7 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
                         if (contacts.getAddress().equals(address)) {
                             lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
                             txtAddrWarning.setVisibility(View.VISIBLE);
-                            txtAddrWarning.setText(mContext.getString(R.string.errDuplicateContactsAddr));
+                            txtAddrWarning.setText(mContext.getString(R.string.errDupICXAddress));
                             return false;
                         }
                     }
@@ -341,7 +344,7 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
                         if (contacts.getAddress().equals(address)) {
                             lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));
                             txtAddrWarning.setVisibility(View.VISIBLE);
-                            txtAddrWarning.setText(mContext.getString(R.string.errDuplicateContactsAddr));
+                            txtAddrWarning.setText(mContext.getString(R.string.errDupETHAddress));
                             return false;
                         }
                     }

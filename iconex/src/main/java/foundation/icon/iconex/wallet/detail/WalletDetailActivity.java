@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -39,15 +38,14 @@ import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.dialogs.SearchConditionDialog;
 import foundation.icon.iconex.dialogs.TrackerDialog;
 import foundation.icon.iconex.intro.IntroActivity;
-import foundation.icon.iconex.realm.RealmUtil;
-import foundation.icon.iconex.service.NetworkService;
-import foundation.icon.iconex.token.manage.TokenManageActivity;
-import foundation.icon.iconex.token.swap.TokenSwapActivity;
-import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.menu.WalletAddressCodeActivity;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
+import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.service.NetworkService;
+import foundation.icon.iconex.token.manage.TokenManageActivity;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
 import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import foundation.icon.iconex.widgets.RefreshLayout.LoadingHeaderView;
@@ -55,7 +53,6 @@ import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
-import loopchain.icon.wallet.service.crypto.PKIUtils;
 
 import static foundation.icon.MyConstants.EXCHANGE_BTC;
 import static foundation.icon.MyConstants.EXCHANGE_ETH;
@@ -192,8 +189,6 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onReceiveTransactionList(int totalData, JsonArray txList) {
             txTotalData = totalData;
-            Log.d(TAG, "TxTotal=" + totalData);
-//            WalletDetailActivity.this.txList = new ArrayList<>();
             TxItem txItem;
             for (int i = 0; i < txList.size(); i++) {
                 txItem = new TxItem();
@@ -505,24 +500,6 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                             startActivity(new Intent(WalletDetailActivity.this, WalletBackUpActivity.class)
                                     .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
-                        } else if (result == EditTextDialog.RESULT_PWD.SWAP) {
-
-                            try {
-                                Intent swapIntent = new Intent(WalletDetailActivity.this, TokenSwapActivity.class);
-                                swapIntent.putExtra(TokenSwapActivity.ARG_WALLET, (Serializable) mWallet);
-                                swapIntent.putExtra(TokenSwapActivity.ARG_TOKEN, (Serializable) selectedEntry);
-                                String address = PKIUtils.makeAddressFromPrivateKey(bytePrivKey, Constants.KS_COINTYPE_ICX);
-                                if (hasSwapWallet(address))
-                                    swapIntent.putExtra(TokenSwapActivity.ARG_TYPE, TokenSwapActivity.TYPE_SWAP.EXIST);
-                                else
-                                    swapIntent.putExtra(TokenSwapActivity.ARG_TYPE, TokenSwapActivity.TYPE_SWAP.NO_WALLET);
-                                swapIntent.putExtra(TokenSwapActivity.ARG_ICX_ADDR, address);
-                                swapIntent.putExtra(TokenSwapActivity.ARG_PRIV, Hex.toHexString(bytePrivKey));
-
-                                startActivityForResult(swapIntent, RC_SWAP);
-                            } catch (Exception e) {
-                                // TODO: 2018. 5. 16. Notice error
-                            }
                         } else {
                             RealmUtil.removeWallet(mWallet.getAddress());
                             try {
@@ -597,9 +574,6 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 Wallet result = (Wallet) data.getExtras().get("result");
                 mWallet = result;
             }
-        } else if (requestCode == RC_SWAP) {
-            if (resultCode == TokenSwapActivity.RES_CREATED)
-                setResult(RES_REFRESH);
         }
     }
 
@@ -774,32 +748,6 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         public void onSwap() {
-            BasicDialog dialog = new BasicDialog(WalletDetailActivity.this);
-            try {
-                BigInteger tBalance = new BigInteger(selectedEntry.getBalance());
-                if (tBalance.equals(BigInteger.ZERO)) {
-                    dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                    dialog.show();
-                    return;
-                }
-
-                BigInteger eBalance = new BigInteger(mWallet.getWalletEntries().get(0).getBalance());
-                if (eBalance.equals(BigInteger.ZERO)) {
-                    dialog.setMessage(getString(R.string.swapMsgNotEnoughFee));
-                    dialog.show();
-                    return;
-                }
-
-                editTextDialog = new EditTextDialog(WalletDetailActivity.this, getString(R.string.enterWalletPassword));
-                editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.SWAP);
-                editTextDialog.setOnPasswordCallback(mPasswordDialogCallback);
-                editTextDialog.show();
-            } catch (Exception e) {
-                dialog.setMessage(getString(R.string.swapMsgHasNoToken));
-                dialog.show();
-            }
         }
 
         @Override

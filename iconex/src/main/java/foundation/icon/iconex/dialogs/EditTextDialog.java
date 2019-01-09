@@ -104,6 +104,9 @@ public class EditTextDialog extends Dialog implements View.OnClickListener {
                     if (mType == TYPE_INPUT.ALIAS) {
                         if (s.toString().trim().isEmpty()) {
                             editText.setText("");
+                        } else if (s.charAt(0) == ' ') {
+                            editText.setText(beforeStr);
+                            editText.setSelection(beforeStr.length());
                         } else {
                             if (Utils.checkByteLength(s.toString()) > 16) {
                                 editText.setText(beforeStr);

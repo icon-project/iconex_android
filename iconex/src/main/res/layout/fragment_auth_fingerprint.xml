@@ -47,7 +47,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/appLockFingerprintGuide"
                 android:textColor="@color/colorWhite50"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
 
@@ -76,7 +76,7 @@
             android:gravity="center"
             android:text="@string/unlockByLockNum"
             android:textColor="@color/colorWhite50"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
         <ImageView
             android:layout_width="wrap_content"

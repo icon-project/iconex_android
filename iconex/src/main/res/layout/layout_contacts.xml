@@ -34,7 +34,7 @@
                 android:fontFamily="@font/noto_sans_medium"
                 android:text="Contacts"
                 android:textColor="@color/colorText"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
             <Button
                 android:id="@+id/btn_edit"
@@ -54,7 +54,7 @@
             android:gravity="end"
             android:text="Address"
             android:textColor="@color/colorText"
-            android:textSize="10sp" />
+            android:textSize="10dp" />
     </LinearLayout>
 
     <View

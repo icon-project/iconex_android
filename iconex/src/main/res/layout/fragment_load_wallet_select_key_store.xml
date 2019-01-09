@@ -20,7 +20,7 @@
             android:fontFamily="@font/noto_sans_bold"
             android:text="@string/loadKeystoreHeader"
             android:textColor="@color/colorText"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -46,7 +46,7 @@
                 android:gravity="start|center_vertical"
                 android:text="@string/loadKeystoreSub"
                 android:textColor="@color/colorText70"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <Button
@@ -74,7 +74,7 @@
             android:fontFamily="@font/noto_sans_regular"
             android:text="@string/invalidKeyStoreFile"
             android:textColor="@color/colorWarning"
-            android:textSize="10sp"
+            android:textSize="10dp"
             android:visibility="gone" />
 
         <RelativeLayout
@@ -100,7 +100,7 @@
                 android:layout_toStartOf="@+id/btn_delete"
                 android:fontFamily="@font/noto_sans_medium"
                 android:textColor="@color/colorMain"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
             <Button
                 android:id="@+id/btn_delete"

@@ -18,6 +18,6 @@
         android:paddingTop="4dp"
         android:text="Name"
         android:textColor="@color/text_main_appbar_selector"
-        android:textSize="13sp" />
+        android:textSize="13dp" />
 
 </LinearLayout>

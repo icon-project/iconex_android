@@ -15,7 +15,7 @@
         android:gravity="center_horizontal"
         android:text="@string/enterWalletPassword"
         android:textColor="#262626"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <View
         android:id="@+id/separator"
@@ -80,7 +80,7 @@
         android:fontFamily="@font/noto_sans_regular"
         android:text="@string/errPassword"
         android:textColor="@color/colorWarning"
-        android:textSize="10sp"
+        android:textSize="10dp"
         android:visibility="invisible" />
 
     <LinearLayout

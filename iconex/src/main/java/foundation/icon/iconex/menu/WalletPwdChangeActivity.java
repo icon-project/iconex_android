@@ -51,6 +51,8 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
     private InputMethodManager mImm;
     private byte[] mPrivateKey;
 
+    private String beforePwd, beforeCheck;
+
     public static final int RESULT_CODE = 3333;
 
     @Override
@@ -92,9 +94,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                 } else {
                     lineOld.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-                    if (editOldPwd.getText().toString().isEmpty()) {
-                        showWarning(lineOld, txtOldWarning, getString(R.string.errPwdEmpty));
-                    } else {
+                    if (!editOldPwd.getText().toString().isEmpty()) {
                         boolean result = validateCurrentPwd(editOldPwd.getText().toString());
                         if (!result) {
                             showWarning(lineOld, txtOldWarning, getString(R.string.errPassword));
@@ -157,10 +157,6 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
 
                     int result = PasswordValidator.validatePassword(editPwd.getText().toString());
                     switch (result) {
-                        case PasswordValidator.EMPTY:
-                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
-                            break;
-
                         case PasswordValidator.LEAST_8:
                             showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
                             break;
@@ -197,7 +193,11 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                         editPwd.setText(s.subSequence(0, s.length() - 1));
                         if (editPwd.getText().toString().length() > 0)
                             editPwd.setSelection(editPwd.getText().toString().length());
-                    }
+                    } else if (s.toString().contains(" ")) {
+                        editPwd.setText(beforePwd);
+                        editPwd.setSelection(beforePwd.length());
+                    } else
+                        beforePwd = s.toString();
                 } else {
                     btnPwdDel.setVisibility(View.INVISIBLE);
                     hideWarning(editPwd, linePwd, txtPwdWarning);
@@ -238,9 +238,7 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                 } else {
                     lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
 
-                    if (editCheck.getText().toString().isEmpty()) {
-                        showWarning(lineCheck, txtCheckWarnig, getString(R.string.errWhiteSpace));
-                    } else {
+                    if (!editCheck.getText().toString().isEmpty()) {
                         if (editPwd.getText().toString().isEmpty()) {
                             showWarning(lineCheck, txtCheckWarnig, getString(R.string.errPasswordNotMatched));
                         } else {
@@ -269,7 +267,11 @@ public class WalletPwdChangeActivity extends AppCompatActivity implements View.O
                         editCheck.setText(s.subSequence(0, s.length() - 1));
                         if (editCheck.getText().toString().length() > 0)
                             editCheck.setSelection(editCheck.getText().toString().length());
-                    }
+                    } else if (s.toString().contains(" ")) {
+                        editCheck.setText(beforeCheck);
+                        editCheck.setSelection(beforeCheck.length());
+                    } else
+                        beforeCheck = s.toString();
                 } else {
                     btnCheckDel.setVisibility(View.INVISIBLE);
                     hideWarning(editCheck, lineCheck, txtCheckWarnig);

@@ -33,6 +33,7 @@
             android:background="@drawable/bg_rounded_button_a"
             android:gravity="center"
             android:text="@string/add"
+            android:textAllCaps="false"
             android:textColor="@color/button_text"
             android:textSize="16dp" />
     </RelativeLayout>

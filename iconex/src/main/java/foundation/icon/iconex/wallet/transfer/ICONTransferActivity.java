@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -313,11 +312,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
                             txtTransSend.setText(String.format("%s USD", strTransUSD));
                         }
-
-//                        if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
-//                            getIrcStepLimit();
-//                            editLimit.setText(minStep.toString());
-//                        }
                         setRemain(amount);
                     }
                 } else {
@@ -662,7 +656,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                         editSend.setText("");
                         lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                         txtSendWarning.setVisibility(View.VISIBLE);
-                        txtSendWarning.setText(getString(R.string.errNeedFee));
+                        txtSendWarning.setText(getString(R.string.errICXFee));
                     } else {
                         BigInteger allIcx = balance.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
                         editSend.setText(ConvertUtil.getValue(allIcx, mWalletEntry.getDefaultDec()));
@@ -956,7 +950,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             } else if (canICX.compareTo(sendAmount) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNeedFee));
+                txtSendWarning.setText(getString(R.string.errICXFee));
 
                 return false;
             }
@@ -983,7 +977,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             } else if (ownBalance.compareTo(canICX) < 0) {
                 lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNeedFee));
+                txtSendWarning.setText(getString(R.string.errICXFee));
 
                 return false;
             }
@@ -1014,7 +1008,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             if (!(address.startsWith("hx") || address.startsWith("cx"))) {
                 lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errCheckAddress));
+                txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
                 return false;
             }
         }
@@ -1023,7 +1017,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             if (!address.startsWith("hx")) {
                 lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
                 txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errCheckAddress));
+                txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
                 return false;
             }
 
@@ -1033,39 +1027,16 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         if (address.length() != 40) {
             lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+            txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
             return false;
         }
 
         if (address.contains(" ")) {
             lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errCheckAddress));
+            txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
             return false;
         }
-
-//        if (address.startsWith("hx")) {
-//            address = address.substring(2);
-//            if (address.length() != 40) {
-//                lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-//                txtAddrWarning.setVisibility(View.VISIBLE);
-//                txtAddrWarning.setText(getString(R.string.errCheckAddress));
-//
-//                return false;
-//            }
-//        } else if (address.contains(" ")) {
-//            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-//            txtAddrWarning.setVisibility(View.VISIBLE);
-//            txtAddrWarning.setText(getString(R.string.errCheckAddress));
-//
-//            return false;
-//        } else {
-//            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-//            txtAddrWarning.setVisibility(View.VISIBLE);
-//            txtAddrWarning.setText(getString(R.string.errCheckAddress));
-//
-//            return false;
-//        }
 
         if (editAddress.hasFocus())
             lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));
@@ -1235,9 +1206,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                 public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
                     if (response.isSuccessful()) {
                         try {
-                            Log.d(TAG, "result=" + response.body().getResult().getAsString());
                             maxStep = new BigInteger(Utils.remove0x(response.body().getResult().getAsString()), 16);
-                            Log.d(TAG, "maxStep=" + maxStep.toString());
                             preferenceUtil.setMaxStep(maxStep.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1416,8 +1385,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         btnInput.setText(getString(R.string.view));
         btnInput.setSelected(true);
 
-        Log.d(TAG, "Hex string=" + this.data.getData());
-
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         fragmentManager.popBackStackImmediate();
@@ -1462,7 +1429,6 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     editAddress.setText(barcode.displayValue);
                     setSendEnable();
                 } else {
-                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
             }
         }
