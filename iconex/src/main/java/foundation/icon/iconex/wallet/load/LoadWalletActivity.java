@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -177,6 +178,9 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
 
     @Override
     public void onNext(LoadWalletViewPagerAdapter.LOAD_TYPE type) {
+        if (type == LoadWalletViewPagerAdapter.LOAD_TYPE.PRIVATE_KEY)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+
         viewPagerAdapter = new LoadWalletViewPagerAdapter(getSupportFragmentManager(), type);
         viewPager.setAdapter(viewPagerAdapter);
 
@@ -246,6 +250,8 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
 
     @Override
     public void onLoadPrivateKeyNext(String coinType, String privKey) {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+
         mCoinType = coinType;
         mPrivateKey = privKey;
 

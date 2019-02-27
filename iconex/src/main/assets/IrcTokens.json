@@ -14,16 +14,23 @@
     "type": "default"
   },
   {
-    "score": "cx921205acb7c51e16d5b7cbc37539a4357d929d20",
-    "name": "weBloc",
-    "symbol": "WOK",
+    "score": "cx3ec2814520c0096715159b8fc55fa1f385be038c",
+    "name": "SportToken",
+    "symbol": "SPORT",
     "decimals": 18,
     "type": "default"
   },
   {
-    "score": "cx3ec2814520c0096715159b8fc55fa1f385be038c",
-    "name": "SportToken",
-    "symbol": "SPORT",
+    "score": "cxbc264e6279ec971f11ebe3939fc88d05b243eba7",
+    "name": "VELICX",
+    "symbol": "VCX",
+    "decimals": 18,
+    "type": "default"
+  },
+  {
+    "score": "cx921205acb7c51e16d5b7cbc37539a4357d929d20",
+    "name": "weBloc",
+    "symbol": "WOK",
     "decimals": 18,
     "type": "default"
   }

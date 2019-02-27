@@ -35,6 +35,19 @@ public class SplashActivity extends AppCompatActivity {
 
         if (ICONexApp.isConnect)
             request = (RequestData) getIntent().getExtras().get("request");
+
+//        if (getIntent() != null) {
+//            String action = getIntent().getAction();
+//            if (action.equals(ICONexApp.ICONEX_CONNECT)) {
+//                ICONexApp.isConnect = true;
+//
+//                String data = getIntent().getStringExtra("data");
+//                String caller = getIntent().getStringExtra("caller");
+//                String receiver = getIntent().getStringExtra("receiver");
+//
+//                request = new RequestData(data, caller, receiver);
+//            }
+//        }
     }
 
     @Override

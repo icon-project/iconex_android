@@ -144,7 +144,7 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        Intent intent;
+        Intent intent = new Intent();
         ResponseData resData;
 
         switch (v.getId()) {
