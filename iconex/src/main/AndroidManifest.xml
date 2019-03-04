@@ -20,15 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="barcode" />
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="AIzaSyBJQyG3bTgjsDyPn8_-IvxmQ37xHcjDA0g" />
 
         <activity
             android:name="foundation.icon.SplashActivity"

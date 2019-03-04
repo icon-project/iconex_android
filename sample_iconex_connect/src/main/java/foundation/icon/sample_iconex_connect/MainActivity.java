@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -141,7 +142,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES|Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .addFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES | Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_iconex_connect")
                 .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
@@ -163,7 +164,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES | Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_iconex_connect")
                 .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
@@ -187,7 +188,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES | Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_iconex_connect")
                 .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
@@ -211,7 +212,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES | Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
                 .putExtra("data", data)
                 .putExtra("caller", "foundation.icon.sample_iconex_connect")
                 .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
@@ -233,9 +234,15 @@ public class MainActivity extends Activity {
         Intent intent = new Intent()
                 .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
                 .setAction(SampleApp.ACTION_DEVELOPER)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES|Intent.FLAG_EXCLUDE_STOPPED_PACKAGES);
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES | Intent.FLAG_EXCLUDE_STOPPED_PACKAGES);
 
         sendBroadcast(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d(TAG, "requestCode=" + requestCode + ", resultCode=" + resultCode);
     }
 
     private class MyBroadcastReceiver extends BroadcastReceiver {
