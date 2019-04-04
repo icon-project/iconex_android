@@ -9,7 +9,7 @@ android {
         targetSdkVersion 27
         multiDexEnabled true
         versionCode 46
-        versionName "1.5.2.46"
+        versionName "1.5.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
