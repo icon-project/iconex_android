@@ -242,7 +242,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.d(TAG, "requestCode=" + requestCode + ", resultCode=" + resultCode);
+//        Log.d(TAG, "requestCode=" + requestCode + ", resultCode=" + resultCode);
     }
 
     private class MyBroadcastReceiver extends BroadcastReceiver {
