@@ -20,6 +20,7 @@ import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.Sort;
 import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.MyConstants.CoinType.ICX;
@@ -35,7 +36,7 @@ public class RealmUtil {
         Realm realm = Realm.getDefaultInstance();
         ICONexApp.mWallets = new ArrayList<>();
         if (realm.where(foundation.icon.iconex.realm.data.Wallet.class).count() > 0) {
-            for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAll()) {
+            for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAllSorted("id", Sort.DESCENDING)) {
                 Wallet walletInfo = new Wallet();
                 walletInfo.setCoinType(wallet.getCoinType());
                 walletInfo.setAlias(wallet.getAlias());
@@ -74,7 +75,7 @@ public class RealmUtil {
                 ICONexApp.mWallets.add(walletInfo);
             }
 
-            Collections.reverse(ICONexApp.mWallets);
+//            Collections.reverse(ICONexApp.mWallets);
 
             makeExchanges();
         }
