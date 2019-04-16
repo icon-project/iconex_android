@@ -1,6 +1,5 @@
 package foundation.icon.iconex.realm;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +19,7 @@ import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 import io.realm.Sort;
 import loopchain.icon.wallet.core.Constants;
 
@@ -36,7 +36,10 @@ public class RealmUtil {
         Realm realm = Realm.getDefaultInstance();
         ICONexApp.mWallets = new ArrayList<>();
         if (realm.where(foundation.icon.iconex.realm.data.Wallet.class).count() > 0) {
-            for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAllSorted("id", Sort.DESCENDING)) {
+
+            RealmResults<foundation.icon.iconex.realm.data.Wallet> realmResults = realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAllSorted("id", Sort.DESCENDING);
+
+            for (foundation.icon.iconex.realm.data.Wallet wallet : realmResults) {
                 Wallet walletInfo = new Wallet();
                 walletInfo.setCoinType(wallet.getCoinType());
                 walletInfo.setAlias(wallet.getAlias());
@@ -45,7 +48,6 @@ public class RealmUtil {
 
                 List<CoinNToken> list = wallet.getCoinNToken();
                 List<WalletEntry> entries = new ArrayList<>();
-                SecureRandom random = new SecureRandom();
                 for (CoinNToken coinNToken : list) {
                     WalletEntry entry = new WalletEntry();
                     entry.setType(coinNToken.getType());
