@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -358,7 +359,9 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                     if (response.isSuccessful()) {
                         JsonObject result = response.body().getResult().getAsJsonObject();
                         int input = Integer.decode(result.get("input").getAsString());
-                        int dataLength = editData.getText().toString().getBytes().length;
+//                        int dataLength = editData.getText().toString().getBytes().length;
+                        int dataLength = (data.getData() + "\"\"").getBytes().length;
+                        Log.d(TAG, "data=" + (data.getData() + "\"\""));
                         int stepLimit = Integer.decode(result.get("default").getAsString()) + input * dataLength;
 
                         if (checkBalance(stepLimit)) {

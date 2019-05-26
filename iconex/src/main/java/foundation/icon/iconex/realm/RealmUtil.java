@@ -58,9 +58,15 @@ public class RealmUtil {
                         entry.setContractAddress(coinNToken.getContractAddress());
                         entry.setUserName(coinNToken.getUserName());
                         entry.setUserSymbol(coinNToken.getUserSymbol());
-                        entry.setDefaultDec(coinNToken.getDecimal());
-                        entry.setUserDec(coinNToken.getUserDecimal());
                         entry.setCreatedAt(coinNToken.getCreateAt());
+
+                        if (coinNToken.getContractAddress().equals("cxf9148db4f8ec78823a50cb06c4fed83660af38d0")) {
+                            entry.setDefaultDec(0);
+                            entry.setUserDec(0);
+                        } else {
+                            entry.setDefaultDec(coinNToken.getDecimal());
+                            entry.setUserDec(coinNToken.getUserDecimal());
+                        }
                     } else {
                         entry.setDefaultDec(18);
                         entry.setUserDec(18);

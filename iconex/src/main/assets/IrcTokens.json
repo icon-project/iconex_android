@@ -10,7 +10,7 @@
     "score": "cxf9148db4f8ec78823a50cb06c4fed83660af38d0",
     "name": "MECA Coin",
     "symbol": "MCA",
-    "decimals": 18,
+    "decimals": 0,
     "type": "default"
   },
   {
@@ -32,6 +32,41 @@
     "name": "weBloc",
     "symbol": "WOK",
     "decimals": 18,
+    "type": "default"
+  },
+  {
+    "name": "IconGameAlliance",
+    "symbol": "IGA",
+    "decimals": 18,
+    "score": "cx81fe20ac9a8ed7387b8d17be878c1d0ccb01aabf",
+    "type": "default"
+  },
+  {
+    "name": "LogisticsX",
+    "symbol": "PNP",
+    "decimals": 18,
+    "score": "cx2137642d0bf1926fbe23a3688d042a0f34bc2b9a",
+    "type": "default"
+  },
+  {
+    "name": "Somesing Exchange",
+    "symbol": "SSX",
+    "decimals": 18,
+    "score": "cx429731644462ebcfd22185df38727273f16f9b87",
+    "type": "default"
+  },
+  {
+    "name": "Velic Authority",
+    "symbol": "VELA",
+    "decimals": 8,
+    "score": "cxefaa21e34a3a1abf97369b5beef84524f52d88a8",
+    "type": "default"
+  },
+  {
+    "name": "Velic Token",
+    "symbol": "VELT",
+    "decimals": 8,
+    "score": "cx19a23e850bf736387cd90d0b6e88ce9af76a8d41",
     "type": "default"
   }
 ]
