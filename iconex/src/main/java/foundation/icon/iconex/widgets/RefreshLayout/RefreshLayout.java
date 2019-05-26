@@ -183,7 +183,7 @@ public class RefreshLayout extends ViewGroup implements NestedScrollingParent, N
             goToRefresh(-dy);
             consumed[1] = dy;
 
-            Log.i(TAG, "onNestedPreScroll");
+//            Log.i(TAG, "onNestedPreScroll");
         }
 
         if (loadEnable && !isLoading && footer != null && dy < 0 && getScrollY() >= bottomScroll && mTotalUnconsumedLoadMore > 0 && currentStatus == STATE_LOADMORE) {

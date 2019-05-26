@@ -116,7 +116,7 @@ public class IrcListFragment extends Fragment implements View.OnClickListener {
         IrcToken irc;
         for (int i = 0; i < tokens.size(); i++) {
             JsonObject token = tokens.get(i).getAsJsonObject();
-            String score = token.get("contractAddr").getAsString();
+            String score = token.get("score").getAsString();
             String name = token.get("name").getAsString();
             String symbol = token.get("symbol").getAsString();
             int decimal = token.get("decimals").getAsInt();

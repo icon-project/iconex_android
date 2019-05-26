@@ -99,7 +99,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                         });
                         dialog.setMessage(getString(R.string.msgTokenCancelMod));
                         dialog.show();
-                    } else if (!addFragment.isEmpty()) {
+                    } else if (addFragment != null && !addFragment.isEmpty()) {
                         Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
                         dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                             @Override
@@ -256,7 +256,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                 });
                 dialog.setMessage(getString(R.string.msgTokenCancelMod));
                 dialog.show();
-            } else if (!addFragment.isEmpty()) {
+            } else if (addFragment != null && !addFragment.isEmpty()) {
                 Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
                 dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                     @Override

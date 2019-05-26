@@ -196,7 +196,7 @@
     <string name="enterTokenInfo">Enter Token Info</string>
 
     <string name="msgTokenDelete">Do you want to delete\n%s ?</string>
-    <string name="msgTokenCancelAdd">Are you sure you wnat to cancel?</string>
+    <string name="msgTokenCancelAdd">Are you sure you want to cancel?</string>
     <string name="msgTokenCancelMod">Are you sure you want to cancel?</string>
 
     <string name="hintTokenName">Enter token name</string>
