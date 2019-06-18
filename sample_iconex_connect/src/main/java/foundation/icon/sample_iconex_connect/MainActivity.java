@@ -1,99 +1,44 @@
 package foundation.icon.sample_iconex_connect;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
+
 import foundation.icon.icx.Transaction;
+import foundation.icon.icx.TransactionBuilder;
+import foundation.icon.icx.data.Address;
+import foundation.icon.icx.data.IconAmount;
 
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private Transaction tx;
-    private TextView txtAddress, txtSigned, txtIcxTxHash, txtTokenTxHash;
-
-    private MyBroadcastReceiver receiver;
+    private TextView txtAddress, txtIcxTxHash;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.btn_bind).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendBind();
-            }
-        });
+        findViewById(R.id.btn_bind).setOnClickListener(view -> bind());
 
-        findViewById(R.id.btn_sign).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputDialog dialog = new InputDialog(MainActivity.this, SampleApp.Method.Sign);
-                dialog.setListener(new InputDialog.OnClickListener() {
-                    @Override
-                    public void onConfirm(RequestData requestData) {
-                        String params = new Gson().toJson(requestData, RequestData.class);
+        findViewById(R.id.btn_json_rpc).setOnClickListener(view -> jsonRpc());
 
-                        sendSign(params);
-                    }
-                });
-                dialog.show();
-            }
-        });
-
-        findViewById(R.id.btn_send_icx).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputDialog dialog = new InputDialog(MainActivity.this, SampleApp.Method.SendIcx);
-                dialog.setListener(new InputDialog.OnClickListener() {
-                    @Override
-                    public void onConfirm(RequestData requestData) {
-                        String params = new Gson().toJson(requestData, RequestData.class);
-
-                        sendICX(params);
-                    }
-                });
-                dialog.show();
-            }
-        });
-
-        findViewById(R.id.btn_send_irc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputDialog dialog = new InputDialog(MainActivity.this, SampleApp.Method.SendToken);
-                dialog.setListener(new InputDialog.OnClickListener() {
-                    @Override
-                    public void onConfirm(RequestData requestData) {
-                        String params = new Gson().toJson(requestData, RequestData.class);
-
-                        sendToken(params);
-                    }
-                });
-                dialog.show();
-            }
-        });
-
-        findViewById(R.id.btn_developer).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendDeveloper();
-            }
-        });
+        findViewById(R.id.btn_developer).setOnClickListener(view -> setDeveloperMode());
 
         txtAddress = findViewById(R.id.txt_bound);
         txtAddress.setTextIsSelectable(true);
@@ -103,124 +48,44 @@ public class MainActivity extends Activity {
         } else
             txtAddress.setVisibility(View.GONE);
 
-        txtSigned = findViewById(R.id.txt_signed);
         txtIcxTxHash = findViewById(R.id.txt_icx_tx_hash);
-        txtTokenTxHash = findViewById(R.id.txt_token_tx_hash);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (receiver == null)
-            receiver = new MyBroadcastReceiver();
-
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(receiver, new IntentFilter(SampleApp.LOCAL_ACTION));
+    private void bind() {
+        String url = "iconex://bind";
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivityForResult(intent, 1000);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private void jsonRpc() {
+        String url = "iconex://JSON-RPC?data=";
 
-        if (receiver != null) {
-            LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(receiver);
-            receiver = null;
-        }
+        BigInteger networkId = new BigInteger("2");
+        Address fromAddress = new Address(SampleApp.from);
+        Address toAddress = new Address("hx4873b94352c8c1f3b2f09aaeccea31ce9e90bd31");
+
+        BigInteger value = IconAmount.of("1", IconAmount.Unit.ICX).toLoop();
+        BigInteger stepLimit = new BigInteger("100000");
+        long timestamp = System.currentTimeMillis() * 1000L;
+        BigInteger nonce = new BigInteger("1");
+
+        Transaction transaction = TransactionBuilder.newBuilder()
+                .nid(networkId)
+                .from(fromAddress)
+                .to(toAddress)
+                .value(value)
+                .stepLimit(stepLimit)
+                .timestamp(new BigInteger(Long.toString(timestamp)))
+                .nonce(nonce)
+                .build();
+
+        String data = Base64.encodeToString(new Gson().toJson(transaction).getBytes(), Base64.NO_WRAP);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url + data));
+        startActivityForResult(intent, 2000);
     }
 
-    private void sendBind() {
-        JSONObject params = new JSONObject();
-
-        try {
-            params.put("id", 1234);
-            params.put("method", "bind");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String data = Base64.encodeToString(params.toString().getBytes(), Base64.NO_WRAP);
-        Intent intent = new Intent()
-                .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
-                .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES | Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_iconex_connect")
-                .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
-
-        sendBroadcast(intent);
-    }
-
-    private void sendSign(String params) {
-        JSONObject action = new JSONObject();
-        try {
-            action.put("id", 2234)
-                    .put("method", "sign")
-                    .put("params", params);
-        } catch (JSONException e) {
-
-        }
-
-        String data = Base64.encodeToString(action.toString().getBytes(), Base64.NO_WRAP);
-        Intent intent = new Intent()
-                .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
-                .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES | Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
-                .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_iconex_connect")
-                .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
-
-        sendBroadcast(intent);
-    }
-
-    private void sendICX(String params) {
-        JSONObject action = new JSONObject();
-
-        try {
-            action.put("id", 3234)
-                    .put("method", "sendICX")
-                    .put("params", params);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String data = Base64.encodeToString(action.toString().getBytes(), Base64.NO_WRAP);
-        Intent intent = new Intent()
-                .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
-                .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES | Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
-                .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_iconex_connect")
-                .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
-
-        sendBroadcast(intent);
-    }
-
-    private void sendToken(String params) {
-        JSONObject action = new JSONObject();
-
-        try {
-            action.put("id", 4234)
-                    .put("method", "sendToken")
-                    .put("params", params);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String data = Base64.encodeToString(action.toString().getBytes(), Base64.NO_WRAP);
-        Intent intent = new Intent()
-                .setClassName("foundation.icon.iconex", "foundation.icon.connect.ConnectReceiver")
-                .setAction(SampleApp.ACTION_CONNECT)
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES | Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
-                .putExtra("data", data)
-                .putExtra("caller", "foundation.icon.sample_iconex_connect")
-                .putExtra("receiver", "foundation.icon.sample_iconex_connect.ResponseReceiver");
-
-        sendBroadcast(intent);
-    }
-
-    private void sendDeveloper() {
+    private void setDeveloperMode() {
         JSONObject params = new JSONObject();
 
         try {
@@ -242,35 +107,36 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-//        Log.d(TAG, "requestCode=" + requestCode + ", resultCode=" + resultCode);
-    }
+        // Handle bind response
+        if (requestCode == 1000) {
+            if (resultCode < 0) {
+                Uri uri = data.getData();
+                JsonObject response = new Gson().fromJson(uri.toString(), JsonObject.class);
+                String message = response.get("message").getAsString();
 
-    private class MyBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(SampleApp.LOCAL_ACTION)) {
-                int id = intent.getIntExtra("id", -1);
-                switch (id) {
-                    case 1234:
-                        txtAddress.setText(intent.getStringExtra("result"));
-                        txtAddress.setVisibility(View.VISIBLE);
-                        break;
+                Toast.makeText(this, "Get response:" + resultCode + " : " + message, Toast.LENGTH_SHORT).show();
+            } else {
+                Uri uri = data.getData();
+                JsonObject response = new Gson().fromJson(uri.toString(), JsonObject.class);
+                String result = response.get("result").getAsString();
 
-                    case 2234:
-                        txtSigned.setText(intent.getStringExtra("result"));
-                        txtSigned.setVisibility(View.VISIBLE);
-                        break;
+                txtAddress.setText(result);
+            }
+        }
+        // Handle JSON-RPC response
+        else if (requestCode == 2000) {
+            if (resultCode < 0) {
+                Uri uri = data.getData();
+                JsonObject response = new Gson().fromJson(uri.toString(), JsonObject.class);
+                String message = response.get("message").getAsString();
 
-                    case 3234:
-                        txtIcxTxHash.setText(intent.getStringExtra("result"));
-                        txtIcxTxHash.setVisibility(View.VISIBLE);
-                        break;
+                Toast.makeText(this, "Get response:" + resultCode + " : " + message, Toast.LENGTH_SHORT).show();
+            } else {
+                Uri uri = data.getData();
+                JsonObject response = new Gson().fromJson(uri.toString(), JsonObject.class);
+                String result = response.get("result").getAsString();
 
-                    case 4234:
-                        txtTokenTxHash.setText(intent.getStringExtra("result"));
-                        txtTokenTxHash.setVisibility(View.VISIBLE);
-                        break;
-                }
+                txtIcxTxHash.setText(result);
             }
         }
     }
