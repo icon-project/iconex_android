@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -22,6 +25,9 @@ import foundation.icon.icx.Transaction;
 import foundation.icon.icx.TransactionBuilder;
 import foundation.icon.icx.data.Address;
 import foundation.icon.icx.data.IconAmount;
+import foundation.icon.icx.transport.jsonrpc.RpcItem;
+import foundation.icon.icx.transport.jsonrpc.RpcObject;
+import foundation.icon.icx.transport.jsonrpc.RpcValue;
 
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -62,27 +68,51 @@ public class MainActivity extends Activity {
 
         BigInteger networkId = new BigInteger("2");
         Address fromAddress = new Address(SampleApp.from);
-        Address toAddress = new Address("hx4873b94352c8c1f3b2f09aaeccea31ce9e90bd31");
-
-        BigInteger value = IconAmount.of("1", IconAmount.Unit.ICX).toLoop();
-        BigInteger stepLimit = new BigInteger("100000");
+        Address toAddress = new Address(SampleApp.to);
+        BigInteger value = IconAmount.of("1", 18).toLoop();
         long timestamp = System.currentTimeMillis() * 1000L;
         BigInteger nonce = new BigInteger("1");
+        String methodName = "transfer";
 
+        RpcObject params = new RpcObject.Builder()
+                .put("_to", new RpcValue(toAddress))
+                .put("_value", new RpcValue(value))
+                .build();
+
+        // make a raw transaction without the stepLimit
         Transaction transaction = TransactionBuilder.newBuilder()
                 .nid(networkId)
                 .from(fromAddress)
-                .to(toAddress)
-                .value(value)
-                .stepLimit(stepLimit)
+                .to(new Address(SampleApp.score))
                 .timestamp(new BigInteger(Long.toString(timestamp)))
                 .nonce(nonce)
+                .call(methodName)
+                .params(params)
                 .build();
 
-        String data = Base64.encodeToString(new Gson().toJson(transaction).getBytes(), Base64.NO_WRAP);
+        RpcObject object = getTransactionProperties(transaction);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url + data));
-        startActivityForResult(intent, 2000);
+        RpcObject.Builder builder = new RpcObject.Builder();
+        for (String key : object.keySet()) {
+            builder.put(key, object.getItem(key));
+        }
+
+        foundation.icon.icx.transport.jsonrpc.Request request = new foundation.icon.icx.transport.jsonrpc.Request(
+                1234, "icx_sendTransaction", builder.build());
+
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(foundation.icon.icx.transport.jsonrpc.Request.class, new RequestSerializer());
+        mapper.registerModule(module);
+        try {
+            String jsonObject = mapper.writeValueAsString(request);
+            String base64Encoded = Base64.encodeToString(jsonObject.getBytes(), Base64.NO_WRAP);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url + base64Encoded));
+            startActivityForResult(intent, 2000);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setDeveloperMode() {
@@ -104,6 +134,41 @@ public class MainActivity extends Activity {
         sendBroadcast(intent);
     }
 
+    private RpcObject getTransactionProperties(Transaction transaction) {
+        BigInteger timestamp = transaction.getTimestamp();
+        if (timestamp == null) {
+            timestamp = new BigInteger(Long.toString(System.currentTimeMillis() * 1000L));
+        }
+
+        RpcObject.Builder builder = new RpcObject.Builder();
+        putTransactionPropertyToBuilder(builder, "version", transaction.getVersion());
+        putTransactionPropertyToBuilder(builder, "from", transaction.getFrom());
+        putTransactionPropertyToBuilder(builder, "to", transaction.getTo());
+        putTransactionPropertyToBuilder(builder, "value", transaction.getValue());
+        putTransactionPropertyToBuilder(builder, "timestamp", timestamp);
+        putTransactionPropertyToBuilder(builder, "nid", transaction.getNid());
+        putTransactionPropertyToBuilder(builder, "nonce", transaction.getNonce());
+        putTransactionPropertyToBuilder(builder, "dataType", transaction.getDataType());
+        putTransactionPropertyToBuilder(builder, "data", transaction.getData());
+        return builder.build();
+    }
+
+    private void putTransactionPropertyToBuilder(RpcObject.Builder builder, String key, BigInteger value) {
+        if (value != null) builder.put(key, new RpcValue(value));
+    }
+
+    private void putTransactionPropertyToBuilder(RpcObject.Builder builder, String key, String value) {
+        if (value != null) builder.put(key, new RpcValue(value));
+    }
+
+    private void putTransactionPropertyToBuilder(RpcObject.Builder builder, String key, Address value) {
+        if (value != null) builder.put(key, new RpcValue(value));
+    }
+
+    private void putTransactionPropertyToBuilder(RpcObject.Builder builder, String key, RpcItem item) {
+        if (item != null) builder.put(key, item);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -120,6 +185,7 @@ public class MainActivity extends Activity {
                 JsonObject response = new Gson().fromJson(uri.toString(), JsonObject.class);
                 String result = response.get("result").getAsString();
 
+                SampleApp.from = result;
                 txtAddress.setText(result);
             }
         }
@@ -132,11 +198,13 @@ public class MainActivity extends Activity {
 
                 Toast.makeText(this, "Get response:" + resultCode + " : " + message, Toast.LENGTH_SHORT).show();
             } else {
-                Uri uri = data.getData();
-                JsonObject response = new Gson().fromJson(uri.toString(), JsonObject.class);
-                String result = response.get("result").getAsString();
+                if (data != null) {
+                    Uri uri = data.getData();
+                    JsonObject response = new Gson().fromJson(uri.toString(), JsonObject.class);
+                    String result = response.get("result").getAsString();
 
-                txtIcxTxHash.setText(result);
+                    txtIcxTxHash.setText(result);
+                }
             }
         }
     }

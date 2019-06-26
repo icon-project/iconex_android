@@ -38,5 +38,5 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.2'
 
-    implementation 'foundation.icon:icon-sdk:0.9.8'
+    implementation 'foundation.icon:icon-sdk:0.9.13'
 }
