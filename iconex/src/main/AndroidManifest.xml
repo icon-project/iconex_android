@@ -20,7 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name="foundation.icon.SplashActivity"
             android:configChanges="fontScale"
@@ -170,6 +169,20 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
 
+        <activity android:name="foundation.icon.connect.ICONexConnectActivity"
+            android:configChanges="fontScale"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="iconex" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".service.NetworkService"
             android:enabled="true"
@@ -180,13 +193,10 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="ICONEX_CONNECT" />
-            </intent-filter>
-
-            <intent-filter>
                 <action android:name="DEVELOPER" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>
