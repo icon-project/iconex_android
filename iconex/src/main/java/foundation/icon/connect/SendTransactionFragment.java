@@ -336,21 +336,30 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
         if (to != null)
             txtTo.setText(to.toString());
 
-        String dataType = transaction.getDataType();
-        if (dataType != null) {
-            layoutTxData.setVisibility(View.VISIBLE);
-            JsonObject jsonObject = new Gson().fromJson(txString, JsonObject.class);
-            JsonObject params = jsonObject.get("params").getAsJsonObject();
+        try {
+            String dataType = transaction.getDataType();
+            if (dataType != null) {
+                layoutTxData.setVisibility(View.VISIBLE);
+                JsonObject jsonObject = new Gson().fromJson(txString, JsonObject.class);
+                JsonObject params = jsonObject.get("params").getAsJsonObject();
 
-            JsonObject dataObject = new JsonObject();
-            dataObject.addProperty("dataType", params.get("dataType").getAsString());
-            dataObject.add("data", params.get("data").getAsJsonObject());
+                JsonObject dataObject = new JsonObject();
+                dataObject.addProperty("dataType", params.get("dataType").getAsString());
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            txtTxData.setText(String.format(Locale.getDefault(), "%s",
-                    gson.toJson(dataObject)));
-        } else {
-            layoutTxData.setVisibility(GONE);
+                if (params.get("dataType").getAsString().equals("message"))
+                    dataObject.addProperty("data", params.get("data").getAsString());
+                else
+                    dataObject.add("data", params.get("data").getAsJsonObject());
+
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                txtTxData.setText(String.format(Locale.getDefault(), "%s",
+                        gson.toJson(dataObject)));
+            } else {
+                layoutTxData.setVisibility(GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mListener.parseError();
         }
 
         setInfoData();
