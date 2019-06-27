@@ -58,7 +58,7 @@ public class RequestDeserializer {
                         .value(item.getItem("value").asInteger())
                         .timestamp(item.getItem("timestamp").asInteger())
                         .nonce(item.getItem("nonce").asInteger())
-                        .message(item.getItem("message").asString())
+                        .message(item.getItem("data").asString())
                         .build();
             } else {
                 return TransactionBuilder.newBuilder()

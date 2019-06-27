@@ -71,7 +71,14 @@ public class ICONexConnectActivity extends AppCompatActivity
 
             checkWallet(transaction.getFrom().toString());
         } catch (NullPointerException e) {
-            setResult(-1001);
+            e.printStackTrace();
+            Intent err = new Intent();
+            err.setData(Uri.parse(
+                    new Gson().toJson(new Response.Builder()
+                            .code(-1)
+                            .message("Parse error")
+                            .build())));
+            setResult(-1001, err);
             finish();
         } catch (IOException e) {
             e.printStackTrace();

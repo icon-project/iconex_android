@@ -40,7 +40,6 @@ import foundation.icon.icx.IconService;
 import foundation.icon.icx.KeyWallet;
 import foundation.icon.icx.SignedTransaction;
 import foundation.icon.icx.Transaction;
-import foundation.icon.icx.TransactionBuilder;
 import foundation.icon.icx.data.Address;
 import foundation.icon.icx.data.Bytes;
 import foundation.icon.icx.transport.http.HttpProvider;
@@ -350,6 +349,8 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             txtTxData.setText(String.format(Locale.getDefault(), "%s",
                     gson.toJson(dataObject)));
+        } else {
+            layoutTxData.setVisibility(GONE);
         }
 
         setInfoData();
