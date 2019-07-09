@@ -5,7 +5,7 @@
     android:layout_height="60dp"
     android:background="@color/colorWhite">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true">
@@ -32,7 +32,7 @@
             app:layout_constraintStart_toEndOf="@id/radio_selected"
             app:layout_constraintTop_toTopOf="@id/radio_selected"
             app:layout_constraintVertical_bias="0.5" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:layout_width="match_parent"

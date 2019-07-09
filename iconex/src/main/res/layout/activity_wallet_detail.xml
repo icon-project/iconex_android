@@ -19,12 +19,12 @@
         android:layout_height="match_parent"
         android:background="@color/colorMain">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_tx"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
             android:orientation="vertical"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout>
 </LinearLayout>

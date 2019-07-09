@@ -3,9 +3,7 @@ package foundation.icon.sample_iconex_connect;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;

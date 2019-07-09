@@ -169,17 +169,18 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
 
-        <activity android:name="foundation.icon.connect.ICONexConnectActivity"
+        <activity
+            android:name="foundation.icon.connect.ICONexConnectActivity"
             android:configChanges="fontScale"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:scheme="iconex" />
+                <data android:scheme="iconex" />
             </intent-filter>
         </activity>
 

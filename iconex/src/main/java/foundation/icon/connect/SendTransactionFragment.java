@@ -2,15 +2,20 @@ package foundation.icon.connect;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
@@ -30,12 +35,14 @@ import java.util.Locale;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.PreferenceUtil;
+import foundation.icon.iconex.widgets.MyEditText;
 import foundation.icon.icx.IconService;
 import foundation.icon.icx.KeyWallet;
 import foundation.icon.icx.SignedTransaction;
@@ -80,8 +87,12 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
 
     private ViewGroup infoLimit, infoPrice, infoFee;
 
-    private TextView txtSend, txtAmount, txtTransAmount, txtTo, txtStep,
+    private TextView txtSend, txtAmount, txtTransAmount, txtTo,
             txtFee, txtTransFee, txtRemainAmount, txtRemain, txtTransRemain;
+    private MyEditText editLimit;
+    private Button btnLimitDel;
+    private View lineLimit;
+    private TextView txtLimitWarning;
     private TextView txtStepICX, txtStepGloop, txtStepTrans;
 
     private ViewGroup layoutTxData;
@@ -175,7 +186,49 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
         txtSend = v.findViewById(R.id.txt_send_amount);
         txtAmount = v.findViewById(R.id.txt_amount);
         txtTo = v.findViewById(R.id.txt_to);
-        txtStep = v.findViewById(R.id.txt_step);
+        editLimit = v.findViewById(R.id.edit_step_limit);
+        editLimit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    btnLimitDel.setVisibility(View.VISIBLE);
+                    btnSend.setEnabled(true);
+                } else {
+                    btnLimitDel.setVisibility(View.INVISIBLE);
+                    btnSend.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        editLimit.setOnKeyPreImeListener(new OnKeyPreImeListener() {
+            @Override
+            public void onBackPressed() {
+                validateStep();
+            }
+        });
+        editLimit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    validateStep();
+                }
+                return false;
+            }
+        });
+
+        btnLimitDel = v.findViewById(R.id.del_step_limit);
+        btnLimitDel.setOnClickListener(this);
+        lineLimit = v.findViewById(R.id.line_step_limit);
+        txtLimitWarning = v.findViewById(R.id.txt_step_limit_warning);
 
         txtFee = v.findViewById(R.id.txt_fee);
         txtTransFee = v.findViewById(R.id.txt_trans_fee);
@@ -205,6 +258,16 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
         btnSend = v.findViewById(R.id.btn_send);
         btnSend.setEnabled(false);
         btnSend.setOnClickListener(this);
+
+        if (ICONexApp.isDeveloper) {
+            layoutNetwork.setVisibility(View.VISIBLE);
+            if (network == 1)
+                txtNetwork.setText(R.string.networkMain);
+            else if (network == 2)
+                txtNetwork.setText(R.string.networkTest);
+        } else {
+            layoutNetwork.setVisibility(GONE);
+        }
     }
 
     @Override
@@ -240,6 +303,10 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
                 menuDialog.setOnItemClickListener(mItemListener);
 
                 menuDialog.show();
+                break;
+
+            case R.id.del_step_limit:
+                editLimit.setText("");
                 break;
 
             case R.id.info_step_limit:
@@ -457,10 +524,14 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
                 }
             }
 
-            step = iconService.estimateStep(transaction).execute();
-            long requestId = System.currentTimeMillis();
-            foundation.icon.icx.transport.jsonrpc.Request request = new foundation.icon.icx.transport.jsonrpc.Request(
-                    requestId, "debug_estimateStep", transaction.getProperties());
+            if (transaction.getData() == null)
+                step = new BigInteger("100000");
+            else
+                step = new BigInteger("1000000");
+//            step = iconService.estimateStep(transaction).execute();
+//            long requestId = System.currentTimeMillis();
+//            foundation.icon.icx.transport.jsonrpc.Request request = new foundation.icon.icx.transport.jsonrpc.Request(
+//                    requestId, "debug_estimateStep", transaction.getProperties());
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
@@ -488,7 +559,7 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
 
                         parseTransaction(stepLimitAdded);
 
-                        txtStep.setText(String.format(Locale.getDefault(), "%s",
+                        editLimit.setText(String.format(Locale.getDefault(), "%s",
                                 step.toString()));
 
                         BigInteger fee = step.multiply(stepPrice);
@@ -506,6 +577,34 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
                         e.printStackTrace();
                     }
                 });
+    }
+
+    private void validateStep() {
+        BigInteger step = new BigInteger(editLimit.getText().toString());
+        if (step == BigInteger.ZERO) {
+            btnSend.setEnabled(false);
+        } else if (step.compareTo(new BigInteger("2500000")) > 0) {
+            lineLimit.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+            txtLimitWarning.setVisibility(View.VISIBLE);
+            txtLimitWarning.setText(String.format(Locale.getDefault(), getString(R.string.errMaxStep), "2500000"));
+
+            btnSend.setEnabled(false);
+        } else if (step.compareTo(new BigInteger("100000")) < 0) {
+            lineLimit.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+            txtLimitWarning.setVisibility(View.VISIBLE);
+            txtLimitWarning.setText(String.format(Locale.getDefault(), getString(R.string.errMinStep), "100000"));
+
+            btnSend.setEnabled(false);
+        } else {
+            if (editLimit.hasFocus())
+                lineLimit.setBackgroundColor(getResources().getColor(R.color.editActivated));
+            else
+                lineLimit.setBackgroundColor(getResources().getColor(R.color.editNormal));
+            editLimit.setSelection(editLimit.getText().toString().length());
+            txtLimitWarning.setVisibility(View.GONE);
+
+            btnSend.setEnabled(true);
+        }
     }
 
     private BottomSheetMenuDialog.OnItemClickListener mItemListener = new BottomSheetMenuDialog.OnItemClickListener() {

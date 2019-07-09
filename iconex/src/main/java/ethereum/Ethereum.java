@@ -1,6 +1,6 @@
 package ethereum;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;

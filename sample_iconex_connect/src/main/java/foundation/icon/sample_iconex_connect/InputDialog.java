@@ -3,12 +3,12 @@ package foundation.icon.sample_iconex_connect;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 
-import org.bouncycastle.util.encoders.Hex;
+import org.spongycastle.util.encoders.Hex;
 
 public class InputDialog extends Dialog implements View.OnClickListener {
 

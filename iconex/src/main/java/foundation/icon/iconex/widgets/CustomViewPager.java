@@ -2,7 +2,7 @@ package foundation.icon.iconex.widgets;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 
 /**
