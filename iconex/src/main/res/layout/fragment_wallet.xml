@@ -124,14 +124,14 @@
             android:layout_marginEnd="24dp"
             android:background="@color/colorText" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_coins"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/line_bottom"
             android:layout_below="@id/view_line"
             android:orientation="vertical"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <View
             android:id="@+id/line_bottom"

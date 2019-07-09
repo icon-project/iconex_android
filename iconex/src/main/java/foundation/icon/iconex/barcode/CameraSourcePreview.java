@@ -19,7 +19,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.annotation.RequiresPermission;
+import androidx.annotation.RequiresPermission;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;

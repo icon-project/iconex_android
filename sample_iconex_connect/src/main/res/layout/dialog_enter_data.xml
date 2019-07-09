@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Value"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textSize="14dp" />
 
         <EditText
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Data type"
+            android:hint="Method"
             android:textSize="14dp" />
 
         <EditText
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Data"
+            android:hint="Data param"
             android:textSize="14dp" />
 
         <EditText

@@ -78,7 +78,7 @@
                 android:id="@+id/edit_data_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Data type" />
+                android:hint="Method" />
 
             <EditText
                 android:id="@+id/edit_data"

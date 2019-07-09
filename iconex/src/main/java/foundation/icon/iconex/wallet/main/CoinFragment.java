@@ -2,8 +2,8 @@ package foundation.icon.iconex.wallet.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +20,11 @@ import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
-import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
 import static foundation.icon.MyConstants.EXCHANGE_USD;

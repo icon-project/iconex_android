@@ -1,10 +1,9 @@
 package foundation.icon.connect;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -30,9 +29,7 @@ import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.MyEditText;
 import foundation.icon.icx.IconService;
-import foundation.icon.icx.KeyWallet;
 import foundation.icon.icx.data.Address;
-import foundation.icon.icx.data.Bytes;
 import foundation.icon.icx.transport.http.HttpProvider;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;

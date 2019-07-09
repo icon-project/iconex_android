@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -218,10 +219,13 @@ public class MainActivity extends Activity {
             long timestamp = System.currentTimeMillis() * 1000L;
             String methodName = "transfer";
 
+            BigInteger v = IconAmount.of(value, 18).toLoop();
             RpcObject params = new RpcObject.Builder()
                     .put("_to", new RpcValue(to))
-                    .put("_value", new RpcValue(value))
+                    .put("_value", new RpcValue(v))
                     .build();
+
+            Log.d(TAG, "from=" + SampleApp.from);
 
             // make a raw transaction without the stepLimit
             Transaction transaction = TransactionBuilder.newBuilder()
@@ -244,25 +248,32 @@ public class MainActivity extends Activity {
         @Override
         public void onSendContract(String to, String dataType, String data) {
             long timestamp = System.currentTimeMillis() * 1000L;
-            String methodName = "dataType";
 
-            JsonObject jsonData = new Gson().fromJson(data, JsonObject.class);
+            JsonObject jsonParam = new Gson().fromJson(data, JsonObject.class);
 
             RpcObject params;
             RpcObject.Builder builder = new RpcObject.Builder();
-            for (String key : jsonData.keySet()) {
-                builder.put(key, new RpcValue(jsonData.get(key).getAsString()));
+            for (String key : jsonParam.keySet()) {
+                if (jsonParam.get(key).isJsonObject()) {
+                    RpcObject.Builder builder2 = new RpcObject.Builder();
+                    for (String key2 : jsonParam.get(key).getAsJsonObject().keySet())
+                        builder2.put(key2, new RpcValue(jsonParam.get(key).getAsJsonObject().get(key2).getAsString()));
+
+                    builder.put(key, builder2.build());
+                } else
+                    builder.put(key, new RpcValue(jsonParam.get(key).getAsString()));
             }
 
             params = builder.build();
 
             // make a raw transaction without the stepLimit
             Transaction transaction = TransactionBuilder.newBuilder()
-                    .nid(new BigInteger("2"))
-                    .from(new Address(SampleApp.from))
+                    .nid(new BigInteger("1"))
+                    .from(new Address("hxaa38e97e7617059b1f872deb801dcd2633d0c1ed"))
+                    .to(new Address(to))
                     .timestamp(new BigInteger(Long.toString(timestamp)))
                     .nonce(new BigInteger("1"))
-                    .call(methodName)
+                    .call(dataType)
                     .params(params)
                     .build();
 

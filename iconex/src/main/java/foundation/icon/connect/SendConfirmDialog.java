@@ -5,8 +5,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.View;
+import androidx.annotation.NonNull;
+
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
