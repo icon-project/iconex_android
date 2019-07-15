@@ -36,7 +36,7 @@ catch (PackageManager.NameNotFoundException e)
 
 | Key | Type | Description |
 | --- | ---- | ----------- |
-| data | String | Base64 encoded string of JSON-RPC |
+| data | String | Base64 encoded string of JSON |
 
 ```Java
 @Override
