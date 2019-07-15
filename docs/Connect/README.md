@@ -122,7 +122,7 @@ Transaction hash
 
 ```Java
 //Request
-    String data = "{"jsonrpc": "2.0", "method": "icx_sendTransaction", "id": 1234, "params": {"version": "0x3", "from":                     "hxbe258ceb872e08851f1f59694dac2558708ece11", "to": "hx5bfdb090f43a808005ffc27c25b213145e80b7cd", "value":                     "0xde0b6b3a7640000", "timestamp": "0x563a6cf330136", "nid": "0x3", "nonce": "0x1"}}"
+    String data = "{"jsonrpc": "2.0", "method": "icx_sendTransaction", "id": 1234, "params": {"version": "0x3", "from": "hxbe258ceb872e08851f1f59694dac2558708ece11", "to": "hx5bfdb090f43a808005ffc27c25b213145e80b7cd", "value": "0xde0b6b3a7640000", "timestamp": "0x563a6cf330136", "nid": "0x3", "nonce": "0x1"}}"
     String requestData = Base64.encodeToString(data.getBytes(), Base64.NO_WRAP);
     Uri url = Uri.parse("iconex://JSON-RPC?data=" + requestData);
     startActivityForResult(context,new Intent(Intent.ACTION_VIEW, url), REQUEST_CODE);
