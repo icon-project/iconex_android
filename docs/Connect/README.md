@@ -77,11 +77,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data)
 {
     "code": $INT1,  // if code == 0 success, else fail
     "message": $STRING1,    
-    "result": "$STRING2"
+    "result": $STRING2
 }
 ```
 
-## Methods
+## Commands
 | Method | Description | Required Parameters |
 | ------ | ----------- | ------------------- |
 | bind | Request wallet address | - |
