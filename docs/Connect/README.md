@@ -20,7 +20,7 @@ try
     // Check ICONex app is installed.
     pm.getPackageInfo("foundation.icon.iconex", PackageManager.GET_ACTIVITIES);
     // Open ICONex
-    String data = Base64 encoded string of JSON Object
+    String data = Base64 encoded JSON string of JSON-RPC Object
     Uri url = Uri.parse("iconex://"+command+"?data="+data);
     startActivityForResult(context,new Intent(Intent.ACTION_VIEW, url), REQUEST_CODE);
 }
@@ -63,6 +63,14 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data)
 ## JSON-RPC Speicifications
 * [JSON-RPC](https://github.com/icon-project/icon-rpc-server/blob/master/docs/icon-json-rpc-v3.md#icx_sendtransaction)
 
+| Nid | Network |
+| --- | ------- |
+| 0x1 | Main net |
+| 0x2 | Test net |
+| 0x3 | Dev net |
+
+**Note: Do not include the signature and the steplimit.**
+
 ## API Convention
 ```Java
 // Response
@@ -77,7 +85,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data)
 | Method | Description | Required Parameters |
 | ------ | ----------- | ------------------- |
 | bind | Request wallet address | - |
-| JSON-RPC | Request sign for transaction | version, from, value, stepLimit, timestamp, dataType(optional), data(optional) |
+| JSON-RPC | Request to send transaction | Base64 encoded string of JSON-RPC Object |
 
 ### bind
 * Return selected wallet's address.
@@ -92,8 +100,8 @@ Selected wallet's address.
 
 ```Java
 //Request
-    Uri url = Uri.parse("iconex://bind");
-    startActivityForResult(context,new Intent(Intent.ACTION_VIEW, url), REQUEST_CODE);
+Uri url = Uri.parse("iconex://bind");
+startActivityForResult(context,new Intent(Intent.ACTION_VIEW, url), REQUEST_CODE);
 
 // Response - success
 {
@@ -122,10 +130,10 @@ Transaction hash
 
 ```Java
 //Request
-    String data = "{"jsonrpc": "2.0", "method": "icx_sendTransaction", "id": 1234, "params": {"version": "0x3", "from": "hxbe258ceb872e08851f1f59694dac2558708ece11", "to": "hx5bfdb090f43a808005ffc27c25b213145e80b7cd", "value": "0xde0b6b3a7640000", "timestamp": "0x563a6cf330136", "nid": "0x3", "nonce": "0x1"}}"
-    String requestData = Base64.encodeToString(data.getBytes(), Base64.NO_WRAP);
-    Uri url = Uri.parse("iconex://JSON-RPC?data=" + requestData);
-    startActivityForResult(context,new Intent(Intent.ACTION_VIEW, url), REQUEST_CODE);
+String data = "{"jsonrpc": "2.0", "method": "icx_sendTransaction", "id": 1234, "params": {"version": "0x3", "from": "hxbe258ceb872e08851f1f59694dac2558708ece11", "to": "hx5bfdb090f43a808005ffc27c25b213145e80b7cd", "value": "0xde0b6b3a7640000", "timestamp": "0x563a6cf330136", "nid": "0x3", "nonce": "0x1"}}"
+String requestData = Base64.encodeToString(data.getBytes(), Base64.NO_WRAP);
+Uri url = Uri.parse("iconex://JSON-RPC?data=" + requestData);
+startActivityForResult(context,new Intent(Intent.ACTION_VIEW, url), REQUEST_CODE);
 
 // Response - success
 {
