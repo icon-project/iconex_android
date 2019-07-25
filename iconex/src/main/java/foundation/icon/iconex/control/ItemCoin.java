@@ -1,6 +1,6 @@
 package foundation.icon.iconex.control;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by js on 2018. 2. 22..

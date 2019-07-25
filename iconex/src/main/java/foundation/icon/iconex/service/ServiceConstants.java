@@ -7,8 +7,8 @@ package foundation.icon.iconex.service;
 public class ServiceConstants {
 
     // ICON
-    public static final String TRUSTED_HOST_MAIN = "https://wallet.icon.foundation";
-    public static final String TRUSTED_HOST_TEST = "https://testwallet.icon.foundation";
+    public static final String TRUSTED_HOST_MAIN = "https://ctz.solidwallet.io";
+    public static final String TRUSTED_HOST_TEST = "https://test-ctz.solidwallet.io";
     public static final String DEV_HOST = "http://13.209.103.183:9000";
 
     public static final String LC_API_HEADER = "/api";

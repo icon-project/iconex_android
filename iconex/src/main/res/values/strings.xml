@@ -445,4 +445,7 @@
     <string name="connSendSuccess">Transfer Request Complete.\nYou can check the transaction history on ICON Tracker Go to ICON Tracker.</string>
     <string name="connSendFailed">Error occurred. Please try again.</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

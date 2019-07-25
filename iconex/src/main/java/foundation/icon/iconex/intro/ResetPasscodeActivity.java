@@ -1,6 +1,6 @@
 package foundation.icon.iconex.intro;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import foundation.icon.iconex.R;

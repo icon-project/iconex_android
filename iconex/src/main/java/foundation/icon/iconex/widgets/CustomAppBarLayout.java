@@ -1,7 +1,7 @@
 package foundation.icon.iconex.widgets;
 
 import android.content.Context;
-import android.support.design.widget.AppBarLayout;
+import com.google.android.material.appbar.AppBarLayout;
 import android.util.AttributeSet;
 
 public class CustomAppBarLayout extends AppBarLayout {
