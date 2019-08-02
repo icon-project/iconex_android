@@ -7,9 +7,11 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -24,7 +26,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -1426,7 +1431,24 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                    editAddress.setText(barcode.displayValue);
+
+                    if (barcode.displayValue.contains("?")) {
+                        String[] values = barcode.displayValue.split("\\?");
+                        editAddress.setText(values[0]);
+
+                        if (values.length > 1) {
+                            Map<String, String> querys = Utils.parseQuery(values[1]);
+
+                            if (!querys.isEmpty()) {
+                                String amount = Optional.fromNullable(querys.get("amount")).or(StringUtils.EMPTY);
+                                editSend.setText(amount);
+                            }
+                        }
+
+                    } else {
+                        editAddress.setText(barcode.displayValue);
+                    }
+
                     setSendEnable();
                 } else {
                 }
