@@ -37,6 +37,25 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+    
+    <!-- TextView -->
+    <style name="TextView10">
+        <item name="android:textSize">10dp</item>
+        <item name="android:lineSpacingExtra">8dp</item>
+    </style>
+
+    <style name="TextView12" parent="TextView10">
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="TextView14">
+        <item name="android:textSize">14dp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
+    </style>
+
+    <style name="TextView16" parent="TextView10">
+        <item name="android:textSize">16dp</item>
+    </style>
 
     <style name="ProjectDialog"></style>
 </resources>
