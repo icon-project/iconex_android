@@ -16,6 +16,7 @@
     <color name="colorText30">#4d262626</color>
     <color name="colorText50">#80262626</color>
     <color name="colorText70">#b3262626</color>
+    <color name="colorText4D">#4d4d4d</color>
 
     <color name="colorGrayF2">#f2f2f2</color>
 
@@ -46,6 +47,7 @@
 
     <!-- Dim -->
     <color name="dim">#4d000000</color>
+    <color name="dim66">#66000000</color>
     <color name="transparent">#00000000</color>
 
     <!-- Transaction -->
@@ -55,4 +57,9 @@
     <!-- Fingerprint -->
     <color name="finger_success">#009688</color>
     <color name="finger_warning">#f4511e</color>
+
+
+    <color name="colorPrimaryB4">#00b4cc</color>
+
+    <color name="colorGrayE6">#e6e6e6</color>
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<foundation.icon.iconex.dialogs2.button.DismissButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/btn_confirm"
+    android:layout_width="match_parent"
+    android:layout_height="46dp"
+
+    android:textSize="14dp"
+    android:fontFamily="@font/noto_sans_regular"
+    android:textColor="@color/colorText4D"
+    android:background="@drawable/bg_rounded_bottom_gray_f2"
+    android:textAllCaps="false"
+
+    tools:text="sample 버튼 Button"/>

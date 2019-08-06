@@ -104,7 +104,9 @@ dependencies {
 
     implementation "foundation.icon:icon-sdk:$iconSdkVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 }
 repositories {
     mavenCentral()
+    jcenter()
 }
