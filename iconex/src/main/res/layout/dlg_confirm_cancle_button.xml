@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="46dp"
+    android:weightSum="3">
+
+    <foundation.icon.iconex.dialogs2.button.DismissButton
+        android:id="@+id/btn_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@drawable/bg_rounded_lb_gray_f2"
+        android:textAllCaps="false"
+        android:textSize="14dp"
+        android:fontFamily="@font/noto_sans_regular"
+        android:textColor="@color/colorText4D"
+        tools:text="sample 취소"/>
+
+    <foundation.icon.iconex.dialogs2.button.DismissButton
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/bg_rounded_rb_primary_b4"
+        android:textAllCaps="false"
+        android:textSize="14dp"
+        android:fontFamily="@font/noto_sans_regular"
+        android:textColor="@android:color/white"
+        android:enabled="false"
+        tools:text="sample 확인"/>
+</LinearLayout>
