@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import foundation.icon.ICONexApp;
-import foundation.icon.SplashActivity;
+import foundation.icon.iconex.view.SplashActivity;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.icx.Transaction;

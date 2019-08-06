@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import foundation.icon.iconex.view.R
+import foundation.icon.iconex.R
 
 class CreateFragment : Fragment() {
 

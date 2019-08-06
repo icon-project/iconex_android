@@ -29,7 +29,7 @@ import foundation.icon.iconex.control.BottomSheetMenu;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
-import foundation.icon.iconex.intro.IntroActivity;
+import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
 import foundation.icon.iconex.realm.RealmUtil;

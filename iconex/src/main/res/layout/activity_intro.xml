@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorMain"
-    tools:context="foundation.icon.iconex.intro.IntroActivity">
+    tools:context="foundation.icon.iconex.view.IntroActivity">
 
     <LinearLayout
         android:id="@+id/layout_buttons"

@@ -37,7 +37,7 @@ import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.dialogs.SearchConditionDialog;
 import foundation.icon.iconex.dialogs.TrackerDialog;
-import foundation.icon.iconex.intro.IntroActivity;
+import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.menu.WalletAddressCodeActivity;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;

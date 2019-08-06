@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="foundation.icon.SplashActivity"
+            android:name=".view.SplashActivity"
             android:configChanges="fontScale"
             android:noHistory="true"
             android:screenOrientation="portrait">
@@ -42,7 +42,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".intro.IntroActivity"
+            android:name=".view.IntroActivity"
             android:configChanges="fontScale|locale"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -168,7 +168,6 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
-
         <activity
             android:name="foundation.icon.connect.ICONexConnectActivity"
             android:configChanges="fontScale"
@@ -197,7 +196,6 @@
                 <action android:name="DEVELOPER" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>
