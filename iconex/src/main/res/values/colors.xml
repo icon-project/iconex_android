@@ -4,6 +4,25 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!-- Primary -->
+    <color name="primary">#00a2b8</color>
+    <color name="primary00">#00b4cc</color>
+    <color name="primaryB6">#b6ebf2</color>
+    <color name="primaryF5">#f5feff</color>
+
+    <!-- Dark -->
+    <color name="dark">#4d4d4d</color>
+    <color name="dark80">#808080</color>
+    <color name="darkB3">#b3b3b3</color>
+    <color name="darkE6">#e6e6e6</color>
+    <color name="darkF2">#f2f2f2</color>
+    <color name="darkFA">#fafafa</color>
+
+    <!-- Red -->
+    <color name="red">#f25849</color>
+    <color name="redED">#ffefed</color>
+    <color name="redF7">#fff8f7</color>
+
     <color name="colorMain">#1aaaba</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhite20">#33ffffff</color>
