@@ -42,7 +42,7 @@
     <string name="msgCopyTxID">거래 ID가 복사되었습니다.</string>
 
     <!-- Splash -->
-    <string name="copyright">\@2018 ICON Foundation</string>
+    <string name="copyright">\@2019 ICON Foundation</string>
     <string name="intro1">ICONex는 ICX와ETH를 비롯하여\nICON Network에 연결된 다양한 암호화폐의\n지갑을 만들고 관리할 수 있습니다.</string>
     <string name="intro2">Reserved Balance를 기반으로\nICON에 연결된 다양한 암호화폐와 ICX의 편리한\n보관 및 송금이 가능합니다.</string>
     <string name="createWallet">지갑 만들기</string>

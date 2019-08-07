@@ -42,7 +42,7 @@
     <string name="msgCopyTxID">Transaction ID is copied.</string>
 
     <!-- Splash -->
-    <string name="copyright">\@2018 ICON Foundation</string>
+    <string name="copyright">\@2019 ICON Foundation</string>
     <string name="intro1">ICONex enables users to create and manage wallets for various cryptocurrencies that are connected to ICON Network including ICX and ETH.</string>
     <string name="intro2">Convenient storage and transfer of ICX and other various cryptocurrencies connected with ICON are possible based on the Reserved Balance.</string>
     <string name="createWallet">Create Wallet</string>
