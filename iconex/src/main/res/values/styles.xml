@@ -57,5 +57,4 @@
         <item name="android:textSize">16dp</item>
     </style>
 
-    <style name="ProjectDialog"></style>
 </resources>
