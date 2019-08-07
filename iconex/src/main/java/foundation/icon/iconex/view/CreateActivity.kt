@@ -5,7 +5,7 @@ import android.os.Bundle
 import foundation.icon.iconex.R
 import foundation.icon.iconex.view.ui.create.CreateStep1Fragment
 
-class CreateActivit : AppCompatActivity() {
+class CreateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
