@@ -7,4 +7,14 @@
         <attr name="setHint" format="string" />
         <attr name="setWarning" format="string" />
     </declare-styleable>
+
+    <!-- Title bar -->
+    <declare-styleable name="TitleBar">
+        <attr name="type" format="string">
+            <enum name="title" value="0" />
+            <enum name="title_option" value="1" />
+            <enum name="search" value="2" />
+        </attr>
+        <attr name="title" format="string" />
+    </declare-styleable>
 </resources>
