@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import foundation.icon.iconex.R
 
-class MessageDialog: Dialog {
+open class MessageDialog: Dialog {
 
     private var mTextHead: TextView
     private var mHeadLine: View
@@ -27,7 +27,7 @@ class MessageDialog: Dialog {
 
     private var mSingleButton: Button
 
-    constructor(context: Context?) : super(context)
+    constructor(context: Context) : super(context)
 
     init {
         setContentView(R.layout.dlg_message_dialog)
@@ -72,6 +72,22 @@ class MessageDialog: Dialog {
     var onCancleClick: ((v: View) -> Boolean)? = null
     var onSingleClick: ((v: View) -> Boolean)? = null
 
+    var isConfirmEnable: Boolean
+        get() = mConfirmButton.isEnabled
+        set(b) { mConfirmButton.isEnabled = b }
+
+    var confirmButtonText: String
+        get() = mConfirmButton.text.toString()
+        set(s) = mConfirmButton.setText(s)
+
+    var cancleButtonText: String
+        get() = mCancleButton.text.toString()
+        set(s) = mCancleButton.setText(s)
+
+    var singleButtonText: String
+        get() = mSingleButton.text.toString()
+        set(s) = mCancleButton.setText(s)
+
     var isSingleButton: Boolean
         get() = mSingleButton.visibility == View.VISIBLE
         set(b: Boolean) {
@@ -109,7 +125,9 @@ class MessageDialog: Dialog {
                     mOtherContent = null
                 }
 
-                mContent.addView(v)
+                mContent.addView(v,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT)
                 mOtherContent = v
             }
         }

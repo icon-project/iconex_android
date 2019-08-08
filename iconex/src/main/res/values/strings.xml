@@ -445,7 +445,22 @@
     <string name="connSendSuccess">Transfer Request Complete.\nYou can check the transaction history on ICON Tracker Go to ICON Tracker.</string>
     <string name="connSendFailed">Error occurred. Please try again.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Dialogs -->
+    <string name="dialogHeadTextTxHash">TxHash</string>
+    <string name="dialogTxHashTrackerLink"><u>ICON Tracker로 이동</u></string>
+    <string name="dialogTxHashCopyTxHash">Copy TxHash</string>
 
+    <string name="dialogHeadTextWalletPassword">Enter Wallet Password</string>
+    <string name="dialogWalletPasswordHint">Password</string>
+    <string name="dialogWalletPasswordForgotPassworld">Forgot password</string>
+
+    <string name="dialogHeadTextMinExchangeRate">허용가능 최소 환전비율</string>
+    <string name="dialogTitleTextMinExchangeRate">암호화폐의 환율은 변동이 심하므로,\n최소환전비율 설정을 통해 자산을 보호하세요.</string>
+    <string name="dialogSubTextMinExchangeRate">실제 환전이 체결되는 시점에 최소 환전 비율\n미만으로 받게 되면 Transaction이 취소되고,\n이미 사용한 수수료는 소진됩니다.</string>
+
+    <string name="dialogHeatTextUnstakeCancel">Unstake Cancel</string>
+    <string name="dialogLabelTimeRequired">Time Required</string>
+    <string name="dialogLabelStepLimit">Step Limit / Price (ICX)</string>
+    <string name="dialogLabelEstimatedMaxFee">Estimated Maximum Fee (ICX)</string>
+    <string name="dialogDescriptionUnstakeCancle">Unstake 취소 시 Transaction 수수료를 지불해야 합니다.</string>
 </resources>
