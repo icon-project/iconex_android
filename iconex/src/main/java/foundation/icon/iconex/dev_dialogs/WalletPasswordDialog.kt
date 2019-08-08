@@ -3,11 +3,9 @@ package foundation.icon.iconex.dev_dialogs
 import android.content.Context
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import foundation.icon.iconex.R
 
@@ -24,7 +22,7 @@ class WalletPasswordDialog(context: Context) : MessageDialog(context) {
         headText = context.getString(R.string.dialogHeadTextWalletPassword)
 
         // set Content
-        var v = View.inflate(context, R.layout.dlg_wallet_password_dialog, null)
+        var v = View.inflate(context, R.layout.dlg_content_wallet_password, null)
         content = v
 
         // load content ui
