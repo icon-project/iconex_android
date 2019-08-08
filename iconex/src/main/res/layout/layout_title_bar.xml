@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <RelativeLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_white_top_corner"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
+
+        <Button
+            android:id="@+id/btn_close"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/btn_appbar_close" />
+
+        <TextView
+            android:id="@+id/btn_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@color/colorWhite"
+            android:fontFamily="@font/noto_sans_light"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="blank"
+            android:textColor="@color/dark80"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/txt_title"
+            style="@style/TextView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toStartOf="@id/btn_option"
+            android:layout_toEndOf="@id/btn_close"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/colorText4D" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_white_top_corner"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/icon_search"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_appbar_search" />
+
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@color/colorWhite"
+            android:fontFamily="@font/noto_sans_light"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="blank"
+            android:textColor="@color/dark80"
+            android:textSize="12dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toStartOf="@id/btn_cancel"
+            android:layout_toEndOf="@id/icon_search">
+
+            <Button
+                android:id="@+id/btn_clear"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_input_delete" />
+
+            <foundation.icon.iconex.widgets.MyEditText
+                android:id="@+id/edit_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/btn_clear"
+                android:background="@color/colorWhite"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textColor="@color/colorText4D"
+                android:textCursorDrawable="@drawable/custom_cursor"
+                android:textSize="14dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>
