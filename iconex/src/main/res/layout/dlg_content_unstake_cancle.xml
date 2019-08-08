@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <!-- TODO: font DemiLight -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lb_time_required"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+
+                android:fontFamily="@font/noto_sans_light"
+                android:textSize="10dp"
+                android:textColor="@color/dark80"
+
+                android:text="@string/dialogLabelTimeRequired"/>
+
+            <TextView
+                android:id="@+id/txt_time_required"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBaseline="@id/lb_time_required"
+
+                android:fontFamily="@font/nanum_square_bold"
+                android:textSize="10dp"
+                android:textColor="@color/dark"
+
+                tools:text="Immediately"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp">
+
+            <TextView
+                android:id="@+id/lb_step_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@font/noto_sans_light"
+                android:textSize="10dp"
+                android:textColor="@color/dark80"
+
+                android:text="@string/dialogLabelStepLimit"/>
+
+            <TextView
+                android:id="@+id/txt_step_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBaseline="@id/lb_step_limit"
+
+                android:fontFamily="@font/nanum_square_bold"
+                android:textSize="10dp"
+                android:textColor="@color/dark"
+
+                tools:text="100,000/ 0asdlfajsdf"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="11dp">
+
+            <TextView
+                android:id="@+id/lb_estimated_max_fee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@font/noto_sans_light"
+                android:textSize="10dp"
+                android:textColor="@color/dark80"
+
+                android:text="@string/dialogLabelEstimatedMaxFee"/>
+
+            <TextView
+                android:id="@+id/txt_estimated_max_fee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBaseline="@id/lb_estimated_max_fee"
+
+                android:fontFamily="@font/nanum_square_bold"
+                android:textSize="10dp"
+                android:textColor="@color/dark"
+
+                tools:text="0.0000008"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txt_exchanged_fee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textAlignment="textEnd"
+
+            android:fontFamily="@font/nanum_square_bold"
+            android:textSize="10dp"
+            android:textColor="@color/darkB3"
+
+            tools:text="$ 0.0001"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp"
+
+        android:background="@drawable/bg_rounded_stroke_box_primary_f5">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="20dp"
+
+            style="@style/TextView10"
+            android:fontFamily="@font/noto_sans_regular"
+            android:textColor="@color/primary"
+
+            android:text="@string/dialogDescriptionUnstakeCancle"/>
+    </RelativeLayout>
+</LinearLayout>

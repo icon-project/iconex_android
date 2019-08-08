@@ -1,152 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="22dp"
-    android:layout_marginVertical="60dp">
+    android:layout_marginLeft="22dp"
+    android:layout_marginRight="22dp"
+    android:layout_marginTop="60dp"
+    android:layout_marginBottom="60dp"
+    android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/wrap_2button"
+        android:background="@drawable/bg_rounded_top_white">
+
+        <TextView
+            android:id="@+id/txt_head"
+            style="@style/TextView16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_rounded_top_white">
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="23dp"
 
-                <TextView
-                    android:id="@+id/txt_head"
-                    style="@style/TextView16"
+            android:layout_marginRight="30dp"
+            android:fontFamily="@font/noto_sans_medium"
+            android:textAlignment="center"
+
+            android:textColor="@color/dark"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="sample 텍스트" />
+
+        <View
+            android:id="@+id/headline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+
+            android:layout_marginTop="12dp"
+            android:background="@color/darkE6"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_head" />
+
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@id/headline"
+            app:layout_goneMarginTop="60dp">
+
+            <ScrollView
+                android:id="@+id/default_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="50dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="23dp"
+                    android:orientation="vertical">
 
-                    android:layout_marginRight="30dp"
-                    android:fontFamily="@font/noto_sans_medium"
-                    android:textAlignment="center"
+                    <TextView
+                        android:id="@+id/txt_title"
+                        style="@style/TextView14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
 
-                    android:textColor="@color/dark"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="sample 텍스트" />
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorText4D"
 
-                <View
-                    android:id="@+id/headline"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                        tools:text="sample 제목" />
 
-                    android:layout_marginTop="12dp"
-                    android:background="@color/darkE6"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    <TextView
+                        android:id="@+id/txt_sub"
+                        style="@style/TextView12"
+                        android:layout_width="match_parent"
 
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/txt_head" />
+                        android:layout_height="wrap_content"
+                        android:lineHeight="20dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorText4D"
 
-                <FrameLayout
-                    android:id="@+id/content"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:maxHeight="400dp"
-                    app:layout_constraintHeight_default="wrap"
-
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/headline"
-
-                    android:layout_marginTop="30dp"
-                    app:layout_goneMarginTop="60dp"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
-                        <ScrollView
-                            android:id="@+id/default_content"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="50dp"
-                            android:layout_marginLeft="30dp"
-                            android:layout_marginRight="30dp">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical">
-
-                                        <TextView
-                                            android:id="@+id/txt_title"
-                                            style="@style/TextView14"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-
-                                            android:layout_marginBottom="16dp"
-                                            android:fontFamily="@font/noto_sans_medium"
-                                            android:textAlignment="center"
-                                            android:textColor="@color/colorText4D"
-
-                                            tools:text="sample 제목" />
-
-                                        <TextView
-                                            android:id="@+id/txt_sub"
-                                            style="@style/TextView12"
-                                            android:layout_width="match_parent"
-
-                                            android:layout_height="wrap_content"
-                                            android:lineHeight="20dp"
-                                            android:textAlignment="center"
-                                            android:textColor="@color/colorText4D"
-
-                                            tools:text="sample 본문" />
-                                </LinearLayout>
-                        </ScrollView>
-                </FrameLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                        tools:text="sample 본문" />
+                </LinearLayout>
+            </ScrollView>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <LinearLayout
-            android:id="@+id/wrap_2button"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:orientation="horizontal"
-            android:weightSum="3">
+    <LinearLayout
+        android:id="@+id/wrap_2button"
+        android:layout_width="0dp"
+        android:layout_height="46dp"
 
-                <Button
-                    android:id="@+id/btn_cancel"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_rounded_lb_gray_f2"
-                    android:layout_weight="2"
+        app:layout_constraintBottom_toTopOf="@id/btn_single_confirm"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
 
-                    android:textSize="14dp"
-                    android:fontFamily="@font/noto_sans_regular"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorText4D"
-                    android:text="@string/cancel"/>
-
-                <Button
-                    android:id="@+id/btn_confirm"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_rounded_rb_primary_b4"
-
-                    android:textSize="14dp"
-                    android:fontFamily="@font/noto_sans_regular"
-                    android:textAllCaps="false"
-                    android:textColor="@color/dlg_confirm_button"
-                    android:layout_weight="1"
-
-                    android:text="@string/confirm"/>
-        </LinearLayout>
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_single_confirm"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:background="@drawable/bg_rounded_bottom_gray_f2"
-
-            android:textSize="14dp"
+            android:id="@+id/btn_cancel"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_rounded_lb_gray_f2"
             android:fontFamily="@font/noto_sans_regular"
+            android:text="@string/cancel"
             android:textAllCaps="false"
             android:textColor="@color/colorText4D"
+            android:textSize="14dp" />
 
-            android:text="@string/confirm"/>
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_confirm"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/bg_rounded_rb_primary_b4"
+            android:fontFamily="@font/noto_sans_regular"
+            android:text="@string/confirm"
+            android:textAllCaps="false"
+            android:textColor="@color/dlg_confirm_button"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_single_confirm"
+        android:layout_width="0dp"
+        android:layout_height="46dp"
+        android:background="@drawable/bg_rounded_bottom_gray_f2"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:text="@string/confirm"
+        android:textAllCaps="false"
+        android:textColor="@color/colorText4D"
+
+        android:textSize="14dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
