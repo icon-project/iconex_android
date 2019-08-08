@@ -3,15 +3,12 @@ package foundation.icon.iconex.view
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import foundation.icon.ICONexApp
-
 import foundation.icon.connect.RequestData
 import foundation.icon.iconex.R
 import foundation.icon.iconex.dialogs.PermissionConfirmDialog
 import foundation.icon.iconex.intro.auth.AuthActivity
-import foundation.icon.iconex.service.VersionCheck
 import foundation.icon.iconex.util.FingerprintAuthBuilder
 import foundation.icon.iconex.util.PreferenceUtil
 import foundation.icon.iconex.wallet.main.MainActivity
@@ -36,23 +33,25 @@ class SplashActivity : AppCompatActivity() {
     public override fun onResume() {
         super.onResume()
 
-        val localHandler = Handler()
-        localHandler.postDelayed({
-            val versionCheck = VersionCheck(this@SplashActivity,
-                    object : VersionCheck.VersionCheckCallback {
-                        override fun onNeedUpdate() {
-                            // Do nothing.
-                        }
+//        val localHandler = Handler()
+//        localHandler.postDelayed({
+//            val versionCheck = VersionCheck(this@SplashActivity,
+//                    object : VersionCheck.VersionCheckCallback {
+//                        override fun onNeedUpdate() {
+//                            // Do nothing.
+//                        }
+//
+//                        override fun onPass() {
+//                            if (isIconConnect) {
+//                                finish()
+//                            } else
+//                                checkPermissionConfirm()
+//                        }
+//                    })
+//            versionCheck.execute()
+//        }, 500)
 
-                        override fun onPass() {
-                            if (isIconConnect) {
-                                finish()
-                            } else
-                                checkPermissionConfirm()
-                        }
-                    })
-            versionCheck.execute()
-        }, 500)
+        startActivity(Intent(this@SplashActivity, CreateActivity::class.java))
     }
 
     private fun checkPermissionConfirm() {
