@@ -17,4 +17,22 @@
         </attr>
         <attr name="title" format="string" />
     </declare-styleable>
+    
+    
+    <declare-styleable name="CustomActionBar">
+        <attr name="text" format="string"/>
+        <attr name="text_button" format="string"/>
+        <attr name="start_icon" format="integer">
+            <enum name="menu" value="0"/>
+            <enum name="back" value="1"/>
+            <enum name="none" value="2"/>
+        </attr>
+        <attr name="end_icon" format="integer">
+            <enum name="info" value="0"/>
+            <enum name="more" value="1"/>
+            <enum name="text" value="2"/>
+            <enum name="none" value="3"/>
+        </attr>
+        <attr name="show_ic_toggle" format="boolean"/>
+    </declare-styleable>
 </resources>
