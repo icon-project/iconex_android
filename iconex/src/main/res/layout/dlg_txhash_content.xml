@@ -15,7 +15,7 @@
 
         android:textSize="10dp"
         android:lineHeight="18dp"
-        android:textColor="@color/colorText4D"
+        android:textColor="@color/dark"
         android:fontFamily="@font/noto_sans_regular"
         android:textAlignment="center"
 

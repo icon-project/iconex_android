@@ -46,7 +46,7 @@
             android:fontFamily="@font/noto_sans_medium"
             android:gravity="center"
             android:maxLines="1"
-            android:textColor="@color/colorText4D" />
+            android:textColor="@color/dark" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -104,7 +104,7 @@
                 android:layout_toStartOf="@id/btn_clear"
                 android:background="@color/colorWhite"
                 android:fontFamily="@font/noto_sans_regular"
-                android:textColor="@color/colorText4D"
+                android:textColor="@color/dark"
                 android:textCursorDrawable="@drawable/custom_cursor"
                 android:textSize="14dp" />
         </RelativeLayout>
