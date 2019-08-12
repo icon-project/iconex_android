@@ -9,16 +9,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorMain"
-        android:minHeight="75dp">
+        android:background="@color/colorWhite"
+        android:minHeight="75dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <LinearLayout
             android:id="@+id/step_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="18dp"
+            android:layout_marginEnd="8dp"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,12 +30,12 @@
             <View
                 android:layout_width="152dp"
                 android:layout_height="1dp"
-                android:background="@color/colorWhite" />
+                android:background="@color/primary00" />
 
             <View
                 android:layout_width="98dp"
                 android:layout_height="1dp"
-                android:background="#068a99" />
+                android:background="@color/darkE6" />
         </LinearLayout>
 
         <ImageView
@@ -71,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="54dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_04"
+            android:src="@drawable/ic_step_04_off"
             app:layout_constraintStart_toEndOf="@id/imageView3"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,10 +82,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/selectCoin"
-            android:textColor="@color/colorWhite50"
+            android:textColor="@color/primary00"
             android:textSize="10dp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="@id/imageView"
@@ -95,10 +97,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/information"
-            android:textColor="@color/colorWhite50"
+            android:textColor="@color/primary00"
             android:textSize="10dp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="@id/imageView2"
@@ -110,10 +112,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_bold"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/stepDownload"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/primary00"
             android:textSize="10dp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="@id/imageView3"
@@ -125,10 +127,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/savePrivateKey"
-            android:textColor="#068a99"
+            android:textColor="@color/dark80"
             android:textSize="10dp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="@id/imageView4"

@@ -445,4 +445,10 @@
     <string name="connSendSuccess">Transfer Request Complete.\nYou can check the transaction history on ICON Tracker Go to ICON Tracker.</string>
     <string name="connSendFailed">Error occurred. Please try again.</string>
 
+    <!-- Temporary -->
+    <string name="createWalletStep1Detailed1">· You can add IRC tokens using ICON wallet menu.</string>
+    <string name="createWalletStep1Detailed2">· You can add ERC20 tokens using Ethereum wallet menu.</string>
+    <string name="createWalletStep1Detailed3">· Wallets for other coins will be added later.</string>
+    <!-- ========= -->
+
 </resources>
