@@ -2,15 +2,13 @@ package foundation.icon.iconex.view
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import foundation.icon.iconex.R
 import foundation.icon.iconex.control.IntroViewPagerAdapter
-import foundation.icon.iconex.wallet.create.CreateWalletActivity
 import foundation.icon.iconex.wallet.load.LoadWalletActivity
 
 class IntroActivity : AppCompatActivity(), View.OnClickListener {
@@ -66,7 +64,9 @@ class IntroActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.btn_create_wallet -> startActivity(Intent(this, CreateWalletActivity::class.java))
+            R.id.btn_create_wallet -> {
+                CreateWalletDialog().show(supportFragmentManager, null)
+            }
 
             R.id.btn_load_wallet -> startActivity(Intent(this, LoadWalletActivity::class.java))
         }

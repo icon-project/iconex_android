@@ -118,19 +118,19 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
                 View inflated = null;
                 switch (position) {
                     case 0:
-                        inflated = layoutInflater.inflate(R.layout.layout_create_wallet_step1, null);
+                        inflated = layoutInflater.inflate(R.layout.layout_step1, null);
                         break;
 
                     case 1:
-                        inflated = layoutInflater.inflate(R.layout.layout_create_wallet_step2, null);
+                        inflated = layoutInflater.inflate(R.layout.layout_step2, null);
                         break;
 
                     case 2:
-                        inflated = layoutInflater.inflate(R.layout.layout_create_wallet_step3, null);
+                        inflated = layoutInflater.inflate(R.layout.layout_step3, null);
                         break;
 
                     case 3:
-                        inflated = layoutInflater.inflate(R.layout.layout_create_wallet_step4, null);
+                        inflated = layoutInflater.inflate(R.layout.layout_step4, null);
                         break;
                 }
 
