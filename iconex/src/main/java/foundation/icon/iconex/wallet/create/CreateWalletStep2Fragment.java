@@ -78,7 +78,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_create_wallet_step2, container, false);
+        view = inflater.inflate(R.layout.layout_create_wallet_step2, container, false);
         btnPrev = view.findViewById(R.id.btn_prev);
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
