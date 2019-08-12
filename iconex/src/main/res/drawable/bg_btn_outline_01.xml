@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pressed -->
+    <item android:state_pressed="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="4dp" />
+                    <solid android:color="@color/darkE6" />
+                </shape>
+            </item>
+
+            <item android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="4dp" />
+                    <solid android:color="@color/darkFA" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Disabled -->
+    <item android:state_enabled="false">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="4dp" />
+                    <solid android:color="@color/darkE6" />
+                </shape>
+            </item>
+
+            <item android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="4dp" />
+                    <solid android:color="@color/colorWhite" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Normal -->
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="4dp" />
+                    <solid android:color="@color/darkAlpha07" />
+                </shape>
+            </item>
+
+            <item android:bottom="1dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="4dp" />
+                    <solid android:color="@color/darkE6" />
+                </shape>
+            </item>
+
+            <item android:bottom="2dp" android:left="1dp" android:right="1dp" android:top="1dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="4dp" />
+                    <solid android:color="@color/colorWhite" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+</selector>
