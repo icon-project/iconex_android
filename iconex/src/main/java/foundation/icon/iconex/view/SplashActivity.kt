@@ -51,7 +51,7 @@ class SplashActivity : AppCompatActivity() {
 //            versionCheck.execute()
 //        }, 500)
 
-        startActivity(Intent(this@SplashActivity, CreateActivity::class.java))
+        startActivity(Intent(this@SplashActivity, IntroActivity::class.java))
     }
 
     private fun checkPermissionConfirm() {

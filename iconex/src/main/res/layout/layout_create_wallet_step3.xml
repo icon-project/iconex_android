@@ -1,139 +1,135 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    tools:context="foundation.icon.iconex.wallet.create.CreateWalletStep3Fragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
+        android:id="@+id/step"
+        layout="@layout/layout_step3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorMain"
-        android:minHeight="75dp">
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:id="@+id/layout_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/darkE6" />
 
         <LinearLayout
-            android:id="@+id/step_line"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="18dp"
-            android:gravity="center"
+            android:background="@color/darkFC"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:padding="10dp">
 
-            <View
-                android:layout_width="152dp"
-                android:layout_height="1dp"
-                android:background="@color/colorWhite" />
+            <Button
+                android:id="@+id/btn_prev"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_rounded_02"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="center"
+                android:text="@string/back"
+                android:textAllCaps="false"
+                android:textColor="@color/txt_btn_rounded_02"
+                android:textSize="14dp" />
 
-            <View
-                android:layout_width="98dp"
-                android:layout_height="1dp"
-                android:background="#068a99" />
+            <Button
+                android:id="@+id/btn_next"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="2"
+                android:background="@drawable/bg_btn_rounded_01_light"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="center"
+                android:text="@string/next"
+                android:textAllCaps="false"
+                android:textColor="@color/txt_btn_rounded_01_light"
+                android:textSize="14dp" />
         </LinearLayout>
+    </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_buttons"
+        android:layout_below="@id/step">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_check"
-            app:layout_constraintStart_toStartOf="@id/step_line"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_check"
-            app:layout_constraintStart_toEndOf="@id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                style="@style/TextView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/noto_sans_medium"
+                android:text="@string/walletDownloadGuide"
+                android:textColor="@color/dark4D" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_03_on"
-            app:layout_constraintStart_toEndOf="@id/imageView2"
-            app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/btn_back_up"
+                style="@style/TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/bg_btn_outline_01"
+                android:fontFamily="@font/noto_sans_light"
+                android:text="@string/walletDownload"
+                android:textColor="@color/txt_btn_outline_01"
+                android:textSize="10dp" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_04"
-            app:layout_constraintStart_toEndOf="@id/imageView3"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/bg_outline_box_cyan"
+                android:fontFamily="@font/noto_sans_regular"
+                android:padding="20dp"
+                android:text="@string/step3Header"
+                android:textColor="@color/primary00" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/selectCoin"
-            android:textColor="@color/colorWhite50"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView"
-            app:layout_constraintRight_toRightOf="@id/imageView"
-            app:layout_constraintTop_toBottomOf="@id/imageView" />
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/noto_sans_light"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/createWalletStep3Detailed1"
+                android:textColor="@color/primary00" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/information"
-            android:textColor="@color/colorWhite50"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView2"
-            app:layout_constraintRight_toRightOf="@id/imageView2"
-            app:layout_constraintTop_toBottomOf="@id/imageView2" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_bold"
-            android:gravity="center"
-            android:text="@string/stepDownload"
-            android:textColor="@color/colorWhite"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView3"
-            app:layout_constraintRight_toRightOf="@id/imageView3"
-            app:layout_constraintTop_toBottomOf="@id/imageView3" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/savePrivateKey"
-            android:textColor="#068a99"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView4"
-            app:layout_constraintRight_toRightOf="@id/imageView4"
-            app:layout_constraintTop_toBottomOf="@id/imageView4" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/noto_sans_light"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/createWalletStep3Detailed2"
+                android:textColor="@color/primary00" />
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

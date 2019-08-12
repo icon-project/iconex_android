@@ -38,6 +38,10 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="BottomSheetModal" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_rounded_top_white</item>
+    </style>
+
     <!-- TextView -->
     <style name="TextView10">
         <item name="android:textSize">10dp</item>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pressed -->
+    <item android:drawable="@drawable/bg_btn_rounded_02_p" android:state_pressed="true" />
+
+    <!-- Disabled -->
+    <item android:drawable="@drawable/bg_btn_rounded_01_light_d" android:state_enabled="false" />
+
+    <!-- Default -->
+    <item android:drawable="@drawable/bg_btn_rounded_02_n" />
+
+</selector>

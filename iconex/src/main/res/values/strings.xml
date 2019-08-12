@@ -68,7 +68,7 @@
     <string name="hintCreateWalletPassword">At least 8 characters including letters, numbers, and special characters.</string>
     <string name="hintWalletPasswordConfirm">Confirm password</string>
     <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )</string>
-    <string name="step3Header">This Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
+    <string name="step3Header">This Keystore file contains the encrypted private key\nrequires the wallet password to access it.</string>
     <string name="step3Sub1">Use this Keystore file to load your wallet from other devices.</string>
     <string name="step3Sub2">You can download your Keystore file from the \"Backup wallet\" menu later.</string>
     <string name="walletDownloadGuide">Download Keystore file</string>
@@ -77,7 +77,7 @@
     <string name="backupKeyStoreFileConfirm">DO NOT SHARE YOUR KEYSTORE FILE WITH OTHERS. Do you want to proceed? </string>
     <string name="noBackupKeyStoreFileConfirm">Do you want to proceed without downloading the Keystore file?</string>
     <string name="keyStoreDownloadAccomplished">\"%s\"\nThe file has been downloaded successfully.</string>
-    <string name="step4Header">The private key is unique to your wallet and has no password.</string>
+    <string name="step4Header">The private key is unique to your wallet \nprivate key has no password.</string>
     <string name="step4Sub1">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
     <string name="step4Sub2">You can access to your private key from the \'Backup wallet\' menu later.</string>
     <string name="privateKey">Private Key</string>
@@ -463,4 +463,16 @@
     <string name="dialogLabelStepLimit">Step Limit / Price (ICX)</string>
     <string name="dialogLabelEstimatedMaxFee">Estimated Maximum Fee (ICX)</string>
     <string name="dialogDescriptionUnstakeCancle">Unstake 취소 시 Transaction 수수료를 지불해야 합니다.</string>
+
+    <!-- Temporary -->
+    <string name="createWalletStep1Detailed1">· You can add IRC tokens using ICON wallet menu.</string>
+    <string name="createWalletStep1Detailed2">· You can add ERC20 tokens using Ethereum wallet menu.</string>
+    <string name="createWalletStep1Detailed3">· Wallets for other coins will be added later.</string>
+
+    <string name="createWalletStep2Notice">DO NOT FORGET TO SAVE THIS.\nIf yo lose your password, you cannot restore it.</string>
+    <string name="createWalletStep2Detailed1">· You will need the password to load your wallet in other  devices using the Keystore file or your private key.</string>
+
+    <string name="createWalletStep3Detailed1">· Use this Keystore file to load your wallet from other device.</string>
+    <string name="createWalletStep3Detailed2">· You can download your Keystore file from the \`Backup wallet\` menu later.</string>
+    <!-- ========= -->
 </resources>
