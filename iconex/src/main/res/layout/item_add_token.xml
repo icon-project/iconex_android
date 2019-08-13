@@ -6,7 +6,8 @@
     android:layout_height="60dp"
     android:background="@drawable/bg_selector_pressed"
     android:paddingStart="20dp"
-    android:paddingEnd="20dp">
+    android:paddingEnd="20dp"
+    android:clickable="true">
 
     <CheckBox
         android:id="@+id/checkbox"
