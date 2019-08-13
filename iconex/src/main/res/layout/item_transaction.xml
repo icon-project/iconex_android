@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:layout_marginTop="22dp"
+        android:fontFamily="@font/noto_sans_medium"
+        android:textSize="10dp"
+        android:textColor="@color/dark"
+
+        android:text="vote"/>
+
+    <TextView
+        android:id="@+id/txt_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/text"
+
+        android:fontFamily="@font/nanum_square_regular"
+        android:textSize="10dp"
+        android:textColor="@color/dark80"
+
+        android:text="18-02-05 08:53:59"/>
+
+    <!-- TODO: DemiLight -->
+    <TextView
+        android:id="@+id/txt_address"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text"
+
+        android:textSize="10dp"
+        android:textColor="@color/dark80"
+
+        android:maxLines="1"
+        android:ellipsize="end"
+
+        android:text="0x8a7c60368a7c6036…"/>
+
+    <TextView
+        android:id="@+id/txt_tint_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/txt_address"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:fontFamily="@font/nanum_square_bold"
+        android:textSize="10dp"
+        android:textColor="@color/primary"
+
+        android:text="+100,1000,100 ICX" />
+
+
+    <TextView
+        android:id="@+id/txt_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toStartOf="@id/txt_tint_amount"
+        app:layout_constraintBaseline_toBaselineOf="@id/txt_address"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:textSize="10dp"
+        android:textColor="@color/dark"
+
+        android:text="P-Reps(5)"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
