@@ -35,4 +35,8 @@
         </attr>
         <attr name="show_ic_toggle" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="TotalAssetsIndicator">
+        <attr name="index" format="integer"/>
+    </declare-styleable>
 </resources>

@@ -96,9 +96,8 @@ class CustomActionBar: RelativeLayout {
         mTxtTitle.setText(mTitle)
         mImgToggle.visibility = if (mIsShowIcToggle) View.VISIBLE else View.GONE
 
-        addView(v,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT)
+        var dp56 = resources.getDimensionPixelSize(R.dimen.dp56)
+        addView(v, ViewGroup.LayoutParams.MATCH_PARENT, dp56)
     }
 
     enum class IconStart {

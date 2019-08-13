@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primaryF5">
+
+        <foundation.icon.iconex.widgets.CustomActionBar
+            android:id="@+id/actionbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:end_icon="info"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:show_ic_toggle="true"
+            app:start_icon="menu"
+            app:text="Wallets" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh"
+            style="swip"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/actionbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_header"
+                    android:layout_width="0dp"
+                    android:layout_height="148dp"
+                    android:background="@color/primary"
+
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/txt_total_asset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginRight="7dp"
+                        android:text="TotalAssets"
+                        app:layout_constraintEnd_toStartOf="@+id/txt_usd"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
+                        android:textSize="14dp"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/txt_usd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="USD"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_total_asset"
+                        app:layout_constraintEnd_toStartOf="@id/btn_toggle"
+                        app:layout_constraintStart_toEndOf="@id/txt_total_asset"
+                        app:layout_constraintTop_toTopOf="@id/txt_total_asset"
+
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:textSize="14dp"
+                        android:textColor="@android:color/white" />
+
+                    <ImageButton
+                        android:id="@+id/btn_toggle"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:background="@color/transparent"
+                        android:src="@drawable/ic_toggle"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_total_asset"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/txt_usd"
+                        app:layout_constraintTop_toTopOf="@id/txt_total_asset" />
+
+                    <TextView
+                        android:id="@+id/txt_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:text="900,000.0004"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_total_asset"
+
+                        android:fontFamily="@font/nanum_square_light"
+                        android:textSize="40dp"
+                        android:textColor="@android:color/white"/>
+
+
+                    <foundation.icon.iconex.dev_mainWallet.TotalAssetsIndicator
+                        android:id="@+id/totalAssetsIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginBottom="46dp"
+                        app:index="0"
+                        app:layout_constraintBottom_toBottomOf="parent"
+
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+
+                    android:background="@drawable/bg_gradient_primary2primaryf5"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_header" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_18dp_rounded_white"
+                    app:layout_constraintBottom_toTopOf="@id/page_indicator"
+
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+
+                    app:layout_constraintTop_toBottomOf="@id/layout_header">
+
+                    <TextView
+                        android:id="@+id/txt_nickname"
+                        android:layout_width="0dp"
+                        android:layout_height="27dp"
+
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="47dp"
+                        android:layout_marginRight="12dp"
+
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:text="Wallet Nickname"
+                        android:textColor="@color/dark"
+
+                        android:textSize="18dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/btn_scan"
+
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/btn_wallet_more"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+
+                        android:layout_marginRight="20dp"
+                        android:background="@android:color/transparent"
+
+                        android:src="@drawable/ic_more_vert_darkgray"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_nickname"
+                        app:layout_constraintRight_toRightOf="parent"
+
+                        app:layout_constraintTop_toTopOf="@id/txt_nickname" />
+
+                    <ImageButton
+                        android:id="@+id/btn_wallet_rem"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+
+                        android:layout_marginRight="18dp"
+                        android:background="@android:color/transparent"
+
+                        android:src="@drawable/ic_wallet_rem_darkgray"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_nickname"
+                        app:layout_constraintRight_toLeftOf="@id/btn_wallet_more"
+
+                        app:layout_constraintTop_toTopOf="@id/txt_nickname" />
+
+                    <ImageButton
+                        android:id="@+id/btn_scan"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+
+                        android:layout_marginRight="18dp"
+                        android:background="@android:color/transparent"
+
+                        android:src="@drawable/ic_qr_code_scan"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_nickname"
+                        app:layout_constraintRight_toLeftOf="@id/btn_wallet_rem"
+
+                        app:layout_constraintTop_toTopOf="@id/txt_nickname" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="26dp"
+                        android:layout_marginRight="15dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_nickname"
+                        tools:listitem="@layout/item_wallet_card_borderless" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <foundation.icon.iconex.dev_mainWallet.WalletPageIndicator
+                    android:id="@+id/page_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include layout="@layout/main_wallet_side_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>
