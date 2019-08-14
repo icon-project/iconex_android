@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import foundation.icon.iconex.R
+import org.web3j.abi.datatypes.Uint
 
-class CustomActionBar: RelativeLayout {
+class CustomActionBar: RelativeLayout, View.OnClickListener {
 
     private var mIconStart: IconStart = IconStart.none
     private var mIconEnd: IconEnd = IconEnd.none
@@ -21,6 +22,10 @@ class CustomActionBar: RelativeLayout {
     private lateinit var mBtnText: Button
     private lateinit var mTxtTitle: TextView
     private lateinit var mImgToggle: ImageView
+
+    private var mOnClickStartIcon: ((View) -> Uint)? = null
+    private var mOnClickEndIcon: ((View) -> Uint)? = null
+    private var mOnCLickToggleIcon: ((View) -> Uint)? = null
 
     constructor(context: Context) : super(context) {
         initView()
@@ -68,6 +73,12 @@ class CustomActionBar: RelativeLayout {
         mTxtTitle = v.findViewById(R.id.txt_title)
         mImgToggle = v.findViewById(R.id.img_toggle)
 
+        mBtnStartIcon.setOnClickListener(this)
+        mBtnEndIcon.setOnClickListener(this)
+        mBtnText.setOnClickListener(this)
+        mTxtTitle.setOnClickListener(this)
+        mImgToggle.setOnClickListener(this)
+
         when (mIconStart) {
             IconStart.menu -> mBtnStartIcon.setImageResource(R.drawable.ic_appbar_menu)
             IconStart.back -> mBtnStartIcon.setImageResource(R.drawable.ic_appbar_back)
@@ -98,6 +109,16 @@ class CustomActionBar: RelativeLayout {
 
         var dp56 = resources.getDimensionPixelSize(R.dimen.dp56)
         addView(v, ViewGroup.LayoutParams.MATCH_PARENT, dp56)
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            R.id.btn_start_icon -> mOnClickStartIcon?.invoke(v)
+            R.id.btn_end_icon -> mOnClickEndIcon?.invoke(v)
+            R.id.btn_text -> mOnClickEndIcon?.invoke(v)
+            R.id.txt_title -> mOnCLickToggleIcon?.invoke(v)
+            R.id.img_toggle -> mOnCLickToggleIcon?.invoke(v)
+        }
     }
 
     enum class IconStart {
