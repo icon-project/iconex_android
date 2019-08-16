@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import foundation.icon.iconex.R
 import foundation.icon.iconex.control.IntroViewPagerAdapter
-import foundation.icon.iconex.wallet.load.LoadWalletActivity
+import foundation.icon.iconex.view.ui.load.LoadWalletActivity
 
 class IntroActivity : AppCompatActivity(), View.OnClickListener {
 

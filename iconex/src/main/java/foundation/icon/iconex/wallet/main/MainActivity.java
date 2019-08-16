@@ -52,7 +52,7 @@ import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.create.CreateWalletActivity;
-import foundation.icon.iconex.wallet.load.LoadWalletActivity;
+import foundation.icon.iconex.view.ui.load.LoadWalletActivity;
 import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.MyConstants.EXCHANGE_BTC;

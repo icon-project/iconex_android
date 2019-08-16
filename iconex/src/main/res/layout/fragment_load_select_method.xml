@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context="foundation.icon.iconex.wallet.load.LoadSelectMethodFragment">
+    tools:context=".view.ui.load.LoadSelectMethodFragment">
 
     <TextView
         android:id="@+id/txt_header"

@@ -57,7 +57,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".wallet.load.LoadWalletActivity"
+            android:name=".view.ui.load.LoadWalletActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -141,7 +141,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
-            android:name=".wallet.load.LoadBundleActivity"
+            android:name=".view.ui.load.LoadBundleActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
