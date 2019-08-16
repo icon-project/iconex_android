@@ -8,6 +8,16 @@
         <attr name="setWarning" format="string" />
     </declare-styleable>
 
+    <!-- TTextInputLayout -->
+    <declare-styleable name="TTextInputLayout">
+        <attr name="inputType" format="string">
+            <enum name="text" value="0" />
+            <enum name="password" value="1" />
+            <enum name="readOnly" value="2" />
+        </attr>
+        <attr name="hint" format="string" />
+    </declare-styleable>
+
     <!-- Title bar -->
     <declare-styleable name="TitleBar">
         <attr name="type" format="string">

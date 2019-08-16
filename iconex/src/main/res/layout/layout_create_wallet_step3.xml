@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.wallet.create.CreateWalletStep3Fragment">
+    tools:context="foundation.icon.iconex.view.ui.create.CreateWalletStep3Fragment">
 
     <include
         android:id="@+id/step"

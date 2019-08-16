@@ -64,9 +64,7 @@ class IntroActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.btn_create_wallet -> {
-                CreateWalletDialog().show(supportFragmentManager, null)
-            }
+            R.id.btn_create_wallet -> startActivity(Intent(this, CreateWalletActivity::class.java))
 
             R.id.btn_load_wallet -> startActivity(Intent(this, LoadWalletActivity::class.java))
         }

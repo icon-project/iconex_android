@@ -69,7 +69,7 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
         txtPrivKey.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         txtPrivKey.setText(mPrivKey);
-        btnVisibility = findViewById(R.id.btn_visibility);
+        btnVisibility = findViewById(R.id.btn_eye);
         btnVisibility.setOnClickListener(this);
     }
 
@@ -92,7 +92,7 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
                 Toast.makeText(this, getString(R.string.msgCopyPrivateKey), Toast.LENGTH_SHORT).show();
                 break;
 
-            case R.id.btn_visibility:
+            case R.id.btn_eye:
                 if (btnVisibility.isSelected()) {
                     btnVisibility.setSelected(false);
                     txtPrivKey.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD

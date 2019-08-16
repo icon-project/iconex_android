@@ -20,7 +20,10 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.CreateActivity"></activity>
+        <activity
+            android:name=".view.CreateWalletActivity"
+            android:theme="@style/DialogActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".view.SplashActivity"
             android:configChanges="fontScale"

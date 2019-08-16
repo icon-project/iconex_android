@@ -8,7 +8,7 @@
     <foundation.icon.iconex.widgets.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="title"
+        app:title="@string/createWallet"
         app:type="title" />
 
     <FrameLayout

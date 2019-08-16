@@ -71,7 +71,15 @@ class TitleBar : RelativeLayout, View.OnClickListener {
 
     private fun init() {
         when (type) {
-            Type.TITLE, Type.TITLE_OPTION -> {
+            Type.TITLE -> {
+                layoutTitle!!.visibility = View.VISIBLE
+                layoutSearch!!.visibility = View.GONE
+                btnOption!!.visibility = View.GONE
+
+                txtTitle!!.text = title
+            }
+
+            Type.TITLE_OPTION -> {
                 layoutTitle!!.visibility = View.VISIBLE
                 layoutSearch!!.visibility = View.GONE
 
@@ -97,7 +105,7 @@ class TitleBar : RelativeLayout, View.OnClickListener {
 
     private fun setTypedArray(typedArray: TypedArray) {
         if (typedArray.hasValue(R.styleable.TitleBar_type))
-            type = Type.fromType(typedArray.getString(R.styleable.TitleBar_type))
+            type = Type.fromType(typedArray.getInt(R.styleable.TitleBar_type, -1))
 
         if (typedArray.hasValue(R.styleable.TitleBar_title))
             title = typedArray.getString(R.styleable.TitleBar_title)
@@ -120,15 +128,15 @@ class TitleBar : RelativeLayout, View.OnClickListener {
         }
     }
 
-    private enum class Type constructor(val type: String) {
-        TITLE("title"),
-        TITLE_OPTION("title_option"),
-        SEARCH("search");
+    private enum class Type constructor(val type: Int) {
+        TITLE(0),
+        TITLE_OPTION(1),
+        SEARCH(2);
 
 
         companion object {
 
-            fun fromType(type: String?): Type? {
+            fun fromType(type: Int?): Type? {
                 for (t in values()) {
                     if (t.type == type)
                         return t
