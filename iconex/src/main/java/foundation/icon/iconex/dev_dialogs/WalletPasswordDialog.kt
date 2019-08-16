@@ -34,7 +34,7 @@ class WalletPasswordDialog(context: Context) : MessageDialog(context) {
         isSingleButton = false
 
         // on focus change -> set box background
-        mIptPassword.setOnFocusChangeListener { v, hasFocus ->
+        mIptPassword.setOnFocusChangeListener { _, hasFocus ->
             if (!error) { setLayoutColor(hasFocus) }
         }
 

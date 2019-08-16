@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:clickable="true">
+
+
+
+<TextView
+        android:id="@+id/txt_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginTop="22dp"
+
+        android:fontFamily="@font/noto_sans_medium"
+        android:textSize="12dp"
+        android:textColor="@color/dark"
+
+        android:text="Wallet Nickname A"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/txt_nickname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/txt_nickname"
+
+        android:layout_marginStart="14dp"
+
+        android:fontFamily="@font/nanum_square_bold"
+        android:textSize="12dp"
+        android:textColor="@color/dark"
+        android:textAlignment="textEnd"
+
+        android:text="9,000,000.0004 ICX "/>
+
+    <!--TODO: DemiLight-->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_nickname"
+
+        android:layout_marginTop="3dp"
+
+        android:textSize="10dp"
+        android:textColor="@color/darkB3"
+
+        android:text="hx5b2fd073721d682aec1c4df4fc1dcd8dc90d9e87"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
