@@ -16,7 +16,7 @@
 
     <include
         android:id="@+id/layout_step"
-        layout="@layout/layout_step1"
+        layout="@layout/layout_create_step1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/appbar" />
