@@ -32,6 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".dev_detail.WalletDetailActivity"/>
         <activity
             android:name=".intro.auth.AuthActivity"
             android:configChanges="fontScale"
