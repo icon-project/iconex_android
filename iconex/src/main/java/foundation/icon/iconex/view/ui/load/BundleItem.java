@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.load;
+package foundation.icon.iconex.view.ui.load;
 
 import java.io.Serializable;
 

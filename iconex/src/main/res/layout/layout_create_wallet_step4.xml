@@ -1,13 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context="foundation.icon.iconex.wallet.create.CreateWalletStep4Fragment">
+    tools:context="foundation.icon.iconex.view.ui.create.CreateWalletStep4Fragment">
 
     <include
         android:id="@+id/step"
-        layout="@layout/layout_step4"
+        layout="@layout/layout_create_step4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
@@ -73,33 +74,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp">
+            android:paddingTop="40dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="50dp">
 
             <TextView
                 style="@style/TextView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40dp"
                 android:fontFamily="@font/noto_sans_medium"
                 android:text="@string/walletDownloadGuide"
                 android:textColor="@color/dark4D" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <foundation.icon.iconex.widgets.TTextInputLayout
+                android:id="@+id/input_private_key"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:fontFamily="@font/noto_sans_regular"
-                    android:hint="@string/privateKey"
-                    android:padding="14dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginTop="30dp"
+                app:hint="@string/privateKey"
+                app:inputType="readOnly" />
 
             <LinearLayout
                 android:layout_width="match_parent"

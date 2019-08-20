@@ -20,7 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.CreateActivity"></activity>
         <activity
             android:name=".view.SplashActivity"
             android:configChanges="fontScale"
@@ -49,17 +48,19 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".view.CreateWalletActivity"
+            android:theme="@style/DialogActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".wallet.create.CreateWalletActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".wallet.load.LoadWalletActivity"
-            android:configChanges="fontScale"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
+            android:name=".view.ui.load.LoadWalletActivity"
+            android:theme="@style/DialogActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".dialogs.BottomItemSelectActivity"
             android:configChanges="fontScale"
@@ -139,7 +140,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
-            android:name=".wallet.load.LoadBundleActivity"
+            android:name=".view.ui.load.LoadBundleActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />

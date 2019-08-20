@@ -6,6 +6,11 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import java.util.HashMap;
 
+import foundation.icon.iconex.view.ui.create.CreateWalletStep1Fragment;
+import foundation.icon.iconex.view.ui.create.CreateWalletStep2Fragment;
+import foundation.icon.iconex.view.ui.create.CreateWalletStep3Fragment;
+import foundation.icon.iconex.view.ui.create.CreateWalletStep4Fragment;
+
 /**
  * Created by js on 2018. 2. 22..
  */
@@ -32,19 +37,19 @@ public class CreateWalletViewPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 if (step1 == null)
-                    step1 = CreateWalletStep1Fragment.newInstance();
+                    step1 = CreateWalletStep1Fragment.Companion.newInstance();
                 return step1;
             case 1:
                 if (step2 == null)
-                    step2 = CreateWalletStep2Fragment.newInstance();
+                    step2 = CreateWalletStep2Fragment.Companion.newInstance();
                 return step2;
             case 2:
                 if (step3 == null)
-                    step3 = CreateWalletStep3Fragment.newInstance(this.keyStore);
+                    step3 = CreateWalletStep3Fragment.Companion.newInstance(this.keyStore);
                 return step3;
             case 3:
                 if (step4 == null)
-                    step4 = CreateWalletStep4Fragment.newInstance(this.address, this.privKey, false);
+                    step4 = CreateWalletStep4Fragment.Companion.newInstance(this.address, this.privKey, false);
                 return step4;
             default:
                 return null;

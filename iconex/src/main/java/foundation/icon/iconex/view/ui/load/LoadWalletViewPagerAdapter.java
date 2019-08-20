@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.load;
+package foundation.icon.iconex.view.ui.load;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

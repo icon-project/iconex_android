@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:clickable="true"
-    tools:context="foundation.icon.iconex.wallet.load.LoadInputPrivateKeyFragment">
+    tools:context=".view.ui.load.LoadInputPrivateKeyFragment">
 
     <TextView
         android:id="@+id/txt_header"

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import foundation.icon.iconex.R
 import foundation.icon.iconex.control.IntroViewPagerAdapter
-import foundation.icon.iconex.wallet.load.LoadWalletActivity
+import foundation.icon.iconex.view.ui.load.LoadWalletActivity
 
 class IntroActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -64,9 +64,7 @@ class IntroActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.btn_create_wallet -> {
-                CreateWalletDialog().show(supportFragmentManager, null)
-            }
+            R.id.btn_create_wallet -> startActivity(Intent(this, CreateWalletActivity::class.java))
 
             R.id.btn_load_wallet -> startActivity(Intent(this, LoadWalletActivity::class.java))
         }

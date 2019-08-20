@@ -30,6 +30,10 @@ import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.menu.ViewWalletInfoActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.KeyStoreIO;
+import foundation.icon.iconex.view.ui.create.CreateWalletStep1Fragment;
+import foundation.icon.iconex.view.ui.create.CreateWalletStep2Fragment;
+import foundation.icon.iconex.view.ui.create.CreateWalletStep3Fragment;
+import foundation.icon.iconex.view.ui.create.CreateWalletStep4Fragment;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.MainActivity;
@@ -118,19 +122,19 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
                 View inflated = null;
                 switch (position) {
                     case 0:
-                        inflated = layoutInflater.inflate(R.layout.layout_step1, null);
+                        inflated = layoutInflater.inflate(R.layout.layout_create_step1, null);
                         break;
 
                     case 1:
-                        inflated = layoutInflater.inflate(R.layout.layout_step2, null);
+                        inflated = layoutInflater.inflate(R.layout.layout_create_step2, null);
                         break;
 
                     case 2:
-                        inflated = layoutInflater.inflate(R.layout.layout_step3, null);
+                        inflated = layoutInflater.inflate(R.layout.layout_create_step3, null);
                         break;
 
                     case 3:
-                        inflated = layoutInflater.inflate(R.layout.layout_step4, null);
+                        inflated = layoutInflater.inflate(R.layout.layout_create_step4, null);
                         break;
                 }
 

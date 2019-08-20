@@ -32,14 +32,14 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="6dp"
         android:layout_marginStart="10dp"
-        android:layout_toStartOf="@+id/btn_visibility"
+        android:layout_toStartOf="@+id/btn_eye"
         android:background="@color/colorWhite"
         android:textColor="@color/colorText"
         android:textColorHint="@color/colorText20"
         android:textSize="14dp" />
 
     <Button
-        android:id="@+id/btn_visibility"
+        android:id="@+id/btn_eye"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_above="@id/line_old_pwd"
