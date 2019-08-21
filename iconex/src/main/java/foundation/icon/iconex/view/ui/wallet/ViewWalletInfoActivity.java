@@ -1,4 +1,4 @@
-package foundation.icon.iconex.menu;
+package foundation.icon.iconex.view.ui.wallet;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import java.util.Date;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.menu.WalletInfoViewPager;
 
 public class ViewWalletInfoActivity extends AppCompatActivity {
 

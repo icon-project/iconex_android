@@ -3,105 +3,48 @@ package foundation.icon.iconex.view.ui.create
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import foundation.icon.iconex.R
+import foundation.icon.iconex.realm.RealmUtil
+import foundation.icon.iconex.wallet.main.MainActivity
 import foundation.icon.iconex.widgets.TTextInputLayout
+import io.reactivex.Completable
+import io.reactivex.CompletableObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class CreateWalletStep4Fragment : Fragment() {
 
     private var mListener: OnStep4Listener? = null
-    private var address: String? = null
-    private var privKey: String? = null
+    private lateinit var address: String
+    private lateinit var privateKey: String
 
-    private var txtPrivateKey: TextView? = null
-    private var btnVisibility: Button? = null
-    private var btnDone: Button? = null
-    private var btnCopy: Button? = null
-    private var btnInfo: Button? = null
-
-    private val layoutTwoButton: ViewGroup? = null
-
-    private var isTwoBtn = false
-
+    private lateinit var btnComplete: Button
+    private lateinit var btnBack: Button
+    private lateinit var btnCopy: Button
+    private lateinit var btnInfo: Button
     private lateinit var inputText: TTextInputLayout
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            address = arguments!!.getString("address")
-            privKey = arguments!!.getString("privateKey")
-            isTwoBtn = arguments!!.getBoolean("isTwoButton")
-        }
+    private val vm: CreateWalletViewModel by lazy {
+        ViewModelProviders.of(activity!!).get(CreateWalletViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.layout_create_wallet_step4, container, false)
-
-//        txtPrivateKey = v.findViewById(R.id.txt_private_key)
-//        txtPrivateKey!!.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-//                or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-//        btnVisibility = v.findViewById(R.id.btn_visibility)
-//        btnVisibility!!.setOnClickListener {
-//            if (btnVisibility!!.isSelected) {
-//                btnVisibility!!.isSelected = false
-//                txtPrivateKey!!.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-//                        or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-//            } else {
-//                btnVisibility!!.isSelected = true
-//                txtPrivateKey!!.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-//                        or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-//            }
-//        }
-
-        btnCopy = v.findViewById(R.id.btn_copy)
-        btnCopy!!.setOnClickListener {
-            val clipboard = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val data = ClipData.newPlainText("priv", privKey)
-            clipboard.primaryClip = data
-            Toast.makeText(activity, getString(R.string.msgCopyPrivateKey), Toast.LENGTH_SHORT).show()
-        }
-
-        btnInfo = v.findViewById(R.id.btn_view_info)
-        btnInfo!!.setOnClickListener { mListener!!.showWalletInfo(privKey) }
-
-        inputText = v.findViewById(R.id.input_private_key)
-        inputText.setText("Test Private Key")
-
-
-//        btnDone = v.findViewById(R.id.btn_done)
-//        btnDone!!.setOnClickListener { mListener!!.onStep4Done() }
-//
-//        //        layoutTwoButton = v.findViewById(R.id.layout_two);
-//        val btnBack = v.findViewById<Button>(R.id.btn_back)
-//        btnBack.setOnClickListener { mListener!!.onStep4Back() }
-//        val btnNext = v.findViewById<Button>(R.id.btn_next)
-//        btnNext.setOnClickListener { mListener!!.onStep4Next() }
-//
-//        if (isTwoBtn) {
-//            btnDone!!.visibility = View.GONE
-//            layoutTwoButton!!.visibility = View.VISIBLE
-//        }
+        initView(v)
+        setData()
 
         return v
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-//        btnVisibility!!.isSelected = false
-//        txtPrivateKey!!.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-//                or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-//        txtPrivateKey!!.text = privKey
     }
 
     override fun onAttach(context: Context) {
@@ -118,28 +61,54 @@ class CreateWalletStep4Fragment : Fragment() {
         mListener = null
     }
 
-    interface OnStep4Listener {
-        fun onStep4Done()
+    private fun initView(v: View) {
+        btnCopy = v.findViewById(R.id.btn_copy)
+        btnCopy.setOnClickListener {
+            val clipboard = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val data = ClipData.newPlainText("priv", privateKey)
+            clipboard.primaryClip = data
+            Toast.makeText(activity, getString(R.string.msgCopyPrivateKey), Toast.LENGTH_SHORT).show()
+        }
 
+        btnInfo = v.findViewById(R.id.btn_view_info)
+        btnInfo.setOnClickListener { mListener!!.showWalletInfo() }
+
+        btnComplete = v.findViewById(R.id.btn_complete)
+        btnComplete.setOnClickListener { saveWallet() }
+
+        btnBack = v.findViewById(R.id.btn_back)
+        btnBack.setOnClickListener { mListener!!.onStep4Back() }
+
+        inputText = v.findViewById(R.id.input_private_key)
+    }
+
+    private fun setData() {
+        address = vm.getWallet().value!!.address
+        privateKey = vm.getPrivateKey().value!!
+        inputText.setText(privateKey)
+    }
+
+    private fun saveWallet() {
+        RealmUtil.addWallet(vm.getWallet().value!!)
+        RealmUtil.loadWallet()
+
+        startActivity(Intent(activity!!, MainActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        or Intent.FLAG_ACTIVITY_NEW_TASK))
+    }
+
+    interface OnStep4Listener {
         fun onStep4Back()
 
-        fun onStep4Next()
-
-        fun showWalletInfo(privateKey: String?)
+        fun showWalletInfo()
     }
 
     companion object {
 
         private val TAG = CreateWalletStep4Fragment::class.java.simpleName
 
-        fun newInstance(address: String, privKey: String, isTwoBtn: Boolean): CreateWalletStep4Fragment {
-            val fragment = CreateWalletStep4Fragment()
-            val args = Bundle()
-            args.putString("address", address)
-            args.putString("privateKey", privKey)
-            args.putBoolean("isTwoButton", isTwoBtn)
-            fragment.arguments = args
-            return fragment
+        fun newInstance(): CreateWalletStep4Fragment {
+            return CreateWalletStep4Fragment()
         }
     }
 }// Required empty public constructor

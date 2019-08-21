@@ -522,7 +522,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
         btnContacts = findViewById(R.id.btn_contacts);
         btnContacts.setOnClickListener(this);
-        btnScan = findViewById(R.id.btn_scan);
+        btnScan = findViewById(R.id.btn_qr_scan);
         btnScan.setOnClickListener(this);
 
         txtStepICX = findViewById(R.id.txt_step_icx);
@@ -676,7 +676,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                         .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
                 break;
 
-            case R.id.btn_scan:
+            case R.id.btn_qr_scan:
                 intent = new Intent(this, BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);

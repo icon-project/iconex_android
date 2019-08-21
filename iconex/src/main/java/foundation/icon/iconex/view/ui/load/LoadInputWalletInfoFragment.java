@@ -315,19 +315,19 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             }
         });
 
-        txtAliasWarning = v.findViewById(R.id.txt_alias_warning);
-        txtAliasWarning.setVisibility(View.GONE);
+//        txtAliasWarning = v.findViewById(R.id.txt_alias_warning);
+//        txtAliasWarning.setVisibility(View.GONE);
         txtPwdWarning = v.findViewById(R.id.txt_pwd_warning);
         txtPwdWarning.setVisibility(View.GONE);
         txtCheckWarnig = v.findViewById(R.id.txt_check_warning);
         txtCheckWarnig.setVisibility(View.GONE);
 
-        lineAlias = v.findViewById(R.id.line_alias);
+//        lineAlias = v.findViewById(R.id.line_alias);
         linePwd = v.findViewById(R.id.line_pwd);
         lineCheck = v.findViewById(R.id.line_check);
 
-        btnAliasDel = v.findViewById(R.id.btn_alias_delete);
-        btnAliasDel.setOnClickListener(this);
+//        btnAliasDel = v.findViewById(R.id.btn_alias_delete);
+//        btnAliasDel.setOnClickListener(this);
         btnPwdDel = v.findViewById(R.id.btn_pwd_delete);
         btnPwdDel.setOnClickListener(this);
         btnCheckDel = v.findViewById(R.id.btn_check_delete);
@@ -346,9 +346,9 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_alias_delete:
-                editAlias.setText("");
-                break;
+//            case R.id.btn_alias_delete:
+//                editAlias.setText("");
+//                break;
 
             case R.id.btn_pwd_delete:
                 editPwd.setText("");

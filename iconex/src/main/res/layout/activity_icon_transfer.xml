@@ -372,7 +372,7 @@
                         android:textSize="13dp" />
 
                     <Button
-                        android:id="@+id/btn_scan"
+                        android:id="@+id/btn_qr_scan"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="2dp"

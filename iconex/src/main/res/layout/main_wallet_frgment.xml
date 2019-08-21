@@ -156,7 +156,7 @@
 
                         android:textSize="18dp"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@id/btn_scan"
+                        app:layout_constraintRight_toLeftOf="@id/btn_qr_scan"
 
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -175,7 +175,7 @@
                         app:layout_constraintTop_toTopOf="@id/txt_nickname" />
 
                     <ImageButton
-                        android:id="@+id/btn_wallet_rem"
+                        android:id="@+id/btn_wallet_qr_code"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
 
@@ -189,7 +189,7 @@
                         app:layout_constraintTop_toTopOf="@id/txt_nickname" />
 
                     <ImageButton
-                        android:id="@+id/btn_scan"
+                        android:id="@+id/btn_qr_scan"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
 
@@ -198,7 +198,7 @@
 
                         android:src="@drawable/ic_qr_code_scan"
                         app:layout_constraintBottom_toBottomOf="@id/txt_nickname"
-                        app:layout_constraintRight_toLeftOf="@id/btn_wallet_rem"
+                        app:layout_constraintRight_toLeftOf="@id/btn_wallet_qr_code"
 
                         app:layout_constraintTop_toTopOf="@id/txt_nickname" />
 

@@ -104,7 +104,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".menu.ViewWalletInfoActivity"
+            android:name=".view.ui.wallet.ViewWalletInfoActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />

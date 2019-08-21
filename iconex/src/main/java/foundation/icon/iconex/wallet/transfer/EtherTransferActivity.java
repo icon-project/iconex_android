@@ -584,7 +584,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
         btnContacts = findViewById(R.id.btn_contacts);
         btnContacts.setOnClickListener(this);
-        btnScan = findViewById(R.id.btn_scan);
+        btnScan = findViewById(R.id.btn_qr_scan);
         btnScan.setOnClickListener(this);
 
         layoutDataInfo = findViewById(R.id.layout_data_info);
@@ -726,7 +726,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                         .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
                 break;
 
-            case R.id.btn_scan:
+            case R.id.btn_qr_scan:
                 Intent intent = new Intent(this, BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);

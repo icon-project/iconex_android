@@ -1,14 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context="foundation.icon.iconex.view.ui.create.CreateWalletStep2Fragment">
+    tools:context=".view.ui.load.LoadBundleFragment">
 
     <include
         android:id="@+id/step"
-        layout="@layout/layout_create_step2"
+        layout="@layout/layout_load_step3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
@@ -53,15 +53,15 @@
                 android:layout_weight="2">
 
                 <Button
-                    android:id="@+id/btn_next"
+                    android:id="@+id/btn_complete"
                     style="@style/Base.Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_btn_rounded_01_light"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:fontFamily="@font/noto_sans_regular"
                     android:gravity="center"
-                    android:text="@string/next"
+                    android:text="@string/complete"
                     android:textAllCaps="false"
                     android:textColor="@color/txt_btn_rounded_01_light"
                     android:textSize="14dp" />
@@ -77,69 +77,10 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@id/layout_buttons"
-        android:layout_below="@id/step">
-
-        <LinearLayout
-            style="@style/BaseLinear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                style="@style/TextView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/noto_sans_medium"
-                android:text="@string/enterInfoHeader"
-                android:textColor="@color/dark4D" />
-
-            <foundation.icon.iconex.widgets.TTextInputLayout
-                android:id="@+id/input_alias"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                app:hint="Wallet Name" />
-
-            <foundation.icon.iconex.widgets.TTextInputLayout
-                android:id="@+id/input_pwd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                app:hint="Password"
-                app:inputType="password" />
-
-            <foundation.icon.iconex.widgets.TTextInputLayout
-                android:id="@+id/input_pwd_check"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                app:hint="Confirm Password"
-                app:inputType="password" />
-
-            <TextView
-                style="@style/TextView10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/bg_outline_box_cyan"
-                android:padding="20dp"
-                android:text="@string/createWalletStep2Notice"
-                android:textColor="@color/primary00" />
-
-            <TextView
-                style="@style/TextView10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/noto_sans_light"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/createWalletStep2Detailed1"
-                android:textColor="@color/primary00" />
-        </LinearLayout>
-    </ScrollView>
+        android:layout_below="@id/step" />
 </RelativeLayout>

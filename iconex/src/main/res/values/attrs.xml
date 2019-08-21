@@ -14,8 +14,14 @@
             <enum name="text" value="0" />
             <enum name="password" value="1" />
             <enum name="readOnly" value="2" />
+            <enum name="file" value="3" />
         </attr>
         <attr name="hint" format="string" />
+    </declare-styleable>
+
+    <!-- TDropdownLayout -->
+    <declare-styleable name="TDropdownLayout">
+        <attr name="helper" format="string" />
     </declare-styleable>
 
     <!-- Title bar -->
@@ -27,26 +33,26 @@
         </attr>
         <attr name="title" format="string" />
     </declare-styleable>
-    
-    
+
+
     <declare-styleable name="CustomActionBar">
-        <attr name="text" format="string"/>
-        <attr name="text_button" format="string"/>
+        <attr name="text" format="string" />
+        <attr name="text_button" format="string" />
         <attr name="start_icon" format="integer">
-            <enum name="menu" value="0"/>
-            <enum name="back" value="1"/>
-            <enum name="none" value="2"/>
+            <enum name="menu" value="0" />
+            <enum name="back" value="1" />
+            <enum name="none" value="2" />
         </attr>
         <attr name="end_icon" format="integer">
-            <enum name="info" value="0"/>
-            <enum name="more" value="1"/>
-            <enum name="text" value="2"/>
-            <enum name="none" value="3"/>
+            <enum name="info" value="0" />
+            <enum name="more" value="1" />
+            <enum name="text" value="2" />
+            <enum name="none" value="3" />
         </attr>
-        <attr name="show_ic_toggle" format="boolean"/>
+        <attr name="show_ic_toggle" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="TotalAssetsIndicator">
-        <attr name="index" format="integer"/>
+        <attr name="index" format="integer" />
     </declare-styleable>
 </resources>

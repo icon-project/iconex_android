@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "foundation.icon.iconex"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         multiDexEnabled true
         versionCode 52
         versionName "1.6.1"
@@ -30,7 +30,7 @@ android {
         }
     }
 
-    compileOptions {1
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }

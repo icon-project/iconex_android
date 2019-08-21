@@ -139,71 +139,71 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
         btnScan = v.findViewById(R.id.btn_qr_scan);
         btnScan.setOnClickListener(this);
 
-        editPriv = v.findViewById(R.id.edit_priv);
-        editPriv.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    linePriv.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                } else {
-                    linePriv.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                }
-            }
-        });
-        editPriv.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    btnPrivDelete.setVisibility(View.VISIBLE);
-                } else {
-                    btnPrivDelete.setVisibility(View.INVISIBLE);
-                    btnNext.setEnabled(false);
-                }
-
-//                int lines = editPriv.getLineCount();
-//                if (lines > 2) {
-//                    editPriv.getText().delete(editPriv.getSelectionEnd() - 1, editPriv.getSelectionStart());
-//                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        editPriv.setOnKeyPreImeListener(new OnKeyPreImeListener() {
-            @Override
-            public void onBackPressed() {
-                hideInputMode();
-                checkPrivKey(editPriv.getText().toString());
-            }
-        });
-//        editPriv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//        editPriv = v.findViewById(R.id.edit_priv);
+//        editPriv.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-//                    hideInputMode();
-//                    checkPrivKey(editPriv.getText().toString());
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    linePriv.setBackgroundColor(getResources().getColor(R.color.editActivated));
+//                } else {
+//                    linePriv.setBackgroundColor(getResources().getColor(R.color.editNormal));
 //                }
-//                return false;
 //            }
 //        });
-        editPriv.setOnEditTouchListener(new MyEditText.OnEditTouchListener() {
-            @Override
-            public void onTouch() {
-                showInputMode(editPriv);
-            }
-        });
+//        editPriv.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (s.length() > 0) {
+//                    btnPrivDelete.setVisibility(View.VISIBLE);
+//                } else {
+//                    btnPrivDelete.setVisibility(View.INVISIBLE);
+//                    btnNext.setEnabled(false);
+//                }
+//
+////                int lines = editPriv.getLineCount();
+////                if (lines > 2) {
+////                    editPriv.getText().delete(editPriv.getSelectionEnd() - 1, editPriv.getSelectionStart());
+////                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
+//        editPriv.setOnKeyPreImeListener(new OnKeyPreImeListener() {
+//            @Override
+//            public void onBackPressed() {
+//                hideInputMode();
+//                checkPrivKey(editPriv.getText().toString());
+//            }
+//        });
+////        editPriv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+////            @Override
+////            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+////                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+////                    hideInputMode();
+////                    checkPrivKey(editPriv.getText().toString());
+////                }
+////                return false;
+////            }
+////        });
+//        editPriv.setOnEditTouchListener(new MyEditText.OnEditTouchListener() {
+//            @Override
+//            public void onTouch() {
+//                showInputMode(editPriv);
+//            }
+//        });
 
-        linePriv = v.findViewById(R.id.line_priv);
-        txtPrivWarning = v.findViewById(R.id.txt_priv_warning);
-        btnPrivDelete = v.findViewById(R.id.btn_priv_delete);
-        btnPrivDelete.setOnClickListener(this);
+//        linePriv = v.findViewById(R.id.line_priv);
+//        txtPrivWarning = v.findViewById(R.id.txt_priv_warning);
+//        btnPrivDelete = v.findViewById(R.id.btn_priv_delete);
+//        btnPrivDelete.setOnClickListener(this);
 
         btnNext = v.findViewById(R.id.btn_next);
         btnNext.setOnClickListener(this);
@@ -223,14 +223,14 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
                         .putExtra(BarcodeCaptureActivity.AutoFocus, true), RC_CAPTURE);
                 break;
 
-            case R.id.btn_priv_delete:
-                editPriv.setText("");
-                txtPrivWarning.setVisibility(View.INVISIBLE);
-                if (editPriv.isFocused())
-                    linePriv.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                else
-                    linePriv.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                break;
+//            case R.id.btn_priv_delete:
+//                editPriv.setText("");
+//                txtPrivWarning.setVisibility(View.INVISIBLE);
+//                if (editPriv.isFocused())
+//                    linePriv.setBackgroundColor(getResources().getColor(R.color.editActivated));
+//                else
+//                    linePriv.setBackgroundColor(getResources().getColor(R.color.editNormal));
+//                break;
 
             case R.id.btn_next:
                 mListener.onLoadPrivateKeyNext(mCoinType, mPrivateKey);

@@ -34,7 +34,7 @@ public class LoadWalletViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         if (TYPE == null) {
-            return LoadSelectMethodFragment.newInstance();
+            return LoadSelectMethodFragment.Companion.newInstance();
         }
 
         if (TYPE == LOAD_TYPE.KEYSTORE) {
@@ -62,7 +62,7 @@ public class LoadWalletViewPagerAdapter extends FragmentStatePagerAdapter {
             }
         }
 
-        return LoadSelectMethodFragment.newInstance();
+        return LoadSelectMethodFragment.Companion.newInstance();
     }
 
     @Override
@@ -102,7 +102,7 @@ public class LoadWalletViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void setKeyStore(String coinType, String keyStore) {
-        loadInputWalletNameFragment.setKeyStore(coinType, keyStore);
+
     }
 
     public void clearInfo() {

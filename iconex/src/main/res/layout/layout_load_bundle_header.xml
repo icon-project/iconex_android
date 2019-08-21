@@ -1,55 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_sans_bold"
-        android:gravity="start"
-        android:text="@string/loadBundleHeader"
-        android:textColor="@color/colorText"
-        android:textSize="14dp"
-        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="3dp"
-            android:layout_height="3dp"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/dot_gray" />
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="30dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            style="@style/TextView14"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:fontFamily="@font/noto_sans_regular"
-            android:gravity="start|center_vertical"
-            android:text="@string/loadBundleDetailed"
-            android:textColor="@color/colorText70"
-            android:textSize="12dp" />
-    </LinearLayout>
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:text="@string/titleLoadBundle"
+            android:textColor="@color/txt_default" />
 
-    <TextView
-        android:id="@+id/txt_wallet_count"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/noto_sans_medium"
-        android:gravity="start"
-        android:text="..."
-        android:textSize="12dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_outline_box_cyan"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/loadBundleHeader"
+                android:textColor="@color/primary00" />
+
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/loadBundleDetailed"
+                android:textColor="@color/primary00" />
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/colorText" />
+        android:layout_height="0.5dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/darkE6" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkFA"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/registered"
+            style="@style/TextView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_regular"
+            android:text="Registered"
+            android:textColor="@color/primary00"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/darkE6" />
 </LinearLayout>

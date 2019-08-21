@@ -1,4 +1,4 @@
-package foundation.icon.iconex.menu;
+package foundation.icon.iconex.view.ui.wallet;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -21,27 +21,28 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 
-public class QRPrivateKeyFragment extends Fragment {
+public class QRAddressFragment extends Fragment {
 
-    private static final String ARG_PRIV_KEY = "ARG_PRIVATE_KEY";
+    private static final String ARG_ADDR = "ARG_ADDRESS";
 
-    private String mPrivateKey;
+    private String mAddress;
 
-    private TextView txtPrivateKey;
+    private TextView txtAddress;
     private ImageView imgQR;
     private ProgressBar progressBar;
     private Button btnCopy;
 
-    public QRPrivateKeyFragment() {
+    public QRAddressFragment() {
         // Required empty public constructor
     }
 
-    public static QRPrivateKeyFragment newInstance(String privateKey) {
-        QRPrivateKeyFragment fragment = new QRPrivateKeyFragment();
+    public static QRAddressFragment newInstance(String address) {
+        QRAddressFragment fragment = new QRAddressFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PRIV_KEY, privateKey);
+        args.putString(ARG_ADDR, address);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,17 +51,19 @@ public class QRPrivateKeyFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mPrivateKey = getArguments().getString(ARG_PRIV_KEY);
+            mAddress = getArguments().getString(ARG_ADDR);
+            if (!mAddress.startsWith("hx"))
+                mAddress = MyConstants.PREFIX_HEX + mAddress;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_qrprivate_key, container, false);
+        View v = inflater.inflate(R.layout.fragment_qraddress, container, false);
 
-        txtPrivateKey = v.findViewById(R.id.txt_private_key);
-        txtPrivateKey.setText(mPrivateKey);
+        txtAddress = v.findViewById(R.id.txt_address);
+        txtAddress.setText(mAddress);
 
         imgQR = v.findViewById(R.id.img_qrcode);
         progressBar = v.findViewById(R.id.progress);
@@ -70,15 +73,15 @@ public class QRPrivateKeyFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData data = ClipData.newPlainText("privateKey", mPrivateKey);
+                ClipData data = ClipData.newPlainText("address", mAddress);
                 clipboard.setPrimaryClip(data);
 
-                Toast.makeText(getActivity(), getString(R.string.msgCopyPrivateKey), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.msgCopyAddress), Toast.LENGTH_SHORT).show();
             }
         });
 
         GenerateQRCode generateQRCode = new GenerateQRCode();
-        generateQRCode.execute(mPrivateKey);
+        generateQRCode.execute(mAddress);
 
         return v;
     }
@@ -88,7 +91,7 @@ public class QRPrivateKeyFragment extends Fragment {
         Bitmap qrCode = null;
         int size = (int) getResources().getDimension(R.dimen.QRCodeSize);
         try {
-            qrCode = toBitmap(qrCodeWriter.encode(mPrivateKey, BarcodeFormat.QR_CODE, size, size));
+            qrCode = toBitmap(qrCodeWriter.encode(mAddress, BarcodeFormat.QR_CODE, size, size));
         } catch (Exception e) {
             e.printStackTrace();
         }

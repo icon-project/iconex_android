@@ -91,4 +91,13 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <!-- Linear -->
+    <style name="BaseLinear" parent="AppTheme">
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingTop">40dp</item>
+        <item name="android:paddingBottom">50dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+    </style>
+
 </resources>

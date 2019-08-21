@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Activated -->
+    <item android:drawable="@drawable/ic_input_drop_active" android:state_activated="true" />
+
+    <!-- Disabled -->
+    <item android:drawable="@drawable/ic_input_drop_enabled" android:state_enabled="false" />
+
+    <!-- Normal -->
+    <item android:drawable="@drawable/ic_input_drop_enabled" />
+
+</selector>

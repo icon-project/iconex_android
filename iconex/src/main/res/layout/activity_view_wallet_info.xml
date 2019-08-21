@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.menu.ViewWalletInfoActivity">
+    tools:context="foundation.icon.iconex.view.ui.wallet.ViewWalletInfoActivity">
 
     <include
         android:id="@+id/appbar"

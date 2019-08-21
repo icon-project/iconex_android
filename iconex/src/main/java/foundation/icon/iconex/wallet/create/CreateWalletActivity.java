@@ -6,15 +6,16 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -27,7 +28,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
-import foundation.icon.iconex.menu.ViewWalletInfoActivity;
+import foundation.icon.iconex.view.ui.wallet.ViewWalletInfoActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.KeyStoreIO;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep1Fragment;
@@ -174,21 +175,23 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
     }
 
     @Override
-    public void onStep1Done(String coinType) {
+    public void onStep1Done() {
         this.coinType = coinType;
         wallet.setCoinType(coinType);
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-        pagerAdapter.clearEdit();
+//        pagerAdapter.clearEdit();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
-    public void onStep2Done(String name, String pwd) {
-        createKeyStore = new CreateKeyStore();
-        createKeyStore.execute(name, pwd);
-
+    public void onStep2Done() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, CreateWalletStep3Fragment.Companion.newInstance())
+                .addToBackStack("step3")
+                .commit();
     }
 
     @Override
@@ -217,7 +220,7 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
     }
 
     @Override
-    public void showWalletInfo(String privateKey) {
+    public void showWalletInfo() {
         String coinName;
         String address;
         if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
@@ -233,32 +236,12 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
                 .putExtra("alias", wallet.getAlias())
                 .putExtra("coinName", coinName)
                 .putExtra("address", address)
-                .putExtra("privateKey", privateKey)
                 .putExtra("date", wallet.getCreatedAt()));
     }
 
     @Override
     public void onStep4Back() {
         // Do nothing.
-    }
-
-    @Override
-    public void onStep4Next() {
-        // Do nothing.
-    }
-
-    @Override
-    public void onStep4Done() {
-
-        try {
-            RealmUtil.addWallet(wallet);
-            RealmUtil.loadWallet();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     @Override
@@ -275,22 +258,6 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
         }
 
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-    }
-
-    @Override
-    public void onShowInputMode() {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
-        layoutParams.removeRule(RelativeLayout.BELOW);
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.appbar);
-        viewPager.setLayoutParams(layoutParams);
-    }
-
-    @Override
-    public void onHideInputMode() {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
-        layoutParams.removeRule(RelativeLayout.BELOW);
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.layout_step);
-        viewPager.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -405,10 +372,8 @@ public class CreateWalletActivity extends AppCompatActivity implements CreateWal
             pagerAdapter.setAddress(wallet.getAddress());
             pagerAdapter.setPrivKey(privKey);
 
-            pagerAdapter.clearEdit();
+//            pagerAdapter.clearEdit();
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-
-            // TODO: 2018. 3. 27. Create wallet failed.
         }
 
         @Override

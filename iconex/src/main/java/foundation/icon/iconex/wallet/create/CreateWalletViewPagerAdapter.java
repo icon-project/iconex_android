@@ -44,12 +44,12 @@ public class CreateWalletViewPagerAdapter extends FragmentStatePagerAdapter {
                     step2 = CreateWalletStep2Fragment.Companion.newInstance();
                 return step2;
             case 2:
-                if (step3 == null)
-                    step3 = CreateWalletStep3Fragment.Companion.newInstance(this.keyStore);
-                return step3;
+//                if (step3 == null)
+//                    step3 = CreateWalletStep3Fragment.Companion.newInstance(this.keyStore);
+//                return step3;
             case 3:
                 if (step4 == null)
-                    step4 = CreateWalletStep4Fragment.Companion.newInstance(this.address, this.privKey, false);
+//                    step4 = CreateWalletStep4Fragment.Companion.newInstance(this.address, this.privKey, false);
                 return step4;
             default:
                 return null;
@@ -105,7 +105,7 @@ public class CreateWalletViewPagerAdapter extends FragmentStatePagerAdapter {
         this.privKey = privKey;
     }
 
-    public void clearEdit() {
-        step2.clearEdit();
-    }
+//    public void clearEdit() {
+//        step2.clearEdit();
+//    }
 }

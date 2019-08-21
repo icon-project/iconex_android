@@ -4,6 +4,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import foundation.icon.iconex.view.ui.wallet.QRAddressFragment;
+import foundation.icon.iconex.view.ui.wallet.QRPrivateKeyFragment;
+
 /**
  * Created by js on 2018. 3. 21..
  */

@@ -26,6 +26,7 @@ class CreateWalletStep1Fragment : Fragment(), View.OnClickListener {
         val v = inflater.inflate(R.layout.layout_create_wallet_step1, container, false)
 
         initView(v)
+        vm.setCoinType(CreateWalletViewModel.CoinType.ICX)
 
         return v
     }
@@ -70,7 +71,7 @@ class CreateWalletStep1Fragment : Fragment(), View.OnClickListener {
 
             R.id.btn_next -> {
                 if (mListener != null)
-                    mListener!!.onStep1Done("test")
+                    mListener!!.onStep1Done()
             }
         }
     }
@@ -90,7 +91,7 @@ class CreateWalletStep1Fragment : Fragment(), View.OnClickListener {
     private var mListener: OnStep1Listener? = null
 
     interface OnStep1Listener {
-        fun onStep1Done(coinType: String)
+        fun onStep1Done()
     }
 
     companion object {

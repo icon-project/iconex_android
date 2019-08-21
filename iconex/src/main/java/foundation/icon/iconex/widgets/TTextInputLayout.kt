@@ -6,11 +6,14 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import foundation.icon.iconex.R
@@ -18,12 +21,16 @@ import foundation.icon.iconex.R
 class TTextInputLayout : LinearLayout {
     private val TAG = this@TTextInputLayout::class.simpleName
 
-    private lateinit var layout: ViewGroup
+    private lateinit var layoutInput: ViewGroup
     private lateinit var edit: MyEditText
     private lateinit var btnClear: Button
     private lateinit var btnEye: Button
     private lateinit var tvHint: TextView
     private lateinit var tvError: TextView
+
+    private lateinit var layoutFile: ViewGroup
+    private lateinit var imgFile: ImageView
+    private lateinit var tvFileName: TextView
 
     private val DEF_STYLEABLE = R.styleable.TTextInputLayout
 
@@ -60,33 +67,40 @@ class TTextInputLayout : LinearLayout {
         val v = inflater.inflate(R.layout.t_text_input_layout, this, false)
         addView(v)
 
-        layout = v.findViewById(R.id.layout_text_input)
+        layoutInput = v.findViewById(R.id.layout_text_input)
         edit = v.findViewById(R.id.edit)
         btnClear = v.findViewById(R.id.btn_clear_text)
         btnEye = v.findViewById(R.id.btn_eye)
         tvHint = v.findViewById(R.id.tv_hint)
         tvError = v.findViewById(R.id.tv_err)
 
+        layoutFile = v.findViewById(R.id.layout_file)
+        imgFile = v.findViewById(R.id.img_file)
+        tvFileName = v.findViewById(R.id.txt_file_name)
+
         edit.onFocusChangeListener = OnFocusChangeListener { _, b ->
             run {
                 if (b) {
-                    layout.background = resources.getDrawable(BG_LAYOUT_F, null)
+                    layoutInput.background = resources.getDrawable(BG_LAYOUT_F, null)
                     tvHint.background = resources.getDrawable(BG_FLOATING_LABEL_F, null)
                     tvHint.setTextColor(resources.getColor(R.color.primary00))
                     tvHint.visibility = View.VISIBLE
 
-                    edit.hint = ""
+                    if (tvError.visibility == View.VISIBLE)
+                        tvError.visibility = View.GONE
 
-                    mOnFocusChangedListener?.onFocused()
+                    edit.hint = ""
                 } else {
-                    layout.background = resources.getDrawable(BG_LAYOUT_N, null)
+                    layoutInput.background = resources.getDrawable(BG_LAYOUT_N, null)
                     tvHint.background = resources.getDrawable(BG_FLOATING_LABEL_N, null)
                     tvHint.setTextColor(resources.getColor(R.color.dark4D))
 
-                    if (edit.text!!.isEmpty())
+                    if (edit.text!!.isEmpty()) {
                         tvHint.visibility = View.GONE
+                        edit.hint = hint
+                    }
 
-                    mOnFocusChangedListener?.onReleased()
+                    mOnFocusReleasedListener?.onReleased()
                 }
             }
         }
@@ -101,9 +115,10 @@ class TTextInputLayout : LinearLayout {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.isNotEmpty())
-                    btnClear.visibility = View.VISIBLE
-                else {
+                if (s.isNotEmpty()) {
+                    if (edit.isEnabled)
+                        btnClear.visibility = View.VISIBLE
+                } else {
                     btnClear.visibility = View.INVISIBLE
 
                     if (!edit.isFocused) {
@@ -116,18 +131,28 @@ class TTextInputLayout : LinearLayout {
             }
         })
 
+        edit.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+                    mOnEditorActionListener?.onDone()
+                }
+
+                return false
+            }
+        })
+
         btnClear.setOnClickListener { edit.setText("") }
         btnEye.setOnClickListener {
             when (it.isSelected) {
                 true -> {
                     btnEye.isSelected = false
-                    edit.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    edit.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                             or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                 }
 
                 false -> {
                     btnEye.isSelected = true
-                    edit.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    edit.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                             or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                 }
             }
@@ -136,16 +161,24 @@ class TTextInputLayout : LinearLayout {
 
     private fun setTypedArray(typedArray: TypedArray) {
         when (typedArray.getInt(R.styleable.TTextInputLayout_inputType, 0)) {
-            0 -> edit.inputType = InputType.TYPE_CLASS_TEXT
-            1 -> edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            0 -> {
+                edit.inputType = InputType.TYPE_CLASS_TEXT
+            }
+            1 -> {
+                edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
             2 -> {
                 edit.isEnabled = false
                 edit.isFocusable = false
+                edit.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
 
-                btnClear.visibility = View.GONE
                 btnEye.visibility = View.VISIBLE
-
                 tvHint.visibility = View.VISIBLE
+            }
+            3 -> {
+                layoutInput.visibility = View.GONE
+                layoutFile.visibility = View.VISIBLE
             }
         }
 
@@ -157,14 +190,20 @@ class TTextInputLayout : LinearLayout {
         }
     }
 
+    fun getText(): String {
+        return edit.text.toString()
+    }
+
     fun setText(text: String) {
         edit.setText(text)
+        if (text.isNotEmpty())
+            edit.setSelection(text.length)
     }
 
     fun setError(err: Boolean, msg: String?) {
         when (err) {
             true -> {
-                layout.setBackgroundResource(BG_LAYOUT_E)
+                layoutInput.setBackgroundResource(BG_LAYOUT_E)
                 tvHint.setTextColor(resources.getColor(R.color.redCoral))
                 tvHint.setBackgroundResource(BG_FLOATING_LABEL_E)
 
@@ -174,11 +213,11 @@ class TTextInputLayout : LinearLayout {
 
             false -> {
                 if (edit.isFocused) {
-                    layout.setBackgroundResource(BG_LAYOUT_F)
+                    layoutInput.setBackgroundResource(BG_LAYOUT_F)
                     tvHint.setTextColor(resources.getColor(R.color.primary00))
                     tvHint.setBackgroundResource(BG_FLOATING_LABEL_F)
                 } else {
-                    layout.setBackgroundResource(BG_LAYOUT_N)
+                    layoutInput.setBackgroundResource(BG_LAYOUT_N)
                     tvHint.setTextColor(resources.getColor(R.color.dark4D))
                     tvHint.setBackgroundResource(BG_FLOATING_LABEL_N)
                 }
@@ -188,13 +227,32 @@ class TTextInputLayout : LinearLayout {
         }
     }
 
-    private var mOnFocusChangedListener: OnFocusChanged? = null
-    fun setOnFocusChangedListener(onFocusChangedListener: OnFocusChanged) {
-        mOnFocusChangedListener = onFocusChangedListener
+    fun setFile(fileName: String) {
+        layoutFile.setBackgroundResource(BG_LAYOUT_F)
+        tvHint.setBackgroundResource(BG_FLOATING_LABEL_F)
+        tvHint.visibility = View.VISIBLE
+
+        imgFile.setBackgroundResource(R.drawable.ic_keystore)
+        imgFile.visibility = View.VISIBLE
+        tvFileName.setTextColor(resources.getColor(R.color.primary00))
+        tvFileName.text = fileName
     }
 
-    interface OnFocusChanged {
-        fun onFocused()
+    fun setFileError() {
+        layoutFile.setBackgroundResource(BG_LAYOUT_E)
+        tvHint.setBackgroundResource(BG_FLOATING_LABEL_E)
+        tvHint.visibility = View.VISIBLE
+
+        imgFile.setBackgroundResource(R.drawable.ic_keystorefile_error)
+        tvFileName.setTextColor(resources.getColor(R.color.redCoral))
+    }
+
+    private var mOnFocusReleasedListener: OnFocusReleased? = null
+    fun setOnFocusChangedListener(onFocusReleasedListener: OnFocusReleased) {
+        mOnFocusReleasedListener = onFocusReleasedListener
+    }
+
+    interface OnFocusReleased {
         fun onReleased()
     }
 
@@ -204,6 +262,15 @@ class TTextInputLayout : LinearLayout {
     }
 
     interface OnKeyPreIme {
+        fun onDone()
+    }
+
+    private var mOnEditorActionListener: OnEditorAction? = null
+    fun setOnEditorActionListener(listener: OnEditorAction) {
+        mOnEditorActionListener = listener
+    }
+
+    interface OnEditorAction {
         fun onDone()
     }
 

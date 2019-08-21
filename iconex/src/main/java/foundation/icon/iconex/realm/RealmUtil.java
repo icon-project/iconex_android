@@ -147,7 +147,6 @@ public class RealmUtil {
         }
 
         realm.commitTransaction();
-
         realm.close();
     }
 

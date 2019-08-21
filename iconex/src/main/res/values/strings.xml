@@ -114,7 +114,7 @@
     <string name="loadBundleDetailed">The password of each wallet is the same as the wallet bundle password.</string>
     <string name="loadBundleTotal">out of %d are already registered in your ICONex</string>
     <string name="loadBundleRegistered">%d wallets</string>
-    <string name="registeredWallet">Registered</string>
+    <string name="registeredWallet">Registered %s</string>
 
     <string name="msgLoadBundle">Wallet bundle is loaded. The password of each wallet is the same as the wallet bundle password and it can be changed from wallet menu.</string>
 
@@ -464,7 +464,8 @@
     <string name="dialogLabelEstimatedMaxFee">Estimated Maximum Fee (ICX)</string>
     <string name="dialogDescriptionUnstakeCancle">Unstake 취소 시 Transaction 수수료를 지불해야 합니다.</string>
 
-    <!-- Temporary -->
+    <!-- New -->
+
     <string name="createWalletStep1Detailed1">· You can add IRC tokens using ICON wallet menu.</string>
     <string name="createWalletStep1Detailed2">· You can add ERC20 tokens using Ethereum wallet menu.</string>
     <string name="createWalletStep1Detailed3">· Wallets for other coins will be added later.</string>
@@ -474,5 +475,7 @@
 
     <string name="createWalletStep3Detailed1">· Use this Keystore file to load your wallet from other device.</string>
     <string name="createWalletStep3Detailed2">· You can download your Keystore file from the \`Backup wallet\` menu later.</string>
+
+
     <!-- ========= -->
 </resources>

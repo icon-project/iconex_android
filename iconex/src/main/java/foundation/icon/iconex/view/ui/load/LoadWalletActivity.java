@@ -30,9 +30,7 @@ import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 import loopchain.icon.wallet.service.crypto.PKIUtils;
 
-public class LoadWalletActivity extends AppCompatActivity implements LoadSelectMethodFragment.OnSelectMethodCallback,
-        SelectKeyStoreFragment.OnSelectKeyStoreCallback, LoadInputWalletNameFragment.OnInputWalletNameCallback,
-        LoadInputPrivateKeyFragment.OnLoadPrivateKeyListener, LoadInputWalletInfoFragment.OnInputWalletInfoListener {
+public class LoadWalletActivity extends AppCompatActivity {
 
     private static final String TAG = LoadWalletActivity.class.getSimpleName();
 
@@ -94,9 +92,6 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
                 }
             }
         });
-
-        viewPager = findViewById(R.id.load_view_pager);
-        viewPager.setAdapter(viewPagerAdapter);
     }
 
     @Override
@@ -176,158 +171,6 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
         return false;
     }
 
-    @Override
-    public void onNext(LoadWalletViewPagerAdapter.LOAD_TYPE type) {
-        if (type == LoadWalletViewPagerAdapter.LOAD_TYPE.PRIVATE_KEY)
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-
-        viewPagerAdapter = new LoadWalletViewPagerAdapter(getSupportFragmentManager(), type);
-        viewPager.setAdapter(viewPagerAdapter);
-
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-    }
-
-    @Override
-    public void onKeyStoreSelected(JsonObject keyStore) {
-        mKeyStore = keyStore;
-
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-        InputMethodManager mImm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        mImm.toggleSoftInput(0, 0);
-    }
-
-    @Override
-    public void onKeyStoreBundleSelected(List<Wallet> wallets) {
-        mBundle = wallets;
-        bundleItems = makeList();
-
-        startActivityForResult(new Intent(this, LoadBundleActivity.class)
-                .putExtra(LoadBundleActivity.EXTRA_LIST, bundleItems), RC_BUNDLE_LIST);
-    }
-
-    @Override
-    public void onKeyStoreBack() {
-        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-    }
-
-    @Override
-    public void onDoneLoadWalletByKeyStore(String alias) {
-        mAlias = alias;
-        Wallet wallet = new Wallet();
-        wallet.setAlias(mAlias);
-        wallet.setAddress(mKeyStore.get("address").getAsString());
-        wallet.setKeyStore(mKeyStore.toString());
-
-        List<WalletEntry> walletEntries = new ArrayList<>();
-        WalletEntry coin = new WalletEntry();
-        coin.setType(MyConstants.TYPE_COIN);
-        coin.setAddress(mKeyStore.get("address").getAsString());
-
-        if (mKeyStore.has("coinType")) {
-            wallet.setCoinType(Constants.KS_COINTYPE_ICX);
-            coin.setSymbol(Constants.KS_COINTYPE_ICX);
-            coin.setName(MyConstants.NAME_ICX);
-        } else {
-            wallet.setCoinType(Constants.KS_COINTYPE_ETH);
-            coin.setSymbol(Constants.KS_COINTYPE_ETH);
-            coin.setName(MyConstants.NAME_ETH);
-        }
-        walletEntries.add(coin);
-
-        wallet.setWalletEntries(walletEntries);
-        wallet.setCreatedAt(Long.toString(System.currentTimeMillis()));
-
-        try {
-            RealmUtil.addWallet(wallet);
-            RealmUtil.loadWallet();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        startActivity(new Intent(this, MainActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
-
-    @Override
-    public void onLoadPrivateKeyNext(String coinType, String privKey) {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
-
-        mCoinType = coinType;
-        mPrivateKey = privKey;
-
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-    }
-
-    @Override
-    public void onDoneInputWalletInfo(String name, String pwd) {
-        byte[] privateKey = PKIUtils.hexDecode(mPrivateKey);
-        String[] result = null;
-        Wallet info = new Wallet();
-
-        try {
-            if (mCoinType.equals(Constants.KS_COINTYPE_ICX)) {
-                result = KeyStoreUtils.generateICXKeyStoreByPriv(pwd, privateKey);
-
-            } else {
-                result = KeyStoreUtils.generateETHKeyStoreByPriv(pwd, privateKey);
-            }
-
-            info.setCoinType(mCoinType);
-            info.setAlias(name);
-            info.setAddress(result[0]);
-            info.setKeyStore(result[2]);
-
-            JsonObject keyStore = new Gson().fromJson(result[2], JsonObject.class);
-
-            List<WalletEntry> walletEntries = new ArrayList<>();
-            WalletEntry coin = new WalletEntry();
-            coin.setType(MyConstants.TYPE_COIN);
-            coin.setAddress(result[0]);
-
-            if (keyStore.has("coinType")) {
-                info.setCoinType(Constants.KS_COINTYPE_ICX);
-                coin.setSymbol(Constants.KS_COINTYPE_ICX);
-                coin.setName(MyConstants.NAME_ICX);
-            } else {
-                info.setCoinType(Constants.KS_COINTYPE_ETH);
-                coin.setSymbol(Constants.KS_COINTYPE_ETH);
-                coin.setName(MyConstants.NAME_ETH);
-            }
-            walletEntries.add(coin);
-
-            info.setWalletEntries(walletEntries);
-
-            info.setCreatedAt(Long.toString(System.currentTimeMillis()));
-
-            RealmUtil.addWallet(info);
-            RealmUtil.loadWallet();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-
-        startActivity(new Intent(this, MainActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
-
-    @Override
-    public void onNameBack() {
-
-        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-    }
-
-    @Override
-    public void onPrivBack() {
-
-        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-    }
-
-    @Override
-    public void onInfoBack() {
-
-        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-        viewPagerAdapter.toString();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
