@@ -69,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:text="USD"
                         app:layout_constraintBottom_toBottomOf="@id/txt_total_asset"
-                        app:layout_constraintEnd_toStartOf="@id/btn_toggle"
+                        app:layout_constraintEnd_toStartOf="@id/dropdown_coin"
                         app:layout_constraintStart_toEndOf="@id/txt_total_asset"
                         app:layout_constraintTop_toTopOf="@id/txt_total_asset"
 
@@ -78,7 +78,7 @@
                         android:textColor="@android:color/white" />
 
                     <ImageButton
-                        android:id="@+id/btn_toggle"
+                        android:id="@+id/dropdown_coin"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
 

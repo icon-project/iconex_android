@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <foundation.icon.iconex.widgets.CustomActionBar
+        android:id="@+id/actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:end_icon="more"
+        app:start_icon="back"
+        app:text="Wallet Nickname" />
+
+    <foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+
+        android:layout_height="0dp"
+        android:background="@color/primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionbar">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <foundation.icon.iconex.dev_detail.WalletInfoView
+                    android:id="@+id/info_wallet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <foundation.icon.iconex.dev_detail.WalletDetailHeader
+                    android:id="@+id/list_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_transaction"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    tools:listitem="@layout/item_transaction" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout>
+
+    <foundation.icon.iconex.dev_detail.WalletDetailHeader
+        android:id="@+id/list_header_fixed"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionbar" />
+</androidx.constraintlayout.widget.ConstraintLayout>
