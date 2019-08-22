@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- TODO: remove Hardcoding -->
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/layout_appbar_back"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp">
+
+            <!-- Network -->
+            <LinearLayout
+                android:id="@+id/layout_network"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingEnd="24dp"
+                android:paddingStart="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/selectNetwork"
+                    android:textColor="@color/colorText"
+                    android:textSize="14dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/btn_network"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="10dp">
+
+                        <TextView
+                            android:id="@+id/txt_network"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/noto_sans_medium"
+                            android:text="Mainnet"
+                            android:textColor="@color/colorText"
+                            android:textSize="14dp" />
+
+                        <ImageView
+                            android:id="@+id/network_arrow"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/ic_arrow_down" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorText" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Available Balance -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txt_sub_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="40dp"
+
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:textSize="14dp"
+                    android:textColor="@color/dark4D"
+
+                    android:text="Available Balance"/>
+
+                <TextView
+                    android:id="@+id/txt_sub_balance_symbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/txt_sub_balance"
+                    app:layout_constraintBaseline_toBaselineOf="@id/txt_sub_balance"
+                    android:layout_marginStart="5dp"
+
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:textSize="10dp"
+                    android:textColor="@color/dark4D"
+
+                    android:text="(ICX)"/>
+
+                <TextView
+                    android:id="@+id/txt_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/txt_sub_balance"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="12dp"
+
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:textSize="22dp"
+                    android:textColor="@color/primary"
+
+                    android:text="9,000,000.00000008"/>
+
+                <TextView
+                    android:id="@+id/txt_trans_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/txt_balance"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="40dp"
+
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:textSize="10dp"
+                    android:textColor="@color/darkB3"
+
+                    android:text=" $ 9,000,000.003"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Send Amount -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/edit_send_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="Send amount"/>
+
+                <TextView
+                    android:id="@id/txt_trans_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="14dp"
+
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:textSize="10dp"
+                    android:textColor="@color/darkB3"
+
+                    android:text="$ 0.000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="6dp">
+                    <Button
+                        android:id="@+id/btn_plus_10"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:background="@drawable/bg_btn_outline_01"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:textSize="10dp"
+                        android:textColor="@color/dark80"
+
+                        android:text="+10"/>
+
+                    <Button
+                        android:id="@+id/btn_plus_100"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+
+                        android:background="@drawable/bg_btn_outline_01"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:textSize="10dp"
+                        android:textColor="@color/dark80"
+
+                        android:text="+100"/>
+
+                    <Button
+                        android:id="@+id/btn_plus_1000"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+
+                        android:background="@drawable/bg_btn_outline_01"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:textSize="10dp"
+                        android:textColor="@color/dark80"
+
+                        android:text="+1000"/>
+
+                    <Button
+                        android:id="@+id/btn_plus_all"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+
+                        android:background="@drawable/bg_btn_outline_01"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:textSize="10dp"
+                        android:textColor="@color/dark80"
+
+                        android:textAllCaps="false"
+                        android:text="Max"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Receiving Address -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="40dp">
+
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/edit_to_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="Receiving Address"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="26dp">
+
+                    <Button
+                        android:id="@+id/btn_contacts"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:background="@drawable/bg_btn_outline_01"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:textSize="10dp"
+                        android:textColor="@color/dark80"
+
+                        android:textAllCaps="false"
+                        android:text="My Address"/>
+
+                    <Button
+                        android:id="@+id/btn_qr_scan"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+
+                        android:background="@drawable/bg_btn_outline_01"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:textSize="10dp"
+                        android:textColor="@color/dark80"
+
+                        android:textAllCaps="false"
+                        android:text="QR Code"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Data -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="30dp">
+
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/edit_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="Data (Optional)"/>
+
+                <Button
+                    android:id="@+id/btn_view_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="26dp"
+
+                    android:background="@drawable/bg_btn_outline_01"
+                    android:fontFamily="@font/noto_sans_light"
+                    android:textSize="10dp"
+                    android:textColor="@color/dark80"
+
+                    android:textAllCaps="false"
+                    android:text="View Data"/>
+            </LinearLayout>
+                    
+            <!-- Fee -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="121dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/bg_outline_box_darkfc">
+
+                <!--TODO: font Demilight-->
+                <TextView
+                    android:id="@+id/lb_step_limit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+
+                    android:textSize="10dp"
+                    android:textColor="@color/dark80"
+
+                    android:text="Step Limit / Price (ICX)"/>
+
+                <TextView
+                    android:id="@+id/lb_estimated_max_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@+id/lb_step_limit"
+                    app:layout_constraintTop_toBottomOf="@+id/lb_step_limit"
+                    android:layout_marginTop="13dp"
+
+                    android:textSize="10dp"
+                    android:textColor="@color/dark80"
+
+                    android:text="Estimated Maximum Fee (ICX)"/>
+
+                <TextView
+                    android:id="@+id/txt_step_limit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_step_limit"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="20dp"
+
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:textSize="12dp"
+                    android:textColor="@color/dark4D"
+
+                    android:text="100,000 / 0.00000001"/>
+
+                <TextView
+                    android:id="@+id/txt_estimated_max_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_estimated_max_fee"
+                    app:layout_constraintEnd_toEndOf="@+id/txt_step_limit"
+
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:textSize="12dp"
+                    android:textColor="@color/dark4D"
+
+                    android:text="0.00000008"/>
+
+                <TextView
+                    android:id="@+id/txt_trans_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@+id/txt_estimated_max_fee"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_estimated_max_fee"
+                    android:layout_marginTop="6dp"
+
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:textSize="10dp"
+                    android:textColor="@color/darkB3"
+
+                    android:text=" $ 0.001"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@color/darkFC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!--TODO: HardCodeing-->
+        <Button
+            android:id="@+id/btn_send"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+
+            android:background="@drawable/bg_btn_rounded_01_light"
+            android:enabled="false"
+            android:fontFamily="@font/nanum_square_regular"
+            android:text="Send"
+            android:textAllCaps="false"
+            android:textColor="@color/primary"
+            android:textSize="14dp" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
