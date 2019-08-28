@@ -8,14 +8,16 @@
 
     <!-- TODO: remove Hardcoding -->
 
-    <include
+    <foundation.icon.iconex.widgets.CustomActionBar
         android:id="@+id/appbar"
-        layout="@layout/layout_appbar_back"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:start_icon="back"
+        app:end_icon="info"
+        app:text="지갑명 "/>
 
     <ScrollView
         android:layout_width="0dp"
@@ -250,7 +252,7 @@
                 android:background="@drawable/bg_outline_box_darkfc">
 
                 <TextView
-                    android:id="@+id/info_price"
+                    android:id="@+id/lb_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -268,7 +270,7 @@
                     android:id="@+id/txt_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/info_price"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_price"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="20dp"
 
@@ -283,8 +285,8 @@
                     android:id="@+id/lb_slow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/info_price"
-                    app:layout_constraintStart_toStartOf="@+id/info_price"
+                    app:layout_constraintTop_toBottomOf="@+id/lb_price"
+                    app:layout_constraintStart_toStartOf="@+id/lb_price"
                     android:layout_marginTop="19dp"
 
                     android:textSize="10dp"
@@ -304,14 +306,19 @@
 
                     android:text="(빠름) 99"/>
 
-                <SeekBar
+                <foundation.icon.iconex.widgets.CustomSeekbar
                     android:id="@+id/seek_price"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="@+id/lb_fast"
-                    app:layout_constraintStart_toStartOf="@+id/lb_slow"
-                    app:layout_constraintTop_toBottomOf="@+id/lb_slow" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lb_slow"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    app:max="98"
+                    app:progress="53"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -353,7 +360,7 @@
 
                 <!-- TODO: font Demi light -->
                 <TextView
-                    android:id="@+id/txt_send_fee"
+                    android:id="@+id/lb_estimated_max_fee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -371,7 +378,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/txt_send_fee"
+                    app:layout_constraintBaseline_toBaselineOf="@id/lb_estimated_max_fee"
                     app:layout_constraintEnd_toEndOf="parent"
 
                     android:fontFamily="@font/nanum_square_regular"
