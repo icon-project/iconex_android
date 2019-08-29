@@ -53,6 +53,7 @@
     </declare-styleable>
 
     <declare-styleable name="TotalAssetsIndicator">
+        <attr name="size" format="integer" />
         <attr name="index" format="integer" />
     </declare-styleable>
 

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/primary">
+
+    <LinearLayout
+        android:id="@+id/label_wraper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- TODO: font DemiLight   -->
+        <TextView
+            android:id="@+id/lb_total_assets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textColor="#99FFFFFF"
+            android:text="Total Assets"/>
+
+        <TextView
+            android:id="@+id/txt_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+
+            android:fontFamily="@font/noto_sans_medium"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+
+            android:text="USD"/>
+
+        <ImageView
+            android:id="@+id/btn_toggle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/ic_toggle" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/txt_total_asset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nanum_square_light"
+        android:text="900,000.0004"
+        android:textColor="@android:color/white"
+        android:textSize="40dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_wraper" />
+</androidx.constraintlayout.widget.ConstraintLayout>
