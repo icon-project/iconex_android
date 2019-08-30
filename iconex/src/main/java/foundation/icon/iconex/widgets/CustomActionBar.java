@@ -34,6 +34,8 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
     public void setOnClickStartIcon(View.OnClickListener listener) {
         mOnClickStartIcon = listener;
     }
+    public void setOnClickEndIcon(View.OnClickListener listener) { mOnClickEndIcon = listener; }
+    public void setOnCLickToggleIcon(View.OnClickListener listener) { mOnCLickToggleIcon = listener; }
 
     public CustomActionBar(Context context) {
         super(context);

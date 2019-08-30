@@ -19,7 +19,7 @@
         android:layout_marginTop="26dp"
         android:layout_marginLeft="15dp"
 
-        android:src="@drawable/img_logo_icon"/>
+        android:src="@drawable/img_logo_icon_sel"/>
 
     <TextView
         android:id="@+id/txt_symbol"
