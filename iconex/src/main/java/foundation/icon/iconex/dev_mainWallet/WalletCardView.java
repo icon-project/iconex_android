@@ -1,13 +1,9 @@
 package foundation.icon.iconex.dev_mainWallet;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -15,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.junit.Test;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_items.EthCoinWalletItem;
@@ -25,20 +22,20 @@ import foundation.icon.iconex.dev_items.IcxCoinWalletItem;
 import foundation.icon.iconex.dev_items.TokenWalletItem;
 import foundation.icon.iconex.dev_items.WalletWalletItem;
 
-public class WalletCard extends FrameLayout {
+public class WalletCardView extends FrameLayout {
 
     public interface OnChangeIsScrollTopListener { void onChangeIsScrollTop(boolean isScrollTop); }
 
     private TextView txtAlias;
-    private ImageView btnQrSacn;
-    private ImageView btnQrCode;
-    private ImageView btnMore;
+    protected ImageView btnQrSacn;
+    protected ImageView btnQrCode;
+    protected ImageView btnMore;
     private RecyclerView recycler;
 
     private boolean mIsScrollTop = true;
     private OnChangeIsScrollTopListener changeIsScrollTopListener = null;
 
-    public WalletCard(@NonNull Context context) {
+    public WalletCardView(@NonNull Context context) {
         super(context);
         initView();
     }
@@ -122,9 +119,19 @@ public class WalletCard extends FrameLayout {
         }
     }
 
-    private int dp2px (int dp) {
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, dp,
-                getResources().getDisplayMetrics());
+    public void setTextAliasLabel(String alias) {
+        txtAlias.setText(alias);
+    }
+
+    public void setOnClickQrScanListener(View.OnClickListener listener) {
+        btnQrSacn.setOnClickListener(listener);
+    }
+
+    public void setOnClickQrCodeListener(View.OnClickListener listener) {
+        btnQrCode.setOnClickListener(listener);
+    }
+
+    public void setOnClickMoreListener(View.OnClickListener listener) {
+        btnMore.setOnClickListener(listener);
     }
 }

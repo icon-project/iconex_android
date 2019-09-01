@@ -4,22 +4,13 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GestureDetectorCompat;
-import androidx.core.view.LayoutInflaterCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -29,7 +20,7 @@ import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
 
-public class MainWalletActivity extends AppCompatActivity {
+public class MainWalletActivity extends AppCompatActivity implements WalletCardView.OnChangeIsScrollTopListener {
 
     private CustomActionBar actionBar;
     private TotalAssetInfoView totalAssetInfoView;
@@ -78,6 +69,8 @@ public class MainWalletActivity extends AppCompatActivity {
             }
         });
 
+
+
         // wallet view pager
         walletViewPager = findViewById(R.id.wallet_viewpager);
         walletViewPager.setClipToPadding(false);
@@ -88,15 +81,15 @@ public class MainWalletActivity extends AppCompatActivity {
             @NonNull
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                WalletCard walletCard = new WalletCard(container.getContext());
-                walletCard.setOnChagneIsScrollTopListener(new WalletCard.OnChangeIsScrollTopListener() {
+                WalletCardView walletCardView = new WalletCardView(container.getContext());
+                walletCardView.setOnChagneIsScrollTopListener(new WalletCardView.OnChangeIsScrollTopListener() {
                     @Override
                     public void onChangeIsScrollTop(boolean isScrollTop) {
                         updateCollapsable();
                     }
                 });
-                container.addView(walletCard);
-                return walletCard;
+                container.addView(walletCardView);
+                return walletCardView;
             }
 
             @Override
@@ -111,7 +104,13 @@ public class MainWalletActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                return 30;
+                return 5;
+            }
+        });
+        walletViewPager.setOnStateChangeListener(new ExpanableViewPager.OnStateChangeListener() {
+            @Override
+            public void onChangeState(ExpanableViewPager.State state) {
+                Log.d("hello", "state=" + state);
             }
         });
 
@@ -141,10 +140,15 @@ public class MainWalletActivity extends AppCompatActivity {
         });
     }
 
+    @Override // WalletCardView's event listener
+    public void onChangeIsScrollTop(boolean isScrollTop) {
+        updateCollapsable();
+    }
+
     private void updateCollapsable() {
         int position = walletViewPager.getCurrentItem();
-        WalletCard walletCard = ((WalletCard) walletViewPager.getChildAt(position));
-        boolean collapsable = walletCard.getIsScrollTop();
+        WalletCardView walletCardView = ((WalletCardView) walletViewPager.getChildAt(position));
+        boolean collapsable = walletCardView.getIsScrollTop();
         walletViewPager.setIsCollapsable(collapsable);
     }
 
