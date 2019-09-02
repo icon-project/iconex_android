@@ -33,7 +33,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletF
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
 
-        // Thread Safe, allow
+
         MainWalletFragment fragment = MainWalletFragment.newInstance();
 
         getSupportFragmentManager()
@@ -42,7 +42,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletF
                 .commit();
     }
 
-    @Override
+    @Override // Thread Safe, refresh trigger
     public TotalAssetsViewData onSyncRequestTotalAssetsData() {
         return new TotalAssetsViewData()
                 .setTotalAsset(new BigInteger("20000000"))
@@ -50,7 +50,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletF
 
     }
 
-    @Override
+    @Override // Thread Safe
     public List<WalletCardViewData> onSyncRequestWalletListData() {
         return new ArrayList<WalletCardViewData>() {{
             add(new WalletCardViewData()
@@ -113,7 +113,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletF
         }};
     }
 
-    @Override
+    @Override // Thread Safe
     public List<WalletCardViewData> onSyncRequestTokenListData() {
         return new ArrayList<WalletCardViewData>() {{
             add(new WalletCardViewData()

@@ -13,6 +13,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 
 public class TotalAssetInfoView extends FrameLayout {
 
@@ -99,5 +100,9 @@ public class TotalAssetInfoView extends FrameLayout {
 
     public int getIndex() { // maybe will return only 0 or 1
         return mIndicator.getIndex();
+    }
+
+    public void bind(TotalAssetsViewData data) {
+
     }
 }

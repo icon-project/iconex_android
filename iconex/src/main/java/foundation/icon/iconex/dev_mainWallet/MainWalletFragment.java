@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -51,7 +53,14 @@ public class MainWalletFragment extends Fragment {
     private TotalAssetInfoView totalAssetInfoView;
     private ExpanableViewPager walletViewPager;
     private WalletIndicator walletIndicator;
+
     private ImageButton btnAction;
+    private ViewGroup bubbleMenuModal;
+    private ViewGroup bubbleMenu;
+    private Button btnPReps;
+    private Button btnStake;
+    private Button btnVote;
+    private Button btnIScore;
 
     // UI side field
     private PagerAdapter pagerAdapter = null;
@@ -87,7 +96,14 @@ public class MainWalletFragment extends Fragment {
         totalAssetInfoView = v.findViewById(R.id.info_total_asset);
         walletViewPager = v.findViewById(R.id.wallet_viewpager);
         walletIndicator = v.findViewById(R.id.wallet_indicator);
+
         btnAction = v.findViewById(R.id.btn_action);
+        bubbleMenuModal = v.findViewById(R.id.bubble_menu_modal);
+        bubbleMenu = v.findViewById(R.id.bubble_menu);
+        btnPReps = v.findViewById(R.id.btn_preps);
+        btnStake = v.findViewById(R.id.btn_stake);
+        btnVote = v.findViewById(R.id.btn_vote);
+        btnIScore = v.findViewById(R.id.btn_iscore);
 
         initUI(v);
         refreshAllData();
@@ -160,14 +176,67 @@ public class MainWalletFragment extends Fragment {
         initWalletViewPager(content);
 
         // init wallet indicator.
+        // noting.
 
         // init btnAction
+
         btnAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                int visibility = bubbleMenuModal.getVisibility();
+                setBubbleMenuShow(visibility != ViewGroup.VISIBLE);
             }
         });
+
+        bubbleMenuModal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setBubbleMenuShow(false);
+            }
+        });
+
+        View.OnClickListener bublemenuListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_preps: {
+                        Toast.makeText(getContext(), "not implement btn_preps", Toast.LENGTH_SHORT).show();
+                        setBubbleMenuShow(false);
+                    } break;
+                    case R.id.btn_stake: {
+                        Toast.makeText(getContext(), "not implement btn_stake", Toast.LENGTH_SHORT).show();
+                        setBubbleMenuShow(false);
+                    } break;
+                    case R.id.btn_vote: {
+                        Toast.makeText(getContext(), "not implement btn_vote", Toast.LENGTH_SHORT).show();
+                        setBubbleMenuShow(false);
+                    } break;
+                    case R.id.btn_iscore: {
+                        Toast.makeText(getContext(), "not implement btn_iscore", Toast.LENGTH_SHORT).show();
+                        setBubbleMenuShow(false);
+                    } break;
+                }
+            }
+        };
+
+        btnPReps.setOnClickListener(bublemenuListener);
+        btnStake.setOnClickListener(bublemenuListener);
+        btnVote.setOnClickListener(bublemenuListener);
+        btnIScore.setOnClickListener(bublemenuListener);
+
+        setBubbleMenuShow(false);
+    }
+
+    private void setBubbleMenuShow(boolean isShow) {
+        if (!isShow) {
+            bubbleMenuModal.setVisibility(View.GONE);
+            bubbleMenu.setVisibility(View.GONE);
+            btnAction.setImageResource(R.drawable.ic_vote_menu);
+        } else {
+            bubbleMenuModal.setVisibility(View.VISIBLE);
+            bubbleMenu.setVisibility(View.VISIBLE);
+            btnAction.setImageResource(R.drawable.ic_close_menu);
+        }
     }
 
     private void initWalletViewPager(View content) {
@@ -181,6 +250,19 @@ public class MainWalletFragment extends Fragment {
             public void onPageSelected(int position) {
                 updateCollapsable();
                 walletIndicator.setIndex(position);
+            }
+        });
+        walletViewPager.setOnStateChangeListener(new ExpanableViewPager.OnStateChangeListener() {
+            @Override
+            public void onChangeState(ExpanableViewPager.State state) {
+                switch (state) {
+                    case Expaned: {
+                        refresh.setRefreshEnable(false);
+                    } break;
+                    case Collapsed: {
+                        refresh.setRefreshEnable(true);
+                    } break;
+                }
             }
         });
         pagerAdapter = new PagerAdapter() {
@@ -261,7 +343,7 @@ public class MainWalletFragment extends Fragment {
     }
 
     private void updateTotalAssetsView() {
-
+        totalAssetInfoView.bind(totalAssetsData);
     }
 
     private void refreshAllData() {

@@ -3,6 +3,7 @@ package foundation.icon.iconex.dev_mainWallet.component;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -15,13 +16,13 @@ import androidx.viewpager.widget.ViewPager;
 
 public class ExpanableViewPager extends ViewPager {
 
+    // Declaration
     private String TAG = ExpanableViewPager.class.getSimpleName();
-
     public enum State { Expaned, Collapsed, Dragging, Expanding, Collapsing }
     public interface OnStateChangeListener { void onChangeState(State state); }
-
     private static final int ANIMATION_DURATION = 300;
 
+    // expand & collapse state value
     private int mExpandedHeight = 750;
     private int mCollapseHeight = 450;
     private boolean mIsExpanable = true;
@@ -29,62 +30,51 @@ public class ExpanableViewPager extends ViewPager {
     private State mState = State.Collapsed;
     private OnStateChangeListener changeListener = null;
 
-    private GestureDetectorCompat dragStartDetector;
+    // gesture detect value
+    private GestureDetectorCompat interceptDragStarter;
     int mStartRawY = 0;
     int mStartHeight = 0;
+    private boolean mLastActionDown = false;
+    private float mLastActionDownX = 0;
+    private float mLastActionDownY = 0;
 
-
+    // =============== init methods
     public ExpanableViewPager(@NonNull Context context) {
         super(context);
-        initView();
+        initGesture();
     }
 
     public ExpanableViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initView();
+        initGesture();
     }
 
-    private void initView () {
-        dragStartDetector = new GestureDetectorCompat(getContext(), new GestureDetector.SimpleOnGestureListener() {
+    // ============= gesture detect methods
+    private void initGesture() {
+        // simple intercept drag start gesture detector
+        interceptDragStarter = new GestureDetectorCompat(getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                if (Math.abs(distanceY) < Math.abs(distanceX)) return false;
-
-                if (
-                    (distanceY > 0.5f && mState == State.Collapsed && mIsExpanable)
-                    ||
-                    (distanceY < -0.5f && mState == State.Expaned && mIsCollapsable)
-                ) {
-                    ViewParent parent = getParent();
-                    if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
-                    updateState(State.Dragging);
-                    mStartRawY = ((int) e1.getRawY());
-                    mStartHeight = getHeight();
-                    return true;
-                }
-
-                return false;
+                return checkDragStartPattern(e1, distanceX, distanceY);
             }
         });
     }
 
-    @Override
+    @Override // intercept gesture
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-
         if (mState != State.Dragging) {
-            return dragStartDetector.onTouchEvent(ev) || super.onInterceptTouchEvent(ev);
+            return interceptDragStarter.onTouchEvent(ev) || super.onInterceptTouchEvent(ev);
         }
-
-        // dragging.
         return true;
     }
 
-    @Override
+    @Override // gesture process
     public boolean onTouchEvent(MotionEvent ev) {
         final int action = ev.getAction() & MotionEvent.ACTION_MASK;
 
         if (mState == State.Dragging) {
             switch (action) {
+                case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP: {
                     ViewParent parent = getParent();
                     if (parent != null) parent.requestDisallowInterceptTouchEvent(false);
@@ -96,15 +86,58 @@ public class ExpanableViewPager extends ViewPager {
                 }
                 case MotionEvent.ACTION_MOVE: {
                     int deltaY = ((int) (ev.getRawY() - mStartRawY));
-                    setHeight(mStartHeight - deltaY);
+                    int height = mStartHeight - deltaY;
+                    if (height < mCollapseHeight)
+                        height = mCollapseHeight - ((mCollapseHeight - height) / 2);
+                    setHeight(height);
                     return true;
                 }
+            }
+        } else {
+            switch (action) {
+                case MotionEvent.ACTION_DOWN: {
+                    mLastActionDown = true;
+                    mLastActionDownX = ev.getRawX();
+                    mLastActionDownY = ev.getRawY();
+                } break;
+                case MotionEvent.ACTION_MOVE: {
+                    if (mLastActionDown) {
+                        float distanceY = mLastActionDownY - ev.getRawY();
+                        float distanceX = mLastActionDownX - ev.getRawX();
+                        if (checkDragStartPattern(ev, distanceX, distanceY)) {
+                            mLastActionDown = false;
+                            return true;
+                        }
+                    }
+                } break;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP: {
+                    mLastActionDown = false;
+                } break;
             }
         }
 
         return super.onTouchEvent(ev);
     }
 
+    private boolean checkDragStartPattern(MotionEvent e, float distanceX, float distanceY) {
+        if (Math.abs(distanceY) < Math.abs(distanceX)) return false;
+        boolean isExpandDragStart = distanceY > 0.5f && mState == State.Collapsed && mIsExpanable;
+        boolean isCollapsDragStart = distanceY < -0.5f && mState == State.Expaned && mIsCollapsable;
+
+        if (isExpandDragStart || isCollapsDragStart) {
+            ViewParent parent = getParent();
+            if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
+            updateState(State.Dragging);
+            mStartRawY = ((int) e.getRawY());
+            mStartHeight = getHeight();
+            return true;
+        }
+
+        return false;
+    }
+
+    // ============== get/set methods
     public int getExpandedHeight () { return mExpandedHeight; }
     public int getCollapseHeight () { return mCollapseHeight; }
 
@@ -142,6 +175,7 @@ public class ExpanableViewPager extends ViewPager {
         return changeListener;
     }
 
+    // ================== height calc method
     private void updateState (State state) {
         if (changeListener != null && mState != state)
             changeListener.onChangeState(state);
@@ -162,9 +196,8 @@ public class ExpanableViewPager extends ViewPager {
     }
 
     private void setHeight(int height) {
-        ViewGroup.LayoutParams layoutParams = getLayoutParams();
-        layoutParams.height = height;
-        setLayoutParams(layoutParams);
+        getLayoutParams().height = height;
+        requestLayout();
     }
 
     private void updateHeightSmooth (State state) {
