@@ -199,7 +199,7 @@
             android:text="900,000,000.0004"/>
 
         <TextView
-            android:id="@+id/txt_exchanged_amount"
+            android:id="@+id/txt_exchanged"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
