@@ -1,4 +1,4 @@
-package foundation.icon.iconex.dev_mainWallet;
+package foundation.icon.iconex.dev_mainWallet.component;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

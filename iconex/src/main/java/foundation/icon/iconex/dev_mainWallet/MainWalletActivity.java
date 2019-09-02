@@ -1,160 +1,125 @@
 package foundation.icon.iconex.dev_mainWallet;
 
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import foundation.icon.iconex.R;
 
-import foundation.icon.iconex.widgets.CustomActionBar;
-import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
-import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
+import foundation.icon.iconex.dev_mainWallet.items.ICXcoinWalletItem;
+import foundation.icon.iconex.dev_mainWallet.items.TokenWalletItem;
+import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
+import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
+import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 
-public class MainWalletActivity extends AppCompatActivity implements WalletCardView.OnChangeIsScrollTopListener {
+public class MainWalletActivity extends AppCompatActivity implements MainWalletFragment.SyncRequester {
 
-    private CustomActionBar actionBar;
-    private TotalAssetInfoView totalAssetInfoView;
-    private RefreshLayout refresh;
-    private ExpanableViewPager walletViewPager;
-    private WalletIndicator walletIndicator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_wallet_frgment);
 
-        totalAssetInfoView = findViewById(R.id.info_total_asset);
+        FrameLayout container = new FrameLayout(this);
+        container.setId(R.id.container);
+        setContentView(container, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
 
-        // refresh layout
-        refresh = findViewById(R.id.refresh);
-        refresh.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh.stopRefresh(true);
-            }
+        // Thread Safe, allow
+        MainWalletFragment fragment = MainWalletFragment.newInstance();
 
-            @Override
-            public void onLoadMore() {
-
-            }
-        });
-        refresh.setRefreshEnable(true);
-        refresh.addHeader(new RefreshLoadingView(this) {
-            @Override
-            public void onRefreshBefore(int scrollY, int headerHeight) {
-                super.onRefreshBefore(scrollY, headerHeight);
-                walletViewPager.setIsExpanable(false);
-            }
-
-            @Override
-            public void onRefreshComplete(int scrollY, int headerHeight, boolean isRefreshSuccess) {
-                super.onRefreshComplete(scrollY, headerHeight, isRefreshSuccess);
-                walletViewPager.setIsExpanable(true);
-            }
-
-            @Override
-            public void onRefreshCancel(int scrollY, int headerHeight) {
-                super.onRefreshCancel(scrollY, headerHeight);
-                walletViewPager.setIsExpanable(true);
-            }
-        });
-
-
-
-        // wallet view pager
-        walletViewPager = findViewById(R.id.wallet_viewpager);
-        walletViewPager.setClipToPadding(false);
-        walletViewPager.setPadding(dp2px(10), 0, dp2px(10), 0);
-        walletViewPager.setPageMargin(dp2px(10));
-        walletViewPager.setOffscreenPageLimit(5);
-        walletViewPager.setAdapter(new PagerAdapter() {
-            @NonNull
-            @Override
-            public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                WalletCardView walletCardView = new WalletCardView(container.getContext());
-                walletCardView.setOnChagneIsScrollTopListener(new WalletCardView.OnChangeIsScrollTopListener() {
-                    @Override
-                    public void onChangeIsScrollTop(boolean isScrollTop) {
-                        updateCollapsable();
-                    }
-                });
-                container.addView(walletCardView);
-                return walletCardView;
-            }
-
-            @Override
-            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-                container.removeView(((View) object));
-            }
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-                return view == object;
-            }
-
-            @Override
-            public int getCount() {
-                return 5;
-            }
-        });
-        walletViewPager.setOnStateChangeListener(new ExpanableViewPager.OnStateChangeListener() {
-            @Override
-            public void onChangeState(ExpanableViewPager.State state) {
-                Log.d("hello", "state=" + state);
-            }
-        });
-
-        // set wallet page indicatore
-        walletIndicator = findViewById(R.id.wallet_indicator);
-        walletViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                updateCollapsable();
-                walletIndicator.setIndex(position);
-            }
-        });
-
-        View content = findViewById(android.R.id.content);
-        content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                Rect pagerBound = new Rect();
-                Rect infoBound = new Rect();
-                walletViewPager.getGlobalVisibleRect(pagerBound);
-                totalAssetInfoView.getGlobalVisibleRect(infoBound);
-                walletViewPager.setExpandedHeight(pagerBound.bottom - infoBound.top);
-                walletViewPager.setCollapseHeight(pagerBound.bottom - infoBound.bottom);
-            }
-        });
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.container, fragment)
+                .commit();
     }
 
-    @Override // WalletCardView's event listener
-    public void onChangeIsScrollTop(boolean isScrollTop) {
-        updateCollapsable();
+    @Override
+    public TotalAssetsViewData onSyncRequestTotalAssetsData() {
+        return new TotalAssetsViewData()
+                .setTotalAsset(new BigInteger("20000000"))
+                .setVotedPower(0.99f);
+
     }
 
-    private void updateCollapsable() {
-        int position = walletViewPager.getCurrentItem();
-        WalletCardView walletCardView = ((WalletCardView) walletViewPager.getChildAt(position));
-        boolean collapsable = walletCardView.getIsScrollTop();
-        walletViewPager.setIsCollapsable(collapsable);
+    @Override
+    public List<WalletCardViewData> onSyncRequestWalletListData() {
+        return new ArrayList<WalletCardViewData>() {{
+            add(new WalletCardViewData()
+                    .setTitle("아이콘 지갑1")
+                    .setWalletType(WalletCardViewData.WalletType.ICXwallet)
+                    .setLstWallet(new ArrayList<WalletItemViewData>() {{
+                        add(new WalletItemViewData()
+                                .setWalletItemType(WalletItemViewData.WalletItemType.ICXcoin)
+                                .setAmount("1,234.2600")
+                                .setExchanged("187.274 USD")
+                                .setStacked("70.1")
+                                .setVotingPower("1,000.1234")
+                                .setiScore("1,234.26000")
+                        );
+                        add(new WalletItemViewData()
+                                .setWalletItemType(WalletItemViewData.WalletItemType.Token)
+                                .setSymbol("ABC gogo")
+                                .setSymbolLetter('A')
+                                .setBgSymbolColor(TokenWalletItem.TokenColor.A.color)
+                                .setAmount("1,234.2600")
+                                .setExchanged("187.274 USD")
+                        );
+                        add(new WalletItemViewData()
+                                .setWalletItemType(WalletItemViewData.WalletItemType.Token)
+                                .setSymbol("Gaglin")
+                                .setSymbolLetter('G')
+                                .setBgSymbolColor(TokenWalletItem.TokenColor.G.color)
+                                .setAmount("1,234.2600")
+                                .setExchanged("187.274 USD")
+                        );
+                    }})
+            );
+            add(new WalletCardViewData()
+                    .setTitle("이더리움 지갑1")
+                    .setWalletType(WalletCardViewData.WalletType.ETHwallet)
+                    .setLstWallet(new ArrayList<WalletItemViewData>() {{
+                        add(new WalletItemViewData()
+                                .setWalletItemType(WalletItemViewData.WalletItemType.ETHcoin)
+                                .setAmount("1,234.2600")
+                                .setExchanged("187.274 USD")
+                        );
+                        add(new WalletItemViewData()
+                                .setWalletItemType(WalletItemViewData.WalletItemType.Token)
+                                .setSymbol("ABC gogo")
+                                .setSymbolLetter('A')
+                                .setBgSymbolColor(TokenWalletItem.TokenColor.A.color)
+                                .setAmount("1,234.2600")
+                                .setExchanged("187.274 USD")
+                        );
+                        add(new WalletItemViewData()
+                                .setWalletItemType(WalletItemViewData.WalletItemType.Token)
+                                .setSymbol("Gaglin")
+                                .setSymbolLetter('G')
+                                .setBgSymbolColor(TokenWalletItem.TokenColor.G.color)
+                                .setAmount("1,234.2600")
+                                .setExchanged("187.274 USD")
+                        );
+                    }})
+            );
+        }};
     }
 
-    private int dp2px (int dp) {
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, dp,
-                getResources().getDisplayMetrics());
+    @Override
+    public List<WalletCardViewData> onSyncRequestTokenListData() {
+        return new ArrayList<WalletCardViewData>() {{
+            add(new WalletCardViewData()
+                    .setWalletType(WalletCardViewData.WalletType.TokenList)
+                    .setTitle("ICON")
+            );
+        }};
     }
 }

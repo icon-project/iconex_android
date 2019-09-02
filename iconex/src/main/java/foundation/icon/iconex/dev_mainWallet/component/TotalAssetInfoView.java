@@ -1,4 +1,4 @@
-package foundation.icon.iconex.dev_mainWallet;
+package foundation.icon.iconex.dev_mainWallet.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -91,5 +91,13 @@ public class TotalAssetInfoView extends FrameLayout {
         });
     }
 
+    public void setIndex(int idx) {
+        if (0 > idx  || mViewPager.getChildCount() <= idx )
+            throw new IllegalArgumentException("not allow idx=" + idx + " idx range: 0 || 1");
+        mViewPager.setCurrentItem(idx, true);
+    }
 
+    public int getIndex() { // maybe will return only 0 or 1
+        return mIndicator.getIndex();
+    }
 }

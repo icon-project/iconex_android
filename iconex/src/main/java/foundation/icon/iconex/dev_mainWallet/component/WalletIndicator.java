@@ -1,4 +1,4 @@
-package foundation.icon.iconex.dev_mainWallet;
+package foundation.icon.iconex.dev_mainWallet.component;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,45 +14,45 @@ import java.util.List;
 
 import foundation.icon.iconex.R;
 
-public class TotalAssetsIndicator extends LinearLayout {
+public class WalletIndicator extends LinearLayout {
 
-    private List<ImageView> mLstImg = new ArrayList<>(2);
-    private int mSize = 2;
+    private List<ImageView> mLstImg = new ArrayList<>();
+    private int mSize = 1;
     private int mIndex = 0;
 
-    public TotalAssetsIndicator(Context context) {
+    public WalletIndicator(Context context) {
         super(context);
         initView();
     }
 
-    public TotalAssetsIndicator(Context context, @Nullable AttributeSet attrs) {
+    public WalletIndicator(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        setTypArray(getContext().obtainStyledAttributes(attrs, R.styleable.TotalAssetsIndicator));
+        setTypeArray(getContext().obtainStyledAttributes(attrs, R.styleable.WalletIndicator));
         initView();
     }
 
-    public TotalAssetsIndicator(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public WalletIndicator(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setTypArray(getContext().obtainStyledAttributes(
-                attrs, R.styleable.TotalAssetsIndicator, defStyleAttr, 0
+        setTypeArray(getContext().obtainStyledAttributes(attrs,
+                R.styleable.WalletIndicator, defStyleAttr, 0
         ));
         initView();
     }
 
-    private void setTypArray(TypedArray typArray) {
-        mSize = typArray.hasValue(R.styleable.TotalAssetsIndicator_size) ?
-                typArray.getInteger(R.styleable.TotalAssetsIndicator_size, 2)
+    private void setTypeArray(TypedArray typedArray) {
+        mSize = typedArray.hasValue(R.styleable.WalletIndicator_size) ?
+                typedArray.getInteger(R.styleable.WalletIndicator_size, 5)
                 :
-                2;
-        mIndex = typArray.hasValue(R.styleable.TotalAssetsIndicator_index) ?
-                typArray.getInteger(R.styleable.TotalAssetsIndicator_index, 0)
+                5;
+        mIndex = typedArray.hasValue(R.styleable.WalletIndicator_index) ?
+                typedArray.getInteger(R.styleable.WalletIndicator_index, 0)
                 :
                 0;
     }
 
     private void initView () {
         setOrientation(HORIZONTAL);
-        setSize(mSize);
+        setSize(5);
     }
 
     public int getSize() {
@@ -66,7 +66,7 @@ public class TotalAssetsIndicator extends LinearLayout {
         mLstImg.clear();
 
         int dp4 = dp2px(4);
-        for (int i = 0; mSize > i; i++) {
+        for (int i = 0; mSize > i && 7 >= i; i++) {
             ImageView img = new ImageView(getContext());
 
             LayoutParams layoutParams = new LayoutParams(
@@ -75,6 +75,8 @@ public class TotalAssetsIndicator extends LinearLayout {
             );
 
             if (i != mSize -1) layoutParams.setMarginEnd(dp4);
+
+            img.setImageResource(R.drawable.wallet_indicator);
 
             mLstImg.add(img);
             addView(img, layoutParams);
@@ -88,17 +90,18 @@ public class TotalAssetsIndicator extends LinearLayout {
     }
 
     public void setIndex(int index) {
-        mIndex = index;
+        if (5 >= mSize) {
+            for (int i = 0; mSize > i; i++ ) {
+                ImageView img = mLstImg.get(i);
+                img.setAlpha(index == i ? 0.7f : 0.2f);
+            }
+        } else if (6 == mSize) {
 
-        for (int i = 0; mSize > i; i++) {
-            ImageView img = mLstImg.get(i);
-            img.setImageResource(
-                    index == i ?
-                            R.drawable.page_indicator_total_assets_selected
-                            :
-                            R.drawable.page_indicator_total_assets_unselected
-            );
+        } else { // mSize >= 7
+
         }
+
+        mIndex = index;
     }
 
     private int dp2px (int dp) {

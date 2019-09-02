@@ -1,4 +1,4 @@
-package foundation.icon.iconex.dev_mainWallet;
+package foundation.icon.iconex.dev_mainWallet.component;
 
 import android.content.Context;
 import android.view.LayoutInflater;

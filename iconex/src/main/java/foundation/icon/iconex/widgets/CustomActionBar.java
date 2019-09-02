@@ -27,15 +27,85 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
     private TextView mTxtTitle;
     private ImageView mImgToggle;
 
+    public IconStart getIconStart() {
+        return mIconStart;
+    }
+
+    public void setIconStart(IconStart IconStart) {
+        mIconStart = IconStart;
+        switch (mIconStart) {
+            case menu: mBtnStartIcon.setImageResource(R.drawable.ic_appbar_menu); break;
+            case back: mBtnStartIcon.setImageResource(R.drawable.ic_appbar_back); break;
+            default: mBtnStartIcon.setVisibility(View.GONE); break;
+        }
+    }
+
+    public IconEnd getIconEnd() {
+        return mIconEnd;
+    }
+
+    public void setIconEnd(IconEnd IconEnd) {
+        mIconEnd = IconEnd;
+        switch (mIconEnd) {
+            case info: {
+                mBtnText.setVisibility(View.GONE);
+                mBtnEndIcon.setImageResource(R.drawable.ic_info);
+            } break;
+            case more: {
+                mBtnText.setVisibility(View.GONE);
+                mBtnEndIcon.setImageResource(R.drawable.ic_more_vert_darkgray);
+            } break;
+            case text: {
+                mBtnEndIcon.setVisibility(View.GONE);
+                mBtnText.setText(mTextButton);
+            } break;
+            default: {
+                mBtnEndIcon.setVisibility(View.GONE);
+                mBtnText.setVisibility(View.GONE);
+            } break;
+        }
+    }
+
+    public Boolean getIsShowIcToggle() {
+        return mIsShowIcToggle;
+    }
+
+    public void setIsShowIcToggle(Boolean IsShowIcToggle) {
+        mIsShowIcToggle = IsShowIcToggle;
+        mImgToggle.setVisibility(mIsShowIcToggle ? VISIBLE : GONE);
+    }
+
+    public String getTextButton() {
+        return mTextButton;
+    }
+
+    public void setTextButton(String TextButton) {
+        mIconEnd = IconEnd.text;
+        mTextButton = TextButton;
+        mBtnEndIcon.setVisibility(View.GONE);
+        mBtnText.setText(mTextButton);
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String Title) {
+        mTitle = Title;
+        mTxtTitle.setText(mTitle);
+    }
+
     private View.OnClickListener mOnClickStartIcon = null;
     private View.OnClickListener mOnClickEndIcon = null;
     private View.OnClickListener mOnCLickToggleIcon = null;
+    private OnActionClickListener mOnActionClickListener = null;
 
     public void setOnClickStartIcon(View.OnClickListener listener) {
         mOnClickStartIcon = listener;
     }
     public void setOnClickEndIcon(View.OnClickListener listener) { mOnClickEndIcon = listener; }
     public void setOnCLickToggleIcon(View.OnClickListener listener) { mOnCLickToggleIcon = listener; }
+    public void setmOnActionClickListener(OnActionClickListener listener) { mOnActionClickListener = listener; }
 
     public CustomActionBar(Context context) {
         super(context);
@@ -128,16 +198,25 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_start_icon: {
+                if (mOnActionClickListener != null)
+                    mOnActionClickListener.onClickAction(ClickAction.btnStart);
+
                 if (mOnClickStartIcon != null) mOnClickStartIcon.onClick(view);
             } break;
             case R.id.btn_text:
             case R.id.btn_end_icon: {
+                if (mOnActionClickListener != null)
+                    mOnActionClickListener.onClickAction(ClickAction.btnEnd);
+
                 if (mOnClickEndIcon != null) mOnClickEndIcon.onClick(view);
             } break;
             case R.id.txt_title: {
 //                if (mOnCLickToggleIcon != null) mOnCLickToggleIcon.onClick(view);
             } break;
             case R.id.img_toggle: {
+                if (mOnActionClickListener != null)
+                    mOnActionClickListener.onClickAction(ClickAction.btnToggle);
+
                 if (mOnCLickToggleIcon != null) mOnCLickToggleIcon.onClick(view);
             } break;
         }
@@ -165,5 +244,10 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
                 default: return none;
             }
         }
+    }
+
+    public enum ClickAction { btnStart, btnEnd, btnToggle }
+    public interface OnActionClickListener {
+        void onClickAction(ClickAction action);
     }
 }

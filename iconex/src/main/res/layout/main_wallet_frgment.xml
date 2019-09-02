@@ -2,6 +2,7 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,11 +15,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-
             app:end_icon="info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
             app:show_ic_toggle="true"
             app:start_icon="menu"
             app:text="Wallets" />
@@ -30,10 +31,10 @@
 
             android:background="@color/primary"
 
-            app:layout_constraintTop_toBottomOf="@id/actionbar"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/actionbar">
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -44,14 +45,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <foundation.icon.iconex.dev_mainWallet.TotalAssetInfoView
+                    <foundation.icon.iconex.dev_mainWallet.component.TotalAssetInfoView
                         android:id="@+id/info_total_asset"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -79,17 +80,16 @@
                     </LinearLayout>
 
 
-                    <foundation.icon.iconex.dev_mainWallet.ExpanableViewPager
+                    <foundation.icon.iconex.dev_mainWallet.component.ExpanableViewPager
                         android:id="@+id/wallet_viewpager"
                         android:layout_width="0dp"
                         android:layout_height="450dp"
+                        android:layout_marginBottom="12dp"
                         app:layout_constraintBottom_toTopOf="@id/wallet_indicator"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginBottom="12dp"
-                        />
+                        app:layout_constraintStart_toStartOf="parent" />
 
-                    <foundation.icon.iconex.dev_mainWallet.WalletIndicator
+                    <foundation.icon.iconex.dev_mainWallet.component.WalletIndicator
                         android:id="@+id/wallet_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -104,15 +104,15 @@
         </foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout>
 
         <ImageButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/btn_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="45dp"
             android:background="@drawable/bg_btn_oval_dark40"
             android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_vote_menu" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

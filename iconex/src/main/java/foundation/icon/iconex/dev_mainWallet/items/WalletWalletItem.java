@@ -1,4 +1,4 @@
-package foundation.icon.iconex.dev_items;
+package foundation.icon.iconex.dev_mainWallet.items;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,8 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 
-public class WalletWalletItem extends FrameLayout {
+public class WalletWalletItem extends FrameLayout implements WalletItem{
 
     public TextView txtSymbol;
     public TextView txtName;
@@ -31,5 +32,13 @@ public class WalletWalletItem extends FrameLayout {
         txtExchanged = v.findViewById(R.id.txt_exchanged);
 
         addView(v);
+    }
+
+    @Override
+    public void bind(WalletItemViewData data) {
+        txtSymbol.setText(data.getSymbol());
+        txtName.setText(data.getName());
+        txtAmount.setText(data.getAmount());
+        txtExchanged.setText(data.getExchanged());
     }
 }
