@@ -109,10 +109,10 @@ public class ContactsFragment extends Fragment {
 
     private List<Wallet> makeWalletList() {
         List<Wallet> list = new ArrayList<>();
-        for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-            if (ICONexApp.mWallets.get(i).getCoinType().equals(mCoinType)
-                    && !ICONexApp.mWallets.get(i).getAddress().equals(mAddress)) {
-                list.add(ICONexApp.mWallets.get(i));
+        for (int i = 0; i < ICONexApp.wallets.size(); i++) {
+            if (ICONexApp.wallets.get(i).getCoinType().equals(mCoinType)
+                    && !ICONexApp.wallets.get(i).getAddress().equals(mAddress)) {
+                list.add(ICONexApp.wallets.get(i));
             }
         }
 

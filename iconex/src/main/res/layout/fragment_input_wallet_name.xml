@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context=".view.ui.load.LoadInputWalletNameFragment">
+    android:clickable="true"
+    android:focusable="true"
+    tools:context=".view.ui.load.LoadInputWalletAliasFragment">
 
     <include
         android:id="@+id/step"

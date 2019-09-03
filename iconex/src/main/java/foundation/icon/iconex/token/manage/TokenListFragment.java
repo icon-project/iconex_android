@@ -123,7 +123,7 @@ public class TokenListFragment extends Fragment {
 
         mTokens = new ArrayList<>();
 
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             if (info.getAddress().equals(mWallet.getAddress())) {
                 for (WalletEntry entry : info.getWalletEntries()) {
                     if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {

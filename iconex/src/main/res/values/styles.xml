@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/colorMain</item>
+        <item name="android:statusBarColor">@color/primary00</item>
     </style>
 
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">
@@ -49,7 +49,7 @@
     </style>
 
     <!-- DialogActivity -->
-    <style name="DialogActivity" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="DialogActivity" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>

@@ -87,7 +87,7 @@ public class ICONexConnectActivity extends AppCompatActivity
 
     private void checkWallet(String address) {
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 if (wallet.getAddress().equals(address)) {
                     this.wallet = wallet;

@@ -118,12 +118,12 @@ public class MyContactsFragment extends Fragment {
         public void onConfirm(ContactsDialog.MODE mode, String name, String address) {
             if (mode == ContactsDialog.MODE.ADD) {
                 if (mType.equals(Constants.KS_COINTYPE_ICX)) {
-                    RealmUtil.addContacts(MyConstants.CoinType.ICX, name, address);
+                    RealmUtil.addContacts(MyConstants.Coin.ICX, name, address);
                     RealmUtil.loadContacts();
 
                     data = ICONexApp.ICXContacts;
                 } else {
-                    RealmUtil.addContacts(MyConstants.CoinType.ETH, name, address);
+                    RealmUtil.addContacts(MyConstants.Coin.ETH, name, address);
                     RealmUtil.loadContacts();
 
                     data = ICONexApp.ETHContacts;

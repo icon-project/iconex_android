@@ -1,4 +1,4 @@
-package foundation.icon.iconex.intro;
+package foundation.icon.iconex.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;

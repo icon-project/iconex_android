@@ -280,7 +280,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                if (ICONexApp.mWallets.size() == 0) {
+                                if (ICONexApp.wallets.size() == 0) {
                                     startActivity(new Intent(getActivity(), IntroActivity.class)
                                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                                 } else {
@@ -340,7 +340,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         loadingBalance.setVisibility(View.VISIBLE);
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getAddress().equals(mWallet.getAddress())) {
                 mWallet = wallet;
                 break;
@@ -403,7 +403,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            for (Wallet info : ICONexApp.mWallets) {
+            for (Wallet info : ICONexApp.wallets) {
                 if (info.getAlias().equals(alias)) {
                     editTextDialog.setError(getString(R.string.duplicateWalletAlias));
                     return;
@@ -443,7 +443,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if (ICONexApp.mWallets.size() == 0) {
+                        if (ICONexApp.wallets.size() == 0) {
                             startActivity(new Intent(getActivity(), IntroActivity.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                         } else {
@@ -462,7 +462,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     };
 
     private boolean hasSwapWallet(String address) throws Exception {
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (address.equals(wallet.getAddress()))
                 return true;
         }

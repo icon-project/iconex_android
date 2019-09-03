@@ -1,4 +1,4 @@
-package foundation.icon.iconex.intro;
+package foundation.icon.iconex.view.ui.intro;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;

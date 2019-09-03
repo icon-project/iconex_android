@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorMain"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.intro.auth.AuthFingerprintFragment">
+    tools:context=".view.ui.auth.AuthFingerprintFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

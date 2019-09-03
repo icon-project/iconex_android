@@ -43,8 +43,9 @@ class TDropdownLayout : LinearLayout {
     fun initView() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val v = inflater.inflate(R.layout.t_drop_down_layout, this, false)
+        addView(v)
 
-        dropDown = v.findViewById(R.id.drop_down)
+        dropDown = v.findViewById(R.id.layout)
         dropDown.setOnClickListener {
             dropDown.setBackgroundResource(R.drawable.bg_drop_down_f)
             arrow.isActivated = true

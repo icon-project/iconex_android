@@ -41,7 +41,7 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.TitleMsgDialog;
-import foundation.icon.iconex.intro.auth.AuthActivity;
+import foundation.icon.iconex.view.AuthActivity;
 import foundation.icon.iconex.menu.DrawerMenuFragment;
 import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
@@ -51,8 +51,7 @@ import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.create.CreateWalletActivity;
-import foundation.icon.iconex.view.ui.load.LoadWalletActivity;
+import foundation.icon.iconex.view.LoadWalletActivity;
 import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.MyConstants.EXCHANGE_BTC;
@@ -182,11 +181,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onReceiveICXBalance(String id, String address, String result) {
 
             if (isForeground) {
-                for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-                    if (address.equals(ICONexApp.mWallets.get(i).getAddress())) {
-                        for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                            if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
-                                ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(result);
+                for (int i = 0; i < ICONexApp.wallets.size(); i++) {
+                    if (address.equals(ICONexApp.wallets.get(i).getAddress())) {
+                        for (int j = 0; j < ICONexApp.wallets.get(i).getWalletEntries().size(); j++) {
+                            if (id.equals(Integer.toString(ICONexApp.wallets.get(i).getWalletEntries().get(j).getId()))) {
+                                ICONexApp.wallets.get(i).getWalletEntries().get(j).setBalance(result);
 
                                 if (isForeground) {
                                     if (mViewType == ViewType.WALLETS)
@@ -215,11 +214,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (isForeground) {
                 String ethAddress = address.substring(2);
 
-                for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-                    if (ethAddress.equals(ICONexApp.mWallets.get(i).getAddress())) {
-                        for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                            if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
-                                ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(result);
+                for (int i = 0; i < ICONexApp.wallets.size(); i++) {
+                    if (ethAddress.equals(ICONexApp.wallets.get(i).getAddress())) {
+                        for (int j = 0; j < ICONexApp.wallets.get(i).getWalletEntries().size(); j++) {
+                            if (id.equals(Integer.toString(ICONexApp.wallets.get(i).getWalletEntries().get(j).getId()))) {
+                                ICONexApp.wallets.get(i).getWalletEntries().get(j).setBalance(result);
 
                                 if (isForeground) {
                                     if (mViewType == ViewType.WALLETS)
@@ -248,11 +247,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (address.startsWith(MyConstants.PREFIX_HEX))
                 address = address.substring(2);
 
-            for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-                if (address.equals(ICONexApp.mWallets.get(i).getAddress())) {
-                    for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                        if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
-                            ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(MyConstants.NO_BALANCE);
+            for (int i = 0; i < ICONexApp.wallets.size(); i++) {
+                if (address.equals(ICONexApp.wallets.get(i).getAddress())) {
+                    for (int j = 0; j < ICONexApp.wallets.get(i).getWalletEntries().size(); j++) {
+                        if (id.equals(Integer.toString(ICONexApp.wallets.get(i).getWalletEntries().get(j).getId()))) {
+                            ICONexApp.wallets.get(i).getWalletEntries().get(j).setBalance(MyConstants.NO_BALANCE);
 
                             if (isForeground) {
                                 if (mViewType == ViewType.WALLETS)
@@ -280,11 +279,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (address.startsWith(MyConstants.PREFIX_HEX))
                 address = address.substring(2);
 
-            for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-                if (address.equals(ICONexApp.mWallets.get(i).getAddress())) {
-                    for (int j = 0; j < ICONexApp.mWallets.get(i).getWalletEntries().size(); j++) {
-                        if (id.equals(Integer.toString(ICONexApp.mWallets.get(i).getWalletEntries().get(j).getId()))) {
-                            ICONexApp.mWallets.get(i).getWalletEntries().get(j).setBalance(MyConstants.NO_BALANCE);
+            for (int i = 0; i < ICONexApp.wallets.size(); i++) {
+                if (address.equals(ICONexApp.wallets.get(i).getAddress())) {
+                    for (int j = 0; j < ICONexApp.wallets.get(i).getWalletEntries().size(); j++) {
+                        if (id.equals(Integer.toString(ICONexApp.wallets.get(i).getWalletEntries().get(j).getId()))) {
+                            ICONexApp.wallets.get(i).getWalletEntries().get(j).setBalance(MyConstants.NO_BALANCE);
 
                             if (isForeground) {
                                 if (mViewType == ViewType.WALLETS)
@@ -581,7 +580,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void makeNameList() {
         walletNames = new ArrayList<>();
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             walletNames.add(wallet.getAlias());
         }
     }
@@ -593,7 +592,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         HashMap<String, String[]> ercList = new HashMap<>();
         HashMap<String, String[]> ircList = new HashMap<>();
 
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             if (info.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 List<WalletEntry> entries = info.getWalletEntries();
                 for (WalletEntry entry : entries) {
@@ -628,7 +627,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<CoinsViewItem> makeListFromCoins() {
         List<CoinsViewItem> list = new ArrayList<>();
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 String key;
                 if (entry.getType().equals(MyConstants.TYPE_COIN))
@@ -762,7 +761,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setTotalAsset() {
         Double totalAsset = 0.0;
         int cntNoBalance = 0;
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             for (WalletEntry entry : info.getWalletEntries()) {
 
                 if (!entry.getBalance().isEmpty()) {
@@ -914,7 +913,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onMenuClicked(DrawerMenuFragment.SIDE_MENU menu) {
         if (menu == DrawerMenuFragment.SIDE_MENU.CREATE_WALLET) {
-            startActivity(new Intent(this, CreateWalletActivity.class));
+//            startActivity(new Intent(this, CreateWalletActivity.class));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.IMPORT_WALLET) {
             startActivity(new Intent(this, LoadWalletActivity.class));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.EXPORT_WALLET_BUNDLE) {

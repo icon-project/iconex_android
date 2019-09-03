@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMain"
+    android:background="@color/primary00"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.intro.Intro1Fragment">
+    tools:context=".view.ui.intro.Intro1Fragment">
 
     <androidx.legacy.widget.Space
         android:layout_width="match_parent"
@@ -24,16 +24,16 @@
             android:src="@drawable/img_homescreen_2" />
 
         <TextView
+            style="@style/TextView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="24dp"
-            android:fontFamily="@font/noto_sans_medium"
+            android:layout_marginEnd="40dp"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/intro2"
-            android:textColor="@color/colorWhite"
-            android:textSize="14dp" />
+            android:textColor="@color/colorWhite" />
     </LinearLayout>
 
     <androidx.legacy.widget.Space

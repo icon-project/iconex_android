@@ -140,7 +140,7 @@ public class IconexConnect {
     }
 
     private Wallet findWallet(String address) {
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getAddress().equals(address))
                 return wallet;
         }

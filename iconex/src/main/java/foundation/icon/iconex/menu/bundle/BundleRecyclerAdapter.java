@@ -133,7 +133,7 @@ public class BundleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         for (BundleItem item : mData) {
             if (item.isSelected()) {
-                for (Wallet info : ICONexApp.mWallets) {
+                for (Wallet info : ICONexApp.wallets) {
                     if (info.getAlias().equals(item.getAlias())) {
                         bundle.add(info);
                         break;

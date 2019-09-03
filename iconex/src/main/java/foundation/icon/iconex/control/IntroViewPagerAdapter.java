@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import foundation.icon.iconex.intro.Intro1Fragment;
-import foundation.icon.iconex.intro.Intro2Fragment;
+import foundation.icon.iconex.view.ui.intro.Intro1Fragment;
+import foundation.icon.iconex.view.ui.intro.Intro2Fragment;
 
 /**
  * Created by js on 2018. 2. 19..

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context=".view.ui.load.SelectKeyStoreFragment">
+    tools:context=".view.ui.load.LoadSelectKeyStoreFragment">
 
     <include
         android:id="@+id/step"
@@ -86,7 +86,8 @@
         <LinearLayout
             style="@style/BaseLinear"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/TextView14"
@@ -106,7 +107,7 @@
                 <foundation.icon.iconex.widgets.TTextInputLayout
                     android:id="@+id/input_file"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     app:hint="@string/selectKeyStore"
                     app:inputType="file"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -119,6 +120,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_btn_outline_01"
                     android:src="@drawable/ic_upload"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -131,7 +133,6 @@
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 app:hint="@string/hintWalletPassword"
                 app:inputType="password" />
 
@@ -139,7 +140,7 @@
                 style="@style/TextView10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/noto_sans_light"
                 android:text="· If your Keystore file id stored on another device, move the
    Keystore file to this device or upload it to cloud service and

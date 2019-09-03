@@ -22,7 +22,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.MyConstants.CoinType.ICX;
+import static foundation.icon.MyConstants.Coin.ICX;
 
 /**
  * Created by js on 2018. 3. 5..
@@ -33,7 +33,7 @@ public class RealmUtil {
 
     public static void loadWallet() throws Exception {
         Realm realm = Realm.getDefaultInstance();
-        ICONexApp.mWallets = new ArrayList<>();
+        ICONexApp.wallets = new ArrayList<>();
         if (realm.where(foundation.icon.iconex.realm.data.Wallet.class).count() > 0) {
             for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAll()) {
                 Wallet walletInfo = new Wallet();
@@ -77,10 +77,10 @@ public class RealmUtil {
                 }
                 walletInfo.setWalletEntries(entries);
                 walletInfo.setCreatedAt(wallet.getCreateAt());
-                ICONexApp.mWallets.add(walletInfo);
+                ICONexApp.wallets.add(walletInfo);
             }
 
-            Collections.reverse(ICONexApp.mWallets);
+            Collections.reverse(ICONexApp.wallets);
 
             makeExchanges();
         }
@@ -193,7 +193,7 @@ public class RealmUtil {
     }
 
     public static void makeExchanges() {
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             for (WalletEntry entry : info.getWalletEntries()) {
                 String symbol = entry.getSymbol().toLowerCase();
                 if (!ICONexApp.EXCHANGES.contains(symbol))
@@ -264,7 +264,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addContacts(MyConstants.CoinType type, String name, String address) {
+    public static void addContacts(MyConstants.Coin type, String name, String address) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;
@@ -330,7 +330,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addRecentSend(MyConstants.CoinType type, String txHash, String name, String address, String date, String amount, String symbol) {
+    public static void addRecentSend(MyConstants.Coin type, String txHash, String name, String address, String date, String amount, String symbol) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;

@@ -1,4 +1,4 @@
-package foundation.icon.iconex.intro.auth;
+package foundation.icon.iconex.view.ui.auth;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,13 +33,13 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Wallet wallet = ICONexApp.mWallets.get(position);
+        Wallet wallet = ICONexApp.wallets.get(position);
         holder.txtAlias.setText(wallet.getAlias());
     }
 
     @Override
     public int getItemCount() {
-        return ICONexApp.mWallets.size();
+        return ICONexApp.wallets.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -56,7 +56,7 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
         @Override
         public void onClick(View v) {
             if (mListener != null)
-                mListener.onWalletClick(ICONexApp.mWallets.get(getAdapterPosition()));
+                mListener.onWalletClick(ICONexApp.wallets.get(getAdapterPosition()));
         }
     }
 

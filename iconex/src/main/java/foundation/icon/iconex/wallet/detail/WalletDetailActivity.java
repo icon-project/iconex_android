@@ -465,7 +465,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            if (ICONexApp.mWallets.size() == 0) {
+                            if (ICONexApp.wallets.size() == 0) {
                                 startActivity(new Intent(WalletDetailActivity.this, IntroActivity.class)
                                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                             } else {
@@ -507,7 +507,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            if (ICONexApp.mWallets.size() == 0) {
+                            if (ICONexApp.wallets.size() == 0) {
                                 startActivity(new Intent(WalletDetailActivity.this, IntroActivity.class)
                                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                             } else {
@@ -540,7 +540,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 return;
             }
 
-            for (Wallet info : ICONexApp.mWallets) {
+            for (Wallet info : ICONexApp.wallets) {
                 if (info.getAlias().equals(alias)) {
                     editTextDialog.setError(getString(R.string.duplicateWalletAlias));
                     return;
@@ -672,7 +672,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                if (ICONexApp.mWallets.size() == 0) {
+                                if (ICONexApp.wallets.size() == 0) {
                                     dialog.dismiss();
                                     startActivity(new Intent(WalletDetailActivity.this, IntroActivity.class)
                                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -851,7 +851,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
     }
 
     private boolean hasSwapWallet(String address) throws Exception {
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (address.equals(wallet.getAddress()))
                 return true;
         }

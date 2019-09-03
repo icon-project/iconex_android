@@ -3,21 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/drop_down"
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_drop_down_n"
             android:padding="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/text"
@@ -52,8 +54,8 @@
             android:background="@drawable/bg_floating_drop_down"
             android:text="helper"
             android:textColor="@color/txt_default"
-            app:layout_constraintBottom_toTopOf="@id/drop_down"
-            app:layout_constraintStart_toStartOf="@id/drop_down"
-            app:layout_constraintTop_toTopOf="@id/drop_down" />
+            app:layout_constraintBottom_toTopOf="@id/layout"
+            app:layout_constraintStart_toStartOf="@id/layout"
+            app:layout_constraintTop_toTopOf="@id/layout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

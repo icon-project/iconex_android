@@ -102,7 +102,7 @@ public class IrcListAdapter extends RecyclerView.Adapter {
     private void makeTokenList() {
         ownTokens = new ArrayList<>();
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 if (wallet.getAddress().equals(address)) {
                     for (WalletEntry entry : wallet.getWalletEntries()) {

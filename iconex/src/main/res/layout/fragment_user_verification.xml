@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.intro.auth.UserVerificationFragment">
+    tools:context=".view.ui.auth.UserVerificationFragment">
 
     <include
         layout="@layout/layout_appbar_back"

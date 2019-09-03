@@ -1,4 +1,4 @@
-package foundation.icon.iconex.intro.auth;
+package foundation.icon.iconex.view.ui.auth;
 
 import android.content.Context;
 import android.os.Bundle;

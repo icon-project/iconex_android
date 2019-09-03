@@ -175,7 +175,7 @@ public class CoinFragment extends Fragment {
         List<Wallet> list = new ArrayList<>();
         mList = new ArrayList<>();
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 if (entry.getType().equals(mType)) {
                     if (entry.getSymbol().equals(mSymbol)) {
@@ -254,7 +254,7 @@ public class CoinFragment extends Fragment {
     };
 
     private boolean hasSwapWallet(String address) throws Exception {
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (address.equals(wallet.getAddress()))
                 return true;
         }

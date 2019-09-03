@@ -1,4 +1,4 @@
-package foundation.icon.iconex.intro.auth;
+package foundation.icon.iconex.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.PreferenceUtil;
+import foundation.icon.iconex.view.ui.auth.AuthFingerprintFragment;
+import foundation.icon.iconex.view.ui.auth.AuthLockNumFragment;
+import foundation.icon.iconex.view.ui.auth.UserVerificationFragment;
 import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 

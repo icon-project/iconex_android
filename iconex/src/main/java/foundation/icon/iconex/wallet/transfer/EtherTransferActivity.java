@@ -1161,9 +1161,9 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
     @Nullable
     private String findContactName(String address) {
-        for (int i = 0; i < ICONexApp.mWallets.size(); i++) {
-            if (address.equals(MyConstants.PREFIX_HEX + ICONexApp.mWallets.get(i).getAddress()))
-                return ICONexApp.mWallets.get(i).getAlias();
+        for (int i = 0; i < ICONexApp.wallets.size(); i++) {
+            if (address.equals(MyConstants.PREFIX_HEX + ICONexApp.wallets.get(i).getAddress()))
+                return ICONexApp.wallets.get(i).getAlias();
         }
 
         for (int j = 0; j < ICONexApp.ETHContacts.size(); j++) {
@@ -1186,7 +1186,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         if (contactName == null)
             contactName = "";
 
-        RealmUtil.addRecentSend(MyConstants.CoinType.ETH, "", contactName,
+        RealmUtil.addRecentSend(MyConstants.Coin.ETH, "", contactName,
                 editAddress.getText().toString(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }

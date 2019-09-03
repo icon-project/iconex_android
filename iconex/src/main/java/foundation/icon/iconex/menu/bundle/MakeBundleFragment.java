@@ -122,7 +122,7 @@ public class MakeBundleFragment extends Fragment {
         List<BundleItem> list = new ArrayList<>();
 
         BundleItem wallet;
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             wallet = new BundleItem();
             wallet.setAlias(info.getAlias());
             wallet.setBalance(getBalance(info));

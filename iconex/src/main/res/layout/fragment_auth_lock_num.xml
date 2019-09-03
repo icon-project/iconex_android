@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorMain"
-    tools:context="foundation.icon.iconex.intro.auth.AuthLockNumFragment">
+    tools:context=".view.ui.auth.AuthLockNumFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

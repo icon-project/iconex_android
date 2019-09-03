@@ -596,7 +596,7 @@ public class TokenManageFragment extends Fragment implements View.OnClickListene
     }
 
     private boolean checkAddressDup(String address) {
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             if (mWalletAddr.equals(info.getAddress())) {
                 for (WalletEntry entry : info.getWalletEntries()) {
                     if (address.equals(entry.getContractAddress()))

@@ -33,12 +33,12 @@
         </activity>
         <activity android:name=".dev_detail.WalletDetailActivity"/>
         <activity
-            android:name=".intro.auth.AuthActivity"
+            android:name=".view.AuthActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".intro.ResetPasscodeActivity"
+            android:name=".view.ResetPasscodeActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -52,13 +52,7 @@
             android:theme="@style/DialogActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".wallet.create.CreateWalletActivity"
-            android:configChanges="fontScale"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".view.ui.load.LoadWalletActivity"
+            android:name=".view.LoadWalletActivity"
             android:theme="@style/DialogActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity

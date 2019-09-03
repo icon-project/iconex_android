@@ -14,7 +14,7 @@ import java.util.List;
 import foundation.icon.connect.Constants;
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.intro.auth.AuthActivity;
+import foundation.icon.iconex.view.AuthActivity;
 import foundation.icon.iconex.realm.MyMigration;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.VersionCheck;
@@ -31,7 +31,7 @@ public class ICONexApp extends Application {
 
     private static final String TAG = ICONexApp.class.getSimpleName();
 
-    public static ArrayList<Wallet> mWallets = new ArrayList<>();
+    public static ArrayList<Wallet> wallets = new ArrayList<>();
 
     // ========== Exchange Rate ================
     public static List<String> EXCHANGES = new ArrayList<>();

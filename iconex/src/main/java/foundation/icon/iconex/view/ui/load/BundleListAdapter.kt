@@ -66,15 +66,15 @@ class BundleListAdapter(private val mContext: Context, private var mData: List<B
             if (item.isRegistered) {
                 itemHolder.txtAlias.setTextColor(mContext.resources.getColor(R.color.darkB3))
                 itemHolder.txtBalance.setTextColor(mContext.resources.getColor(R.color.darkB3))
-                itemHolder.txtAddrese.setTextColor(mContext.resources.getColor(R.color.primary00))
-                itemHolder.txtAddrese.text = item.address
+                itemHolder.txtAddress.setTextColor(mContext.resources.getColor(R.color.primary00))
+                itemHolder.txtAddress.text = String.format(Locale.getDefault(),
+                        mContext.getString(R.string.registeredWallet),
+                        item.address)
             } else {
                 itemHolder.txtAlias.setTextColor(mContext.resources.getColor(R.color.dark4D))
                 itemHolder.txtBalance.setTextColor(mContext.resources.getColor(R.color.dark4D))
-                itemHolder.txtAddrese.setTextColor(mContext.resources.getColor(R.color.darkB3))
-                itemHolder.txtAddrese.text = String.format(Locale.getDefault(),
-                        mContext.getString(R.string.registeredWallet),
-                        item.address)
+                itemHolder.txtAddress.setTextColor(mContext.resources.getColor(R.color.darkB3))
+                itemHolder.txtAddress.text = item.address
             }
 
         }
@@ -97,7 +97,7 @@ class BundleListAdapter(private val mContext: Context, private var mData: List<B
     inner class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var txtAlias: TextView = itemView.findViewById(R.id.alias)
         internal var txtBalance: TextView = itemView.findViewById(R.id.balance)
-        internal var txtAddrese: TextView = itemView.findViewById(R.id.address)
+        internal var txtAddress: TextView = itemView.findViewById(R.id.address)
     }
 
     private fun getColoredSpanned(text: String, color: String): String {

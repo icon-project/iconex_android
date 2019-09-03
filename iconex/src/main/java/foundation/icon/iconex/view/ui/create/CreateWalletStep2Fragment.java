@@ -1,7 +1,6 @@
-package foundation.icon.iconex.view.ui.load;
+package foundation.icon.iconex.view.ui.create;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -16,36 +17,41 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import io.reactivex.Observable;
-import io.reactivex.Observer;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
-import loopchain.icon.wallet.service.crypto.PKIUtils;
 
 import static foundation.icon.iconex.util.PasswordValidator.checkPasswordMatch;
 
-public class LoadInputWalletInfoFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = LoadInputWalletInfoFragment.class.getSimpleName();
+public class CreateWalletStep2Fragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = CreateWalletStep2Fragment.class.getSimpleName();
 
-    private OnInputWalletInfoListener mListener;
-    private LoadViewModel vm;
+    private OnStep2Listener mListener;
+    private CreateWalletViewModel vm;
+    private Disposable disposable;
+
+    public static CreateWalletStep2Fragment newInstance() {
+        return new CreateWalletStep2Fragment();
+    }
 
     private TTextInputLayout inputAlias, inputPwd, inputCheck;
-    private Button btnComplete;
+    private Button btnBack, btnNext;
     private ProgressBar progress;
 
     private String beforeStr, beforePwd, beforeCheck;
@@ -54,44 +60,39 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
     private final int ALIAS_DUP = 1;
     private final int ALIAS_EMPTY = 2;
 
-    public LoadInputWalletInfoFragment() {
-        // Required empty public constructor
-    }
-
-    public static LoadInputWalletInfoFragment newInstance() {
-        return new LoadInputWalletInfoFragment();
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        vm = ViewModelProviders.of(getActivity()).get(LoadViewModel.class);
+        vm = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(CreateWalletViewModel.class);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_load_input_wallet_info, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.layout_create_wallet_step2, container, false);
         initView(v);
 
         return v;
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof OnInputWalletInfoListener) {
-            mListener = (OnInputWalletInfoListener) context;
+
+        if (context instanceof OnStep2Listener) {
+            mListener = (OnStep2Listener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnInputWalletInfoListener");
+            throw new RuntimeException(context + " must implement OnStep2Listener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        if (!disposable.isDisposed())
+            disposable.dispose();
+
         mListener = null;
     }
 
@@ -123,7 +124,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                         }
                     }
                 } else {
-                    btnComplete.setEnabled(false);
+                    btnNext.setEnabled(false);
                 }
             }
         });
@@ -170,7 +171,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                         beforePwd = s.toString();
                     }
                 } else {
-                    btnComplete.setEnabled(false);
+                    btnNext.setEnabled(false);
                 }
             }
         });
@@ -181,7 +182,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             @Override
             public void onReleased() {
                 if (inputCheck.getText().isEmpty()) {
-                    btnComplete.setEnabled(false);
+                    btnNext.setEnabled(false);
                 } else {
                     if (inputCheck.getText().isEmpty()) {
                         inputCheck.setError(true, getString(R.string.errPasswordNotMatched));
@@ -209,87 +210,89 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                         beforeCheck = s.toString();
                     }
                 } else {
-                    btnComplete.setEnabled(false);
+                    btnNext.setEnabled(false);
                 }
             }
         });
         inputCheck.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
             @Override
             public void onDone() {
-                setCompleteEnable(inputAlias.getText(), inputPwd.getText(), inputCheck.getText());
+                setNextEnable(inputAlias.getText(), inputPwd.getText(), inputCheck.getText());
             }
         });
         inputCheck.setOnKeyPreImeListener(onKeyPreIme);
 
-        btnComplete = v.findViewById(R.id.btn_complete);
-        btnComplete.setOnClickListener(this);
+        btnNext = v.findViewById(R.id.btn_next);
+        btnNext.setOnClickListener(this);
+        btnBack = v.findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(this);
         progress = v.findViewById(R.id.progress);
-
-        v.findViewById(R.id.btn_back).setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_complete:
-                btnComplete.setEnabled(false);
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_next:
+                btnNext.setEnabled(false);
                 progress.setVisibility(View.VISIBLE);
 
-                Observable.just(0).map(new Function<Integer, Wallet>() {
+                disposable = Observable.create(new ObservableOnSubscribe<String[]>() {
                     @Override
-                    public Wallet apply(Integer integer) throws Exception {
-                        return loadWallet();
+                    public void subscribe(ObservableEmitter<String[]> emitter) throws Exception {
+                        emitter.onNext(createWallet());
+                        emitter.onComplete();
                     }
                 }).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Wallet>() {
+                        .subscribeWith(new DisposableObserver<String[]>() {
                             @Override
-                            public void onSubscribe(Disposable d) {
+                            public void onNext(String[] result) {
+                                Wallet wallet = new Wallet();
+                                wallet.setAlias(inputAlias.getText());
+                                wallet.setAddress(result[0]);
+                                vm.setPrivateKey(result[1]);
+                                wallet.setKeyStore(result[2]);
+                                wallet.setCoinType(vm.getCoin().getValue().getSymbol().toUpperCase());
 
-                            }
+                                List<WalletEntry> entries = new ArrayList<>();
+                                WalletEntry coin = new WalletEntry();
+                                coin.setType(MyConstants.TYPE_COIN);
+                                coin.setAddress(result[0]);
 
-                            @Override
-                            public void onNext(Wallet wallet) {
-                                try {
-                                    saveWallet(wallet);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    btnComplete.setEnabled(false);
-                                    progress.setVisibility(View.VISIBLE);
+                                if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                                    coin.setName(MyConstants.NAME_ICX);
+                                    coin.setSymbol(Constants.KS_COINTYPE_ICX);
+                                } else {
+                                    coin.setName(MyConstants.NAME_ETH);
+                                    coin.setSymbol(Constants.KS_COINTYPE_ETH);
                                 }
 
-                                btnComplete.setEnabled(false);
-                                progress.setVisibility(View.VISIBLE);
+                                entries.add(coin);
+                                wallet.setWalletEntries(entries);
+
+                                vm.setWallet(wallet);
+
+                                mListener.onStep2Done();
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                e.printStackTrace();
-                                btnComplete.setEnabled(false);
-                                progress.setVisibility(View.VISIBLE);
+
                             }
 
                             @Override
                             public void onComplete() {
-                                startActivity(new Intent(getActivity(), MainActivity.class)
-                                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                                btnNext.setEnabled(true);
+                                progress.setVisibility(View.GONE);
                             }
                         });
                 break;
 
             case R.id.btn_back:
-                clear();
-                mListener.onInfoBack();
+                mListener.onStep2Back();
                 break;
         }
     }
-
-    private TTextInputLayout.OnKeyPreIme onKeyPreIme = new TTextInputLayout.OnKeyPreIme() {
-        @Override
-        public void onDone() {
-            setCompleteEnable(inputAlias.getText(), inputPwd.getText(), inputCheck.getText());
-        }
-    };
 
     private int checkAlias(String target) {
         String alias = Utils.strip(target);
@@ -304,10 +307,10 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         return OK;
     }
 
-    private void setCompleteEnable(String alias, String pwd, String checkPwd) {
-        int aliasValidate;
-        int pwdValidate;
-        boolean matched;
+    private void setNextEnable(String alias, String pwd, String checkPwd) {
+        int aliasValidate = 0;
+        int pwdValidate = 0;
+        boolean matched = true;
 
         if (!inputAlias.toString().isEmpty()) {
             aliasValidate = checkAlias(alias);
@@ -324,7 +327,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             }
         } else {
             inputAlias.setError(true, getString(R.string.errAliasEmpty));
-            btnComplete.setEnabled(false);
+            btnNext.setEnabled(false);
             return;
         }
 
@@ -356,7 +359,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             }
         } else {
             inputPwd.setError(true, getString(R.string.errPwdEmpty));
-            btnComplete.setEnabled(false);
+            btnNext.setEnabled(false);
             return;
         }
 
@@ -369,61 +372,34 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             }
         } else {
             inputCheck.setError(true, getString(R.string.errCheckEmpty));
-            btnComplete.setEnabled(false);
+            btnNext.setEnabled(false);
             return;
         }
 
         if (aliasValidate == OK && matched && (pwdValidate == PasswordValidator.OK))
-            btnComplete.setEnabled(true);
+            btnNext.setEnabled(true);
         else
-            btnComplete.setEnabled(false);
+            btnNext.setEnabled(false);
     }
 
-    private Wallet loadWallet() {
-        MyConstants.Coin coin = vm.getCoin().getValue();
-        String privateKey = vm.getPrivateKey().getValue();
-        Wallet wallet = new Wallet();
-
-        String[] loadedWallet;
-        if (coin == MyConstants.Coin.ICX) {
-            loadedWallet = KeyStoreUtils.generateICXKeyStoreByPriv(
-                    inputPwd.getText(), PKIUtils.hexDecode(privateKey));
+    private String[] createWallet() {
+        if (vm.getCoin().getValue() == MyConstants.Coin.ICX) {
+            return KeyStoreUtils.generateICXKeystore(inputPwd.getText());
         } else {
-            loadedWallet = KeyStoreUtils.generateETHKeyStoreByPriv(
-                    inputPwd.getText(), PKIUtils.hexDecode(privateKey));
+            return KeyStoreUtils.generateEtherKeystore(inputPwd.getText());
         }
-
-        wallet.setCoinType(coin.getSymbol());
-        wallet.setAlias(inputAlias.getText());
-        wallet.setAddress(loadedWallet[0]);
-        wallet.setKeyStore(loadedWallet[2]);
-
-        List<WalletEntry> entries = new ArrayList<>();
-        WalletEntry entry = new WalletEntry();
-        entry.setType(MyConstants.TYPE_COIN);
-        entry.setSymbol(coin.getSymbol());
-        entry.setAddress(loadedWallet[0]);
-        entry.setName(coin.getName());
-        entries.add(entry);
-
-        wallet.setWalletEntries(entries);
-        wallet.setCreatedAt(Long.toString(System.currentTimeMillis()));
-
-        return wallet;
     }
 
-    private void saveWallet(final Wallet wallet) throws Exception {
-        RealmUtil.addWallet(wallet);
-        RealmUtil.loadWallet();
-    }
+    private TTextInputLayout.OnKeyPreIme onKeyPreIme = new TTextInputLayout.OnKeyPreIme() {
+        @Override
+        public void onDone() {
+            setNextEnable(inputAlias.getText(), inputPwd.getText(), inputCheck.getText());
+        }
+    };
 
-    public void clear() {
-        inputAlias.setText("");
-        inputPwd.setText("");
-        inputCheck.setText("");
-    }
+    public interface OnStep2Listener {
+        void onStep2Done();
 
-    public interface OnInputWalletInfoListener {
-        void onInfoBack();
+        void onStep2Back();
     }
 }

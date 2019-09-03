@@ -4,244 +4,76 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongycastle.util.encoders.Hex;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
-import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.dialogs.BottomItemSelectActivity;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.widgets.DropdownLayout;
-import foundation.icon.iconex.widgets.MyEditText;
-import loopchain.icon.wallet.core.Constants;
+import foundation.icon.iconex.widgets.TDropdownLayout;
+import foundation.icon.iconex.widgets.TTextInputLayout;
 import loopchain.icon.wallet.service.crypto.PKIUtils;
 
 public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClickListener {
-
     private static final String TAG = LoadInputPrivateKeyFragment.class.getSimpleName();
 
     private OnLoadPrivateKeyListener mListener;
+    private LoadViewModel vm;
 
-    private ViewGroup layoutInput;
+    private TTextInputLayout inputPrivateKey;
+    private TDropdownLayout dropDown;
+    private Button btnNext;
 
-    private DropdownLayout dropDown;
-    private MyEditText editPriv;
-    private ImageView btnScan;
-    private View linePriv;
-    private Button btnPrivDelete;
-    private TextView txtPrivWarning;
-    private Button btnNext, btnBack;
-
-    private String mCoinType;
+    private List<String> coinList;
+    private MyConstants.Coin mCoin;
     private String mPrivateKey;
 
     private final int RC_COIN = 1001;
     private final int RC_CAPTURE = 1002;
-
-    private ArrayList<String> coinList = new ArrayList<>();
-
-    private InputMethodManager mImm;
 
     public LoadInputPrivateKeyFragment() {
         // Required empty public constructor
     }
 
     public static LoadInputPrivateKeyFragment newInstance() {
-        LoadInputPrivateKeyFragment fragment = new LoadInputPrivateKeyFragment();
-        return fragment;
+        return new LoadInputPrivateKeyFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        vm = ViewModelProviders.of(getActivity()).get(LoadViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_load_input_private_key, container, false);
-
         makeCoinList();
+        initView(v);
 
-        layoutInput = v.findViewById(R.id.layout_input);
-
-        dropDown = v.findViewById(R.id.drop_down);
-        dropDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dropDown.setSelected(true);
-                BottomSheetMenuDialog dialog = new BottomSheetMenuDialog(getActivity(), getString(R.string.selectCoinNToken),
-                        BottomSheetMenuDialog.SHEET_TYPE.BASIC);
-                dialog.setBasicData(coinList);
-                dialog.setOnItemClickListener(new BottomSheetMenuDialog.OnItemClickListener() {
-                    @Override
-                    public void onBasicItem(String item) {
-                        dropDown.setSelected(false);
-                        if (item.contains(Constants.KS_COINTYPE_ICX)) {
-                            dropDown.setItem(getString(R.string.coin_icx));
-                            mCoinType = Constants.KS_COINTYPE_ICX;
-                            if (!editPriv.getText().toString().isEmpty()) {
-                                checkPrivKey(editPriv.getText().toString());
-                            }
-                        } else if (item.contains(Constants.KS_COINTYPE_ETH)) {
-                            dropDown.setItem(getString(R.string.coin_eth));
-                            mCoinType = Constants.KS_COINTYPE_ETH;
-                            if (!editPriv.getText().toString().isEmpty()) {
-                                checkPrivKey(editPriv.getText().toString());
-                            }
-                        } else {
-                            btnNext.setEnabled(false);
-                        }
-                    }
-
-                    @Override
-                    public void onCoinItem(int position) {
-
-                    }
-
-                    @Override
-                    public void onMenuItem(String tag) {
-
-                    }
-                });
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        dropDown.setSelected(false);
-                    }
-                });
-                dialog.show();
-            }
-        });
-        mCoinType = Constants.KS_COINTYPE_ICX;
-        dropDown.setItem(getString(R.string.coin_icx));
-
-        btnScan = v.findViewById(R.id.btn_qr_scan);
-        btnScan.setOnClickListener(this);
-
-//        editPriv = v.findViewById(R.id.edit_priv);
-//        editPriv.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    linePriv.setBackgroundColor(getResources().getColor(R.color.editActivated));
-//                } else {
-//                    linePriv.setBackgroundColor(getResources().getColor(R.color.editNormal));
-//                }
-//            }
-//        });
-//        editPriv.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (s.length() > 0) {
-//                    btnPrivDelete.setVisibility(View.VISIBLE);
-//                } else {
-//                    btnPrivDelete.setVisibility(View.INVISIBLE);
-//                    btnNext.setEnabled(false);
-//                }
-//
-////                int lines = editPriv.getLineCount();
-////                if (lines > 2) {
-////                    editPriv.getText().delete(editPriv.getSelectionEnd() - 1, editPriv.getSelectionStart());
-////                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-//        editPriv.setOnKeyPreImeListener(new OnKeyPreImeListener() {
-//            @Override
-//            public void onBackPressed() {
-//                hideInputMode();
-//                checkPrivKey(editPriv.getText().toString());
-//            }
-//        });
-////        editPriv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-////            @Override
-////            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-////                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-////                    hideInputMode();
-////                    checkPrivKey(editPriv.getText().toString());
-////                }
-////                return false;
-////            }
-////        });
-//        editPriv.setOnEditTouchListener(new MyEditText.OnEditTouchListener() {
-//            @Override
-//            public void onTouch() {
-//                showInputMode(editPriv);
-//            }
-//        });
-
-//        linePriv = v.findViewById(R.id.line_priv);
-//        txtPrivWarning = v.findViewById(R.id.txt_priv_warning);
-//        btnPrivDelete = v.findViewById(R.id.btn_priv_delete);
-//        btnPrivDelete.setOnClickListener(this);
-
-        btnNext = v.findViewById(R.id.btn_next);
-        btnNext.setOnClickListener(this);
-        btnBack = v.findViewById(R.id.btn_back);
-        btnBack.setOnClickListener(this);
+        dropDown.setText(getString(R.string.coin_icx));
 
         return v;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_qr_scan:
-                hideInputMode();
-                startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
-                        .putExtra(BarcodeCaptureActivity.UseFlash, false)
-                        .putExtra(BarcodeCaptureActivity.AutoFocus, true), RC_CAPTURE);
-                break;
-
-//            case R.id.btn_priv_delete:
-//                editPriv.setText("");
-//                txtPrivWarning.setVisibility(View.INVISIBLE);
-//                if (editPriv.isFocused())
-//                    linePriv.setBackgroundColor(getResources().getColor(R.color.editActivated));
-//                else
-//                    linePriv.setBackgroundColor(getResources().getColor(R.color.editNormal));
-//                break;
-
-            case R.id.btn_next:
-                mListener.onLoadPrivateKeyNext(mCoinType, mPrivateKey);
-                clear();
-                break;
-
-            case R.id.btn_back:
-                mListener.onPrivBack();
-                clear();
-                break;
-        }
     }
 
     @Override
@@ -261,21 +93,114 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
         mListener = null;
     }
 
-    private void checkPrivKey(String privKey) {
+    private void initView(View v) {
+        dropDown = v.findViewById(R.id.drop_down);
+        dropDown.setOnClickListener(new TDropdownLayout.OnDropDownClickListener() {
+            @Override
+            public void onClick() {
+                BottomSheetMenuDialog dialog = new BottomSheetMenuDialog(getActivity(), getString(R.string.selectCoinNToken),
+                        BottomSheetMenuDialog.SHEET_TYPE.BASIC);
+                dialog.setBasicData(coinList);
+                dialog.setOnItemClickListener(new BottomSheetMenuDialog.OnItemClickListener() {
+                    @Override
+                    public void onBasicItem(String item) {
+                        dropDown.setSelected(false);
+                        dropDown.setText(item);
+                        mCoin = MyConstants.Coin.fromLabel(item);
+                        if (!inputPrivateKey.getText().isEmpty()) {
+                            checkPrivateKey(inputPrivateKey.getText());
+                        }
+                    }
+
+                    @Override
+                    public void onCoinItem(int position) {
+
+                    }
+
+                    @Override
+                    public void onMenuItem(String tag) {
+
+                    }
+                });
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        dropDown.deactivate();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        mCoin = MyConstants.Coin.ICX;
+        dropDown.setText(coinList.get(0));
+
+        inputPrivateKey = v.findViewById(R.id.input_private_key);
+        inputPrivateKey.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
+            @Override
+            public void onChanged(@NotNull CharSequence s) {
+                if (s.length() == 0)
+                    btnNext.setEnabled(false);
+            }
+        });
+        inputPrivateKey.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                checkPrivateKey(inputPrivateKey.getText());
+            }
+        });
+        inputPrivateKey.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
+            @Override
+            public void onDone() {
+                checkPrivateKey(inputPrivateKey.getText());
+            }
+        });
+
+        v.findViewById(R.id.btn_qr_scan).setOnClickListener(this);
+        btnNext = v.findViewById(R.id.btn_next);
+        btnNext.setOnClickListener(this);
+        v.findViewById(R.id.btn_back).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.d(TAG, "onClick:" + v.getId() + "//" + R.id.drop_down);
+        switch (v.getId()) {
+            case R.id.drop_down:
+
+                break;
+
+            case R.id.btn_qr_scan:
+                startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
+                        .putExtra(BarcodeCaptureActivity.UseFlash, false)
+                        .putExtra(BarcodeCaptureActivity.AutoFocus, true), RC_CAPTURE);
+                break;
+
+            case R.id.btn_next:
+                vm.setCoinType(mCoin);
+                vm.setPrivateKey(inputPrivateKey.getText());
+                mListener.onPrivateKeyNext();
+                break;
+
+            case R.id.btn_back:
+                mListener.onPrivateKeyBack();
+                break;
+        }
+    }
+
+    private void checkPrivateKey(String input) {
         boolean result;
         byte[] decode = null;
 
-        if (privKey.trim().isEmpty()) {
-            linePriv.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtPrivWarning.setVisibility(View.VISIBLE);
-            txtPrivWarning.setText(getString(R.string.loadByPrivateKeyHeader));
+        if (input.trim().isEmpty()) {
+            inputPrivateKey.setError(true, getString(R.string.loadByPrivateKeyHeader));
 
             btnNext.setEnabled(false);
             return;
         }
 
         try {
-            decode = Hex.decode(privKey);
+            decode = Hex.decode(input);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -283,32 +208,18 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
         }
 
         if (result) {
-            if (dropDown.getItem().isEmpty()) {
-                btnNext.setEnabled(false);
-                return;
-            }
-
-            if (checkAddress(decode, mCoinType)) {
-                if (editPriv.hasFocus())
-                    linePriv.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                else
-                    linePriv.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
-                txtPrivWarning.setVisibility(View.INVISIBLE);
-                mPrivateKey = privKey;
+            if (checkAddress(decode, mCoin.getSymbol())) {
+                mPrivateKey = input;
+                inputPrivateKey.setError(false, null);
 
                 btnNext.setEnabled(true);
             } else {
-                linePriv.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtPrivWarning.setVisibility(View.VISIBLE);
-                txtPrivWarning.setText(getString(R.string.duplicateWalletAddress));
+                inputPrivateKey.setError(true, getString(R.string.duplicateWalletAddress));
 
                 btnNext.setEnabled(false);
             }
         } else {
-            linePriv.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtPrivWarning.setVisibility(View.VISIBLE);
-            txtPrivWarning.setText(getString(R.string.errPrivateKey));
+            inputPrivateKey.setError(true, getString(R.string.errPrivateKey));
 
             btnNext.setEnabled(false);
         }
@@ -325,7 +236,7 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
             return false;
         }
 
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             if (info.getAddress().equals(address))
                 return false;
         }
@@ -333,54 +244,15 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
         return true;
     }
 
-    private void showInputMode(View view) {
-        view.requestFocus();
-        mImm.showSoftInput(view, 0);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) layoutInput.getLayoutParams();
-        layoutParams.removeRule(RelativeLayout.BELOW);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.ChangePwdMarginTopShow), 0, 0);
-        layoutInput.setLayoutParams(layoutParams);
-    }
-
-    private void hideInputMode() {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) layoutInput.getLayoutParams();
-        layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.drop_down);
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.dp10), 0, 0);
-        layoutInput.setLayoutParams(layoutParams);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == RC_COIN) {
-            dropDown.setSelected(false);
-            if (resultCode == BottomItemSelectActivity.CODE_BASIC) {
-
-                if (data.getExtras().getString("item").contains(Constants.KS_COINTYPE_ICX)) {
-                    dropDown.setItem(getString(R.string.coin_icx));
-                    mCoinType = Constants.KS_COINTYPE_ICX;
-                    if (!editPriv.getText().toString().isEmpty()) {
-                        checkPrivKey(editPriv.getText().toString());
-                    }
-                } else if (data.getExtras().getString("item").contains(Constants.KS_COINTYPE_ETH)) {
-                    dropDown.setItem(getString(R.string.coin_eth));
-                    mCoinType = Constants.KS_COINTYPE_ETH;
-                    if (!editPriv.getText().toString().isEmpty()) {
-                        checkPrivKey(editPriv.getText().toString());
-                    }
-                } else {
-                    btnNext.setEnabled(false);
-                }
-            }
-        } else if (requestCode == RC_CAPTURE) {
+        if (requestCode == RC_CAPTURE) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                    editPriv.setText(barcode.displayValue);
-                    editPriv.setSelection(editPriv.getText().toString().length());
-                    checkPrivKey(editPriv.getText().toString());
+                    inputPrivateKey.setText(barcode.displayValue);
+                    checkPrivateKey(barcode.displayValue);
                 } else {
                 }
             } else {
@@ -392,19 +264,21 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
     }
 
     public interface OnLoadPrivateKeyListener {
-        void onLoadPrivateKeyNext(String coinType, String privKey);
+        void onPrivateKeyNext();
 
-        void onPrivBack();
+        void onPrivateKeyBack();
     }
 
     private void makeCoinList() {
-        coinList.add("ICON (ICX)");
-        coinList.add("Ethereum (ETH)");
+        coinList = new ArrayList<>();
+        coinList.add(MyConstants.Coin.ICX.getLabel());
+        coinList.add(MyConstants.Coin.ETH.getLabel());
     }
 
-    private void clear() {
-        dropDown.setItem(getString(R.string.coin_icx));
-        mCoinType = Constants.KS_COINTYPE_ICX;
-        editPriv.setText("");
+    public void clear(boolean inputEnabled) {
+        dropDown.setText(getString(R.string.coin_icx));
+        mCoin = MyConstants.Coin.ICX;
+        inputPrivateKey.setText("");
+        inputPrivateKey.setInputEnabled(inputEnabled);
     }
 }

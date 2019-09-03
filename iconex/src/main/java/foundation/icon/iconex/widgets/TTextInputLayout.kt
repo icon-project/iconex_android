@@ -21,6 +21,8 @@ import foundation.icon.iconex.R
 class TTextInputLayout : LinearLayout {
     private val TAG = this@TTextInputLayout::class.simpleName
 
+    private lateinit var layout: ViewGroup
+
     private lateinit var layoutInput: ViewGroup
     private lateinit var edit: MyEditText
     private lateinit var btnClear: Button
@@ -43,6 +45,7 @@ class TTextInputLayout : LinearLayout {
     private val BG_FLOATING_LABEL_E = R.drawable.bg_floating_label_e
 
     private var hint = ""
+    private var isError = false
 
     constructor(context: Context) : super(context) {
         initView()
@@ -67,7 +70,9 @@ class TTextInputLayout : LinearLayout {
         val v = inflater.inflate(R.layout.t_text_input_layout, this, false)
         addView(v)
 
-        layoutInput = v.findViewById(R.id.layout_text_input)
+        layout = v.findViewById(R.id.layout)
+
+        layoutInput = v.findViewById(R.id.layout_input)
         edit = v.findViewById(R.id.edit)
         btnClear = v.findViewById(R.id.btn_clear_text)
         btnEye = v.findViewById(R.id.btn_eye)
@@ -81,22 +86,22 @@ class TTextInputLayout : LinearLayout {
         edit.onFocusChangeListener = OnFocusChangeListener { _, b ->
             run {
                 if (b) {
-                    layoutInput.background = resources.getDrawable(BG_LAYOUT_F, null)
+                    layout.background = resources.getDrawable(BG_LAYOUT_F, null)
                     tvHint.background = resources.getDrawable(BG_FLOATING_LABEL_F, null)
                     tvHint.setTextColor(resources.getColor(R.color.primary00))
                     tvHint.visibility = View.VISIBLE
 
                     if (tvError.visibility == View.VISIBLE)
-                        tvError.visibility = View.GONE
+                        tvError.visibility = View.INVISIBLE
 
                     edit.hint = ""
                 } else {
-                    layoutInput.background = resources.getDrawable(BG_LAYOUT_N, null)
+                    layout.background = resources.getDrawable(BG_LAYOUT_N, null)
                     tvHint.background = resources.getDrawable(BG_FLOATING_LABEL_N, null)
                     tvHint.setTextColor(resources.getColor(R.color.dark4D))
 
                     if (edit.text!!.isEmpty()) {
-                        tvHint.visibility = View.GONE
+                        tvHint.visibility = View.INVISIBLE
                         edit.hint = hint
                     }
 
@@ -122,7 +127,7 @@ class TTextInputLayout : LinearLayout {
                     btnClear.visibility = View.INVISIBLE
 
                     if (!edit.isFocused) {
-                        tvHint.visibility = View.GONE
+                        tvHint.visibility = View.INVISIBLE
                         edit.hint = hint
                     }
                 }
@@ -162,12 +167,15 @@ class TTextInputLayout : LinearLayout {
     private fun setTypedArray(typedArray: TypedArray) {
         when (typedArray.getInt(R.styleable.TTextInputLayout_inputType, 0)) {
             0 -> {
+                layoutInput.visibility = View.VISIBLE
                 edit.inputType = InputType.TYPE_CLASS_TEXT
             }
             1 -> {
+                layoutInput.visibility = View.VISIBLE
                 edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
             2 -> {
+                layoutInput.visibility = View.VISIBLE
                 edit.isEnabled = false
                 edit.isFocusable = false
                 edit.inputType = (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -187,6 +195,7 @@ class TTextInputLayout : LinearLayout {
             this.hint = it
             edit.hint = it
             tvHint.text = it
+            tvFileName.text = it
         }
     }
 
@@ -201,9 +210,11 @@ class TTextInputLayout : LinearLayout {
     }
 
     fun setError(err: Boolean, msg: String?) {
+        isError = err
+
         when (err) {
             true -> {
-                layoutInput.setBackgroundResource(BG_LAYOUT_E)
+                layout.setBackgroundResource(BG_LAYOUT_E)
                 tvHint.setTextColor(resources.getColor(R.color.redCoral))
                 tvHint.setBackgroundResource(BG_FLOATING_LABEL_E)
 
@@ -213,38 +224,63 @@ class TTextInputLayout : LinearLayout {
 
             false -> {
                 if (edit.isFocused) {
-                    layoutInput.setBackgroundResource(BG_LAYOUT_F)
+                    layout.setBackgroundResource(BG_LAYOUT_F)
                     tvHint.setTextColor(resources.getColor(R.color.primary00))
                     tvHint.setBackgroundResource(BG_FLOATING_LABEL_F)
                 } else {
-                    layoutInput.setBackgroundResource(BG_LAYOUT_N)
+                    layout.setBackgroundResource(BG_LAYOUT_N)
                     tvHint.setTextColor(resources.getColor(R.color.dark4D))
                     tvHint.setBackgroundResource(BG_FLOATING_LABEL_N)
                 }
 
-                tvError.visibility = View.GONE
+                tvError.visibility = View.INVISIBLE
             }
         }
     }
 
+    fun isError(): Boolean {
+        return isError
+    }
+
     fun setFile(fileName: String) {
-        layoutFile.setBackgroundResource(BG_LAYOUT_F)
+        isError = false
+
+        layout.setBackgroundResource(BG_LAYOUT_F)
         tvHint.setBackgroundResource(BG_FLOATING_LABEL_F)
+        tvHint.setTextColor(resources.getColor(R.color.primary00))
         tvHint.visibility = View.VISIBLE
 
-        imgFile.setBackgroundResource(R.drawable.ic_keystore)
+        imgFile.setBackgroundResource(R.drawable.ic_keystorefile_load)
         imgFile.visibility = View.VISIBLE
         tvFileName.setTextColor(resources.getColor(R.color.primary00))
         tvFileName.text = fileName
+
+        tvError.visibility = View.INVISIBLE
     }
 
-    fun setFileError() {
-        layoutFile.setBackgroundResource(BG_LAYOUT_E)
+    fun setFileError(fileName: String, msg: String) {
+        isError = true
+
+        layout.setBackgroundResource(BG_LAYOUT_E)
         tvHint.setBackgroundResource(BG_FLOATING_LABEL_E)
+        tvHint.setTextColor(resources.getColor(R.color.redCoral))
         tvHint.visibility = View.VISIBLE
 
         imgFile.setBackgroundResource(R.drawable.ic_keystorefile_error)
         tvFileName.setTextColor(resources.getColor(R.color.redCoral))
+        tvFileName.text = fileName
+
+        tvError.text = msg
+        tvError.visibility = View.VISIBLE
+    }
+
+    fun setInputEnabled(enabled: Boolean) {
+        if (enabled) {
+            edit.isFocusableInTouchMode = enabled
+        }
+
+        edit.isEnabled = enabled
+        edit.isFocusable = enabled
     }
 
     private var mOnFocusReleasedListener: OnFocusReleased? = null
