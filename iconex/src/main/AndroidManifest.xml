@@ -31,6 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".wallet.transfer.EtherTransferAcitivtyNew"/>
+        <activity android:name=".wallet.transfer.ICONTransferActivityNew"/>
+        <activity android:name=".dev_mainWallet.MainWalletActivity"/>
         <activity android:name=".dev_detail.WalletDetailActivity"/>
         <activity
             android:name=".view.AuthActivity"

@@ -8,7 +8,7 @@
     android:clickable="true">
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/txt_symbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBaseline_toBaselineOf="@id/text"
+        app:layout_constraintBaseline_toBaselineOf="@id/txt_symbol"
 
         android:fontFamily="@font/nanum_square_bold"
         android:textSize="12dp"
@@ -37,12 +37,12 @@
         android:text="9,000,000.0004"/>
 
     <TextView
-        android:id="@+id/txt_text2"
+        android:id="@+id/txt_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintTop_toBottomOf="@id/txt_symbol"
 
         android:fontFamily="@font/noto_sans_regular"
         android:textSize="10dp"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBaseline_toBaselineOf="@id/txt_text2"
+        app:layout_constraintBaseline_toBaselineOf="@id/txt_name"
 
         android:fontFamily="@font/nanum_square_regular"
         android:textSize="10dp"

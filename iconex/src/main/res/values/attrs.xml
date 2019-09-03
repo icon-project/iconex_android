@@ -52,7 +52,21 @@
         <attr name="show_ic_toggle" format="boolean" />
     </declare-styleable>
 
+    <attr name="size" format="integer" />
+    <attr name="index" format="integer" />
+
     <declare-styleable name="TotalAssetsIndicator">
-        <attr name="index" format="integer" />
+        <attr name="size" />
+        <attr name="index"/>
+    </declare-styleable>
+
+    <declare-styleable name="WalletIndicator">
+        <attr name="size" />
+        <attr name="index"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomSeekbar">
+        <attr name="progress" format="integer"/>
+        <attr name="max" format="integer" />
     </declare-styleable>
 </resources>

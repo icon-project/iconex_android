@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonArray
 import foundation.icon.MyConstants
 import foundation.icon.iconex.R
+import foundation.icon.iconex.dev_mainWallet.RefreshLoadingView
 import foundation.icon.iconex.service.NetworkService
 import foundation.icon.iconex.service.ServiceConstants
 import foundation.icon.iconex.wallet.detail.TransactionListAdapter
