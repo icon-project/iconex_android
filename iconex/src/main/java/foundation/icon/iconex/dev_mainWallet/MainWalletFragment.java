@@ -2,10 +2,10 @@ package foundation.icon.iconex.dev_mainWallet;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -67,16 +67,17 @@ public class MainWalletFragment extends Fragment {
     private LoadState mLoadState = LoadState.unloaded;
     private Runnable totalAssetInfoLooper = null;
     private int LOOPING_TIME_INTERVAL = 5000;
+    private Handler asyncUpdater = new Handler();
 
     // Data field
-    private List<WalletCardViewData> walletDataList = new ArrayList<>();
-    private TotalAssetsViewData totalAssetsData = new TotalAssetsViewData();
+    private List<WalletCardViewData> mWalletDataList = new ArrayList<>();
+    private TotalAssetsViewData mTotalAssetsData = new TotalAssetsViewData();
 
     // data loader
     public interface SyncRequester {
-        TotalAssetsViewData onSyncRequestTotalAssetsData();
-        List<WalletCardViewData> onSyncRequestWalletListData();
-        List<WalletCardViewData> onSyncRequestTokenListData();
+        void onAsyncRequestTotalAssetsData();
+        void onAsyncRequestWalletListData();
+        void onAsyncRequestTokenListData();
     }
 
     public static MainWalletFragment newInstance(){
@@ -272,7 +273,7 @@ public class MainWalletFragment extends Fragment {
                 WalletCardView walletCardView = onGenWalletCardView(container);
                 container.addView(walletCardView);
 
-                WalletCardViewData data = walletDataList.get(position);
+                WalletCardViewData data = mWalletDataList.get(position);
                 walletCardView.bindData(data);
 
                 return walletCardView;
@@ -290,7 +291,7 @@ public class MainWalletFragment extends Fragment {
 
             @Override
             public int getCount() {
-                return walletDataList.size();
+                return mWalletDataList.size();
             }
 
             @Override
@@ -339,29 +340,26 @@ public class MainWalletFragment extends Fragment {
 
     private void updateWalletView() {
         pagerAdapter.notifyDataSetChanged();
-        walletIndicator.setSize(walletDataList.size());
+        walletIndicator.setSize(mWalletDataList.size());
     }
 
     private void updateTotalAssetsView() {
-        totalAssetInfoView.bind(totalAssetsData);
+        totalAssetInfoView.bind(mTotalAssetsData);
     }
 
     private void refreshAllData() {
         Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
-                totalAssetsData = ((SyncRequester) getActivity()).onSyncRequestTotalAssetsData();
+                loadTotalAssetsData();
                 switch (mLoadState) {
                     case unloaded:
                     case loadedWalletData: {
-                        walletDataList = ((SyncRequester) getActivity()).onSyncRequestWalletListData();
-                        mLoadState = LoadState.loadedWalletData;
+                        loadWalletsData();
                     } break;
                     case loadedTokenData: {
-                        walletDataList = ((SyncRequester) getActivity()).onSyncRequestTokenListData();
-                        mLoadState = LoadState.loadedTokenData;
+                         loadTokensData();
                     } break;
-
                 }
             }
         }).subscribeOn(Schedulers.io())
@@ -371,11 +369,8 @@ public class MainWalletFragment extends Fragment {
                     public void onSubscribe(Disposable d) {
 
                     }
-
                     @Override
                     public void onComplete() {
-                        updateTotalAssetsView();
-                        updateWalletView();
                         refresh.stopRefresh(true);
                     }
 
@@ -399,61 +394,53 @@ public class MainWalletFragment extends Fragment {
         }
     }
 
+    private void loadTotalAssetsData () {
+        ((SyncRequester) getActivity()).onAsyncRequestTotalAssetsData();
+    }
+
     private void loadWalletsData () {
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                walletDataList = ((SyncRequester) getActivity()).onSyncRequestWalletListData();
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        mLoadState = LoadState.loadedWalletData;
-                        updateWalletView();
-                        // TODO: hardcoding
-                        actionBar.setTitle("지갑");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
+        ((SyncRequester) getActivity()).onAsyncRequestWalletListData();
     }
 
     private void loadTokensData () {
-        Completable.fromAction(new Action() {
+        ((SyncRequester) getActivity()).onAsyncRequestTokenListData();
+    }
+
+    public void asyncResponseTotalAssetsData (TotalAssetsViewData totalAssetsData) {
+        asyncUpdater.post(new Runnable() {
             @Override
-            public void run() throws Exception {
-                walletDataList = ((SyncRequester) getActivity()).onSyncRequestTokenListData();
+            public void run() {
+                mTotalAssetsData = totalAssetsData;
+                updateTotalAssetsView();
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        });
+    }
 
-                    }
+    public void asyncResponseWalletListData (List<WalletCardViewData> walletDataList) {
+        asyncUpdater.post(new Runnable() {
+            @Override
+            public void run() {
+                mWalletDataList.clear();
+                mWalletDataList.addAll(walletDataList);
+                mLoadState = LoadState.loadedWalletData;
+                updateWalletView();
+                // TODO: hardcoding
+                actionBar.setTitle("지갑");
+            }
+        });
+    }
 
-                    @Override
-                    public void onComplete() {
-                        mLoadState = LoadState.loadedTokenData;
-                        updateWalletView();
-                        // TODO: hardcoding
-                        actionBar.setTitle("코인&토큰");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
+    public void asyncResponseTokenListData (List<WalletCardViewData> tokenDataList) {
+        asyncUpdater.post(new Runnable() {
+            @Override
+            public void run() {
+                mWalletDataList.clear();
+                mWalletDataList.addAll(tokenDataList);
+                mLoadState = LoadState.loadedTokenData;
+                updateWalletView();
+                // TODO: hardcoding
+                actionBar.setTitle("코인&토큰");
+            }
+        });
     }
 }
