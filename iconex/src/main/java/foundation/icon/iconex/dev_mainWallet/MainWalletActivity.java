@@ -1,6 +1,7 @@
 package foundation.icon.iconex.dev_mainWallet;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -20,17 +21,14 @@ import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 
-public class MainWalletActivity extends AppCompatActivity implements MainWalletFragment.SyncRequester {
+public class MainWalletActivity extends AppCompatActivity implements
+        MainWalletFragment.AsyncRequester, MainWalletServiceHelper.OnLoadRemoteDataListener {
 
     private static String MAIN_WALLET_FRAGMENT_TAG = "main wallet fragment";
 
-    private TotalAssetsViewData totalAssetsViewData = null;
-    private WalletCardViewData mainWalletCardViewData = null;
-
-
-    private List<WalletCardViewData> chachedWalletList = null;
-    private List<WalletCardViewData> chachedTokenList = null;
+    private MainWalletServiceHelper mainWalletServiceHelper = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,80 +46,134 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletF
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.container, fragment,MAIN_WALLET_FRAGMENT_TAG)
+                .add(R.id.container, fragment, MAIN_WALLET_FRAGMENT_TAG)
                 .commit();
+
+        mainWalletServiceHelper = new MainWalletServiceHelper(this, this);
     }
 
-    private List<WalletCardViewData> convertWallets2ViewData() {
-        if (chachedWalletList == null) {
-            List<WalletCardViewData> walletViewDatas = new ArrayList<>();
-            for (Wallet wallet : ICONexApp.wallets) {
-                walletViewDatas.add(WalletCardViewData.convertWallet2ViewData(wallet));
-            }
-            chachedWalletList = walletViewDatas;
-        }
-
-        return chachedWalletList;
+    @Override // activity
+    protected void onResume() {
+        super.onResume();
+        mainWalletServiceHelper.resume();
     }
 
-    private List<WalletCardViewData> convertWallets2TokenViewData() {
-        if (chachedTokenList == null) {
-            List<WalletCardViewData> lstwalletViewData = convertWallets2ViewData();
-            Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
-
-            for (WalletCardViewData walletViewData: lstwalletViewData) {
-                for (WalletItemViewData itemViewData: walletViewData.getLstWallet()) {
-                    String tokenName = itemViewData.getName();
-
-                    if(!mapTokenViewData.containsKey(tokenName)) {
-                        mapTokenViewData.put(tokenName,
-                                new WalletCardViewData()
-                                        .setWalletType(WalletCardViewData.WalletType.TokenList)
-                                        .setTitle(tokenName)
-                                        .setLstWallet(new ArrayList<WalletItemViewData>() {{
-                                            add(itemViewData);
-                                        }})
-                        );
-                    }
-
-                    WalletCardViewData lstTokenViewData = mapTokenViewData.get(tokenName);
-                    lstTokenViewData.getLstWallet().add(
-                            new WalletItemViewData()
-                                    .setWalletItemType(WalletItemViewData.WalletItemType.Wallet)
-                                    .setSymbol(walletViewData.getTitle())
-                                    //.setName() TODO: 앗 주소 빠졌다.
-                                    .setAmount("0.00")
-                                    .setExchanged("0.00 USD")
-                    );
-                }
-            }
-            chachedTokenList = new ArrayList<WalletCardViewData> () {{ addAll(mapTokenViewData.values()); }};
-        }
-
-        return chachedTokenList;
+    @Override // activity
+    protected void onStop() {
+        super.onStop();
+        mainWalletServiceHelper.stop();
     }
 
-    @Override //
-    public void onAsyncRequestTotalAssetsData() {
-        getMainWalletFragment().asyncResponseTotalAssetsData(
+    @Override // MainWalletFragment.AsyncRequester (ViewData)
+    public void requestInitData() {
+        getMainWalletFragment().asyncResponseInit(
+                loadWalletFromLocal(),
                 new TotalAssetsViewData()
-                .setTotalAsset(new BigInteger("20000000"))
-                .setVotedPower(0.99f));
+                    .setTotalAsset("0")
+                    .setVotedPower("0")
+        );
     }
 
-    @Override
-    public void onAsyncRequestWalletListData() {
-        getMainWalletFragment()
-                .asyncResponseWalletListData(convertWallets2ViewData());
+    @Override // MainWalletFragment.AsyncRequester (ViewData)
+    public void requestRefreshData() {
+        mainWalletServiceHelper.requestRemoteData();
     }
 
-    @Override
-    public void onAsyncRequestTokenListData() {
-        getMainWalletFragment()
-                .asyncResponseTokenListData(convertWallets2TokenViewData());
+    @Override // MainWalletServiceHelper.OnLoadRemoteDataListener
+    public void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance) {
+        mixWalletDataWithBalance(icxBalance, ethBalance, errBalance);
     }
 
     private MainWalletFragment getMainWalletFragment() {
-        return ((MainWalletFragment) getSupportFragmentManager().findFragmentByTag(MAIN_WALLET_FRAGMENT_TAG));
+        return ((MainWalletFragment) getSupportFragmentManager()
+                .findFragmentByTag(MAIN_WALLET_FRAGMENT_TAG));
+    }
+
+    private List<WalletCardViewData> loadWalletFromLocal() {
+        List<WalletCardViewData> walletViewDatas = new ArrayList<>();
+        for (Wallet wallet : ICONexApp.wallets) {
+            walletViewDatas.add(WalletCardViewData.convertWallet2ViewData(wallet));
+        }
+        return walletViewDatas;
+    }
+
+    private void mixWalletDataWithBalance(
+            List<String[]> icxBalance,
+            List<String[]> ethBalance,
+            List<String[]> errBalance) {
+
+        double totalAsset = 0.0;
+        String exchageUnit = "USD";
+        List<WalletCardViewData> lstWalletData = loadWalletFromLocal();
+
+        // indexing wallet entry
+        Map<String, WalletEntry> mapWalletEntry = new HashMap<>();
+        for(Wallet wallet: ICONexApp.wallets) {
+            for (WalletEntry entry: wallet.getWalletEntries()) {
+                String key = wallet.getAddress() + "," + entry.getId();
+                mapWalletEntry.put(key, entry);
+            }
+        }
+
+        // indexing view data
+        Map<String, WalletItemViewData> mapWalletItemData = new HashMap<>();
+        for(WalletCardViewData walletViewData: lstWalletData) {
+            for (WalletItemViewData itemViewData: walletViewData.getLstWallet()) {
+                String key = walletViewData.getAddress() + "," + itemViewData.getEntryID();
+                mapWalletItemData.put(key, itemViewData);
+            }
+        }
+
+        for (String[] param : icxBalance) {
+            String id = param[0];
+            String address = param[1];
+            String result = param[2];
+            String key = address + "," + id;
+            mapWalletEntry.get(key).setBalance(result);
+            WalletItemViewData viewData = mapWalletItemData.get(key);
+            String exchageKey = viewData.getSymbol().toLowerCase() + exchageUnit.toLowerCase();
+            double exchanger = Double.parseDouble(ICONexApp.EXCHANGE_TABLE.get(exchageKey));
+            double balance = Double.parseDouble(result);
+            double exchanged = balance * exchanger;
+            totalAsset += exchanged;
+            viewData
+                    .setAmount(result)
+                    .setExchanged(exchanged + " " + exchageUnit);
+        }
+
+        for (String[] param : ethBalance) {
+            String id = param[0];
+            String address = param[1];
+            String result = param[2];
+            String key = address + "," + id;
+            mapWalletEntry.get(key).setBalance(result);
+            WalletItemViewData viewData = mapWalletItemData.get(key);
+            String exchageKey = viewData.getSymbol().toLowerCase() + exchageUnit.toLowerCase();
+            double exchanger = Double.parseDouble(ICONexApp.EXCHANGE_TABLE.get(exchageKey));
+            double balance = Double.parseDouble(result);
+            double exchanged = balance * exchanger;
+            totalAsset += exchanged;
+            viewData
+                    .setAmount(result)
+                    .setExchanged(exchanged + " " + exchageUnit);
+        }
+
+        for (String[] param : errBalance) {
+            String id = param[0];
+            String address = param[1];
+            String result = param[2];
+            String key = address + "," + id;
+            mapWalletEntry.get(key).setBalance(result);
+            mapWalletItemData.get(key)
+                    .setAmount(result)
+                    .setExchanged("- " + exchageUnit);
+        }
+
+        getMainWalletFragment().asyncResponseRefreash(
+                lstWalletData,
+                new TotalAssetsViewData()
+                    .setTotalAsset(icxBalance.size() > 0 || ethBalance.size() > 0 ? totalAsset + "" : "-")
+                    .setVotedPower("0.0")
+        );
     }
 }

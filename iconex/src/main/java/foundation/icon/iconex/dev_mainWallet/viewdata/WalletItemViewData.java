@@ -9,6 +9,8 @@ public class WalletItemViewData {
     private static String TAG = WalletItemViewData.class.getSimpleName();
     public enum WalletItemType { ICXcoin, ETHcoin, Token, Wallet}
 
+    private int entryID;
+
     // common flied
     private WalletItemType walletItemType;
 
@@ -48,6 +50,7 @@ public class WalletItemViewData {
             Log.e(TAG, "unknown token type " + walletEntry.getType());
         }
         itemViewData.setWalletItemType(walletItemType);
+        itemViewData.setEntryID(walletEntry.getId());
 
         switch (walletItemType) {
             case ICXcoin: {
@@ -55,29 +58,28 @@ public class WalletItemViewData {
                         .setName(walletEntry.getName())
                         .setSymbol(walletEntry.getSymbol())
                         .setDrawableSymbolresId(R.drawable.img_logo_icon_sel)
-                        .setAmount("0.00")
-                        .setExchanged("0.00 USD")
-                        .setStacked("12.5")
-                        .setVotingPower("0.000")
-                        .setiScore("0.000");
+                        .setAmount(walletEntry.getBalance())
+                        .setExchanged("-")
+                        .setStacked("-")
+                        .setVotingPower("-")
+                        .setiScore("-");
             } break;
             case ETHcoin: {
                 itemViewData
                         .setName(walletEntry.getName())
                         .setSymbol(walletEntry.getSymbol())
                         .setDrawableSymbolresId(R.drawable.img_logo_ethereum_nor)
-                        .setAmount("0.00")
-                        .setExchanged("0.00 USD");
+                        .setAmount(walletEntry.getBalance())
+                        .setExchanged("-");
             } break;
             case Token: {
                 itemViewData
                         .setName(walletEntry.getName())
                         .setSymbol(walletEntry.getSymbol())
                         .setSymbolLetter(walletEntry.getName().charAt(0))
-//                        .setBgSymbolColor(tokenColor.getColor())
-                        .setAmount("0.00")
-                        .setExchanged("0.00 USD");
-                // need init background color
+                        //.setBgSymbolColor(tokenColor.getColor()) not this timing
+                        .setAmount(walletEntry.getBalance())
+                        .setExchanged("-");
             }
             case Wallet:
             default: {
@@ -87,6 +89,14 @@ public class WalletItemViewData {
         return itemViewData;
     }
 
+    public int getEntryID() {
+        return entryID;
+    }
+
+    public WalletItemViewData setEntryID(int entryID) {
+        this.entryID = entryID;
+        return this;
+    }
 
     public WalletItemType getWalletItemType() {
         return walletItemType;

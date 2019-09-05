@@ -21,7 +21,9 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.component.ExpanableViewPager;
@@ -31,16 +33,11 @@ import foundation.icon.iconex.dev_mainWallet.component.WalletCardView;
 import foundation.icon.iconex.dev_mainWallet.component.WalletIndicator;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
+import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainWalletFragment extends Fragment {
 
@@ -70,14 +67,17 @@ public class MainWalletFragment extends Fragment {
     private Handler asyncUpdater = new Handler();
 
     // Data field
-    private List<WalletCardViewData> mWalletDataList = new ArrayList<>();
+    private List<WalletCardViewData> mShownWalletDataList = new ArrayList<>();
     private TotalAssetsViewData mTotalAssetsData = new TotalAssetsViewData();
 
+    // cached data
+    private List<WalletCardViewData> mWalletDataList = new ArrayList<>();
+    private List<WalletCardViewData> mTokenDataList = new ArrayList<>();
+
     // data loader
-    public interface SyncRequester {
-        void onAsyncRequestTotalAssetsData();
-        void onAsyncRequestWalletListData();
-        void onAsyncRequestTokenListData();
+    public interface AsyncRequester {
+        void requestInitData();
+        void requestRefreshData();
     }
 
     public static MainWalletFragment newInstance(){
@@ -107,7 +107,7 @@ public class MainWalletFragment extends Fragment {
         btnIScore = v.findViewById(R.id.btn_iscore);
 
         initUI(v);
-        refreshAllData();
+        ((AsyncRequester) getActivity()).requestInitData();
 
         return v;
     }
@@ -156,7 +156,7 @@ public class MainWalletFragment extends Fragment {
         });
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() { refreshAllData(); }
+            public void onRefresh() { refreshViewData(); }
             @Override
             public void onLoadMore() { }
         });
@@ -273,7 +273,7 @@ public class MainWalletFragment extends Fragment {
                 WalletCardView walletCardView = onGenWalletCardView(container);
                 container.addView(walletCardView);
 
-                WalletCardViewData data = mWalletDataList.get(position);
+                WalletCardViewData data = mShownWalletDataList.get(position);
                 walletCardView.bindData(data);
                 return walletCardView;
             }
@@ -290,7 +290,7 @@ public class MainWalletFragment extends Fragment {
 
             @Override
             public int getCount() {
-                return mWalletDataList.size();
+                return mShownWalletDataList.size();
             }
 
             @Override
@@ -336,107 +336,101 @@ public class MainWalletFragment extends Fragment {
     }
 
     private void updateWalletView() {
+        mShownWalletDataList.clear();
+        switch (mLoadState) {
+            case unloaded:
+            case loadedWalletData: {
+                mShownWalletDataList.addAll(mWalletDataList);
+                // TODO: hardcoding
+                actionBar.setTitle("지갑");
+            } break;
+            case loadedTokenData: {
+                mShownWalletDataList.addAll(mTokenDataList);
+                // TODO: hardcoding
+                actionBar.setTitle("코인&토큰");
+            } break;
+        }
         pagerAdapter.notifyDataSetChanged();
-        walletIndicator.setSize(mWalletDataList.size());
+        walletIndicator.setSize(mShownWalletDataList.size());
     }
 
     private void updateTotalAssetsView() {
         totalAssetInfoView.bind(mTotalAssetsData);
     }
 
-    private void refreshAllData() {
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                loadTotalAssetsData();
-                switch (mLoadState) {
-                    case unloaded:
-                    case loadedWalletData: {
-                        loadWalletsData();
-                    } break;
-                    case loadedTokenData: {
-                         loadTokensData();
-                    } break;
-                }
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-                    @Override
-                    public void onComplete() {
-                        refresh.stopRefresh(true);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
+    private void refreshViewData() {
+        ((AsyncRequester) getActivity()).requestRefreshData();
     }
 
     private void toggleWalletDataLoad() {
         // inverse state
         switch (mLoadState) {
-            case unloaded:
             case loadedTokenData: {
-                loadWalletsData();
+                mLoadState = LoadState.loadedWalletData;
             } break;
+            case unloaded:
             case loadedWalletData: {
-                loadTokensData();
+                mLoadState = LoadState.loadedTokenData;
             } break;
         }
+        updateWalletView();
     }
 
-    private void loadTotalAssetsData () {
-        ((SyncRequester) getActivity()).onAsyncRequestTotalAssetsData();
+    private void updateWalletData(List<WalletCardViewData> walletDataList) {
+        mWalletDataList = walletDataList;
+        Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
+
+        for (WalletCardViewData walletViewData: mWalletDataList) {
+            for (WalletItemViewData itemViewData: walletViewData.getLstWallet()) {
+                String tokenName = itemViewData.getName();
+
+                if(!mapTokenViewData.containsKey(tokenName)) {
+                    mapTokenViewData.put(tokenName,
+                            new WalletCardViewData()
+                                    .setWalletType(WalletCardViewData.WalletType.TokenList)
+                                    .setTitle(tokenName)
+                                    .setLstWallet(new ArrayList<WalletItemViewData>() {{
+                                        add(itemViewData);
+                                    }})
+                    );
+                }
+
+                WalletCardViewData lstTokenViewData = mapTokenViewData.get(tokenName);
+                lstTokenViewData.getLstWallet().add(
+                        new WalletItemViewData()
+                                .setWalletItemType(WalletItemViewData.WalletItemType.Wallet)
+                                .setSymbol(walletViewData.getTitle())
+                                //.setName() TODO: 앗 주소 빠졌다.
+                                .setAmount("0.00")
+                                .setExchanged("0.00 USD")
+                );
+            }
+        }
+        mTokenDataList = new ArrayList<WalletCardViewData> () {{ addAll(mapTokenViewData.values()); }};
     }
 
-    private void loadWalletsData () {
-        ((SyncRequester) getActivity()).onAsyncRequestWalletListData();
-    }
-
-    private void loadTokensData () {
-        ((SyncRequester) getActivity()).onAsyncRequestTokenListData();
-    }
-
-    public void asyncResponseTotalAssetsData (TotalAssetsViewData totalAssetsData) {
+    public void asyncResponseInit (List<WalletCardViewData> walletDataList, TotalAssetsViewData totalAssetsViewData) {
         asyncUpdater.post(new Runnable() {
             @Override
             public void run() {
-                mTotalAssetsData = totalAssetsData;
+                updateWalletData(walletDataList);
+                updateWalletView();
+                mTotalAssetsData = totalAssetsViewData;
                 updateTotalAssetsView();
             }
         });
     }
 
-    public void asyncResponseWalletListData (List<WalletCardViewData> walletDataList) {
+    public void asyncResponseRefreash (
+            List<WalletCardViewData> walletDataList, TotalAssetsViewData totalAssetsViewData) {
         asyncUpdater.post(new Runnable() {
             @Override
             public void run() {
-                mWalletDataList.clear();
-                mWalletDataList.addAll(walletDataList);
-                mLoadState = LoadState.loadedWalletData;
+                updateWalletData(walletDataList);
                 updateWalletView();
-                // TODO: hardcoding
-                actionBar.setTitle("지갑");
-            }
-        });
-    }
-
-    public void asyncResponseTokenListData (List<WalletCardViewData> tokenDataList) {
-        asyncUpdater.post(new Runnable() {
-            @Override
-            public void run() {
-                mWalletDataList.clear();
-                mWalletDataList.addAll(tokenDataList);
-                mLoadState = LoadState.loadedTokenData;
-                updateWalletView();
-                // TODO: hardcoding
-                actionBar.setTitle("코인&토큰");
+                mTotalAssetsData = totalAssetsViewData;
+                updateTotalAssetsView();
+                refresh.stopRefresh(true);
             }
         });
     }
