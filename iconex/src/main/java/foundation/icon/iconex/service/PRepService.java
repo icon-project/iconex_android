@@ -17,9 +17,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public class PRepService {
 
     private IconService iconService;
-    private Gson gson = new Gson();
 
-    public PRepService(String host) throws Exception {
+    public PRepService(String host) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -45,6 +44,20 @@ public class PRepService {
         Call<RpcItem> call = new Call.Builder()
                 .to(new Address("cx0000000000000000000000000000000000000000"))
                 .method("getPRep")
+                .params(params)
+                .build();
+
+        return iconService.call(call).execute();
+    }
+
+    public RpcItem getIScore(String address) throws IOException {
+        RpcObject params = new RpcObject.Builder()
+                .put("address", new RpcValue(address))
+                .build();
+
+        Call<RpcItem> call = new Call.Builder()
+                .to(new Address("cx0000000000000000000000000000000000000000"))
+                .method("queryIScore")
                 .params(params)
                 .build();
 
