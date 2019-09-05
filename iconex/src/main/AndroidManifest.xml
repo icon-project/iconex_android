@@ -19,6 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".view.IScoreActivity"></activity>
+        <activity android:name=".view.PRepStakeActivity" />
         <activity
             android:name=".view.SplashActivity"
             android:configChanges="fontScale"
