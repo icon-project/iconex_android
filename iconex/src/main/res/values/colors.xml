@@ -37,6 +37,9 @@
 
     <color name="alphaBackground">#52000000</color>
 
+    <!-- Shadow -->
+    <color name="shadow94">#19000000</color>
+
     <color name="colorMain">#1aaaba</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhite20">#33ffffff</color>

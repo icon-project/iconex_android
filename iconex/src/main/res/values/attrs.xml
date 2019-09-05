@@ -32,6 +32,8 @@
             <enum name="search" value="2" />
         </attr>
         <attr name="title" format="string" />
+        <attr name="optionText" format="string" />
+        <attr name="searchHint" format="string" />
     </declare-styleable>
 
 
@@ -57,16 +59,16 @@
 
     <declare-styleable name="TotalAssetsIndicator">
         <attr name="size" />
-        <attr name="index"/>
+        <attr name="index" />
     </declare-styleable>
 
     <declare-styleable name="WalletIndicator">
         <attr name="size" />
-        <attr name="index"/>
+        <attr name="index" />
     </declare-styleable>
 
     <declare-styleable name="CustomSeekbar">
-        <attr name="progress" format="integer"/>
+        <attr name="progress" format="integer" />
         <attr name="max" format="integer" />
     </declare-styleable>
 </resources>

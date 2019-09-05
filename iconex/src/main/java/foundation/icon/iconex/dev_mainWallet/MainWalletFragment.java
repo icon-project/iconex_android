@@ -117,7 +117,7 @@ public class MainWalletFragment extends Fragment {
         // noting.
 
         // init actiobar
-        actionBar.setmOnActionClickListener(new CustomActionBar.OnActionClickListener() {
+        actionBar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
             @Override
             public void onClickAction(CustomActionBar.ClickAction action) {
                 switch (action) {

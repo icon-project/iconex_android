@@ -4,8 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -31,6 +29,7 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.main.MainActivity;
+import foundation.icon.iconex.widgets.DividerItemDecorator;
 import loopchain.icon.wallet.core.Constants;
 
 public class LoadBundleFragment extends Fragment implements View.OnClickListener {
@@ -102,7 +101,8 @@ public class LoadBundleFragment extends Fragment implements View.OnClickListener
     private void initView(View v) {
         list = v.findViewById(R.id.list);
         RecyclerView.ItemDecoration itemDecoration =
-                new DividerItemDecorator(ContextCompat.getDrawable(getContext(), R.drawable.line_divider));
+                new DividerItemDecorator(getContext(),
+                        ContextCompat.getDrawable(getContext(), R.drawable.line_divider));
         list.addItemDecoration(itemDecoration);
 
         adapter = new BundleListAdapter(getContext(), makeList());
@@ -174,34 +174,6 @@ public class LoadBundleFragment extends Fragment implements View.OnClickListener
 
     public interface OnLoadBundleListener {
         void onBundleBack();
-    }
-
-    public class DividerItemDecorator extends RecyclerView.ItemDecoration {
-        private Drawable mDivider;
-
-        public DividerItemDecorator(Drawable divider) {
-            mDivider = divider;
-        }
-
-        @Override
-        public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
-            int inset = getResources().getDimensionPixelSize(R.dimen.divider_padding);
-            int dividerLeft = inset;
-            int dividerRight = parent.getWidth() - inset;
-
-            int childCount = parent.getChildCount();
-            for (int i = 1; i <= childCount - 2; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int dividerTop = child.getBottom() + params.bottomMargin;
-                int dividerBottom = dividerTop + mDivider.getIntrinsicHeight();
-
-                mDivider.setBounds(dividerLeft, dividerTop, dividerRight, dividerBottom);
-                mDivider.draw(canvas);
-            }
-        }
     }
 
     private boolean mBound = false;

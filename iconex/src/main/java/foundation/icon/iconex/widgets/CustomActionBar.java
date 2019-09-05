@@ -105,7 +105,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
     }
     public void setOnClickEndIcon(View.OnClickListener listener) { mOnClickEndIcon = listener; }
     public void setOnCLickToggleIcon(View.OnClickListener listener) { mOnCLickToggleIcon = listener; }
-    public void setmOnActionClickListener(OnActionClickListener listener) { mOnActionClickListener = listener; }
+    public void setOnActionClickListener(OnActionClickListener listener) { mOnActionClickListener = listener; }
 
     public CustomActionBar(Context context) {
         super(context);
@@ -210,9 +210,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
 
                 if (mOnClickEndIcon != null) mOnClickEndIcon.onClick(view);
             } break;
-            case R.id.txt_title: {
-//                if (mOnCLickToggleIcon != null) mOnCLickToggleIcon.onClick(view);
-            } break;
+            case R.id.txt_title:
             case R.id.img_toggle: {
                 if (mOnActionClickListener != null)
                     mOnActionClickListener.onClickAction(ClickAction.btnToggle);
