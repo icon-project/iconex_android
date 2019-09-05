@@ -16,7 +16,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:resizeableActivity="false"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -31,10 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".wallet.transfer.EtherTransferAcitivtyNew"/>
-        <activity android:name=".wallet.transfer.ICONTransferActivityNew"/>
-        <activity android:name=".dev_mainWallet.MainWalletActivity"/>
-        <activity android:name=".dev_detail.WalletDetailActivity"/>
+        <activity android:name=".wallet.transfer.EtherTransferAcitivtyNew" />
+        <activity android:name=".wallet.transfer.ICONTransferActivityNew" />
+        <activity android:name=".dev_mainWallet.MainWalletActivity" />
+        <activity android:name=".dev_detail.WalletDetailActivity" />
         <activity
             android:name=".view.AuthActivity"
             android:configChanges="fontScale"
@@ -163,6 +162,13 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
+        <activity
+            android:name=".view.PRepSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivity" />
+        <activity
+            android:name=".view.PRepListActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="foundation.icon.connect.ICONexConnectActivity"
             android:configChanges="fontScale"
