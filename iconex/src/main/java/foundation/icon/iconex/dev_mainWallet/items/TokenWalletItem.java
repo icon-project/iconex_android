@@ -14,32 +14,58 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.util.ScreenUnit;
 
 public class TokenWalletItem extends FrameLayout implements WalletItem{
 
-    public enum TokenColor {
-        A("#4390DE"),
-        B("#735CCC"),
-        C("#B547CC"),
-        D("#40993D"),
-        E("#E66A29"),
-        F("#805339"),
-        G("#E6B000"),
-        H("#E645D3"),
-        I("#4754FF"),
-        J("#71B800"),
-        K("#EE385D"),
-        L("#547345");
+    public static class TokenColor {
+        public static String[] colorCodes = {
+            "#4390DE",
+            "#735CCC",
+            "#B547CC",
+            "#40993D",
+            "#E66A29",
+            "#805339",
+            "#E6B000",
+            "#E645D3",
+            "#4754FF",
+            "#71B800",
+            "#EE385D",
+            "#547345"
+        };
 
-        public int color;
-        TokenColor(String color) {
-            int r = Integer.parseInt(color.substring(1,3), 16);
-            int g = Integer.parseInt(color.substring(3,5), 16);
-            int b = Integer.parseInt(color.substring(5,7), 16);
-            this.color = Color.rgb(r,g,b);
+        private int color;
+        private int index;
+
+        public TokenColor () {
+          this(0);
+        }
+
+        public TokenColor (int idx) {
+            index = idx;
+            color = parseColor(idx);
+        }
+
+        public void nextColor() {
+            index = (index + 1) % 12;
+            color = parseColor(index);
+        }
+
+        public int getColor() {
+            return color;
+        }
+
+        private int parseColor(int idx) {
+            String colorCode = colorCodes[idx];
+            int r = Integer.parseInt(colorCode.substring(1,3), 16);
+            int g = Integer.parseInt(colorCode.substring(3,5), 16);
+            int b = Integer.parseInt(colorCode.substring(5,7), 16);
+            return Color.rgb(r,g,b);
         }
     }
 

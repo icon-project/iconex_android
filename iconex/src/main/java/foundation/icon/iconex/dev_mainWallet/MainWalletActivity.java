@@ -9,16 +9,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 
-import foundation.icon.iconex.dev_mainWallet.items.ICXcoinWalletItem;
-import foundation.icon.iconex.dev_mainWallet.items.TokenWalletItem;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
-import foundation.icon.iconex.realm.data.Wallet;
+import foundation.icon.iconex.wallet.Wallet;
 
 public class MainWalletActivity extends AppCompatActivity implements MainWalletFragment.SyncRequester {
 
@@ -26,6 +27,10 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletF
 
     private TotalAssetsViewData totalAssetsViewData = null;
     private WalletCardViewData mainWalletCardViewData = null;
+
+
+    private List<WalletCardViewData> chachedWalletList = null;
+    private List<WalletCardViewData> chachedTokenList = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +52,55 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletF
                 .commit();
     }
 
+    private List<WalletCardViewData> convertWallets2ViewData() {
+        if (chachedWalletList == null) {
+            List<WalletCardViewData> walletViewDatas = new ArrayList<>();
+            for (Wallet wallet : ICONexApp.wallets) {
+                walletViewDatas.add(WalletCardViewData.convertWallet2ViewData(wallet));
+            }
+            chachedWalletList = walletViewDatas;
+        }
+
+        return chachedWalletList;
+    }
+
+    private List<WalletCardViewData> convertWallets2TokenViewData() {
+        if (chachedTokenList == null) {
+            List<WalletCardViewData> lstwalletViewData = convertWallets2ViewData();
+            Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
+
+            for (WalletCardViewData walletViewData: lstwalletViewData) {
+                for (WalletItemViewData itemViewData: walletViewData.getLstWallet()) {
+                    String tokenName = itemViewData.getName();
+
+                    if(!mapTokenViewData.containsKey(tokenName)) {
+                        mapTokenViewData.put(tokenName,
+                                new WalletCardViewData()
+                                        .setWalletType(WalletCardViewData.WalletType.TokenList)
+                                        .setTitle(tokenName)
+                                        .setLstWallet(new ArrayList<WalletItemViewData>() {{
+                                            add(itemViewData);
+                                        }})
+                        );
+                    }
+
+                    WalletCardViewData lstTokenViewData = mapTokenViewData.get(tokenName);
+                    lstTokenViewData.getLstWallet().add(
+                            new WalletItemViewData()
+                                    .setWalletItemType(WalletItemViewData.WalletItemType.Wallet)
+                                    .setSymbol(walletViewData.getTitle())
+                                    //.setName() TODO: 앗 주소 빠졌다.
+                                    .setAmount("0.00")
+                                    .setExchanged("0.00 USD")
+                    );
+                }
+            }
+            chachedTokenList = new ArrayList<WalletCardViewData> () {{ addAll(mapTokenViewData.values()); }};
+        }
+
+        return chachedTokenList;
+    }
+
     @Override //
     public void onAsyncRequestTotalAssetsData() {
         getMainWalletFragment().asyncResponseTotalAssetsData(
@@ -57,79 +111,14 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletF
 
     @Override
     public void onAsyncRequestWalletListData() {
-        getMainWalletFragment().asyncResponseWalletListData(
-                new ArrayList<WalletCardViewData>() {{
-                    add(new WalletCardViewData()
-                            .setTitle("아이콘 지갑1")
-                            .setWalletType(WalletCardViewData.WalletType.ICXwallet)
-                            .setLstWallet(new ArrayList<WalletItemViewData>() {{
-                                add(new WalletItemViewData()
-                                        .setWalletItemType(WalletItemViewData.WalletItemType.ICXcoin)
-                                        .setAmount("1,234.2600")
-                                        .setExchanged("187.274 USD")
-                                        .setStacked("70.1")
-                                        .setVotingPower("1,000.1234")
-                                        .setiScore("1,234.26000")
-                                );
-                                add(new WalletItemViewData()
-                                        .setWalletItemType(WalletItemViewData.WalletItemType.Token)
-                                        .setSymbol("ABC gogo")
-                                        .setSymbolLetter('A')
-                                        .setBgSymbolColor(TokenWalletItem.TokenColor.A.color)
-                                        .setAmount("1,234.2600")
-                                        .setExchanged("187.274 USD")
-                                );
-                                add(new WalletItemViewData()
-                                        .setWalletItemType(WalletItemViewData.WalletItemType.Token)
-                                        .setSymbol("Gaglin")
-                                        .setSymbolLetter('G')
-                                        .setBgSymbolColor(TokenWalletItem.TokenColor.G.color)
-                                        .setAmount("1,234.2600")
-                                        .setExchanged("187.274 USD")
-                                );
-                            }})
-                    );
-                    add(new WalletCardViewData()
-                            .setTitle("이더리움 지갑1")
-                            .setWalletType(WalletCardViewData.WalletType.ETHwallet)
-                            .setLstWallet(new ArrayList<WalletItemViewData>() {{
-                                add(new WalletItemViewData()
-                                        .setWalletItemType(WalletItemViewData.WalletItemType.ETHcoin)
-                                        .setAmount("1,234.2600")
-                                        .setExchanged("187.274 USD")
-                                );
-                                add(new WalletItemViewData()
-                                        .setWalletItemType(WalletItemViewData.WalletItemType.Token)
-                                        .setSymbol("ABC gogo")
-                                        .setSymbolLetter('A')
-                                        .setBgSymbolColor(TokenWalletItem.TokenColor.A.color)
-                                        .setAmount("1,234.2600")
-                                        .setExchanged("187.274 USD")
-                                );
-                                add(new WalletItemViewData()
-                                        .setWalletItemType(WalletItemViewData.WalletItemType.Token)
-                                        .setSymbol("Gaglin")
-                                        .setSymbolLetter('G')
-                                        .setBgSymbolColor(TokenWalletItem.TokenColor.G.color)
-                                        .setAmount("1,234.2600")
-                                        .setExchanged("187.274 USD")
-                                );
-                            }})
-                    );
-                }}
-        );
+        getMainWalletFragment()
+                .asyncResponseWalletListData(convertWallets2ViewData());
     }
 
     @Override
     public void onAsyncRequestTokenListData() {
-        getMainWalletFragment().asyncResponseTokenListData(
-                new ArrayList<WalletCardViewData>() {{
-                    add(new WalletCardViewData()
-                            .setWalletType(WalletCardViewData.WalletType.TokenList)
-                            .setTitle("ICON")
-                    );
-                }}
-        );
+        getMainWalletFragment()
+                .asyncResponseTokenListData(convertWallets2TokenViewData());
     }
 
     private MainWalletFragment getMainWalletFragment() {

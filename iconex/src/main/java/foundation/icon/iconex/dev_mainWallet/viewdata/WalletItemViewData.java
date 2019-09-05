@@ -1,6 +1,12 @@
 package foundation.icon.iconex.dev_mainWallet.viewdata;
 
+import android.util.Log;
+
+import foundation.icon.iconex.R;
+import foundation.icon.iconex.wallet.WalletEntry;
+
 public class WalletItemViewData {
+    private static String TAG = WalletItemViewData.class.getSimpleName();
     public enum WalletItemType { ICXcoin, ETHcoin, Token, Wallet}
 
     // common flied
@@ -22,6 +28,64 @@ public class WalletItemViewData {
     // for token
     private int bgSymbolColor;
     private char symbolLetter;
+
+    public static WalletItemViewData convertWalletEntry2ViewItem(WalletEntry walletEntry) {
+        WalletItemViewData itemViewData = new WalletItemViewData();
+
+        // Wallet Item(Entry) Type check
+        WalletItemViewData.WalletItemType walletItemType = null;
+        if ("COIN".equals(walletEntry.getType().toUpperCase())) {
+            if ("ICX".equals(walletEntry.getSymbol().toUpperCase())) {
+                walletItemType = WalletItemViewData.WalletItemType.ICXcoin;
+            } else if ("ETH".equals(walletEntry.getSymbol().toUpperCase())) {
+                walletItemType = WalletItemViewData.WalletItemType.ETHcoin;
+            } else {
+                Log.e(TAG, "unknow coin(symbol) type " + walletEntry.getSymbol());
+            }
+        } else if ("TOKEN".equals(walletEntry.getType().toUpperCase())) {
+            walletItemType = WalletItemViewData.WalletItemType.Token;
+        } else {
+            Log.e(TAG, "unknown token type " + walletEntry.getType());
+        }
+        itemViewData.setWalletItemType(walletItemType);
+
+        switch (walletItemType) {
+            case ICXcoin: {
+                itemViewData
+                        .setName(walletEntry.getName())
+                        .setSymbol(walletEntry.getSymbol())
+                        .setDrawableSymbolresId(R.drawable.img_logo_icon_sel)
+                        .setAmount("0.00")
+                        .setExchanged("0.00 USD")
+                        .setStacked("12.5")
+                        .setVotingPower("0.000")
+                        .setiScore("0.000");
+            } break;
+            case ETHcoin: {
+                itemViewData
+                        .setName(walletEntry.getName())
+                        .setSymbol(walletEntry.getSymbol())
+                        .setDrawableSymbolresId(R.drawable.img_logo_ethereum_nor)
+                        .setAmount("0.00")
+                        .setExchanged("0.00 USD");
+            } break;
+            case Token: {
+                itemViewData
+                        .setName(walletEntry.getName())
+                        .setSymbol(walletEntry.getSymbol())
+                        .setSymbolLetter(walletEntry.getName().charAt(0))
+//                        .setBgSymbolColor(tokenColor.getColor())
+                        .setAmount("0.00")
+                        .setExchanged("0.00 USD");
+                // need init background color
+            }
+            case Wallet:
+            default: {
+                // never reach here.
+            } break;
+        }
+        return itemViewData;
+    }
 
 
     public WalletItemType getWalletItemType() {

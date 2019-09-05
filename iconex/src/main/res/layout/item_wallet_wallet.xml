@@ -51,7 +51,7 @@
         android:text="Token Full Name A"/>
 
     <TextView
-        android:id="@+id/txt_exchange"
+        android:id="@+id/txt_exchanged"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 

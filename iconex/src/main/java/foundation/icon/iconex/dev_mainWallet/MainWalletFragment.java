@@ -275,7 +275,6 @@ public class MainWalletFragment extends Fragment {
 
                 WalletCardViewData data = mWalletDataList.get(position);
                 walletCardView.bindData(data);
-
                 return walletCardView;
             }
 
@@ -296,7 +295,7 @@ public class MainWalletFragment extends Fragment {
 
             @Override
             public int getItemPosition(@NonNull Object object) {
-                Log.d("go", "go");
+                Log.d("get Item Pos", object.getClass().getSimpleName());
                 return POSITION_NONE;
             }
         };
@@ -320,14 +319,12 @@ public class MainWalletFragment extends Fragment {
     private void updateCollapsable() {
         int position = walletViewPager.getCurrentItem();
         WalletCardView walletCardView = ((WalletCardView) walletViewPager.getChildAt(position));
-        boolean collapsable = walletCardView.getIsScrollTop();
+        boolean collapsable = walletCardView == null || walletCardView.getIsScrollTop();
         walletViewPager.setIsCollapsable(collapsable);
     }
 
     private WalletCardView onGenWalletCardView (ViewGroup container) {
         WalletCardView walletCardView = new WalletCardView(container.getContext());
-
-        // init UI
         walletCardView.setOnChagneIsScrollTopListener(new WalletCardView.OnChangeIsScrollTopListener() {
             @Override
             public void onChangeIsScrollTop(boolean isScrollTop) {
