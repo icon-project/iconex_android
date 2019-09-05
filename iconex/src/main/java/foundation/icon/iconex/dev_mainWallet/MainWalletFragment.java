@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -116,7 +115,7 @@ public class MainWalletFragment extends Fragment {
         // noting.
 
         // init actiobar
-        actionBar.setmOnActionClickListener(new CustomActionBar.OnActionClickListener() {
+        actionBar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
             @Override
             public void onClickAction(CustomActionBar.ClickAction action) {
                 switch (action) {

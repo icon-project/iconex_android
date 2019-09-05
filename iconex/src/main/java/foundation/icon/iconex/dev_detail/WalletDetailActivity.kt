@@ -4,9 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,29 +14,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonArray
-import foundation.icon.MyConstants
 import foundation.icon.iconex.R
-import foundation.icon.iconex.dev_mainWallet.RefreshLoadingView
+import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView
 import foundation.icon.iconex.service.NetworkService
-import foundation.icon.iconex.service.ServiceConstants
-import foundation.icon.iconex.wallet.detail.TransactionListAdapter
-import foundation.icon.iconex.wallet.detail.TxItem
 import foundation.icon.iconex.widgets.CustomActionBar
-import foundation.icon.iconex.widgets.RefreshLayout.LoadingHeaderView
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout
 
-class WalletDetailActivity: AppCompatActivity() {
+class WalletDetailActivity : AppCompatActivity() {
     private companion object {
         val TAG = WalletDetailActivity::class.java.simpleName
     }
 
     private lateinit var actionbar: CustomActionBar
     private lateinit var refresh: RefreshLayout
-    private lateinit var scroll : NestedScrollView
+    private lateinit var scroll: NestedScrollView
     private lateinit var info_wallet: WalletInfoView
     private lateinit var list_header: WalletDetailHeader
     private lateinit var list_header_fixed: WalletDetailHeader
@@ -69,11 +61,11 @@ class WalletDetailActivity: AppCompatActivity() {
         initView()
     }
 
-    private fun initView () {
+    private fun initView() {
         // load ui
         actionbar = findViewById(R.id.actionbar)
         refresh = findViewById(R.id.refresh)
-        scroll  = findViewById(R.id.scroll )
+        scroll = findViewById(R.id.scroll)
         info_wallet = findViewById(R.id.info_wallet)
         list_header = findViewById(R.id.list_header)
         list_header_fixed = findViewById(R.id.list_header_fixed)
@@ -92,8 +84,7 @@ class WalletDetailActivity: AppCompatActivity() {
         refresh.setRefreshEnable(true)
         refresh.addHeader(RefreshLoadingView(this))
 
-        scroll.setOnScrollChangeListener {
-            v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+        scroll.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
             list_header_fixed.visibility = if (scrollY >= info_wallet.height) View.VISIBLE else View.GONE
         }
 
