@@ -17,7 +17,7 @@ import retrofit2.http.Query;
  * Created by js on 2018. 2. 15..
  */
 
-public interface RESTApiService {
+public interface RESTApi {
 
     @Headers("Content-Type: application/json; charset=utf-8")
     @POST(ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3)

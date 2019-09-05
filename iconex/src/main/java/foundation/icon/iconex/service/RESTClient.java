@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RESTClient {
 
-    private RESTApiService RESTService;
+    private RESTApi RESTService;
     private Gson gson = new Gson();
 
     public RESTClient(String host) throws Exception {
@@ -41,7 +41,7 @@ public class RESTClient {
                 .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        RESTService = retrofit.create(RESTApiService.class);
+        RESTService = retrofit.create(RESTApi.class);
     }
 
     public Call<LCResponse> sendRequest(RequestData reqData) throws IOException {
