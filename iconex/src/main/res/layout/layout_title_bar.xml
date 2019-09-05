@@ -76,7 +76,7 @@
             android:fontFamily="@font/noto_sans_light"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="blank"
+            android:text="@string/cancel"
             android:textColor="@color/dark80"
             android:textSize="12dp" />
 
@@ -94,7 +94,8 @@
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/ic_input_delete" />
+                android:background="@drawable/ic_input_delete"
+                android:visibility="invisible" />
 
             <foundation.icon.iconex.widgets.MyEditText
                 android:id="@+id/edit_search"
@@ -104,6 +105,9 @@
                 android:layout_toStartOf="@id/btn_clear"
                 android:background="@color/colorWhite"
                 android:fontFamily="@font/noto_sans_regular"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
                 android:textColor="@color/dark"
                 android:textCursorDrawable="@drawable/custom_cursor"
                 android:textSize="14dp" />
@@ -113,6 +117,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/darkE6"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/darkE6" />
 </RelativeLayout>
