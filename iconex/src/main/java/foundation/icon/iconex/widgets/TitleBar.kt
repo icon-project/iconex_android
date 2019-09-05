@@ -12,7 +12,7 @@ import android.widget.TextView
 
 import foundation.icon.iconex.R
 
-class TitleBar : RelativeLayout, View.OnClickListener {
+class TitleBar : RelativeLayout {
 
     private var layoutTitle: ViewGroup? = null
     private var layoutSearch: ViewGroup? = null
@@ -25,8 +25,8 @@ class TitleBar : RelativeLayout, View.OnClickListener {
 
     private var type: Type? = null
     private var title: String? = null
-
-    private var mListener: OnTitleBarListener? = null
+    private var optionText: String? = null
+    private var hint: String? = null
 
     constructor(context: Context) : super(context) {
 
@@ -55,16 +55,12 @@ class TitleBar : RelativeLayout, View.OnClickListener {
         layoutSearch = v.findViewById(R.id.layout_search)
 
         btnClose = v.findViewById(R.id.btn_close)
-        btnClose!!.setOnClickListener(this)
         btnOption = v.findViewById(R.id.btn_option)
-        btnOption!!.setOnClickListener(this)
         btnCancel = v.findViewById(R.id.btn_cancel)
-        btnCancel!!.setOnClickListener(this)
-        btnClear = v.findViewById(R.id.btn_clear)
-        btnClose!!.setOnClickListener(this)
+
+        editSearch = v.findViewById(R.id.edit_search)
 
         txtTitle = v.findViewById(R.id.txt_title)
-        editSearch = v.findViewById(R.id.edit_search)
 
         init()
     }
@@ -84,11 +80,13 @@ class TitleBar : RelativeLayout, View.OnClickListener {
                 layoutSearch!!.visibility = View.GONE
 
                 txtTitle!!.text = title
+                btnOption!!.text = optionText
             }
 
             Type.SEARCH -> {
                 layoutTitle!!.visibility = View.GONE
                 layoutSearch!!.visibility = View.VISIBLE
+                editSearch!!.hint = hint
             }
         }
     }
@@ -109,23 +107,12 @@ class TitleBar : RelativeLayout, View.OnClickListener {
 
         if (typedArray.hasValue(R.styleable.TitleBar_title))
             title = typedArray.getString(R.styleable.TitleBar_title)
-    }
 
-    override fun onClick(view: View) {
+        if (typedArray.hasValue(R.styleable.TitleBar_optionText))
+            optionText = typedArray.getString(R.styleable.TitleBar_optionText)
 
-        when (view.id) {
-            R.id.btn_close -> {
-            }
-
-            R.id.btn_option -> {
-            }
-
-            R.id.btn_cancel -> {
-            }
-
-            R.id.btn_clear -> {
-            }
-        }
+        if (typedArray.hasValue(R.styleable.TitleBar_searchHint))
+            hint = typedArray.getString(R.styleable.TitleBar_searchHint)
     }
 
     private enum class Type constructor(val type: Int) {
@@ -145,18 +132,6 @@ class TitleBar : RelativeLayout, View.OnClickListener {
                 return null
             }
         }
-    }
-
-    fun setListener(listener: OnTitleBarListener) {
-        mListener = listener
-    }
-
-    interface OnTitleBarListener {
-        fun onClose()
-
-        fun onOption()
-
-        fun onCancel()
     }
 
     companion object {
