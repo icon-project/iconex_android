@@ -1,9 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="275dp"
     android:layout_height="match_parent"
+    android:layout_gravity="start"
     android:background="@drawable/bg_gradient_primary2white"
-    android:layout_gravity="start">
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+
+        android:layout_marginTop="94dp"
+        android:src="@drawable/logo_lock_symbol_active" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+
+        android:background="@android:color/transparent"
+        android:text="Create Wallet"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:text="Load Wallet"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:text="Export Wallet Bundle"
+        android:textColor="@android:color/white" />
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@android:color/white"/>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="30.5dp"
+
+        android:background="@android:color/transparent"
+        android:text="Screen Lock"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:text="App Ver. 0.0.1"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:text="@string/ICONexDisclaimers"
+        android:textColor="@android:color/white" />
+
+
 </LinearLayout>
