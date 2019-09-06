@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.control.BottomSheetMenu;
 import foundation.icon.iconex.dev_mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.dev_mainWallet.component.TotalAssetInfoView;
@@ -35,6 +37,7 @@ import foundation.icon.iconex.dev_mainWallet.component.WalletIndicator;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
@@ -60,6 +63,13 @@ public class MainWalletFragment extends Fragment {
     private Button btnVote;
     private Button btnIScore;
 
+    private Button btnCreateWallet;
+    private Button btnLoadWallet;
+    private Button btnExportWalletBundle;
+    private Button btnScreenLock;
+    private Button btnAppVer;
+    private Button btnICONexDisclaimers;
+
     // UI side field
     private PagerAdapter pagerAdapter = null;
     private LoadState mLoadState = LoadState.unloaded;
@@ -82,6 +92,25 @@ public class MainWalletFragment extends Fragment {
         void asyncRequestInitData();
         void asyncRequestRefreshData();
         void asyncRequestChangeExchangeUnit(ExchangeUnit exchangeUnit);
+    }
+
+    // manage wallet
+    public interface ManageWallet {
+        void renameWallet(WalletCardViewData viewData);
+        void manageToken(WalletCardViewData viewData);
+        void backupWallet(WalletCardViewData viewData);
+        void changeWalletPassword(WalletCardViewData viewData);
+        void removeWallet(WalletCardViewData viewData);
+    }
+
+    // side menu item
+    public interface SideMenu {
+        void createWallet();
+        void loadWallet();
+        void exportWalletBundle();
+        void screenLock();
+        void appVer();
+        void iconexDisclamers();
     }
 
     public static MainWalletFragment newInstance(){
@@ -157,6 +186,14 @@ public class MainWalletFragment extends Fragment {
         btnVote = v.findViewById(R.id.btn_vote);
         btnIScore = v.findViewById(R.id.btn_iscore);
 
+        btnCreateWallet = v.findViewById(R.id.menu_createWallet);
+        btnLoadWallet = v.findViewById(R.id.menu_loadWallet);
+        btnExportWalletBundle = v.findViewById(R.id.menu_exportWalletBundle);
+        btnScreenLock = v.findViewById(R.id.menu_screenLock);
+        btnAppVer = v.findViewById(R.id.menu_AppVer);
+        btnICONexDisclaimers = v.findViewById(R.id.menu_iconexDiscalimers);
+
+
         initUI(v);
         ((AsyncRequester) getActivity()).asyncRequestInitData();
 
@@ -166,6 +203,14 @@ public class MainWalletFragment extends Fragment {
     private void initUI(View content) {
         // init drawer
         // noting.
+
+        // init side menu
+        btnCreateWallet.setOnClickListener(sideMenuListener);
+        btnLoadWallet.setOnClickListener(sideMenuListener);
+        btnExportWalletBundle.setOnClickListener(sideMenuListener);
+        btnScreenLock.setOnClickListener(sideMenuListener);
+        btnAppVer.setOnClickListener(sideMenuListener);
+        btnICONexDisclaimers.setOnClickListener(sideMenuListener);
 
         // init actiobar
         actionBar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
@@ -388,6 +433,31 @@ public class MainWalletFragment extends Fragment {
             }
         });
 
+        walletCardView.setOnClickQrScanListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "not implement qr scan", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        walletCardView.setOnClickQrCodeListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "not implement qr code", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        walletCardView.setOnClickMoreListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetMenuDialog menuDialog = new BottomSheetMenuDialog(getActivity(), getString(R.string.manageWallet),
+                        BottomSheetMenuDialog.SHEET_TYPE.MENU);
+                menuDialog.setMenuData(makeMenus());
+                menuDialog.setOnItemClickListener(menuListener);
+                menuDialog.show();
+            }
+        });
+
         return walletCardView;
     }
 
@@ -532,6 +602,93 @@ public class MainWalletFragment extends Fragment {
 
             itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
         }
-        Log.d("DONE", "DOEN");
     }
+
+    private WalletCardViewData getCurrentWalletCardData() {
+        int currentPosition = walletViewPager.getCurrentItem();
+        WalletCardViewData viewData = mShownWalletDataList.get(currentPosition);
+        return viewData;
+    }
+
+    // ===========================
+    private ArrayList<BottomSheetMenu> makeMenus() {
+        ArrayList<BottomSheetMenu> menus = new ArrayList<>();
+        BottomSheetMenu menu = new BottomSheetMenu(R.drawable.ic_edit, getCurrentWalletCardData().getTitle());
+
+        menu.setTag(MyConstants.TAG_MENU_ALIAS);
+        menus.add(menu);
+
+        menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
+        menu.setTag(MyConstants.TAG_MENU_TOKEN);
+        menus.add(menu);
+
+        menu = new BottomSheetMenu(R.drawable.ic_backup, getString(R.string.menuBackupWallet));
+        menu.setTag(MyConstants.TAG_MENU_BACKUP);
+        menus.add(menu);
+
+        menu = new BottomSheetMenu(R.drawable.ic_side_lock, getString(R.string.menuChangePwd));
+        menu.setTag(MyConstants.TAG_MENU_PWD);
+        menus.add(menu);
+
+        menu = new BottomSheetMenu(R.drawable.ic_delete, getString(R.string.menuDeleteWallet));
+        menu.setTag(MyConstants.TAG_MENU_REMOVE);
+        menus.add(menu);
+
+        return menus;
+    }
+
+    private BottomSheetMenuDialog.OnItemClickListener menuListener = new BottomSheetMenuDialog.OnItemClickListener() {
+        @Override
+        public void onBasicItem(String item) { }
+        @Override
+        public void onCoinItem(int position) { }
+        @Override
+        public void onMenuItem(String tag) {
+            WalletCardViewData viewData = getCurrentWalletCardData();
+            switch (tag) {
+                case MyConstants.TAG_MENU_ALIAS:
+                    ((ManageWallet) getActivity()).renameWallet(viewData);
+                    break;
+                case MyConstants.TAG_MENU_TOKEN:
+                    ((ManageWallet) getActivity()).manageToken(viewData);
+                    break;
+                case MyConstants.TAG_MENU_BACKUP:
+                    ((ManageWallet) getActivity()).backupWallet(viewData);
+                    break;
+                case MyConstants.TAG_MENU_PWD:
+                    ((ManageWallet) getActivity()).changeWalletPassword(viewData);
+                    break;
+                case MyConstants.TAG_MENU_REMOVE:
+                    ((ManageWallet) getActivity()).removeWallet(viewData);
+                    break;
+            }
+        }
+    };
+
+    private View.OnClickListener sideMenuListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.menu_createWallet: {
+                    ((SideMenu) getActivity()).createWallet();
+                } break;
+                case R.id.menu_loadWallet: {
+                    ((SideMenu) getActivity()).loadWallet();
+                } break;
+                case R.id.menu_exportWalletBundle: {
+                    ((SideMenu) getActivity()).exportWalletBundle();
+                } break;
+                case R.id.menu_screenLock: {
+                    ((SideMenu) getActivity()).screenLock();
+                } break;
+                case R.id.menu_AppVer: {
+                    ((SideMenu) getActivity()).appVer();
+                } break;
+                case R.id.menu_iconexDiscalimers: {
+                    ((SideMenu) getActivity()).iconexDisclamers();
+                } break;
+            }
+            drawer.closeDrawer(Gravity.LEFT);
+        }
+    };
 }

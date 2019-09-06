@@ -15,6 +15,7 @@
         android:src="@drawable/logo_lock_symbol_active" />
 
     <Button
+        android:id="@+id/menu_createWallet"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
@@ -24,6 +25,7 @@
         android:textColor="@android:color/white" />
 
     <Button
+        android:id="@+id/menu_loadWallet"
         android:layout_width="match_parent"
         android:layout_height="60dp"
 
@@ -32,6 +34,7 @@
         android:textColor="@android:color/white" />
 
     <Button
+        android:id="@+id/menu_exportWalletBundle"
         android:layout_width="match_parent"
         android:layout_height="60dp"
 
@@ -50,6 +53,7 @@
 
 
     <Button
+        android:id="@+id/menu_screenLock"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="30.5dp"
@@ -59,6 +63,7 @@
         android:textColor="@android:color/white" />
 
     <Button
+        android:id="@+id/menu_AppVer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
 
@@ -67,6 +72,7 @@
         android:textColor="@android:color/white" />
 
     <Button
+        android:id="@+id/menu_iconexDiscalimers"
         android:layout_width="match_parent"
         android:layout_height="60dp"
 
