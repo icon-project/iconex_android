@@ -38,7 +38,7 @@ public class WalletWalletItem extends FrameLayout implements WalletItem{
     public void bind(WalletItemViewData data) {
         txtSymbol.setText(data.getSymbol());
         txtName.setText(data.getName());
-        txtAmount.setText(data.getAmount());
-        txtExchanged.setText(data.getExchanged());
+        txtAmount.setText(data.getTxtAmount());
+        txtExchanged.setText(data.getTxtExchanged());
     }
 }

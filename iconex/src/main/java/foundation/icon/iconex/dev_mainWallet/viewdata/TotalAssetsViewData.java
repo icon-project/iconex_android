@@ -5,6 +5,7 @@ import java.math.BigInteger;
 public class TotalAssetsViewData {
     private String totalAsset;
     private String votedPower;
+    private String exchangeUnit;
 
     public String getTotalAsset() {
         return totalAsset;
@@ -21,6 +22,15 @@ public class TotalAssetsViewData {
 
     public TotalAssetsViewData setVotedPower(String votedPower) {
         this.votedPower = votedPower;
+        return this;
+    }
+
+    public String getExchangeUnit() {
+        return exchangeUnit;
+    }
+
+    public TotalAssetsViewData setExchangeUnit(String exchangeUnit) {
+        this.exchangeUnit = exchangeUnit;
         return this;
     }
 }

@@ -10,14 +10,16 @@ public class WalletItemViewData {
     public enum WalletItemType { ICXcoin, ETHcoin, Token, Wallet}
 
     private int entryID;
+    private Double amount = null;
+    private Double exchanged = null;
 
     // common flied
     private WalletItemType walletItemType;
 
     private String symbol;
     private String name;
-    private String amount;
-    private String exchanged;
+    private String txtAmount;
+    private String txtExchanged;
 
     // only for icx coin
     private String stacked;
@@ -31,6 +33,23 @@ public class WalletItemViewData {
     private int bgSymbolColor;
     private char symbolLetter;
 
+    public WalletItemViewData () {}
+    public WalletItemViewData (WalletItemViewData data) {
+        entryID = data.entryID;
+        amount = data.amount;
+        exchanged = data.exchanged;
+        walletItemType = data.walletItemType;
+        symbol = data.symbol;
+        name = data.name;
+        txtAmount = data.txtAmount;
+        txtExchanged = data.txtExchanged;
+        stacked = data.stacked;
+        votingPower = data.votingPower;
+        iScore = data.iScore;
+        drawableSymbolresId = data.drawableSymbolresId;
+        bgSymbolColor = data.bgSymbolColor;
+        symbolLetter = data.symbolLetter;
+    }
     public static WalletItemViewData convertWalletEntry2ViewItem(WalletEntry walletEntry) {
         WalletItemViewData itemViewData = new WalletItemViewData();
 
@@ -58,8 +77,8 @@ public class WalletItemViewData {
                         .setName(walletEntry.getName())
                         .setSymbol(walletEntry.getSymbol())
                         .setDrawableSymbolresId(R.drawable.img_logo_icon_sel)
-                        .setAmount(walletEntry.getBalance())
-                        .setExchanged("-")
+                        .setTxtAmount(walletEntry.getBalance())
+                        .setTxtExchanged("-")
                         .setStacked("-")
                         .setVotingPower("-")
                         .setiScore("-");
@@ -69,8 +88,8 @@ public class WalletItemViewData {
                         .setName(walletEntry.getName())
                         .setSymbol(walletEntry.getSymbol())
                         .setDrawableSymbolresId(R.drawable.img_logo_ethereum_nor)
-                        .setAmount(walletEntry.getBalance())
-                        .setExchanged("-");
+                        .setTxtAmount(walletEntry.getBalance())
+                        .setTxtExchanged("-");
             } break;
             case Token: {
                 itemViewData
@@ -78,8 +97,8 @@ public class WalletItemViewData {
                         .setSymbol(walletEntry.getSymbol())
                         .setSymbolLetter(walletEntry.getName().charAt(0))
                         //.setBgSymbolColor(tokenColor.getColor()) not this timing
-                        .setAmount(walletEntry.getBalance())
-                        .setExchanged("-");
+                        .setTxtAmount(walletEntry.getBalance())
+                        .setTxtExchanged("-");
             }
             case Wallet:
             default: {
@@ -95,6 +114,24 @@ public class WalletItemViewData {
 
     public WalletItemViewData setEntryID(int entryID) {
         this.entryID = entryID;
+        return this;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public WalletItemViewData setAmount(Double amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    public Double getExchanged() {
+        return exchanged;
+    }
+
+    public WalletItemViewData setExchanged(Double exchanged) {
+        this.exchanged = exchanged;
         return this;
     }
 
@@ -125,21 +162,21 @@ public class WalletItemViewData {
         return this;
     }
 
-    public String getAmount() {
-        return amount;
+    public String getTxtAmount() {
+        return txtAmount;
     }
 
-    public WalletItemViewData setAmount(String amount) {
-        this.amount = amount;
+    public WalletItemViewData setTxtAmount(String txtAmount) {
+        this.txtAmount = txtAmount;
         return this;
     }
 
-    public String getExchanged() {
-        return exchanged;
+    public String getTxtExchanged() {
+        return txtExchanged;
     }
 
-    public WalletItemViewData setExchanged(String exchanged) {
-        this.exchanged = exchanged;
+    public WalletItemViewData setTxtExchanged(String txtExchanged) {
+        this.txtExchanged = txtExchanged;
         return this;
     }
 

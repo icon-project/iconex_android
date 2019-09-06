@@ -44,7 +44,7 @@ public class ETHcoinWalletItem extends FrameLayout implements WalletItem {
         // txtSymbol.setText(data.getSymbol());
         // txtName.setText(data.getName());
 
-        txtAmount.setText(data.getAmount());
-        txtExchanged.setText(data.getExchanged());
+        txtAmount.setText(data.getTxtAmount());
+        txtExchanged.setText(data.getTxtExchanged());
     }
 }

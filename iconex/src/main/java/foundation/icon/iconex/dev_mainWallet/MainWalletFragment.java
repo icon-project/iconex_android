@@ -23,6 +23,7 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import foundation.icon.iconex.R;
@@ -67,8 +68,10 @@ public class MainWalletFragment extends Fragment {
     private Handler asyncUpdater = new Handler();
 
     // Data field
+    public enum ExchangeUnit { USD, BTC, ETH }
     private List<WalletCardViewData> mShownWalletDataList = new ArrayList<>();
     private TotalAssetsViewData mTotalAssetsData = new TotalAssetsViewData();
+    private ExchangeUnit currentExchangeUnit = ExchangeUnit.USD;
 
     // cached data
     private List<WalletCardViewData> mWalletDataList = new ArrayList<>();
@@ -76,13 +79,61 @@ public class MainWalletFragment extends Fragment {
 
     // data loader
     public interface AsyncRequester {
-        void requestInitData();
-        void requestRefreshData();
+        void asyncRequestInitData();
+        void asyncRequestRefreshData();
+        void asyncRequestChangeExchangeUnit(ExchangeUnit exchangeUnit);
     }
 
     public static MainWalletFragment newInstance(){
         MainWalletFragment fragment = new MainWalletFragment();
         return fragment;
+    }
+
+    public ExchangeUnit getCurrentExchangeUnit() {
+        return  currentExchangeUnit;
+    }
+
+    public void asyncResponseInit (List<WalletCardViewData> walletDataList) {
+        asyncUpdater.post(new Runnable() {
+            @Override
+            public void run() {
+                updateWalletData(walletDataList);
+                updateWalletView();
+                mTotalAssetsData = new TotalAssetsViewData()
+                    .setTotalAsset("-")
+                    .setVotedPower("-")
+                    .setExchangeUnit(currentExchangeUnit.name());
+                updateTotalAssetsView();
+            }
+        });
+    }
+
+    public void asyncResponseRefreash (List<WalletCardViewData> walletDataList, TotalAssetsViewData totalAssetsViewData) {
+        asyncUpdater.post(new Runnable() {
+            @Override
+            public void run() {
+                updateWalletData(walletDataList);
+                updateWalletView();
+                mTotalAssetsData = totalAssetsViewData;
+                totalAssetsViewData.setExchangeUnit(currentExchangeUnit.name());
+                updateTotalAssetsView();
+                refresh.stopRefresh(true);
+            }
+        });
+    }
+
+    public void asyncResponseChangeExchangeUnit(ExchangeUnit exchangeUnit, TotalAssetsViewData totalAssetsViewData) {
+        asyncUpdater.post(new Runnable() {
+            @Override
+            public void run() {
+                currentExchangeUnit = exchangeUnit;
+                mTotalAssetsData = totalAssetsViewData;
+                totalAssetsViewData.setExchangeUnit(exchangeUnit.name());
+                updateTotalAssetsView();
+                updateWalletData(mWalletDataList);
+                updateWalletView();
+            }
+        });
     }
 
     @Nullable
@@ -107,7 +158,7 @@ public class MainWalletFragment extends Fragment {
         btnIScore = v.findViewById(R.id.btn_iscore);
 
         initUI(v);
-        ((AsyncRequester) getActivity()).requestInitData();
+        ((AsyncRequester) getActivity()).asyncRequestInitData();
 
         return v;
     }
@@ -172,6 +223,12 @@ public class MainWalletFragment extends Fragment {
             }
         };
         totalAssetInfoView.postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
+        totalAssetInfoView.setOnClickExchangeUnitButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeExchnageUnit();
+            }
+        });
 
         // init wallet viewpager.
         initWalletViewPager(content);
@@ -295,7 +352,6 @@ public class MainWalletFragment extends Fragment {
 
             @Override
             public int getItemPosition(@NonNull Object object) {
-                Log.d("get Item Pos", object.getClass().getSimpleName());
                 return POSITION_NONE;
             }
         };
@@ -341,7 +397,6 @@ public class MainWalletFragment extends Fragment {
             case unloaded:
             case loadedWalletData: {
                 mShownWalletDataList.addAll(mWalletDataList);
-                // TODO: hardcoding
                 actionBar.setTitle("지갑");
             } break;
             case loadedTokenData: {
@@ -359,7 +414,18 @@ public class MainWalletFragment extends Fragment {
     }
 
     private void refreshViewData() {
-        ((AsyncRequester) getActivity()).requestRefreshData();
+        ((AsyncRequester) getActivity()).asyncRequestRefreshData();
+    }
+
+    private void changeExchnageUnit() {
+        ExchangeUnit exchangeUnit = null;
+        switch (currentExchangeUnit) {
+            case USD: exchangeUnit = ExchangeUnit.BTC; break;
+            case BTC: exchangeUnit = ExchangeUnit.ETH; break;
+            case ETH: exchangeUnit = ExchangeUnit.USD; break;
+        }
+
+        ((AsyncRequester) getActivity()).asyncRequestChangeExchangeUnit(exchangeUnit);
     }
 
     private void toggleWalletDataLoad() {
@@ -377,61 +443,95 @@ public class MainWalletFragment extends Fragment {
     }
 
     private void updateWalletData(List<WalletCardViewData> walletDataList) {
+        String formatTotalAsset = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? "%,.2f" : "%,.4f";
         mWalletDataList = walletDataList;
-        Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
 
+        Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
         for (WalletCardViewData walletViewData: mWalletDataList) {
             for (WalletItemViewData itemViewData: walletViewData.getLstWallet()) {
+                // update balance, exchange (double -> string)
+                String txtAmount = itemViewData.getAmount() == null ? "-" :
+                        String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getAmount());
+
+                Log.d("hasdf", formatTotalAsset + "");
+                String txtExchanged = itemViewData.getExchanged() == null ? "-" :
+                        String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getExchanged())
+                                + " " + currentExchangeUnit.name();
+
+                itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
+
+
                 String tokenName = itemViewData.getName();
+                WalletItemViewData topToken = null;
 
                 if(!mapTokenViewData.containsKey(tokenName)) {
+                    topToken = new WalletItemViewData(itemViewData);
+                    final WalletItemViewData _topToken = topToken;
                     mapTokenViewData.put(tokenName,
+                            // create wallet card
                             new WalletCardViewData()
                                     .setWalletType(WalletCardViewData.WalletType.TokenList)
                                     .setTitle(tokenName)
                                     .setLstWallet(new ArrayList<WalletItemViewData>() {{
-                                        add(itemViewData);
+                                        add(_topToken); // add top token
                                     }})
+
                     );
                 }
 
+                // wallet item view
                 WalletCardViewData lstTokenViewData = mapTokenViewData.get(tokenName);
                 lstTokenViewData.getLstWallet().add(
                         new WalletItemViewData()
                                 .setWalletItemType(WalletItemViewData.WalletItemType.Wallet)
                                 .setSymbol(walletViewData.getTitle())
-                                //.setName() TODO: 앗 주소 빠졌다.
-                                .setAmount("0.00")
-                                .setExchanged("0.00 USD")
+                                .setName(walletViewData.getAddress())
+                                .setAmount(itemViewData.getAmount())
+                                .setExchanged(itemViewData.getExchanged())
+                                .setTxtAmount(itemViewData.getTxtAmount())
+                                .setTxtExchanged(itemViewData.getTxtExchanged())
                 );
+
+                // accumulate top token
+                if ( topToken == null) {
+                    topToken = lstTokenViewData.getLstWallet().get(0);
+                    Double itemAmount = itemViewData.getAmount();
+                    if (itemAmount != null) {
+                        Double tokenAmount = topToken.getAmount();
+                        if (tokenAmount != null) {
+                            topToken.setAmount(itemAmount + tokenAmount);
+                        } else {
+                            topToken.setExchanged(itemAmount);
+                        }
+                    }
+                    Double itemExchanged = itemViewData.getExchanged();
+                    if (itemExchanged != null) {
+                        Double tokenExchanged = topToken.getExchanged();
+                        if (tokenExchanged != null) {
+                            topToken.setExchanged(itemExchanged + tokenExchanged);
+                        } else {
+                            topToken.setExchanged(itemExchanged);
+                        }
+                    }
+
+                }
+
             }
         }
+
         mTokenDataList = new ArrayList<WalletCardViewData> () {{ addAll(mapTokenViewData.values()); }};
-    }
+        for (WalletCardViewData cardViewData: mTokenDataList) {
+            WalletItemViewData itemViewData = cardViewData.getLstWallet().get(0);
+            // update balance, exchange (double -> string)
+            String txtAmount = itemViewData.getAmount() == null ? "-" :
+                    String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getAmount());
 
-    public void asyncResponseInit (List<WalletCardViewData> walletDataList, TotalAssetsViewData totalAssetsViewData) {
-        asyncUpdater.post(new Runnable() {
-            @Override
-            public void run() {
-                updateWalletData(walletDataList);
-                updateWalletView();
-                mTotalAssetsData = totalAssetsViewData;
-                updateTotalAssetsView();
-            }
-        });
-    }
+            String txtExchanged = itemViewData.getExchanged() == null ? "-" :
+                    String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getExchanged())
+                            + " " + currentExchangeUnit.name();
 
-    public void asyncResponseRefreash (
-            List<WalletCardViewData> walletDataList, TotalAssetsViewData totalAssetsViewData) {
-        asyncUpdater.post(new Runnable() {
-            @Override
-            public void run() {
-                updateWalletData(walletDataList);
-                updateWalletView();
-                mTotalAssetsData = totalAssetsViewData;
-                updateTotalAssetsView();
-                refresh.stopRefresh(true);
-            }
-        });
+            itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
+        }
+        Log.d("DONE", "DOEN");
     }
 }

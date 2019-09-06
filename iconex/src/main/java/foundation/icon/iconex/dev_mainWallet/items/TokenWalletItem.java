@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -13,9 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
@@ -120,8 +116,8 @@ public class TokenWalletItem extends FrameLayout implements WalletItem{
     public void bind(WalletItemViewData data) {
         mTxtSymbol.setText(data.getSymbol());
         mTxtName.setText(data.getName());
-        mTxtAmount.setText(data.getAmount());
-        mTxtExchanged.setText(data.getExchanged());
+        mTxtAmount.setText(data.getTxtAmount());
+        mTxtExchanged.setText(data.getTxtExchanged());
 
         setLetterSymbol(data.getSymbolLetter(), data.getBgSymbolColor());
     }
