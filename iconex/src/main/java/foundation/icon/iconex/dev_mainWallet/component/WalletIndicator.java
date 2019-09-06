@@ -66,7 +66,7 @@ public class WalletIndicator extends LinearLayout {
         mLstImg.clear();
 
         int dp4 = dp2px(4);
-        for (int i = 0; mSize > i && 7 >= i; i++) {
+        for (int i = 0; mSize > i; i++) {
             ImageView img = new ImageView(getContext());
 
             LayoutParams layoutParams = new LayoutParams(
@@ -90,15 +90,9 @@ public class WalletIndicator extends LinearLayout {
     }
 
     public void setIndex(int index) {
-        if (5 >= mSize) {
-            for (int i = 0; mSize > i; i++ ) {
-                ImageView img = mLstImg.get(i);
-                img.setAlpha(index == i ? 0.7f : 0.2f);
-            }
-        } else if (6 == mSize) {
-
-        } else { // mSize >= 7
-
+        for (int i = 0; mSize > i; i++ ) {
+            ImageView img = mLstImg.get(i);
+            img.setAlpha(index == i ? 0.7f : 0.2f);
         }
 
         mIndex = index;

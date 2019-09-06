@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.wallet.main.MainActivity;
 
 public class SettingLockActivity extends AppCompatActivity implements AppLockManageFragment.OnAppLockManageListener,
@@ -54,7 +55,7 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
                         btnBack.setBackgroundResource(R.drawable.ic_appbar_close);
                     }
                 } else {
-                    startActivity(new Intent(SettingLockActivity.this, MainActivity.class)
+                    startActivity(new Intent(SettingLockActivity.this, MainWalletActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                     finish();
                 }
@@ -148,7 +149,7 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
                 btnBack.setBackgroundResource(R.drawable.ic_appbar_close);
             }
         } else {
-            startActivity(new Intent(SettingLockActivity.this, MainActivity.class)
+            startActivity(new Intent(SettingLockActivity.this, MainWalletActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         }

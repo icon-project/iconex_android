@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.view.ui.auth.AuthFingerprintFragment;
 import foundation.icon.iconex.view.ui.auth.AuthLockNumFragment;
@@ -67,7 +68,7 @@ public class AuthActivity extends AppCompatActivity implements AuthFingerprintFr
             PreferenceUtil preferenceUtil = new PreferenceUtil(this);
             preferenceUtil.saveBeingLock(false);
 
-            startActivity(new Intent(this, MainActivity.class)
+            startActivity(new Intent(this, MainWalletActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         }
@@ -84,7 +85,7 @@ public class AuthActivity extends AppCompatActivity implements AuthFingerprintFr
         } else {
             preferenceUtil.saveBeingLock(false);
 
-            startActivity(new Intent(this, MainActivity.class)
+            startActivity(new Intent(this, MainWalletActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                     .putExtra(EXTRA_INVALIDATED, true));
             finish();
@@ -104,7 +105,7 @@ public class AuthActivity extends AppCompatActivity implements AuthFingerprintFr
             PreferenceUtil preferenceUtil = new PreferenceUtil(this);
             preferenceUtil.saveBeingLock(false);
 
-            startActivity(new Intent(this, MainActivity.class)
+            startActivity(new Intent(this, MainWalletActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         }

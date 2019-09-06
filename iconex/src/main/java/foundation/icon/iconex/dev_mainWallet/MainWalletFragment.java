@@ -523,7 +523,6 @@ public class MainWalletFragment extends Fragment {
                 String txtAmount = itemViewData.getAmount() == null ? "-" :
                         String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getAmount());
 
-                Log.d("hasdf", formatTotalAsset + "");
                 String txtExchanged = itemViewData.getExchanged() == null ? "-" :
                         String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getExchanged())
                                 + " " + currentExchangeUnit.name();

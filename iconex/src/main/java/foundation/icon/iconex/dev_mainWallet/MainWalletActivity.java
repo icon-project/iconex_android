@@ -2,6 +2,7 @@ package foundation.icon.iconex.dev_mainWallet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -10,7 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.spongycastle.util.encoders.Hex;
+
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,17 +30,24 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
+import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.CreateWalletActivity;
+import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.view.LoadWalletActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
 import foundation.icon.iconex.wallet.main.MainActivity;
+import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
+import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import loopchain.icon.wallet.core.Constants;
+import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
 public class MainWalletActivity extends AppCompatActivity implements
         MainWalletFragment.AsyncRequester,
@@ -302,14 +316,37 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void backupWallet(WalletCardViewData viewData) {
+        Wallet targetWallet = findWalletByViewData(viewData);
+
         EditTextDialog editTextDialog = new EditTextDialog(this, getString(R.string.enterWalletPassword));
         editTextDialog.setHint(getString(R.string.hintWalletPassword));
         editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
         editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.BACKUP);
         editTextDialog.setOnPasswordCallback(new EditTextDialog.OnPasswordCallback() {
             @Override
-            public void onConfirm(EditTextDialog.RESULT_PWD result, String text) {
+            public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
+                JsonObject keyStore = new Gson().fromJson(targetWallet.getKeyStore(), JsonObject.class);
+                byte[] bytePrivKey;
+                try {
+                    JsonObject crypto = null;
+                    if (keyStore.has("crypto"))
+                        crypto = keyStore.get("crypto").getAsJsonObject();
+                    else
+                        crypto = keyStore.get("Crypto").getAsJsonObject();
 
+                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, targetWallet.getAddress(), crypto, targetWallet.getCoinType());
+                    if (bytePrivKey != null) {
+                        startActivity(new Intent(MainWalletActivity.this, WalletBackUpActivity.class)
+                                .putExtra("walletInfo", (Serializable) targetWallet)
+                                .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
+
+                        editTextDialog.dismiss();
+                    } else {
+                        editTextDialog.setError(getString(R.string.errPassword));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         editTextDialog.show();
@@ -318,13 +355,56 @@ public class MainWalletActivity extends AppCompatActivity implements
     @Override
     public void changeWalletPassword(WalletCardViewData viewData) {
         Wallet targetWallet = findWalletByViewData(viewData);
-
-
+        startActivity(new Intent(this, WalletPwdChangeActivity.class)
+                .putExtra("walletInfo", (Serializable) targetWallet));
     }
 
     @Override
     public void removeWallet(WalletCardViewData viewData) {
+        Wallet targetWallet = findWalletByViewData(viewData);
 
+        EditTextDialog editTextDialog = new EditTextDialog(this, getString(R.string.enterWalletPassword));
+        editTextDialog.setHint(getString(R.string.hintWalletPassword));
+        editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
+        editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.REMOVE);
+        editTextDialog.setOnPasswordCallback(new EditTextDialog.OnPasswordCallback() {
+            @Override
+            public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
+                JsonObject keyStore = new Gson().fromJson(targetWallet.getKeyStore(), JsonObject.class);
+                byte[] bytePrivKey;
+                try {
+                    JsonObject crypto = null;
+                    if (keyStore.has("crypto"))
+                        crypto = keyStore.get("crypto").getAsJsonObject();
+                    else
+                        crypto = keyStore.get("Crypto").getAsJsonObject();
+
+                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, targetWallet.getAddress(), crypto, targetWallet.getCoinType());
+                    if (bytePrivKey != null) {
+                        RealmUtil.removeWallet(targetWallet.getAddress());
+                        try {
+                            RealmUtil.loadWallet();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        if (ICONexApp.wallets.size() == 0) {
+                            startActivity(new Intent(MainWalletActivity.this, IntroActivity.class)
+                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                        } else {
+                            setBalances(cachedIcxBalance, cachedEthBalance, cachedErrBalance);
+                        }
+
+                        editTextDialog.dismiss();
+                    } else {
+                        editTextDialog.setError(getString(R.string.errPassword));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        editTextDialog.show();
     }
 
     // ==================================== side menu item

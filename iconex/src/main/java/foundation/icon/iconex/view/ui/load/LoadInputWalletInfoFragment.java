@@ -20,6 +20,7 @@ import java.util.List;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.util.Utils;
@@ -271,7 +272,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
                             @Override
                             public void onComplete() {
-                                startActivity(new Intent(getActivity(), MainActivity.class)
+                                startActivity(new Intent(getActivity(), MainWalletActivity.class)
                                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                             }
                         });
