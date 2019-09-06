@@ -45,6 +45,15 @@ public class TotalAssetInfoView extends FrameLayout {
         mViewPager = findViewById(R.id.viewpager);
         mIndicator = findViewById(R.id.indicator);
 
+        // inflate Total Asset view ==================
+        mTotalAsset = new TotalAssetsLayout(getContext());
+
+        // inflate Voted Power view ==================
+        mVotedPower = new TotalAssetsLayout(getContext());
+        mVotedPower.txtUint.setVisibility(GONE);
+        mVotedPower.btnToggle.setVisibility(GONE);
+        mVotedPower.txtAsset.setText("90.8 %");
+
         // set viewpage Adapter
         mViewPager.setAdapter(new PagerAdapter() {
             @NonNull
@@ -53,17 +62,10 @@ public class TotalAssetInfoView extends FrameLayout {
                 switch (position) {
                     default:
                     case 0: {
-                        // inflate Total Asset view ==================
-                        mTotalAsset = new TotalAssetsLayout(container.getContext());
                         container.addView(mTotalAsset);
                         return mTotalAsset;
                     }
                     case 1: {
-                        // inflate Voted Power view ==================
-                        mVotedPower = new TotalAssetsLayout(container.getContext());
-                        mVotedPower.txtUint.setVisibility(GONE);
-                        mVotedPower.btnToggle.setVisibility(GONE);
-                        mVotedPower.txtAsset.setText("90.8 %");
                         container.addView(mVotedPower);
                         return mVotedPower;
                     }
@@ -103,6 +105,7 @@ public class TotalAssetInfoView extends FrameLayout {
     }
 
     public void bind(TotalAssetsViewData data) {
-
+        mTotalAsset.txtAsset.setText(data.getTotalAsset());
+        mVotedPower.txtAsset.setText(data.getVotedPower());
     }
 }

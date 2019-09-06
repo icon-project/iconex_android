@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/primary00</item>
+        <item name="android:statusBarColor">@color/primary</item>
     </style>
 
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">

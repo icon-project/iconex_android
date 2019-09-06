@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.dialogs.PermissionConfirmDialog;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
@@ -29,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.primary00));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.primary));
         setContentView(R.layout.activity_splash);
 
         if (getIntent() != null)
@@ -99,7 +100,7 @@ public class SplashActivity extends AppCompatActivity {
                 StartAuthenticate startAuthenticate = new StartAuthenticate();
                 startAuthenticate.execute();
             } else {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class)
+                startActivity(new Intent(SplashActivity.this, MainWalletActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
             }
         } else {
