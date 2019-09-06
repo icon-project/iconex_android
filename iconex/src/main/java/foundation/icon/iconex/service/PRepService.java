@@ -11,6 +11,7 @@ import foundation.icon.icx.transport.http.HttpProvider;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
 import foundation.icon.icx.transport.jsonrpc.RpcValue;
+import loopchain.icon.wallet.core.Constants;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
@@ -29,7 +30,7 @@ public class PRepService {
 
     public RpcItem getPreps() throws IOException {
         Call<RpcItem> call = new Call.Builder()
-                .to(new Address("cx0000000000000000000000000000000000000000"))
+                .to(new Address(Constants.ADDRESS_ZERO))
                 .method("getPReps")
                 .build();
 
@@ -42,7 +43,7 @@ public class PRepService {
                 .build();
 
         Call<RpcItem> call = new Call.Builder()
-                .to(new Address("cx0000000000000000000000000000000000000000"))
+                .to(new Address(Constants.ADDRESS_ZERO))
                 .method("getPRep")
                 .params(params)
                 .build();
@@ -56,7 +57,7 @@ public class PRepService {
                 .build();
 
         Call<RpcItem> call = new Call.Builder()
-                .to(new Address("cx0000000000000000000000000000000000000000"))
+                .to(new Address(Constants.ADDRESS_ZERO))
                 .method("queryIScore")
                 .params(params)
                 .build();

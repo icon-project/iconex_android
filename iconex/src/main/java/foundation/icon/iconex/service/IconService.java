@@ -3,9 +3,7 @@ package foundation.icon.iconex.service;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.icx.Call;
-import foundation.icon.icx.Request;
 import foundation.icon.icx.SignedTransaction;
 import foundation.icon.icx.Transaction;
 import foundation.icon.icx.TransactionBuilder;
@@ -14,7 +12,6 @@ import foundation.icon.icx.data.Bytes;
 import foundation.icon.icx.data.IconAmount;
 import foundation.icon.icx.transport.http.HttpProvider;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
-import foundation.icon.icx.transport.jsonrpc.RpcValue;
 import loopchain.icon.wallet.core.Constants;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -33,8 +30,8 @@ public class IconService {
         iconService = new foundation.icon.icx.IconService(new HttpProvider(httpClient, host));
     }
 
-    public BigInteger getBalance(String balance) throws IOException {
-        return iconService.getBalance(new Address(balance)).execute();
+    public BigInteger getBalance(String address) throws IOException {
+        return iconService.getBalance(new Address(address)).execute();
     }
 
     public Bytes sendTransaction(SignedTransaction transaction) throws IOException {
@@ -51,26 +48,24 @@ public class IconService {
     }
 
     public BigInteger estimateStep(String address) throws IOException {
-        foundation.icon.icx.IconService test =
-                new foundation.icon.icx.IconService(new HttpProvider(Urls.Yeouido.Node.getUrl(), 3));
+        foundation.icon.icx.IconService estimated =
+                new foundation.icon.icx.IconService(new HttpProvider("https://test-ctz.solidwallet.io", 3));
         BigInteger networkId = new BigInteger("3");
         Address fromAddress = new Address(address);
-        Address toAddress = new Address(Constants.ADDRESS_GOVERNANCE);
+        Address toAddress = new Address(Constants.ADDRESS_ZERO);
 
         BigInteger value = IconAmount.of("0", IconAmount.Unit.ICX).toLoop();
-        long timestamp = System.currentTimeMillis() * 1000L;
-        BigInteger nonce = new BigInteger("1");
+//        long timestamp = System.currentTimeMillis() * 1000L;
+//        BigInteger nonce = new BigInteger("1");
 
         Transaction transaction = TransactionBuilder.newBuilder()
                 .nid(networkId)
                 .from(fromAddress)
                 .to(toAddress)
                 .value(value)
-                .timestamp(new BigInteger(Long.toString(timestamp)))
-                .nonce(nonce)
                 .call("claimIScore")
                 .build();
 
-        return test.estimateStep(transaction).execute();
+        return estimated.estimateStep(transaction).execute();
     }
 }
