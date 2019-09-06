@@ -1,5 +1,6 @@
 package foundation.icon.iconex.dev_mainWallet;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,11 +21,13 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView;
@@ -35,13 +38,16 @@ import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.util.ScreenUnit;
+import foundation.icon.iconex.view.IScoreActivity;
+import foundation.icon.iconex.view.PRepListActivity;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
 
 public class MainWalletFragment extends Fragment {
 
-    private enum LoadState { loadedWalletData, loadedTokenData, unloaded }
+    private enum LoadState {loadedWalletData, loadedTokenData, unloaded}
 
     // UI field
     private DrawerLayout drawer;
@@ -77,10 +83,11 @@ public class MainWalletFragment extends Fragment {
     // data loader
     public interface AsyncRequester {
         void requestInitData();
+
         void requestRefreshData();
     }
 
-    public static MainWalletFragment newInstance(){
+    public static MainWalletFragment newInstance() {
         MainWalletFragment fragment = new MainWalletFragment();
         return fragment;
     }
@@ -123,15 +130,18 @@ public class MainWalletFragment extends Fragment {
                 switch (action) {
                     case btnStart: {
                         drawer.openDrawer(Gravity.LEFT);
-                    } break;
+                    }
+                    break;
                     case btnEnd: {
                         // TODO: not implement
                         Toast.makeText(getContext(), "not implement", Toast.LENGTH_SHORT).show();
-                    } break;
+                    }
+                    break;
                     case btnToggle: {
                         toggleWalletDataLoad();
                         Toast.makeText(getContext(), "not implement", Toast.LENGTH_SHORT).show();
-                    } break;
+                    }
+                    break;
                 }
             }
         });
@@ -143,11 +153,13 @@ public class MainWalletFragment extends Fragment {
                 super.onRefreshBefore(scrollY, headerHeight);
                 walletViewPager.setIsExpanable(false);
             }
+
             @Override
             public void onRefreshComplete(int scrollY, int headerHeight, boolean isRefreshSuccess) {
                 super.onRefreshComplete(scrollY, headerHeight, isRefreshSuccess);
                 walletViewPager.setIsExpanable(true);
             }
+
             @Override
             public void onRefreshCancel(int scrollY, int headerHeight) {
                 super.onRefreshCancel(scrollY, headerHeight);
@@ -156,14 +168,18 @@ public class MainWalletFragment extends Fragment {
         });
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() { refreshViewData(); }
+            public void onRefresh() {
+                refreshViewData();
+            }
+
             @Override
-            public void onLoadMore() { }
+            public void onLoadMore() {
+            }
         });
         refresh.setRefreshEnable(true);
 
         // init totalAssetInfoView.
-        totalAssetInfoLooper  = new Runnable() {
+        totalAssetInfoLooper = new Runnable() {
             @Override
             public void run() {
                 totalAssetInfoView.postDelayed(this, LOOPING_TIME_INTERVAL);
@@ -201,21 +217,28 @@ public class MainWalletFragment extends Fragment {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.btn_preps: {
-                        Toast.makeText(getContext(), "not implement btn_preps", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getContext(), PRepListActivity.class));
                         setBubbleMenuShow(false);
-                    } break;
+                    }
+                    break;
                     case R.id.btn_stake: {
                         Toast.makeText(getContext(), "not implement btn_stake", Toast.LENGTH_SHORT).show();
                         setBubbleMenuShow(false);
-                    } break;
+                    }
+                    break;
                     case R.id.btn_vote: {
                         Toast.makeText(getContext(), "not implement btn_vote", Toast.LENGTH_SHORT).show();
                         setBubbleMenuShow(false);
-                    } break;
+                    }
+                    break;
                     case R.id.btn_iscore: {
-                        Toast.makeText(getContext(), "not implement btn_iscore", Toast.LENGTH_SHORT).show();
+                        int position = walletViewPager.getCurrentItem();
+                        Wallet wallet = ICONexApp.wallets.get(position);
+                        startActivity(new Intent(getContext(), IScoreActivity.class)
+                                .putExtra("wallet", (Serializable) wallet));
                         setBubbleMenuShow(false);
-                    } break;
+                    }
+                    break;
                 }
             }
         };
@@ -259,10 +282,12 @@ public class MainWalletFragment extends Fragment {
                 switch (state) {
                     case Expaned: {
                         refresh.setRefreshEnable(false);
-                    } break;
+                    }
+                    break;
                     case Collapsed: {
                         refresh.setRefreshEnable(true);
-                    } break;
+                    }
+                    break;
                 }
             }
         });
@@ -323,7 +348,7 @@ public class MainWalletFragment extends Fragment {
         walletViewPager.setIsCollapsable(collapsable);
     }
 
-    private WalletCardView onGenWalletCardView (ViewGroup container) {
+    private WalletCardView onGenWalletCardView(ViewGroup container) {
         WalletCardView walletCardView = new WalletCardView(container.getContext());
         walletCardView.setOnChagneIsScrollTopListener(new WalletCardView.OnChangeIsScrollTopListener() {
             @Override
@@ -343,12 +368,14 @@ public class MainWalletFragment extends Fragment {
                 mShownWalletDataList.addAll(mWalletDataList);
                 // TODO: hardcoding
                 actionBar.setTitle("지갑");
-            } break;
+            }
+            break;
             case loadedTokenData: {
                 mShownWalletDataList.addAll(mTokenDataList);
                 // TODO: hardcoding
                 actionBar.setTitle("코인&토큰");
-            } break;
+            }
+            break;
         }
         pagerAdapter.notifyDataSetChanged();
         walletIndicator.setSize(mShownWalletDataList.size());
@@ -367,11 +394,13 @@ public class MainWalletFragment extends Fragment {
         switch (mLoadState) {
             case loadedTokenData: {
                 mLoadState = LoadState.loadedWalletData;
-            } break;
+            }
+            break;
             case unloaded:
             case loadedWalletData: {
                 mLoadState = LoadState.loadedTokenData;
-            } break;
+            }
+            break;
         }
         updateWalletView();
     }
@@ -380,11 +409,11 @@ public class MainWalletFragment extends Fragment {
         mWalletDataList = walletDataList;
         Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
 
-        for (WalletCardViewData walletViewData: mWalletDataList) {
-            for (WalletItemViewData itemViewData: walletViewData.getLstWallet()) {
+        for (WalletCardViewData walletViewData : mWalletDataList) {
+            for (WalletItemViewData itemViewData : walletViewData.getLstWallet()) {
                 String tokenName = itemViewData.getName();
 
-                if(!mapTokenViewData.containsKey(tokenName)) {
+                if (!mapTokenViewData.containsKey(tokenName)) {
                     mapTokenViewData.put(tokenName,
                             new WalletCardViewData()
                                     .setWalletType(WalletCardViewData.WalletType.TokenList)
@@ -406,10 +435,12 @@ public class MainWalletFragment extends Fragment {
                 );
             }
         }
-        mTokenDataList = new ArrayList<WalletCardViewData> () {{ addAll(mapTokenViewData.values()); }};
+        mTokenDataList = new ArrayList<WalletCardViewData>() {{
+            addAll(mapTokenViewData.values());
+        }};
     }
 
-    public void asyncResponseInit (List<WalletCardViewData> walletDataList, TotalAssetsViewData totalAssetsViewData) {
+    public void asyncResponseInit(List<WalletCardViewData> walletDataList, TotalAssetsViewData totalAssetsViewData) {
         asyncUpdater.post(new Runnable() {
             @Override
             public void run() {
@@ -421,7 +452,7 @@ public class MainWalletFragment extends Fragment {
         });
     }
 
-    public void asyncResponseRefreash (
+    public void asyncResponseRefreash(
             List<WalletCardViewData> walletDataList, TotalAssetsViewData totalAssetsViewData) {
         asyncUpdater.post(new Runnable() {
             @Override
