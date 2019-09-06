@@ -1,14 +1,12 @@
 package foundation.icon.iconex.dev_mainWallet;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +79,7 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override // MainWalletServiceHelper.OnLoadRemoteDataListener
     public void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance) {
-        mixWalletDataWithBalance(icxBalance, ethBalance, errBalance);
+        setBalance(icxBalance, ethBalance, errBalance);
     }
 
     private MainWalletFragment getMainWalletFragment() {
@@ -97,7 +95,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         return walletViewDatas;
     }
 
-    private void mixWalletDataWithBalance(
+    private void setBalance(
             List<String[]> icxBalance,
             List<String[]> ethBalance,
             List<String[]> errBalance) {
