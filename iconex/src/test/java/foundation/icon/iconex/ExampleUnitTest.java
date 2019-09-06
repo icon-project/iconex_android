@@ -3,6 +3,7 @@ package foundation.icon.iconex;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +34,12 @@ public class ExampleUnitTest {
         IconService iconService = new IconService(Urls.Euljiro.Node.getUrl());
 
         try {
-            RpcItem result = iconService.getStepPrice();
-            RpcValue value = result.asValue();
-            System.out.println(value);
-            System.out.println(iconService.estimateStep("hx8f21e5c54f006b6a5d5fe65486908592151a7c57"));
+//            RpcItem result = iconService.getStepPrice();
+//            RpcValue value = result.asValue();
+//            System.out.println(value);
+//            System.out.println(iconService.estimateStep("hx8f21e5c54f006b6a5d5fe65486908592151a7c57"));
+
+            BigInteger step = iconService.estimateStep("hx8f21e5c54f006b6a5d5fe65486908592151a7c57");
         } catch (IOException e) {
             e.printStackTrace();
         }
