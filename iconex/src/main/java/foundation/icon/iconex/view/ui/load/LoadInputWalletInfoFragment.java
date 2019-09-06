@@ -394,7 +394,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                     inputPwd.getText(), PKIUtils.hexDecode(privateKey));
         }
 
-        wallet.setCoinType(coin.getSymbol());
+        wallet.setCoinType(coin.getSymbol().toUpperCase());
         wallet.setAlias(inputAlias.getText());
         wallet.setAddress(loadedWallet[0]);
         wallet.setKeyStore(loadedWallet[2]);
