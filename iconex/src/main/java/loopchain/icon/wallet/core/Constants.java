@@ -24,6 +24,7 @@ public class Constants {
     public static final String DATA_MESSAGE = "message";
 
     public static final String ADDRESS_GOVERNANCE = "cx0000000000000000000000000000000000000001";
+    public static final String ADDRESS_ZERO = "cx0000000000000000000000000000000000000000";
 
     public static final int KS_VERSION = 3;
 

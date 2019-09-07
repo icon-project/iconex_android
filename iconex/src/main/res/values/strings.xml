@@ -476,9 +476,11 @@
     <string name="createWalletStep3Detailed1">· Use this Keystore file to load your wallet from other device.</string>
     <string name="createWalletStep3Detailed2">· You can download your Keystore file from the \`Backup wallet\` menu later.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
+    <string name="Claim">Claim</string>
+    <string name="currentIScore">Current I-Score</string>
+    <string name="receiveIScroe">You can receive</string>
+    <string name="IScoreClaim">I-Score Claim</string>
+    <string name="stepLimitNPrice">Step Limit / Price (ICX)</string>
+    <string name="estimatedMaximumFee">Estimated Maximum Fee (ICX)</string>
     <!-- ========= -->
 </resources>

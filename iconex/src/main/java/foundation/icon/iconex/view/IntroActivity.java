@@ -24,7 +24,7 @@ public class IntroActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.primary00));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.primary));
         setContentView(R.layout.activity_intro);
 
         indicator1 = findViewById(R.id.indicator_1);

@@ -176,5 +176,7 @@ public class PreferenceUtil {
             ICONexApp.network = MyConstants.NETWORK_MAIN;
             setNetwork(MyConstants.NETWORK_MAIN);
         }
+
+        ICONexApp.network = 2;
     }
 }
