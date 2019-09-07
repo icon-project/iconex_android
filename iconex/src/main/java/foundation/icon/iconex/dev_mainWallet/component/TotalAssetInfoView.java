@@ -105,9 +105,9 @@ public class TotalAssetInfoView extends FrameLayout {
     }
 
     public void bind(TotalAssetsViewData data) {
-        mTotalAsset.txtUint.setText(data.getExchangeUnit());
-        mTotalAsset.txtAsset.setText(data.getTotalAsset());
-        mVotedPower.txtAsset.setText(data.getVotedPower());
+        mTotalAsset.txtUint.setText(data.getTxtExchangeUnit());
+        mTotalAsset.txtAsset.setText(data.getTxtTotalAsset());
+        mVotedPower.txtAsset.setText(data.getTxtVotedPower());
     }
 
     public void setOnClickExchangeUnitButton(View.OnClickListener listener) {

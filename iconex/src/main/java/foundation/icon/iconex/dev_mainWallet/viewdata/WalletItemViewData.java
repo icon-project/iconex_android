@@ -2,6 +2,8 @@ package foundation.icon.iconex.dev_mainWallet.viewdata;
 
 import android.util.Log;
 
+import java.math.BigDecimal;
+
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.wallet.WalletEntry;
 
@@ -10,8 +12,8 @@ public class WalletItemViewData {
     public enum WalletItemType { ICXcoin, ETHcoin, Token, Wallet}
 
     private int entryID;
-    private Double amount = null;
-    private Double exchanged = null;
+    private BigDecimal amount = null;
+    private BigDecimal exchanged = null;
 
     // common flied
     private WalletItemType walletItemType;
@@ -117,20 +119,20 @@ public class WalletItemViewData {
         return this;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public WalletItemViewData setAmount(Double amount) {
+    public WalletItemViewData setAmount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }
 
-    public Double getExchanged() {
+    public BigDecimal getExchanged() {
         return exchanged;
     }
 
-    public WalletItemViewData setExchanged(Double exchanged) {
+    public WalletItemViewData setExchanged(BigDecimal exchanged) {
         this.exchanged = exchanged;
         return this;
     }

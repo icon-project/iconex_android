@@ -3,7 +3,6 @@ package foundation.icon.iconex.dev_mainWallet;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,11 +129,7 @@ public class MainWalletFragment extends Fragment {
             public void run() {
                 updateWalletData(walletDataList);
                 updateWalletView();
-                mTotalAssetsData = new TotalAssetsViewData()
-                    .setTotalAsset("-")
-                    .setVotedPower("-")
-                    .setExchangeUnit(currentExchangeUnit.name());
-                updateTotalAssetsView();
+                updateTotalAssetsView(new TotalAssetsViewData());
             }
         });
     }
@@ -143,9 +140,7 @@ public class MainWalletFragment extends Fragment {
             public void run() {
                 updateWalletData(walletDataList);
                 updateWalletView();
-                mTotalAssetsData = totalAssetsViewData;
-                totalAssetsViewData.setExchangeUnit(currentExchangeUnit.name());
-                updateTotalAssetsView();
+                updateTotalAssetsView(totalAssetsViewData);
                 refresh.stopRefresh(true);
             }
         });
@@ -156,11 +151,9 @@ public class MainWalletFragment extends Fragment {
             @Override
             public void run() {
                 currentExchangeUnit = exchangeUnit;
-                mTotalAssetsData = totalAssetsViewData;
-                totalAssetsViewData.setExchangeUnit(exchangeUnit.name());
-                updateTotalAssetsView();
                 updateWalletData(mWalletDataList);
                 updateWalletView();
+                updateTotalAssetsView(totalAssetsViewData);
             }
         });
     }
@@ -479,7 +472,14 @@ public class MainWalletFragment extends Fragment {
         walletIndicator.setSize(mShownWalletDataList.size());
     }
 
-    private void updateTotalAssetsView() {
+    private void updateTotalAssetsView(TotalAssetsViewData viewData) {
+        int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
+        String txtTotalAsset =  viewData.getTotalAsset() == null ? "-" :
+                viewData.getTotalAsset().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
+        String txtVotingPower = "-";
+        viewData.setTxtExchangeUnit(currentExchangeUnit.name())
+                .setTxtTotalAsset(txtTotalAsset).setTxtVotedPower(txtVotingPower);
+        mTotalAssetsData = viewData;
         totalAssetInfoView.bind(mTotalAssetsData);
     }
 
@@ -513,19 +513,20 @@ public class MainWalletFragment extends Fragment {
     }
 
     private void updateWalletData(List<WalletCardViewData> walletDataList) {
-        String formatTotalAsset = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? "%,.2f" : "%,.4f";
+        int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
         mWalletDataList = walletDataList;
+
 
         Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
         for (WalletCardViewData walletViewData: mWalletDataList) {
             for (WalletItemViewData itemViewData: walletViewData.getLstWallet()) {
                 // update balance, exchange (double -> string)
-                String txtAmount = itemViewData.getAmount() == null ? "-" :
-                        String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getAmount());
+                String txtAmount = itemViewData.getAmount() == null ? "-" : // decimal rounding 4
+                        itemViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
 
                 String txtExchanged = itemViewData.getExchanged() == null ? "-" :
-                        String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getExchanged())
-                                + " " + currentExchangeUnit.name();
+                        itemViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
+                            + " " + currentExchangeUnit.name();
 
                 itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
 
@@ -564,20 +565,20 @@ public class MainWalletFragment extends Fragment {
                 // accumulate top token
                 if ( topToken == null) {
                     topToken = lstTokenViewData.getLstWallet().get(0);
-                    Double itemAmount = itemViewData.getAmount();
+                    BigDecimal itemAmount = itemViewData.getAmount();
                     if (itemAmount != null) {
-                        Double tokenAmount = topToken.getAmount();
+                        BigDecimal tokenAmount = topToken.getAmount();
                         if (tokenAmount != null) {
-                            topToken.setAmount(itemAmount + tokenAmount);
+                            topToken.setAmount(itemAmount.add(tokenAmount));
                         } else {
                             topToken.setExchanged(itemAmount);
                         }
                     }
-                    Double itemExchanged = itemViewData.getExchanged();
+                    BigDecimal itemExchanged = itemViewData.getExchanged();
                     if (itemExchanged != null) {
-                        Double tokenExchanged = topToken.getExchanged();
+                        BigDecimal tokenExchanged = topToken.getExchanged();
                         if (tokenExchanged != null) {
-                            topToken.setExchanged(itemExchanged + tokenExchanged);
+                            topToken.setExchanged(itemExchanged.add(tokenExchanged));
                         } else {
                             topToken.setExchanged(itemExchanged);
                         }
@@ -592,11 +593,11 @@ public class MainWalletFragment extends Fragment {
         for (WalletCardViewData cardViewData: mTokenDataList) {
             WalletItemViewData itemViewData = cardViewData.getLstWallet().get(0);
             // update balance, exchange (double -> string)
-            String txtAmount = itemViewData.getAmount() == null ? "-" :
-                    String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getAmount());
+            String txtAmount = itemViewData.getAmount() == null ? "-" : // decimal rounding 4
+                    itemViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
 
             String txtExchanged = itemViewData.getExchanged() == null ? "-" :
-                    String.format(Locale.getDefault(), formatTotalAsset, itemViewData.getExchanged())
+                    itemViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
                             + " " + currentExchangeUnit.name();
 
             itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);

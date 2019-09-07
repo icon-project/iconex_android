@@ -35,7 +35,7 @@ public class MainWalletServiceHelper {
     private Vector<String[]> mErrBalance = new Vector<>();
 
     private int requestCount;
-    private boolean isReceveExchange = false;
+    private boolean isReceiveExchange = false;
 
     public MainWalletServiceHelper(Context context, OnLoadRemoteDataListener listener) {
         mContext = context;
@@ -126,6 +126,7 @@ public class MainWalletServiceHelper {
     };
 
     private void completeRequest () {
+        Log.d(TAG, "complete Request!");
         if (mListener != null) {
             mListener.onLoadRemoteData(
                     new ArrayList<String[]>() {{ addAll(mIcxBalance); }},
@@ -145,24 +146,27 @@ public class MainWalletServiceHelper {
         }
 
         if (markingExchange) {
-            isReceveExchange = true;
+            isReceiveExchange = true;
         }
 
-        return requestCount == 0 && isReceveExchange;
+        Log.d(TAG, "remain count: " + requestCount + ", isReceiveExchange: " + isReceiveExchange);
+        return requestCount == 0 && isReceiveExchange;
     }
 
     private void cancleRequest() {
         if (!isDoneRequest(false,false)) {
+            Log.d(TAG, "cancle request");
             mService.stopGetBalance();
             mIcxBalance.clear();
             mIcxBalance.clear();
-            isReceveExchange = false;
+            isReceiveExchange = false;
         }
     }
 
     public void requestRemoteData() {
         cancleRequest();
 
+        Log.d(TAG, "request remote data");
         Object[] balanceList = makeGetBalanceList();
         HashMap<String, String> icxList = (HashMap<String, String>) balanceList[0];
         HashMap<String, String[]> ircList = (HashMap<String, String[]>) balanceList[1];
@@ -170,6 +174,8 @@ public class MainWalletServiceHelper {
         HashMap<String, String[]> ercList = (HashMap<String, String[]>) balanceList[3];
 
         requestCount = icxList.size() + ircList.size() + ethList.size() + ercList.size();
+        isReceiveExchange = false;
+
         mService.getBalance(icxList, Constants.KS_COINTYPE_ICX);
         mService.getTokenBalance(ircList, Constants.KS_COINTYPE_ICX);
         mService.getBalance(ethList, Constants.KS_COINTYPE_ETH);

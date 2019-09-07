@@ -2,14 +2,13 @@ package foundation.icon.iconex.dev_mainWallet;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -17,6 +16,7 @@ import com.google.gson.JsonObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,22 +30,18 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.CreateWalletActivity;
 import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.view.LoadWalletActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
-import foundation.icon.iconex.wallet.main.MainActivity;
-import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
-import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -54,6 +50,8 @@ public class MainWalletActivity extends AppCompatActivity implements
         MainWalletFragment.ManageWallet,
         MainWalletFragment.SideMenu,
         MainWalletServiceHelper.OnLoadRemoteDataListener {
+
+    public static String TAG = MainWalletActivity.class.getSimpleName();
 
     // findFragmentByTag
     private static String MAIN_WALLET_FRAGMENT_TAG = "main wallet fragment";
@@ -125,6 +123,7 @@ public class MainWalletActivity extends AppCompatActivity implements
     // =================== Service listener (MainWalletServiceHelper.OnLoadRemoteDataListener)
     @Override
     public void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance) {
+        Log.d(TAG, "load remote data, icx: " + icxBalance.size() + ", eth: " + ethBalance.size() + ", err: " + errBalance.size());
         cachedIcxBalance = icxBalance;
         cachedEthBalance = ethBalance;
         cachedErrBalance = errBalance;
@@ -159,17 +158,20 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
     }
 
-    private Double setBalance (String id, String address, String result, String unit) {
+    private BigDecimal setBalance (String id, String address, String result, String unit) {
         String key = address + "," + id;
-        indexedWalletEntry.get(key).setBalance(result);
-
+        WalletEntry walletEntry = indexedWalletEntry.get(key);
         WalletItemViewData viewData = indexedWalletItemData.get(key);
 
         try {
-            double balance = Double.parseDouble(result);
-            String exchageKey = viewData.getSymbol().toLowerCase() + unit;
-            double exchanger = Double.parseDouble(ICONexApp.EXCHANGE_TABLE.get(exchageKey));
-            double exchanged = balance * exchanger;
+            walletEntry.setBalance(result);
+            String strDecimal = ConvertUtil.getValue(new BigInteger(walletEntry.getBalance()), walletEntry.getDefaultDec());
+            BigDecimal balance = new BigDecimal(strDecimal);
+
+            String exchangeKey = viewData.getSymbol().toLowerCase() + unit;
+            BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
+            BigDecimal exchanged = balance.multiply(exchanger);
+
             viewData.setAmount(balance).setExchanged(exchanged);
             return exchanged;
         } catch (Exception e) {
@@ -183,44 +185,45 @@ public class MainWalletActivity extends AppCompatActivity implements
             List<String[]> ethBalance,
             List<String[]> errBalance) {
 
-        double totalAsset = 0.0;
+        BigDecimal totalAsset = icxBalance.size() == 0 && ethBalance.size() == 0 ? null : BigDecimal.ZERO;
         MainWalletFragment.ExchangeUnit exchageUnit = getMainWalletFragment().getCurrentExchangeUnit();
-        String unit = exchageUnit.name().toLowerCase();
+        String strUnit = exchageUnit.name().toLowerCase();
 
         cachingWalletItemData();
 
         for (String[] param : icxBalance) {
-            totalAsset += setBalance(param[0],param[1], param[2], unit);
+            totalAsset = totalAsset.add(setBalance(param[0],param[1], param[2], strUnit));
         }
 
         for (String[] param : ethBalance) {
-            totalAsset += setBalance(param[0], param[1], param[2], unit);
+            totalAsset = totalAsset.add(setBalance(param[0], param[1], param[2], strUnit));
         }
 
         for (String[] param : errBalance) {
-            setBalance(param[0], param[1], param[2], unit);
+            setBalance(param[0], param[1], param[2], strUnit);
         }
 
-        boolean isAllErr = icxBalance.size() == 0 && ethBalance.size() == 0;
         getMainWalletFragment().asyncResponseRefreash(
                 cachedlstWalletData,
-                genTotalAssetsViewData(isAllErr, exchageUnit, totalAsset)
+                new TotalAssetsViewData().setTotalAsset(totalAsset)
         );
     }
 
     private void setExchange(MainWalletFragment.ExchangeUnit exchangeUnit) {
         String unit = exchangeUnit.name();
 
-        double totalAsset = 0.0;
-        boolean isAllErr = true;
+        BigDecimal totalAsset = null;
         for(WalletItemViewData viewData : indexedWalletItemData.values()) {
             try {
-                Double balance = viewData.getAmount();
+                BigDecimal balance = viewData.getAmount();
+
                 String exchangeKey = viewData.getSymbol().toLowerCase() + unit.toLowerCase();
-                double exchanger = Double.parseDouble(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
-                double exchanged = balance * exchanger;
+                BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
+                BigDecimal exchanged = balance.multiply(exchanger);
+
                 viewData.setExchanged(exchanged);
-                isAllErr = false;
+                if (totalAsset == null) totalAsset = BigDecimal.ZERO;
+                totalAsset = totalAsset.add(exchanged);
             } catch (Exception e) {
                 viewData.setExchanged(null);
             }
@@ -228,19 +231,8 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
         getMainWalletFragment().asyncResponseChangeExchangeUnit(
                 exchangeUnit,
-                genTotalAssetsViewData(isAllErr, exchangeUnit, totalAsset)
+                new TotalAssetsViewData().setTotalAsset(totalAsset)
         );
-    }
-
-    private TotalAssetsViewData genTotalAssetsViewData(boolean isErr, MainWalletFragment.ExchangeUnit unit, double totalAsset) {
-
-        String formatTotalAsset = unit == MainWalletFragment.ExchangeUnit.USD ? "%,.2f" : "%,.4f";
-
-        TotalAssetsViewData totalAssetsViewData = new TotalAssetsViewData()
-                .setTotalAsset(isErr ? "-" : String.format(Locale.getDefault(), formatTotalAsset, totalAsset) )
-                .setVotedPower("-");
-
-        return totalAssetsViewData;
     }
 
     private MainWalletFragment getMainWalletFragment() {

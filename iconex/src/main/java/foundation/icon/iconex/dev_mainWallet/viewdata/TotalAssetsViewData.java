@@ -1,36 +1,58 @@
 package foundation.icon.iconex.dev_mainWallet.viewdata;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 public class TotalAssetsViewData {
-    private String totalAsset;
-    private String votedPower;
-    private String exchangeUnit;
 
-    public String getTotalAsset() {
+    private BigDecimal totalAsset = null;
+    private BigDecimal votedPower = null;
+
+    private String txtTotalAsset = null;
+    private String txtVotedPower = null;
+    private String txtExchangeUnit = null;
+
+    public BigDecimal getTotalAsset() {
         return totalAsset;
     }
 
-    public TotalAssetsViewData setTotalAsset(String totalAsset) {
+    public TotalAssetsViewData setTotalAsset(BigDecimal totalAsset) {
         this.totalAsset = totalAsset;
         return this;
     }
 
-    public String getVotedPower() {
+    public BigDecimal getVotedPower() {
         return votedPower;
     }
 
-    public TotalAssetsViewData setVotedPower(String votedPower) {
+    public TotalAssetsViewData setVotedPower(BigDecimal votedPower) {
         this.votedPower = votedPower;
         return this;
     }
 
-    public String getExchangeUnit() {
-        return exchangeUnit;
+    public String getTxtTotalAsset() {
+        return txtTotalAsset;
     }
 
-    public TotalAssetsViewData setExchangeUnit(String exchangeUnit) {
-        this.exchangeUnit = exchangeUnit;
+    public TotalAssetsViewData setTxtTotalAsset(String txtTotalAsset) {
+        this.txtTotalAsset = txtTotalAsset;
+        return this;
+    }
+
+    public String getTxtVotedPower() {
+        return txtVotedPower;
+    }
+
+    public TotalAssetsViewData setTxtVotedPower(String txtVotedPower) {
+        this.txtVotedPower = txtVotedPower;
+        return this;
+    }
+
+    public String getTxtExchangeUnit() {
+        return txtExchangeUnit;
+    }
+
+    public TotalAssetsViewData setTxtExchangeUnit(String txtExchangeUnit) {
+        this.txtExchangeUnit = txtExchangeUnit;
         return this;
     }
 }
