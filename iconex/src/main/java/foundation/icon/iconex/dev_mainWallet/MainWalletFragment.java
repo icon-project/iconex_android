@@ -262,7 +262,6 @@ public class MainWalletFragment extends Fragment {
         totalAssetInfoLooper  = new Runnable() {
             @Override
             public void run() {
-                totalAssetInfoView.postDelayed(this, LOOPING_TIME_INTERVAL);
                 int inversedIdx = 1 - totalAssetInfoView.getIndex();
                 totalAssetInfoView.setIndex(inversedIdx);
             }
@@ -272,8 +271,18 @@ public class MainWalletFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 changeExchnageUnit();
+                totalAssetInfoView.removeCallbacks(totalAssetInfoLooper);
+                totalAssetInfoView.postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
             }
         });
+        totalAssetInfoView.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                totalAssetInfoView.removeCallbacks(totalAssetInfoLooper);
+                totalAssetInfoView.postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
+            }
+        });
+
 
         // init wallet viewpager.
         initWalletViewPager(content);

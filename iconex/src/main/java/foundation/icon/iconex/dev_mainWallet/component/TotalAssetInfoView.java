@@ -54,7 +54,7 @@ public class TotalAssetInfoView extends FrameLayout {
         mVotedPower.txtUint.setVisibility(GONE);
         mVotedPower.btnToggle.setVisibility(GONE);
 
-        // set viewpage Adapter
+        // set view page Adapter
         mViewPager.setAdapter(new PagerAdapter() {
             @NonNull
             @Override
@@ -112,6 +112,9 @@ public class TotalAssetInfoView extends FrameLayout {
 
     public void setOnClickExchangeUnitButton(View.OnClickListener listener) {
         mTotalAsset.setOnClickExchangeUnitButton(listener);
+    }
 
+    public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
+        mViewPager.addOnPageChangeListener(listener);
     }
 }
