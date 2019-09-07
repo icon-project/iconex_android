@@ -20,26 +20,30 @@
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
 
+        android:fontFamily="@font/noto_sans_medium"
         android:background="@android:color/transparent"
-        android:text="Create Wallet"
+        android:text="@string/titleCreateWallet"
+        android:textAllCaps="false"
         android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/menu_loadWallet"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-
+        android:fontFamily="@font/noto_sans_medium"
         android:background="@android:color/transparent"
-        android:text="Load Wallet"
+        android:text="@string/titleLoadWallet"
+        android:textAllCaps="false"
         android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/menu_exportWalletBundle"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-
+        android:fontFamily="@font/noto_sans_medium"
         android:background="@android:color/transparent"
-        android:text="Export Wallet Bundle"
+        android:text="@string/exportWalletBundle"
+        android:textAllCaps="false"
         android:textColor="@android:color/white" />
 
     <View
@@ -57,27 +61,29 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="30.5dp"
-
+        android:fontFamily="@font/noto_sans_light"
         android:background="@android:color/transparent"
-        android:text="Screen Lock"
+        android:text="@string/settingLock"
         android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/menu_AppVer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-
+        android:fontFamily="@font/noto_sans_light"
         android:background="@android:color/transparent"
-        android:text="App Ver. 0.0.1"
+        android:text="@string/appVer"
+        android:textAllCaps="false"
         android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/menu_iconexDiscalimers"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-
+        android:fontFamily="@font/noto_sans_light"
         android:background="@android:color/transparent"
-        android:text="ICONex Disclaimers"
+        android:text="@string/ICONexDisclaimers"
+        android:textAllCaps="false"
         android:textColor="@android:color/white" />
 
 
