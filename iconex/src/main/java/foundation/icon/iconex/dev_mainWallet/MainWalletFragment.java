@@ -219,7 +219,6 @@ public class MainWalletFragment extends Fragment {
                     } break;
                     case btnToggle: {
                         toggleWalletDataLoad();
-                        Toast.makeText(getContext(), "not implement", Toast.LENGTH_SHORT).show();
                     } break;
                 }
             }
