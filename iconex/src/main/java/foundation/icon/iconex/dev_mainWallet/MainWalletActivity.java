@@ -38,8 +38,10 @@ import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.CreateWalletActivity;
+import foundation.icon.iconex.view.IScoreActivity;
 import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.view.LoadWalletActivity;
+import foundation.icon.iconex.view.PRepListActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
@@ -47,6 +49,7 @@ import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
 public class MainWalletActivity extends AppCompatActivity implements
         MainWalletFragment.AsyncRequester,
+        MainWalletFragment.PRepsMenu,
         MainWalletFragment.ManageWallet,
         MainWalletFragment.SideMenu,
         MainWalletServiceHelper.OnLoadRemoteDataListener {
@@ -428,5 +431,28 @@ public class MainWalletActivity extends AppCompatActivity implements
     @Override
     public void iconexDisclamers() {
         Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+    }
+
+    // ========================= P-Peps Menu
+    @Override
+    public void pReps(WalletCardViewData viewData) {
+        startActivity(new Intent(this, PRepListActivity.class));
+    }
+
+    @Override
+    public void stake(WalletCardViewData viewData) {
+        Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void vote(WalletCardViewData viewData) {
+        Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void iScore(WalletCardViewData viewData) {
+        Wallet wallet = findWalletByViewData(viewData);
+        startActivity(new Intent(this, IScoreActivity.class)
+                .putExtra("wallet", (Serializable) wallet));
     }
 }

@@ -95,6 +95,14 @@ public class MainWalletFragment extends Fragment {
         void asyncRequestChangeExchangeUnit(ExchangeUnit exchangeUnit);
     }
 
+    // prep menu
+    public interface PRepsMenu {
+        void pReps(WalletCardViewData viewData);
+        void stake(WalletCardViewData viewData);
+        void vote(WalletCardViewData viewData);
+        void iScore(WalletCardViewData viewData);
+    }
+
     // manage wallet
     public interface ManageWallet {
         void renameWallet(WalletCardViewData viewData);
@@ -293,21 +301,23 @@ public class MainWalletFragment extends Fragment {
         View.OnClickListener bublemenuListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                WalletCardViewData viewData = getCurrentWalletCardData();
+
                 switch (v.getId()) {
                     case R.id.btn_preps: {
-                        Toast.makeText(getContext(), "not implement btn_preps", Toast.LENGTH_SHORT).show();
+                        ((PRepsMenu) getActivity()).pReps(viewData);
                         setBubbleMenuShow(false);
                     } break;
                     case R.id.btn_stake: {
-                        Toast.makeText(getContext(), "not implement btn_stake", Toast.LENGTH_SHORT).show();
+                        ((PRepsMenu) getActivity()).stake(viewData);
                         setBubbleMenuShow(false);
                     } break;
                     case R.id.btn_vote: {
-                        Toast.makeText(getContext(), "not implement btn_vote", Toast.LENGTH_SHORT).show();
+                        ((PRepsMenu) getActivity()).vote(viewData);
                         setBubbleMenuShow(false);
                     } break;
                     case R.id.btn_iscore: {
-                        Toast.makeText(getContext(), "not implement btn_iscore", Toast.LENGTH_SHORT).show();
+                        ((PRepsMenu) getActivity()).iScore(viewData);
                         setBubbleMenuShow(false);
                     } break;
                 }

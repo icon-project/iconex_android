@@ -66,14 +66,14 @@ public class MainWalletServiceHelper {
     private NetworkService.BalanceCallback mBalanceCallback = new NetworkService.BalanceCallback() {
         @Override
         public void onReceiveICXBalance(String id, String address, String result) {
-            Log("Receive icx balance");
+            Log("Receive icx balance: " + result);
             mIcxBalance.add(new String[] { id, address, result});
             if(isDoneRequest(true, false)) completeRequest();
         }
 
         @Override
         public void onReceiveETHBalance(String id, String address, String result) {
-            Log("Receive eth balance");
+            Log("Receive eth balance: " + result);
             address = address.substring(2);
             mEthBalance.add(new String[] { id, address, result });
 
