@@ -1,7 +1,11 @@
 package foundation.icon.iconex.dev_mainWallet;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
@@ -33,8 +38,12 @@ import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
+import foundation.icon.iconex.dialogs.TitleMsgDialog;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
+import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
+import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
+import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -439,22 +448,30 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void exportWalletBundle() {
-        Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, ExportWalletBundleActivity.class));
     }
 
     @Override
     public void screenLock() {
-        Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, SettingLockActivity.class)
+                .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.DEFAULT));
     }
 
     @Override
     public void appVer() {
-        Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, AppInfoActivity.class));
     }
 
     @Override
     public void iconexDisclamers() {
-        Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+        TitleMsgDialog dialog = new TitleMsgDialog(this);
+        dialog.setTitle(getString(R.string.ICONexDisclaimers));
+        SpannableStringBuilder builder = new SpannableStringBuilder(getString(R.string.disclaimersHeader)
+                + "\n\n" + getString(R.string.disclaimersContents));
+        builder.setSpan(new StyleSpan(Typeface.BOLD), 0, getString(R.string.disclaimersHeader).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        dialog.setMessage(builder.toString());
+        dialog.show();
     }
 
     // ========================= P-Peps Menu
