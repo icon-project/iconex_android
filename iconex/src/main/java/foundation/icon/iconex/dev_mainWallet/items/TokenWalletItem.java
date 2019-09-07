@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +18,7 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.util.ScreenUnit;
 
-public class TokenWalletItem extends FrameLayout implements WalletItem{
+public class TokenWalletItem extends WalletItem{
 
     public static class TokenColor {
         public static String[] colorCodes = {
@@ -64,6 +65,7 @@ public class TokenWalletItem extends FrameLayout implements WalletItem{
             return Color.rgb(r,g,b);
         }
     }
+    public ViewGroup layoutWalletItem;
 
     public ImageView mImgSymbol;
     public TextView mTxtSymbolLetter;
@@ -80,6 +82,7 @@ public class TokenWalletItem extends FrameLayout implements WalletItem{
     private void initView () {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.item_wallet_token, this, false);
 
+        layoutWalletItem = v.findViewById(R.id.wallet_item_layout);
         mImgSymbol = v.findViewById(R.id.img_symbol);
         mTxtSymbolLetter = v.findViewById(R.id.txt_symbol_letter);
         mTxtSymbol = v.findViewById(R.id.txt_symbol);
@@ -120,5 +123,10 @@ public class TokenWalletItem extends FrameLayout implements WalletItem{
         mTxtExchanged.setText(data.getTxtExchanged());
 
         setLetterSymbol(data.getSymbolLetter(), data.getBgSymbolColor());
+    }
+
+    @Override
+    public void setOnClickWalletItem(OnClickListener listener) {
+        layoutWalletItem.setOnClickListener(listener);
     }
 }

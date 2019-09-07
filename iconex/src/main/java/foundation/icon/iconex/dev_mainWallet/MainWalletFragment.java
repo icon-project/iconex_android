@@ -20,11 +20,9 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import foundation.icon.MyConstants;
@@ -444,6 +442,13 @@ public class MainWalletFragment extends Fragment {
             }
         });
 
+        walletCardView.setOnClickWalletItemListner(new WalletCardView.OnClickWalletItemListner() {
+            @Override
+            public void onClickWalletItem(WalletItemViewData itemViewData) {
+                ((WalletCardView.OnClickWalletItemListner) getActivity()).onClickWalletItem(itemViewData);
+            }
+        });
+
         walletCardView.setOnClickQrScanListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -478,12 +483,11 @@ public class MainWalletFragment extends Fragment {
             case unloaded:
             case loadedWalletData: {
                 mShownWalletDataList.addAll(mWalletDataList);
-                actionBar.setTitle("지갑");
+                actionBar.setTitle(getString(R.string.appbarSelectorWallets));
             } break;
             case loadedTokenData: {
                 mShownWalletDataList.addAll(mTokenDataList);
-                // TODO: hardcoding
-                actionBar.setTitle("코인&토큰");
+                actionBar.setTitle(getString(R.string.appbarSelectorCoinsNTokens));
             } break;
         }
         pagerAdapter.notifyDataSetChanged();

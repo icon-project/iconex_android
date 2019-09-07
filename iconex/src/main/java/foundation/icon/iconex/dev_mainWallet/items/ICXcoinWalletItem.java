@@ -3,6 +3,7 @@ package foundation.icon.iconex.dev_mainWallet.items;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,7 +13,9 @@ import androidx.annotation.NonNull;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 
-public class ICXcoinWalletItem extends FrameLayout implements WalletItem{
+public class ICXcoinWalletItem extends WalletItem{
+
+    public ViewGroup layoutWalletItem;
 
     public ImageView imgSymbol;
     public TextView txtSymbol;
@@ -33,6 +36,8 @@ public class ICXcoinWalletItem extends FrameLayout implements WalletItem{
 
     private void initView () {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.item_wallet_icx_coin, this, false);
+
+        layoutWalletItem = v.findViewById(R.id.wallet_item_layout);
 
         imgSymbol = v.findViewById(R.id.img_symbol);
         txtSymbol = v.findViewById(R.id.txt_symbol);
@@ -62,5 +67,10 @@ public class ICXcoinWalletItem extends FrameLayout implements WalletItem{
         txtStaked.setText(data.getStacked());
         txtVotingPower.setText(data.getVotingPower());
         txtIScore.setText(data.getiScore());
+    }
+
+    @Override
+    public void setOnClickWalletItem(OnClickListener listener) {
+        layoutWalletItem.setOnClickListener(listener);
     }
 }

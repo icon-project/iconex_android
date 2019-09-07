@@ -2,9 +2,7 @@ package foundation.icon.iconex.dev_mainWallet.component;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +42,12 @@ public class WalletCardView extends FrameLayout {
     private OnChangeIsScrollTopListener changeIsScrollTopListener = null;
     private RecyclerView.Adapter walletItemAdapter = null;
     private List<WalletItemViewData> walletItems = new ArrayList<>();
+
+    // item click listener
+    public interface OnClickWalletItemListner {
+        void onClickWalletItem(WalletItemViewData itemViewData);
+    }
+    private OnClickWalletItemListner mOnClickWalletItemListener = null;
 
     public WalletCardView(@NonNull Context context) {
         super(context);
@@ -92,7 +96,7 @@ public class WalletCardView extends FrameLayout {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View v;
+                WalletItem v;
                 switch (viewType) {
                     default:
                     case 0: v = new ICXcoinWalletItem(parent.getContext()); break;
@@ -105,7 +109,20 @@ public class WalletCardView extends FrameLayout {
                         RecyclerView.LayoutParams.MATCH_PARENT,
                         RecyclerView.LayoutParams.WRAP_CONTENT
                 ));
-                return new RecyclerView.ViewHolder(v) {};
+
+                RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) { };
+                v.setOnClickWalletItem(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnClickWalletItemListener != null) {
+                            int position = holder.getAdapterPosition();
+                            WalletItemViewData itemViewData = walletItems.get(position);
+                            mOnClickWalletItemListener.onClickWalletItem(itemViewData);
+                        }
+                    }
+                });
+
+                return holder;
             }
 
             @Override
@@ -166,6 +183,10 @@ public class WalletCardView extends FrameLayout {
 
     public void setTextAliasLabel(String alias) {
         txtAlias.setText(alias);
+    }
+
+    public void setOnClickWalletItemListner(OnClickWalletItemListner listner) {
+        mOnClickWalletItemListener = listner;
     }
 
     public void setOnClickQrScanListener(View.OnClickListener listener) {

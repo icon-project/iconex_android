@@ -33,6 +33,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 
+import foundation.icon.iconex.dev_mainWallet.component.WalletCardView;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
@@ -61,9 +62,10 @@ import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
 public class MainWalletActivity extends AppCompatActivity implements
         MainWalletFragment.AsyncRequester,
-        MainWalletFragment.PRepsMenu,
+        WalletCardView.OnClickWalletItemListner,
         MainWalletFragment.ManageWallet,
         MainWalletFragment.SideMenu,
+        MainWalletFragment.PRepsMenu,
         MainWalletServiceHelper.OnLoadRemoteDataListener {
 
     public static String TAG = MainWalletActivity.class.getSimpleName();
@@ -271,6 +273,12 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
 
         return null;
+    }
+
+    // ======================= on click item listenr
+    @Override
+    public void onClickWalletItem(WalletItemViewData itemViewData) {
+        Toast.makeText(this, itemViewData.getSymbol(), Toast.LENGTH_SHORT).show();
     }
 
     // ============================== manage wallet
