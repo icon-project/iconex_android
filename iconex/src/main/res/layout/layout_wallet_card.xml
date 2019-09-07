@@ -16,9 +16,9 @@
         android:layout_marginEnd="12dp"
 
         android:fontFamily="@font/noto_sans_medium"
+        android:maxLines="1"
         android:text="Wallet Nickname"
         android:textColor="@color/dark4D"
-
         android:textSize="18dp"
         app:layout_constraintEnd_toStartOf="@+id/btn_qr_scan"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/txt_alias"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txt_alias"
-        app:srcCompat="@drawable/ic_more_vert_darkgray" />
+        app:srcCompat="@drawable/ic_wallet_more" />
 
     <ImageView
         android:id="@+id/btn_qr_code"
@@ -44,7 +44,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/txt_alias"
         app:layout_constraintEnd_toStartOf="@+id/btn_more"
         app:layout_constraintTop_toTopOf="@+id/txt_alias"
-        app:srcCompat="@drawable/ic_wallet_rem_darkgray" />
+        app:srcCompat="@drawable/ic_wallet_qrcode" />
 
     <ImageView
         android:id="@+id/btn_qr_scan"
@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/txt_alias"
         app:layout_constraintEnd_toStartOf="@+id/btn_qr_code"
         app:layout_constraintTop_toTopOf="@+id/txt_alias"
-        app:srcCompat="@drawable/ic_qr_code_scan" />
+        app:srcCompat="@drawable/ic_qrcode_scan" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
