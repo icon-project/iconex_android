@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            android:fontFamily="@font/noto_sans_medium"
+            android:textSize="16dp"
+            android:textColor="@color/dark"
+
+            android:text="@string/manageWallet"/>
+
+
+        <ImageButton
+            android:id="@+id/btnClose"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="14dp"
+
+            android:src="@drawable/ic_close"
+            android:background="@android:color/transparent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/darkE6"/>
+
+    <Button
+        android:id="@+id/btnRename"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:textAllCaps="false"
+        android:gravity="start|center_vertical"
+        android:paddingStart="20dp"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:textSize="12dp"
+        android:textColor="@color/dark"
+
+        android:text="My Wallet A"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/darkE6"/>
+
+    <Button
+        android:id="@+id/btnManageToken"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:textAllCaps="false"
+        android:gravity="start|center_vertical"
+        android:paddingStart="20dp"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:textSize="12dp"
+        android:textColor="@color/dark"
+
+        android:text="@string/menuManageToken"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/darkE6"/>
+
+    <Button
+        android:id="@+id/btnBackupWallet"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:textAllCaps="false"
+        android:gravity="start|center_vertical"
+        android:paddingStart="20dp"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:textSize="12dp"
+        android:textColor="@color/dark"
+
+        android:text="@string/menuBackupWallet"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/darkE6"/>
+
+    <Button
+        android:id="@+id/btnChangeWalletPassword"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:textAllCaps="false"
+        android:gravity="start|center_vertical"
+        android:paddingStart="20dp"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:textSize="12dp"
+        android:textColor="@color/dark"
+
+        android:text="@string/menuChangePwd"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/darkE6"/>
+
+    <Button
+        android:id="@+id/btnRemoveWallet"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:background="@android:color/transparent"
+        android:textAllCaps="false"
+        android:gravity="start|center_vertical"
+        android:paddingStart="20dp"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:textSize="12dp"
+        android:textColor="@color/dark"
+
+        android:text="@string/menuDeleteWallet"/>
+
+</LinearLayout>

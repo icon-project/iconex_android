@@ -33,6 +33,7 @@ import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.dev_mainWallet.component.TotalAssetInfoView;
 import foundation.icon.iconex.dev_mainWallet.component.WalletCardView;
 import foundation.icon.iconex.dev_mainWallet.component.WalletIndicator;
+import foundation.icon.iconex.dev_mainWallet.component.WalletManageMenu;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
@@ -466,11 +467,19 @@ public class MainWalletFragment extends Fragment {
         walletCardView.setOnClickMoreListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetMenuDialog menuDialog = new BottomSheetMenuDialog(getActivity(), getString(R.string.manageWallet),
-                        BottomSheetMenuDialog.SHEET_TYPE.MENU);
-                menuDialog.setMenuData(makeMenus());
-                menuDialog.setOnItemClickListener(menuListener);
-                menuDialog.show();
+                new WalletManageMenu(getActivity(), getCurrentWalletCardData().getTitle(), new WalletManageMenu.OnClickMenuItemListener() {
+                    @Override
+                    public void onClickMenuItem(WalletManageMenu.MenuItem menuItem) {
+                        WalletCardViewData viewData = getCurrentWalletCardData();
+                        switch (menuItem) {
+                            case Rename: ((ManageWallet) getActivity()).renameWallet(viewData); break;
+                            case ManageToken: ((ManageWallet) getActivity()).manageToken(viewData); break;
+                            case BackupWallet: ((ManageWallet) getActivity()).backupWallet(viewData); break;
+                            case RemoveWallet: ((ManageWallet) getActivity()).changeWalletPassword(viewData); break;
+                            case ChangeWalletPassword: ((ManageWallet) getActivity()).removeWallet(viewData); break;
+                        }
+                    }
+                }).show();
             }
         });
 
@@ -632,60 +641,7 @@ public class MainWalletFragment extends Fragment {
         return viewData;
     }
 
-    // ===========================
-    private ArrayList<BottomSheetMenu> makeMenus() {
-        ArrayList<BottomSheetMenu> menus = new ArrayList<>();
-        BottomSheetMenu menu = new BottomSheetMenu(R.drawable.ic_edit, getCurrentWalletCardData().getTitle());
-
-        menu.setTag(MyConstants.TAG_MENU_ALIAS);
-        menus.add(menu);
-
-        menu = new BottomSheetMenu(R.drawable.ic_setting, getString(R.string.menuManageToken));
-        menu.setTag(MyConstants.TAG_MENU_TOKEN);
-        menus.add(menu);
-
-        menu = new BottomSheetMenu(R.drawable.ic_backup, getString(R.string.menuBackupWallet));
-        menu.setTag(MyConstants.TAG_MENU_BACKUP);
-        menus.add(menu);
-
-        menu = new BottomSheetMenu(R.drawable.ic_side_lock, getString(R.string.menuChangePwd));
-        menu.setTag(MyConstants.TAG_MENU_PWD);
-        menus.add(menu);
-
-        menu = new BottomSheetMenu(R.drawable.ic_delete, getString(R.string.menuDeleteWallet));
-        menu.setTag(MyConstants.TAG_MENU_REMOVE);
-        menus.add(menu);
-
-        return menus;
-    }
-
-    private BottomSheetMenuDialog.OnItemClickListener menuListener = new BottomSheetMenuDialog.OnItemClickListener() {
-        @Override
-        public void onBasicItem(String item) { }
-        @Override
-        public void onCoinItem(int position) { }
-        @Override
-        public void onMenuItem(String tag) {
-            WalletCardViewData viewData = getCurrentWalletCardData();
-            switch (tag) {
-                case MyConstants.TAG_MENU_ALIAS:
-                    ((ManageWallet) getActivity()).renameWallet(viewData);
-                    break;
-                case MyConstants.TAG_MENU_TOKEN:
-                    ((ManageWallet) getActivity()).manageToken(viewData);
-                    break;
-                case MyConstants.TAG_MENU_BACKUP:
-                    ((ManageWallet) getActivity()).backupWallet(viewData);
-                    break;
-                case MyConstants.TAG_MENU_PWD:
-                    ((ManageWallet) getActivity()).changeWalletPassword(viewData);
-                    break;
-                case MyConstants.TAG_MENU_REMOVE:
-                    ((ManageWallet) getActivity()).removeWallet(viewData);
-                    break;
-            }
-        }
-    };
+    // =========================== side menu listenenr
 
     private View.OnClickListener sideMenuListener = new View.OnClickListener() {
         @Override
