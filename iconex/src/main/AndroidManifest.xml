@@ -38,7 +38,7 @@
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"/>
-        <activity android:name=".dev_detail.WalletDetailActivity"
+        <activity android:name=".dev2_detail.WalletDetailActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"/>

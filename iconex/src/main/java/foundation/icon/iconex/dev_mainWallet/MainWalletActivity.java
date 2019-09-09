@@ -1,13 +1,13 @@
 package foundation.icon.iconex.dev_mainWallet;
 
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.spongycastle.util.encoders.Hex;
+import org.web3j.abi.datatypes.Int;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -26,7 +27,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import foundation.icon.ICONexApp;
@@ -56,7 +56,7 @@ import foundation.icon.iconex.view.LoadWalletActivity;
 import foundation.icon.iconex.view.PRepListActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.main.MainActivity;
+import foundation.icon.iconex.dev2_detail.WalletDetailActivity;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -84,6 +84,8 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     private Map<String, WalletEntry> indexedWalletEntry = new HashMap<>();
     private Map<String, WalletItemViewData> indexedWalletItemData = new HashMap<>();
+    private Map<Integer, WalletEntry> indexedByIdWalletEntry = new HashMap<>();
+    private Map<Integer, Wallet> indexedByIdWallet = new HashMap<>();
 
     // ================== activity life cycle
     @Override
@@ -158,10 +160,14 @@ public class MainWalletActivity extends AppCompatActivity implements
 
         // indexing wallet entry
         indexedWalletEntry = new HashMap<>();
+        indexedByIdWalletEntry = new HashMap<>();
+        indexedByIdWallet = new HashMap<>();
         for(Wallet wallet: ICONexApp.wallets) {
             for (WalletEntry entry: wallet.getWalletEntries()) {
                 String key = wallet.getAddress() + "," + entry.getId();
                 indexedWalletEntry.put(key, entry);
+                indexedByIdWallet.put(entry.getId(), wallet);
+                indexedByIdWalletEntry.put(entry.getId(), entry);
             }
         }
 
@@ -278,7 +284,16 @@ public class MainWalletActivity extends AppCompatActivity implements
     // ======================= on click item listenr
     @Override
     public void onClickWalletItem(WalletItemViewData itemViewData) {
-        Toast.makeText(this, itemViewData.getSymbol(), Toast.LENGTH_SHORT).show();
+        Integer entryID = itemViewData.getEntryID();
+        Wallet wallet = indexedByIdWallet.get(entryID);
+        WalletEntry walletEntry = indexedByIdWalletEntry.get(entryID);
+
+        startActivity(
+            new Intent(this, WalletDetailActivity.class)
+                .putExtra(WalletDetailActivity.PARAM_ENTRY_ID, entryID)
+                .putExtra(WalletDetailActivity.PARAM_WALLET, ((Serializable) wallet))
+                .putExtra(WalletDetailActivity.PARAM_WALLET_ENTRY, ((Serializable) walletEntry))
+        );
     }
 
     // ============================== manage wallet

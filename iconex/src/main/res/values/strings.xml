@@ -176,6 +176,10 @@
     <string name="txState">Transaction Status</string>
     <string name="txType">Transaction Type</string>
 
+    <string name="history">History</string>
+    <string name="depositHistory">Deposit History</string>
+    <string name="etehrscan"><u>Etherscan</u></string>
+
     <!-- Wallet Manage Menu -->
     <string name="menuManageToken">Manage Token</string>
     <string name="menuBackupWallet">Backup Wallet</string>

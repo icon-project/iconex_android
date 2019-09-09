@@ -13,29 +13,30 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
-        <ImageView
-            android:id="@+id/imageView5"
+        <ImageButton
+            android:id="@+id/btn_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/ic_info_l" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/txt_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:text="History"
+            android:text="@string/txRecords"
             android:textColor="@color/dark80"
             android:textSize="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView5"
+            app:layout_constraintStart_toEndOf="@+id/btn_info"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/txt_view_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Completed · All ▼"
