@@ -13,7 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
+
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 
@@ -78,7 +85,16 @@ public class SelectTokenDialog extends BottomSheetDialog {
 
                 walletViewHolder.txtSymbol.setText(entry.getSymbol());
                 walletViewHolder.txtName.setText(entry.getName());
-                walletViewHolder.txtAmount.setText(entry.getBalance());
+
+                String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
+                BigDecimal balance = new BigDecimal(strDecimal);
+
+                String exchangeKey = entry.getSymbol().toLowerCase() + "usd";
+                BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
+                BigDecimal exchanged = balance.multiply(exchanger);
+
+                walletViewHolder.txtAmount.setText(balance.setScale(4, BigDecimal.ROUND_FLOOR) + "");
+                walletViewHolder.txtExchange.setText("$ " + exchanged.setScale(2, BigDecimal.ROUND_FLOOR));
             }
 
             @Override

@@ -11,12 +11,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
+import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.dev2_detail.component.TransactionItemViewData;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import loopchain.icon.wallet.core.Constants;
 
 public class WalletDetailServiceHelper {
     public static final String TAG = WalletDetailServiceHelper.class.getSimpleName();
@@ -30,6 +35,11 @@ public class WalletDetailServiceHelper {
     private List<TransactionItemViewData> mCacheTxData = new ArrayList<>();
     private int mCountTxData = 0;
     private int mLoadCursor = 1;
+
+    private Vector<String[]> mIcxBalance = new Vector<>();
+    private Vector<String[]> mEthBalance = new Vector<>();
+    private Vector<String[]> mErrBalance = new Vector<>();
+    private int requestCount;
 
     public interface OnServiceReadyListener { void onReady(); }
     private OnServiceReadyListener mOnServiceReadyListener = null;
@@ -176,22 +186,122 @@ public class WalletDetailServiceHelper {
     private NetworkService.BalanceCallback mBalanceCallback = new NetworkService.BalanceCallback() {
         @Override
         public void onReceiveICXBalance(String id, String address, String result) {
-
+            Log.d(TAG,"Receive icx balance: " + result);
+            mIcxBalance.add(new String[] { id, address, result});
+            if(isDoneRequest(true)) completeRequest();
         }
 
         @Override
         public void onReceiveETHBalance(String id, String address, String result) {
+            Log.d(TAG,"Receive eth balance: " + result);
+            address = address.substring(2);
+            mEthBalance.add(new String[] { id, address, result });
 
+            if(isDoneRequest(true)) completeRequest();
         }
 
         @Override
         public void onReceiveError(String id, String address, int code) {
+            Log.d(TAG,"Receive balance err code:" + code);
+            if (address.startsWith(MyConstants.PREFIX_HEX)) {
+                address = address.substring(2);
+            }
 
+            mErrBalance.add(new String[] { id, address, MyConstants.NO_BALANCE });
+
+            if(isDoneRequest(true)) completeRequest();
         }
 
         @Override
         public void onReceiveException(String id, String address, String msg) {
+            Log.d(TAG,"Receive balance exception " + msg);
+            if (address.startsWith(MyConstants.PREFIX_HEX)) {
+                address = address.substring(2);
+            }
 
+            mErrBalance.add(new String[] { id, address, MyConstants.NO_BALANCE });
+
+            if(isDoneRequest(true)) completeRequest();
         }
     };
+
+    private void completeRequest () {
+        Log.d(TAG, "complete Request!");
+        mViewModle.lstBalanceResults.setValue(
+                new ArrayList<String[]>() {{
+                    addAll(mIcxBalance);
+                    addAll(mEthBalance);
+                    addAll(mErrBalance);
+            }});
+
+        mIcxBalance.clear();
+        mEthBalance.clear();
+        mErrBalance.clear();
+    }
+
+    private synchronized boolean isDoneRequest(boolean countingRequest) {
+        if (requestCount > 0 && countingRequest) {
+            requestCount--;
+        }
+
+        Log.d(TAG, "remain count: " + requestCount);
+        return requestCount == 0;
+    }
+
+    private void cancleRequest() {
+        if (!isDoneRequest(true)) {
+            Log.d(TAG, "cancle request");
+            mService.stopGetBalance();
+            mIcxBalance.clear();
+            mIcxBalance.clear();
+        }
+    }
+
+    public void requestBalance() {
+        cancleRequest();
+
+        Log.d(TAG, "request remote data");
+        Object[] balanceList = makeGetBalanceList();
+        HashMap<String, String> icxList = (HashMap<String, String>) balanceList[0];
+        HashMap<String, String[]> ircList = (HashMap<String, String[]>) balanceList[1];
+        HashMap<String, String> ethList = (HashMap<String, String>) balanceList[2];
+        HashMap<String, String[]> ercList = (HashMap<String, String[]>) balanceList[3];
+
+        requestCount = icxList.size() + ircList.size() + ethList.size() + ercList.size();
+
+        mService.getBalance(icxList, Constants.KS_COINTYPE_ICX);
+        mService.getTokenBalance(ircList, Constants.KS_COINTYPE_ICX);
+        mService.getBalance(ethList, Constants.KS_COINTYPE_ETH);
+        mService.getTokenBalance(ercList, Constants.KS_COINTYPE_ETH);
+    }
+
+    private Object[] makeGetBalanceList() {
+        HashMap<String, String> icxList = new HashMap<>();
+        HashMap<String, String> ethList = new HashMap<>();
+        HashMap<String, String[]> ercList = new HashMap<>();
+        HashMap<String, String[]> ircList = new HashMap<>();
+
+        Wallet info = mViewModle.wallet.getValue();
+        if (info.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+            List<WalletEntry> entries = info.getWalletEntries();
+            for (WalletEntry entry : entries) {
+                if (entry.getType().equals(MyConstants.TYPE_COIN))
+                    icxList.put(Integer.toString(entry.getId()), entry.getAddress());
+                else
+                    ircList.put(Integer.toString(entry.getId()), new String[]{entry.getAddress(), entry.getContractAddress()});
+            }
+        } else {
+            List<WalletEntry> entries = info.getWalletEntries();
+            for (WalletEntry entry : entries) {
+                if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                    ethList.put(Integer.toString(entry.getId()), MyConstants.PREFIX_HEX + entry.getAddress());
+                } else {
+                    ercList.put(Integer.toString(entry.getId()), new String[]{MyConstants.PREFIX_HEX + entry.getAddress(), entry.getContractAddress()});
+                }
+            }
+        }
+
+
+        return new Object[]{icxList, ircList, ethList, ercList};
+    }
 }

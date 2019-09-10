@@ -46,9 +46,6 @@ public class WalletDetailFragment extends Fragment {
 
     private WalletDetailViewModel viewModel;
 
-    private String mCurrentSymbol = null;
-    private String mCurrentUnit = null;
-
     public WalletDetailFragment() { }
 
     @Nullable
@@ -127,7 +124,7 @@ public class WalletDetailFragment extends Fragment {
 
             @Override
             public void onUnitTextChange(String text) {
-                mCurrentUnit = text;
+                viewModel.unit.setValue(text);
             }
         });
     }
@@ -140,6 +137,7 @@ public class WalletDetailFragment extends Fragment {
         boolean isICX = "ICX".equals(viewModel.wallet.getValue().getCoinType());
         listView.setTextNoTransaction(isICX ? getString(R.string.noTransaction) : getString(R.string.txRecords), !isICX);
         viewModel.selectType.setValue(SelectType.All);
+        viewModel.unit.setValue(viewModel.lstUnit.getValue().get(0));
 
         viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
             @Override
@@ -167,7 +165,8 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onChanged(BigDecimal bigDecimal) {
                 String USD = MyConstants.EXCHANGE_USD;
-                infoView.setExchange(bigDecimal, USD.equals(mCurrentUnit) ? 2 : 4);
+                String unit = viewModel.unit.getValue();
+                infoView.setExchange(bigDecimal, USD.equals(unit) ? 2 : 4);
             }
         });
         // list item data

@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.dev2_detail.component.SelectType;
@@ -23,8 +25,11 @@ public class WalletDetailViewModel extends ViewModel {
     public final MutableLiveData<WalletEntry> walletEntry = new MutableLiveData<>();
     public final MutableLiveData<Integer> entryId = new MutableLiveData<>();
 
+    public final MutableLiveData<Map<String, WalletEntry>> indexedWalletEntry = new MutableLiveData<>();
+
     // service helper
     public final MutableLiveData<List<TransactionItemViewData>> lstTxData = new MutableLiveData<>();
+    public final MutableLiveData<List<String[]>> lstBalanceResults = new MutableLiveData<>();
 
     // fragment
     public final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>();
@@ -38,16 +43,23 @@ public class WalletDetailViewModel extends ViewModel {
     public final MutableLiveData<List<String>> lstUnit = new MutableLiveData<>();
     public final MutableLiveData<BigDecimal> amount = new MutableLiveData<>();
     public final MutableLiveData<BigDecimal> exchange = new MutableLiveData<>();
+    public final MutableLiveData<Map<Integer, BigDecimal>> exchanges = new MutableLiveData<>();
+    public final MutableLiveData<String> unit = new MutableLiveData<>();
 
     // listview
     public final MutableLiveData<List<TransactionItemViewData>> lstItemData =  new MutableLiveData<>();
-
-
 
     public void initialize(Wallet wallet, WalletEntry walletEntry, int entryID) {
         this.wallet.setValue(wallet);
         this.walletEntry.setValue(walletEntry);
         this.entryId.setValue(entryID);
+
+        indexedWalletEntry.setValue(new HashMap<>());
+        lstTxData.setValue(new ArrayList<>());
+        lstBalanceResults.setValue(new ArrayList<>());
+        isRefreshing.setValue(false);
+        isLoadMore.setValue(false);
+//        selectType.setValue();
 
         this.name.setValue(wallet.getAlias());
 
@@ -56,6 +68,11 @@ public class WalletDetailViewModel extends ViewModel {
             add(MyConstants.EXCHANGE_BTC);
             add(MyConstants.EXCHANGE_ETH);
         }});
+
+        amount.setValue(BigDecimal.ZERO);
+        exchange.setValue(BigDecimal.ZERO);
+        exchanges.setValue(new HashMap<>());
+
     }
 
 }
