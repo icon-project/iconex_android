@@ -63,6 +63,14 @@ public class WalletDetailActivity extends AppCompatActivity {
             }
         });
 
+        viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
+            @Override
+            public void onChanged(WalletEntry walletEntry) {
+                if (serviceHelper.isBind())
+                    serviceHelper.loadIcxTxList();
+            }
+        });
+
 
         viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
             @Override

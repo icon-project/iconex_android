@@ -13,12 +13,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev2_detail.component.SelectTokenDialog;
 import foundation.icon.iconex.dev2_detail.component.SelectType;
+import foundation.icon.iconex.dev2_detail.component.TransactionItemView;
 import foundation.icon.iconex.dev2_detail.component.TransactionItemViewData;
 import foundation.icon.iconex.dev2_detail.component.TransactionListView;
 import foundation.icon.iconex.dev2_detail.component.TransactionListViewHeader;
@@ -136,6 +138,13 @@ public class WalletDetailFragment extends Fragment {
         infoView.setUnitList(viewModel.lstUnit.getValue());
         viewModel.selectType.setValue(SelectType.All);
 
+        viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
+            @Override
+            public void onChanged(WalletEntry walletEntry) {
+                infoView.setTextSymbol(walletEntry.getSymbol());
+            }
+        });
+
         viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -162,8 +171,43 @@ public class WalletDetailFragment extends Fragment {
         viewModel.lstItemData.observe(this, new Observer<List<TransactionItemViewData>>() {
             @Override
             public void onChanged(List<TransactionItemViewData> transactionItemViewData) {
-                listView.setViewDataList(transactionItemViewData);
+                SelectType selectType = viewModel.selectType.getValue();
+                updateListView(transactionItemViewData, selectType);
             }
         });
+        viewModel.selectType.observe(this, new Observer<SelectType>() {
+            @Override
+            public void onChanged(SelectType selectType) {
+                List<TransactionItemViewData> transactionItemViewData = viewModel.lstItemData.getValue();
+                updateListView(transactionItemViewData, selectType);
+            }
+        });
+    }
+
+    private void updateListView(List<TransactionItemViewData> transactionItemViewData, SelectType selectType) {
+        List<TransactionItemViewData> viewDataList = new ArrayList<>();
+        if (transactionItemViewData == null) transactionItemViewData = new ArrayList<>();
+
+        switch (selectType) {
+            case Send:
+                for (TransactionItemViewData itemViewData : transactionItemViewData)
+                    if (itemViewData.isDark())
+                        viewDataList.add(itemViewData);
+                break;
+            case Deposit:
+                for (TransactionItemViewData itemViewData : transactionItemViewData)
+                    if (!itemViewData.isDark())
+                        viewDataList.add(itemViewData);
+                break;
+            case All:
+                viewDataList.addAll(transactionItemViewData);
+                break;
+        }
+
+        for (TransactionItemViewData itemViewData: transactionItemViewData) {
+            itemViewData.setTxtAmount(itemViewData.getTxtAmount() + " " + viewModel.walletEntry.getValue().getSymbol());
+        }
+
+        listView.setViewDataList(viewDataList);
     }
 }

@@ -34,6 +34,10 @@ public class WalletDetailServiceHelper {
     public interface OnServiceReadyListener { void onReady(); }
     private OnServiceReadyListener mOnServiceReadyListener = null;
 
+    public boolean isBind() {
+        return mIsBind;
+    }
+
     public WalletDetailServiceHelper(Context context, WalletDetailViewModel viewModel) {
         mContext = context;
         mViewModle = viewModel;
@@ -119,6 +123,7 @@ public class WalletDetailServiceHelper {
     private NetworkService.TxListCallback mIcxTxCallback = new NetworkService.TxListCallback() {
         @Override
         public void onReceiveTransactionList(int totalData, JsonArray txList) {
+            Log.d(TAG, "receive list");
             mCountTxData = totalData;
             Wallet wallet = mViewModle.wallet.getValue();
             WalletEntry walletEntry = mViewModle.walletEntry.getValue();
@@ -156,12 +161,15 @@ public class WalletDetailServiceHelper {
 
         @Override
         public void onReceiveError(String resCode) {
+            Log.d(TAG, "error: " + resCode);
             mLoadCursor--;
+            mViewModle.lstTxData.postValue(mCacheTxData);
         }
 
         @Override
         public void onReceiveException(Throwable t) {
-
+            t.printStackTrace();
+            mViewModle.lstTxData.postValue(mCacheTxData);
         }
     };
 
