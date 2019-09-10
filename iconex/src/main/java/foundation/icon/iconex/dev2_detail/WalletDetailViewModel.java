@@ -33,7 +33,6 @@ public class WalletDetailViewModel extends ViewModel {
     public final MutableLiveData<String> name = new MutableLiveData<>();
 
     // info view
-    public final MutableLiveData<List<String>> lstSymbol = new MutableLiveData<>();
     public final MutableLiveData<List<String>> lstUnit = new MutableLiveData<>();
     public final MutableLiveData<BigDecimal> amount = new MutableLiveData<>();
     public final MutableLiveData<BigDecimal> exchange = new MutableLiveData<>();
@@ -49,11 +48,6 @@ public class WalletDetailViewModel extends ViewModel {
 
         this.name.setValue(wallet.getAlias());
 
-        lstSymbol.setValue(new ArrayList<String>() {{
-            for(WalletEntry entry : wallet.getWalletEntries()) {
-                add(entry.getSymbol());
-            }
-        }});
         lstUnit.setValue(new ArrayList<String>() {{
             add(MyConstants.EXCHANGE_USD);
             add(MyConstants.EXCHANGE_BTC);

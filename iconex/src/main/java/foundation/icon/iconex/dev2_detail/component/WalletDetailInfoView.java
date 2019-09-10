@@ -26,18 +26,16 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
     private TextView txtUnit;
     private ImageButton btnUnit;
 
-    private List<String> mLstToken = new ArrayList<>();
     private List<String> mLstUnit = new ArrayList<>();
 
-    private int mCursorLstToken = 0;
     private int mCursorLstUnit = 0;
 
-    public interface OnTextChangeListener {
-        void onSymbolTextChange(String text);
+    public interface OnClickListener {
+        void onSymbolClick();
         void onUnitTextChange(String text);
     }
 
-    private OnTextChangeListener mOnTextChangeListener = null;
+    private OnClickListener mOnClickListener = null;
 
     public WalletDetailInfoView(@NonNull Context context) {
         super(context);
@@ -71,11 +69,12 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
         btnUnit.setOnClickListener(this);
     }
 
-    public void setTokenList(List<String> lstToken) {
-        mLstToken = lstToken;
-        mCursorLstToken = 0;
-        String strToken = mLstToken.get(mCursorLstToken);
-        txtSymbol.setText(strToken);
+    public void setTextSymbol(String symbol) {
+        txtSymbol.setText(symbol);
+    }
+
+    public void setBtnSymbolVisible(boolean visible) {
+        btnSymbol.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void setUnitList(List<String> lstUnit) {
@@ -85,8 +84,8 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
         txtUnit.setText(strUnit);
     }
 
-    public void setOnTextChangeListener(OnTextChangeListener listener) {
-        mOnTextChangeListener = listener;
+    public void setOnTextChangeListener(OnClickListener listener) {
+        mOnClickListener = listener;
     }
 
     public void setAmount(BigDecimal amount) {
@@ -104,14 +103,8 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
         switch (v.getId()) {
             case R.id.txt_symbol:
             case R.id.btn_symbol: {
-                if (++mCursorLstToken >= mLstToken.size())
-                    mCursorLstToken = 0;
-
-                String strToken = mLstToken.get(mCursorLstToken);
-                txtSymbol.setText(strToken);
-
-                if (mOnTextChangeListener != null)
-                    mOnTextChangeListener.onSymbolTextChange(strToken);
+                if (mOnClickListener != null)
+                    mOnClickListener.onSymbolClick();
             } break;
             case R.id.txt_unit:
             case R.id.btn_unit: {
@@ -121,8 +114,8 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
                 String strUnit = mLstUnit.get(mCursorLstUnit);
                 txtUnit.setText(strUnit);
 
-                if (mOnTextChangeListener != null)
-                    mOnTextChangeListener.onUnitTextChange(strUnit);
+                if (mOnClickListener != null)
+                    mOnClickListener.onUnitTextChange(strUnit);
             } break;
             default: break;
         }

@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -26,7 +25,6 @@ import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
-import loopchain.icon.wallet.core.Constants;
 
 
 public class WalletDetailFragment extends Fragment {
@@ -93,10 +91,10 @@ public class WalletDetailFragment extends Fragment {
             }
         });
 
-        infoView.setOnTextChangeListener(new WalletDetailInfoView.OnTextChangeListener() {
+        infoView.setOnTextChangeListener(new WalletDetailInfoView.OnClickListener() {
             @Override
-            public void onSymbolTextChange(String text) {
-                mCurrentSymbol = text;
+            public void onSymbolClick() {
+
             }
 
             @Override
@@ -108,7 +106,8 @@ public class WalletDetailFragment extends Fragment {
 
     private void initDataSubscribe() {
         actionbar.setTitle(viewModel.name.getValue());
-        infoView.setTokenList(viewModel.lstSymbol.getValue());
+        infoView.setTextSymbol(viewModel.walletEntry.getValue().getSymbol());
+        infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
         infoView.setUnitList(viewModel.lstUnit.getValue());
 
         viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
