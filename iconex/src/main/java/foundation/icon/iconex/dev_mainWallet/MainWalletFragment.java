@@ -25,20 +25,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import foundation.icon.MyConstants;
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.BottomSheetMenu;
 import foundation.icon.iconex.dev_mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.dev_mainWallet.component.TotalAssetInfoView;
 import foundation.icon.iconex.dev_mainWallet.component.WalletCardView;
 import foundation.icon.iconex.dev_mainWallet.component.WalletIndicator;
-import foundation.icon.iconex.dev_mainWallet.component.WalletManageMenu;
+import foundation.icon.iconex.dev_mainWallet.component.WalletManageMenuDialog;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
-import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.util.ScreenUnit;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
@@ -92,6 +91,7 @@ public class MainWalletFragment extends Fragment {
         void asyncRequestInitData();
         void asyncRequestRefreshData();
         void asyncRequestChangeExchangeUnit(ExchangeUnit exchangeUnit);
+        void notifyWalletDatachage();
     }
 
     // prep menu
@@ -100,15 +100,6 @@ public class MainWalletFragment extends Fragment {
         void stake(WalletCardViewData viewData);
         void vote(WalletCardViewData viewData);
         void iScore(WalletCardViewData viewData);
-    }
-
-    // manage wallet
-    public interface ManageWallet {
-        void renameWallet(WalletCardViewData viewData);
-        void manageToken(WalletCardViewData viewData);
-        void backupWallet(WalletCardViewData viewData);
-        void changeWalletPassword(WalletCardViewData viewData);
-        void removeWallet(WalletCardViewData viewData);
     }
 
     // side menu item
@@ -467,23 +458,29 @@ public class MainWalletFragment extends Fragment {
         walletCardView.setOnClickMoreListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new WalletManageMenu(getActivity(), getCurrentWalletCardData().getTitle(), new WalletManageMenu.OnClickMenuItemListener() {
+                WalletCardViewData viewData = getCurrentWalletCardData();
+                Wallet wallet = findWalletByViewData(viewData);
+                new WalletManageMenuDialog(getActivity(), wallet, new WalletManageMenuDialog.OnNotifyWalletDataChangeListener() {
                     @Override
-                    public void onClickMenuItem(WalletManageMenu.MenuItem menuItem) {
-                        WalletCardViewData viewData = getCurrentWalletCardData();
-                        switch (menuItem) {
-                            case Rename: ((ManageWallet) getActivity()).renameWallet(viewData); break;
-                            case ManageToken: ((ManageWallet) getActivity()).manageToken(viewData); break;
-                            case BackupWallet: ((ManageWallet) getActivity()).backupWallet(viewData); break;
-                            case RemoveWallet: ((ManageWallet) getActivity()).changeWalletPassword(viewData); break;
-                            case ChangeWalletPassword: ((ManageWallet) getActivity()).removeWallet(viewData); break;
-                        }
+                    public void onNotifyWalletDataChange(WalletManageMenuDialog.UpdateDataType updateDataType) {
+                        ((AsyncRequester) getActivity()).notifyWalletDatachage();
                     }
                 }).show();
             }
         });
 
         return walletCardView;
+    }
+
+    private Wallet findWalletByViewData(WalletCardViewData viewData) {
+        String address = viewData.getAddress();
+        for (Wallet wallet : ICONexApp.wallets) {
+            if (wallet.getAddress().equals(address)) {
+                return wallet;
+            }
+        }
+
+        return null;
     }
 
     private void updateWalletView() {

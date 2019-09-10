@@ -63,7 +63,6 @@ import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 public class MainWalletActivity extends AppCompatActivity implements
         MainWalletFragment.AsyncRequester,
         WalletCardView.OnClickWalletItemListner,
-        MainWalletFragment.ManageWallet,
         MainWalletFragment.SideMenu,
         MainWalletFragment.PRepsMenu,
         MainWalletServiceHelper.OnLoadRemoteDataListener {
@@ -137,6 +136,11 @@ public class MainWalletActivity extends AppCompatActivity implements
     @Override
     public void asyncRequestChangeExchangeUnit(MainWalletFragment.ExchangeUnit exchangeUnit) {
         setExchange(exchangeUnit);
+    }
+
+    @Override
+    public void notifyWalletDatachage() {
+        setBalances(cachedIcxBalance, cachedEthBalance, cachedErrBalance);
     }
 
     // =================== Service listener (MainWalletServiceHelper.OnLoadRemoteDataListener)
@@ -294,168 +298,6 @@ public class MainWalletActivity extends AppCompatActivity implements
                 .putExtra(WalletDetailActivity.PARAM_WALLET, ((Serializable) wallet))
                 .putExtra(WalletDetailActivity.PARAM_WALLET_ENTRY, ((Serializable) walletEntry))
         );
-    }
-
-    // ============================== manage wallet
-    @Override
-    public void renameWallet(WalletCardViewData viewData) {
-        Wallet targetWallet = findWalletByViewData(viewData);
-
-        EditTextDialog editTextDialog = new EditTextDialog(this, getString(R.string.modWalletAlias));
-        editTextDialog.setHint(getString(R.string.hintWalletAlias));
-        editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.ALIAS);
-        editTextDialog.setAlias(targetWallet.getAlias());
-        editTextDialog.setOnConfirmCallback(new EditTextDialog.OnConfirmCallback() {
-            @Override
-            public void onConfirm(String text) {
-                String alias = Utils.strip(text);
-
-                if (alias.isEmpty()) {
-                    editTextDialog.setError(getString(R.string.errWhiteSpace));
-                    return;
-                }
-
-                if (alias.trim().length() == 0) {
-                    editTextDialog.setError(getString(R.string.errWhiteSpace));
-                    return;
-                }
-
-                for (Wallet info : ICONexApp.wallets) {
-                    if (info.getAlias().equals(alias)) {
-                        editTextDialog.setError(getString(R.string.duplicateWalletAlias));
-                        return;
-                    }
-                }
-
-                RealmUtil.modWalletAlias(targetWallet.getAddress(), alias);
-                targetWallet.setAlias(alias);
-                setBalances(cachedIcxBalance, cachedEthBalance, cachedErrBalance);
-                editTextDialog.dismiss();
-            }
-        });
-        editTextDialog.show();
-    }
-
-    @Override
-    public void manageToken(WalletCardViewData viewData) {
-        Wallet targetWallet = findWalletByViewData(viewData);
-
-        Intent intent = new Intent(this, TokenManageActivity.class);
-        intent.putExtra("walletInfo", (Serializable) targetWallet);
-
-        if (targetWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
-            intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.IRC);
-        else
-            intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.ERC);
-
-        startActivity(intent);
-    }
-
-    @Override
-    public void backupWallet(WalletCardViewData viewData) {
-        Wallet targetWallet = findWalletByViewData(viewData);
-
-        EditTextDialog editTextDialog = new EditTextDialog(this, getString(R.string.enterWalletPassword));
-        editTextDialog.setHint(getString(R.string.hintWalletPassword));
-        editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-        editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.BACKUP);
-        editTextDialog.setOnPasswordCallback(new EditTextDialog.OnPasswordCallback() {
-            @Override
-            public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
-                JsonObject keyStore = new Gson().fromJson(targetWallet.getKeyStore(), JsonObject.class);
-                byte[] bytePrivKey;
-                try {
-                    JsonObject crypto = null;
-                    if (keyStore.has("crypto"))
-                        crypto = keyStore.get("crypto").getAsJsonObject();
-                    else
-                        crypto = keyStore.get("Crypto").getAsJsonObject();
-
-                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, targetWallet.getAddress(), crypto, targetWallet.getCoinType());
-                    if (bytePrivKey != null) {
-                        startActivity(new Intent(MainWalletActivity.this, WalletBackUpActivity.class)
-                                .putExtra("walletInfo", (Serializable) targetWallet)
-                                .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
-
-                        editTextDialog.dismiss();
-                    } else {
-                        editTextDialog.setError(getString(R.string.errPassword));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        editTextDialog.show();
-    }
-
-    @Override
-    public void changeWalletPassword(WalletCardViewData viewData) {
-        Wallet targetWallet = findWalletByViewData(viewData);
-        startActivity(new Intent(this, WalletPwdChangeActivity.class)
-                .putExtra("walletInfo", (Serializable) targetWallet));
-    }
-
-    @Override
-    public void removeWallet(WalletCardViewData viewData) {
-        Wallet targetWallet = findWalletByViewData(viewData);
-
-        final Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-        dialog.setMessage(getString(R.string.warningRemoveWallet));
-        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-            @Override
-            public void onOk() {
-                EditTextDialog editTextDialog = new EditTextDialog(MainWalletActivity.this, getString(R.string.enterWalletPassword));
-                editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.REMOVE);
-                editTextDialog.setOnPasswordCallback(new EditTextDialog.OnPasswordCallback() {
-                    @Override
-                    public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
-                        JsonObject keyStore = new Gson().fromJson(targetWallet.getKeyStore(), JsonObject.class);
-                        byte[] bytePrivKey;
-                        try {
-                            JsonObject crypto = null;
-                            if (keyStore.has("crypto"))
-                                crypto = keyStore.get("crypto").getAsJsonObject();
-                            else
-                                crypto = keyStore.get("Crypto").getAsJsonObject();
-
-                            bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, targetWallet.getAddress(), crypto, targetWallet.getCoinType());
-                            if (bytePrivKey != null) {
-
-                                RealmUtil.removeWallet(targetWallet.getAddress());
-                                try {
-                                    RealmUtil.loadWallet();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                if (ICONexApp.wallets.size() == 0) {
-                                    startActivity(new Intent(MainWalletActivity.this, IntroActivity.class)
-                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-                                } else {
-                                    setBalances(cachedIcxBalance, cachedEthBalance, cachedErrBalance);
-                                }
-
-                                editTextDialog.dismiss();
-                            } else {
-                                editTextDialog.setError(getString(R.string.errPassword));
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                editTextDialog.show();
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });
-        dialog.show();
     }
 
     // ==================================== side menu item

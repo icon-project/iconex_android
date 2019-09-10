@@ -31,6 +31,7 @@ import foundation.icon.iconex.dev2_detail.component.TransactionListViewHeader;
 import foundation.icon.iconex.dev2_detail.component.TransactionViewOptionDialog;
 import foundation.icon.iconex.dev2_detail.component.WalletDetailInfoView;
 import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView;
+import foundation.icon.iconex.dev_mainWallet.component.WalletManageMenuDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
@@ -98,7 +99,20 @@ public class WalletDetailFragment extends Fragment {
                 switch (action) {
                     case btnStart: getActivity().finish(); break;
                     case btnEnd:
-                        Toast.makeText(getContext(), "not implement", Toast.LENGTH_SHORT).show();
+                        new WalletManageMenuDialog(getActivity(), viewModel.wallet.getValue(),
+                            new WalletManageMenuDialog.OnNotifyWalletDataChangeListener() {
+                                @Override
+                                public void onNotifyWalletDataChange(WalletManageMenuDialog.UpdateDataType updateDataType) {
+                                    switch (updateDataType) {
+                                        case Rename: {
+                                            viewModel.name.setValue(viewModel.walletEntry.getValue().getName());
+                                        } break;
+                                        case Delete: {
+                                            getActivity().finish();
+                                        }
+                                    }
+                                }
+                            }).show();
                         break;
                 }
             }
