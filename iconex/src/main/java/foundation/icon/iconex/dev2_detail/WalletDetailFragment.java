@@ -1,9 +1,13 @@
 package foundation.icon.iconex.dev2_detail;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,11 +31,14 @@ import foundation.icon.iconex.dev2_detail.component.TransactionListViewHeader;
 import foundation.icon.iconex.dev2_detail.component.TransactionViewOptionDialog;
 import foundation.icon.iconex.dev2_detail.component.WalletDetailInfoView;
 import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView;
+import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
+
+import static foundation.icon.ICONexApp.network;
 
 
 public class WalletDetailFragment extends Fragment {
@@ -66,10 +73,36 @@ public class WalletDetailFragment extends Fragment {
         initUiInteraction();
         initDataSubscribe();
 
+        v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                v.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                int lstViewHiehgt = v.getMeasuredHeight()
+                        - actionbar.getMeasuredHeight()
+                        - infoView.getMeasuredHeight()
+                        - listHeaderView.getMeasuredHeight();
+
+                listView.getLayoutParams().height = lstViewHiehgt;
+                listView.requestLayout();
+            }
+        });
+
         return v;
     }
 
     private void initUiInteraction() {
+        actionbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
+            @Override
+            public void onClickAction(CustomActionBar.ClickAction action) {
+                switch (action) {
+                    case btnStart: getActivity().finish(); break;
+                    case btnEnd:
+                        Toast.makeText(getContext(), "not implement", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
         // init RefreshLayout
         refresh.addHeader(new RefreshLoadingView(getContext()));
         refresh.setOnRefreshListener(new OnRefreshListener() {
@@ -106,6 +139,22 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onScrollBottom() {
                 viewModel.isLoadMore.setValue(true);
+            }
+        });
+
+        listView.setOnClickEtherScanListener(new TransactionListView.OnClickEtherScanListener() {
+            @Override
+            public void onClickEtherScan() {
+                String tracker;
+                if (network == MyConstants.NETWORK_MAIN)
+                    tracker = ServiceConstants.URL_ETHERSCAN;
+                else
+                    tracker = ServiceConstants.URL_ROPSTEN;
+
+                String url = tracker + "address/" + viewModel.walletEntry.getValue().getAddress();
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                getContext().startActivity(intent);
             }
         });
 

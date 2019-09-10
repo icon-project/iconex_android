@@ -164,6 +164,7 @@ public class WalletDetailActivity extends AppCompatActivity {
                     String strBigIntBalane = result[2];
 
                     WalletEntry entry = indexed.get(id);
+                    if (entry == null) continue;
                     entry.setBalance(strBigIntBalane);
                     String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
                     BigDecimal balance = new BigDecimal(strDecimal);
@@ -216,6 +217,7 @@ public class WalletDetailActivity extends AppCompatActivity {
             String strBigIntBalane = result[2];
 
             WalletEntry entry = indexed.get(id);
+            if (entry == null) continue;
             entry.setBalance(strBigIntBalane);
             String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
             BigDecimal balance = new BigDecimal(strDecimal);

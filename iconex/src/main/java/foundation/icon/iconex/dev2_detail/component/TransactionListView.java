@@ -1,6 +1,8 @@
 package foundation.icon.iconex.dev2_detail.component;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.service.ServiceConstants;
+
+import static foundation.icon.ICONexApp.network;
 
 public class TransactionListView extends FrameLayout implements View.OnClickListener {
 
@@ -28,6 +34,15 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
     private boolean mIsEtherscanVisible = false;
     private RecyclerView.Adapter adapter = null;
     private List<TransactionItemViewData> lstViewData = new ArrayList<>();
+
+    public interface OnClickEtherScanListener {
+        void onClickEtherScan();
+    }
+    private OnClickEtherScanListener mOnClickEtherScanListener = null;
+
+    public void setOnClickEtherScanListener (OnClickEtherScanListener listener){
+        mOnClickEtherScanListener = listener;
+    }
 
     public interface OnScrollBottomListener {
         void onScrollBottom();
@@ -108,7 +123,8 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
         switch (v.getId()) {
             case R.id.txt_no_transaction:
             case R.id.link_etherscan: {
-
+                if (mIsEtherscanVisible && mOnClickEtherScanListener != null)
+                    mOnClickEtherScanListener.onClickEtherScan();
             } break;
         }
     }
