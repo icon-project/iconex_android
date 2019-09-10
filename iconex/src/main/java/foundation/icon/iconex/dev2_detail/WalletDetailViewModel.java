@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import foundation.icon.MyConstants;
+import foundation.icon.iconex.dev2_detail.component.SelectType;
 import foundation.icon.iconex.dev2_detail.component.TransactionItemView;
 import foundation.icon.iconex.dev2_detail.component.TransactionItemViewData;
 import foundation.icon.iconex.wallet.Wallet;
@@ -28,6 +29,7 @@ public class WalletDetailViewModel extends ViewModel {
     // fragment
     public final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isLoadMore = new MutableLiveData<>();
+    public final MutableLiveData<SelectType> selectType = new MutableLiveData<>();
 
     // actionbar
     public final MutableLiveData<String> name = new MutableLiveData<>();
@@ -39,6 +41,7 @@ public class WalletDetailViewModel extends ViewModel {
 
     // listview
     public final MutableLiveData<List<TransactionItemViewData>> lstItemData =  new MutableLiveData<>();
+
 
 
     public void initialize(Wallet wallet, WalletEntry walletEntry, int entryID) {

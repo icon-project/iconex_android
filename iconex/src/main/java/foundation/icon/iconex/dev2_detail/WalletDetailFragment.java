@@ -17,11 +17,16 @@ import java.util.List;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev2_detail.component.SelectTokenDialog;
+import foundation.icon.iconex.dev2_detail.component.SelectType;
 import foundation.icon.iconex.dev2_detail.component.TransactionItemViewData;
 import foundation.icon.iconex.dev2_detail.component.TransactionListView;
 import foundation.icon.iconex.dev2_detail.component.TransactionListViewHeader;
+import foundation.icon.iconex.dev2_detail.component.TransactionViewOptionDialog;
 import foundation.icon.iconex.dev2_detail.component.WalletDetailInfoView;
 import foundation.icon.iconex.dev_mainWallet.component.RefreshLoadingView;
+import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
@@ -76,13 +81,27 @@ public class WalletDetailFragment extends Fragment {
         });
         refresh.setRefreshEnable(true);
 
-        fixedListHeaderView.setVisibility(View.INVISIBLE);
+        fixedListHeaderView.setVisibility(View.GONE);
         scroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                fixedListHeaderView.setVisibility(scrollY >= infoView.getHeight() ? View.VISIBLE : View.INVISIBLE);
+                fixedListHeaderView.setVisibility(scrollY >= infoView.getHeight() ? View.VISIBLE : View.GONE);
             }
         });
+
+        View.OnClickListener onClickViewOption = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TransactionViewOptionDialog(getContext(), viewModel.selectType.getValue(), new TransactionViewOptionDialog.OnSelectListener() {
+                    @Override
+                    public void onSelect(SelectType selectType) {
+                        viewModel.selectType.postValue(selectType);
+                    }
+                }).show();
+            }
+        };
+        fixedListHeaderView.setOnClickViewOption(onClickViewOption);
+        listHeaderView.setOnClickViewOption(onClickViewOption);
 
         listView.setOnScrollBottomListener(new TransactionListView.OnScrollBottomListener() {
             @Override
@@ -94,7 +113,13 @@ public class WalletDetailFragment extends Fragment {
         infoView.setOnTextChangeListener(new WalletDetailInfoView.OnClickListener() {
             @Override
             public void onSymbolClick() {
-
+                Wallet wallet = viewModel.wallet.getValue();
+                new SelectTokenDialog(getContext(), wallet, new SelectTokenDialog.OnSelectWalletEntryListener() {
+                    @Override
+                    public void onSelectWalletEntry(WalletEntry walletEntry) {
+                        viewModel.walletEntry.postValue(walletEntry);
+                    }
+                }).show();
             }
 
             @Override
@@ -109,6 +134,7 @@ public class WalletDetailFragment extends Fragment {
         infoView.setTextSymbol(viewModel.walletEntry.getValue().getSymbol());
         infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
         infoView.setUnitList(viewModel.lstUnit.getValue());
+        viewModel.selectType.setValue(SelectType.All);
 
         viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
             @Override
