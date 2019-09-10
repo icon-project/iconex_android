@@ -116,6 +116,7 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onSymbolClick() {
                 Wallet wallet = viewModel.wallet.getValue();
+                if (wallet.getWalletEntries().size() == 0) return;
                 new SelectTokenDialog(getContext(), wallet, new SelectTokenDialog.OnSelectWalletEntryListener() {
                     @Override
                     public void onSelectWalletEntry(WalletEntry walletEntry) {
@@ -136,6 +137,8 @@ public class WalletDetailFragment extends Fragment {
         infoView.setTextSymbol(viewModel.walletEntry.getValue().getSymbol());
         infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
         infoView.setUnitList(viewModel.lstUnit.getValue());
+        boolean isICX = "ICX".equals(viewModel.wallet.getValue().getCoinType());
+        listView.setTextNoTransaction(isICX ? getString(R.string.noTransaction) : getString(R.string.txRecords), !isICX);
         viewModel.selectType.setValue(SelectType.All);
 
         viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {

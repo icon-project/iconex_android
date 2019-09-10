@@ -181,6 +181,7 @@
     <string name="etehrscan"><u>Etherscan</u></string>
     
     <string name="send">Send</string>
+    <string name="convert">Convert</string>
 
     <!-- Wallet Manage Menu -->
     <string name="menuManageToken">Manage Token</string>
