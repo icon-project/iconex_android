@@ -1,7 +1,6 @@
 package foundation.icon.iconex.dev_mainWallet;
 
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -15,12 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import org.spongycastle.util.encoders.Hex;
-import org.web3j.abi.datatypes.Int;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -32,33 +25,23 @@ import java.util.Map;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-
+import foundation.icon.iconex.dev2_detail.WalletDetailActivity;
 import foundation.icon.iconex.dev_mainWallet.component.WalletCardView;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
-import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.dialogs.TitleMsgDialog;
-import foundation.icon.iconex.menu.WalletBackUpActivity;
-import foundation.icon.iconex.menu.WalletPwdChangeActivity;
 import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
-import foundation.icon.iconex.realm.RealmUtil;
-import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.util.ConvertUtil;
-import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.CreateWalletActivity;
-import foundation.icon.iconex.view.IScoreActivity;
-import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.view.LoadWalletActivity;
+import foundation.icon.iconex.view.PRepIScoreActivity;
 import foundation.icon.iconex.view.PRepListActivity;
+import foundation.icon.iconex.view.PRepStakeActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.dev2_detail.WalletDetailActivity;
-import loopchain.icon.wallet.core.Constants;
-import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
 public class MainWalletActivity extends AppCompatActivity implements
         MainWalletFragment.AsyncRequester,
@@ -166,8 +149,8 @@ public class MainWalletActivity extends AppCompatActivity implements
         indexedWalletEntry = new HashMap<>();
         indexedByIdWalletEntry = new HashMap<>();
         indexedByIdWallet = new HashMap<>();
-        for(Wallet wallet: ICONexApp.wallets) {
-            for (WalletEntry entry: wallet.getWalletEntries()) {
+        for (Wallet wallet : ICONexApp.wallets) {
+            for (WalletEntry entry : wallet.getWalletEntries()) {
                 String key = wallet.getAddress() + "," + entry.getId();
                 indexedWalletEntry.put(key, entry);
                 indexedByIdWallet.put(entry.getId(), wallet);
@@ -177,15 +160,15 @@ public class MainWalletActivity extends AppCompatActivity implements
 
         // indexing view data
         indexedWalletItemData = new HashMap<>();
-        for(WalletCardViewData walletViewData: cachedlstWalletData) {
-            for (WalletItemViewData itemViewData: walletViewData.getLstWallet()) {
+        for (WalletCardViewData walletViewData : cachedlstWalletData) {
+            for (WalletItemViewData itemViewData : walletViewData.getLstWallet()) {
                 String key = walletViewData.getAddress() + "," + itemViewData.getEntryID();
                 indexedWalletItemData.put(key, itemViewData);
             }
         }
     }
 
-    private BigDecimal setBalance (String id, String address, String result, String unit) {
+    private BigDecimal setBalance(String id, String address, String result, String unit) {
         String key = address + "," + id;
         WalletEntry walletEntry = indexedWalletEntry.get(key);
         WalletItemViewData viewData = indexedWalletItemData.get(key);
@@ -247,7 +230,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         String unit = exchangeUnit.name();
 
         BigDecimal totalAsset = null;
-        for(WalletItemViewData viewData : indexedWalletItemData.values()) {
+        for (WalletItemViewData viewData : indexedWalletItemData.values()) {
             try {
                 BigDecimal balance = viewData.getAmount();
 
@@ -293,10 +276,10 @@ public class MainWalletActivity extends AppCompatActivity implements
         WalletEntry walletEntry = indexedByIdWalletEntry.get(entryID);
 
         startActivity(
-            new Intent(this, WalletDetailActivity.class)
-                .putExtra(WalletDetailActivity.PARAM_ENTRY_ID, entryID)
-                .putExtra(WalletDetailActivity.PARAM_WALLET, ((Serializable) wallet))
-                .putExtra(WalletDetailActivity.PARAM_WALLET_ENTRY, ((Serializable) walletEntry))
+                new Intent(this, WalletDetailActivity.class)
+                        .putExtra(WalletDetailActivity.PARAM_ENTRY_ID, entryID)
+                        .putExtra(WalletDetailActivity.PARAM_WALLET, ((Serializable) wallet))
+                        .putExtra(WalletDetailActivity.PARAM_WALLET_ENTRY, ((Serializable) walletEntry))
         );
     }
 
@@ -347,7 +330,9 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void stake(WalletCardViewData viewData) {
-        Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+        Wallet wallet = findWalletByViewData(viewData);
+        startActivity(new Intent(this, PRepStakeActivity.class)
+                .putExtra("wallet", (Serializable) wallet));
     }
 
     @Override
@@ -358,7 +343,7 @@ public class MainWalletActivity extends AppCompatActivity implements
     @Override
     public void iScore(WalletCardViewData viewData) {
         Wallet wallet = findWalletByViewData(viewData);
-        startActivity(new Intent(this, IScoreActivity.class)
+        startActivity(new Intent(this, PRepIScoreActivity.class)
                 .putExtra("wallet", (Serializable) wallet));
     }
 }
