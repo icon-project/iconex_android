@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.service.Urls;
@@ -95,7 +96,7 @@ public class PRepListActivity extends AppCompatActivity {
         disposable = Observable.create(new ObservableOnSubscribe<List<PRep>>() {
             @Override
             public void subscribe(ObservableEmitter<List<PRep>> emitter) throws Exception {
-                PRepService pRepService = new PRepService(Urls.Euljiro.Node.getUrl());
+                PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
                 RpcItem result = pRepService.getPreps();
                 BigInteger totalDelegated =
                         ConvertUtil.hexStringToBigInt(

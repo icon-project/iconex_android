@@ -1,11 +1,10 @@
 package foundation.icon.iconex.service;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
 
 import foundation.icon.icx.Call;
 import foundation.icon.icx.IconService;
+import foundation.icon.icx.SignedTransaction;
 import foundation.icon.icx.data.Address;
 import foundation.icon.icx.transport.http.HttpProvider;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
@@ -59,6 +58,38 @@ public class PRepService {
         Call<RpcItem> call = new Call.Builder()
                 .to(new Address(Constants.ADDRESS_ZERO))
                 .method("queryIScore")
+                .params(params)
+                .build();
+
+        return iconService.call(call).execute();
+    }
+
+    public String setStake(SignedTransaction signedTransaction) throws IOException {
+        return iconService.sendTransaction(signedTransaction).execute().toHexString(true);
+    }
+
+    public RpcItem getStake(String address) throws IOException {
+        RpcObject params = new RpcObject.Builder()
+                .put("address", new RpcValue(address))
+                .build();
+
+        Call<RpcItem> call = new Call.Builder()
+                .to(new Address(Constants.ADDRESS_ZERO))
+                .method("getStake")
+                .params(params)
+                .build();
+
+        return iconService.call(call).execute();
+    }
+
+    public RpcItem getDelegation(String address) throws IOException {
+        RpcObject params = new RpcObject.Builder()
+                .put("address", new RpcValue(address))
+                .build();
+
+        Call<RpcItem> call = new Call.Builder()
+                .to(new Address(Constants.ADDRESS_ZERO))
+                .method("getDelegation")
                 .params(params)
                 .build();
 

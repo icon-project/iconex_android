@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context=".view.IScoreActivity">
+    tools:context=".view.PRepIScoreActivity">
 
     <foundation.icon.iconex.widgets.CustomActionBar
         android:layout_width="match_parent"

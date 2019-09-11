@@ -123,6 +123,10 @@ public class CustomSeekbar extends FrameLayout {
         return mProgress;
     }
 
+    public SeekBar getSeekBar() {
+        return this.seekBar;
+    }
+
     public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener listener) {
         onSeekBarChangeListener = listener;
     }

@@ -14,11 +14,12 @@ import java.util.List;
 import foundation.icon.connect.Constants;
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.control.RecentSendInfo;
-import foundation.icon.iconex.view.AuthActivity;
 import foundation.icon.iconex.realm.MyMigration;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.service.Urls;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.PreferenceUtil;
+import foundation.icon.iconex.view.AuthActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -53,6 +54,7 @@ public class ICONexApp extends Application {
 
     // ========== Preference ================
     public static int network = 0;
+    public static Urls.Network NETWORK = Urls.Network.Euljiro;
 
     // ========== Preference ================
     public static boolean permissionConfirm = false;

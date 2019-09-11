@@ -1,12 +1,14 @@
 package foundation.icon.iconex.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,10 +22,13 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.service.ServiceConstants;
-import foundation.icon.iconex.service.Urls;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.icx.Transaction;
+import foundation.icon.icx.TransactionBuilder;
+import foundation.icon.icx.data.Address;
+import foundation.icon.icx.data.IconAmount;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
 import io.reactivex.Completable;
@@ -33,12 +38,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
+import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.response.TRResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
+import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
+import loopchain.icon.wallet.service.crypto.PKIUtils;
 import retrofit2.Response;
 
-public class IScoreActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = IScoreActivity.class.getSimpleName();
+public class PRepIScoreActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = PRepIScoreActivity.class.getSimpleName();
 
     private Wallet wallet;
     private Disposable disposable;
@@ -106,19 +114,31 @@ public class IScoreActivity extends AppCompatActivity implements View.OnClickLis
         disposable = Completable.create(new CompletableOnSubscribe() {
             @Override
             public void subscribe(CompletableEmitter emitter) throws Exception {
-                PRepService pRepService = new PRepService(Urls.Euljiro.Node.getUrl());
+                PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
                 RpcItem result = pRepService.getIScore(wallet.getAddress());
                 RpcObject object = result.asObject();
                 currentIScore = object.getItem("iscore").asValue().asInteger();
                 estimatedIcx = object.getItem("estimatedICX").asValue().asInteger();
 
-                IconService iconService = new IconService(Urls.Euljiro.Node.getUrl());
+                IconService iconService = new IconService(ICONexApp.NETWORK.getUrl());
                 if (wallet.getWalletEntries().get(0).getBalance().equals(MyConstants.NO_BALANCE)) {
                     BigInteger balance = iconService.getBalance(wallet.getAddress());
                     wallet.getWalletEntries().get(0).setBalance(balance.toString());
                 }
 
-                stepLimit = iconService.estimateStep(wallet.getAddress());
+                Address fromAddress = new Address(wallet.getAddress());
+                Address toAddress = new Address(Constants.ADDRESS_ZERO);
+
+                BigInteger value = IconAmount.of("0", IconAmount.Unit.ICX).toLoop();
+
+                Transaction transaction = TransactionBuilder.newBuilder()
+                        .from(fromAddress)
+                        .to(toAddress)
+                        .value(value)
+                        .call("claimIScore")
+                        .build();
+
+                stepLimit = IconService.estimateStep(transaction);
                 stepPrice = iconService.getStepPrice().asInteger();
 
                 if (ICONexApp.EXCHANGE_TABLE.get("icxusd") == null) {

@@ -47,24 +47,9 @@ public class IconService {
         return iconService.call(call).execute();
     }
 
-    public BigInteger estimateStep(String address) throws IOException {
+    public static BigInteger estimateStep(Transaction transaction) throws IOException {
         foundation.icon.icx.IconService estimated =
                 new foundation.icon.icx.IconService(new HttpProvider("https://test-ctz.solidwallet.io", 3));
-        BigInteger networkId = new BigInteger("3");
-        Address fromAddress = new Address(address);
-        Address toAddress = new Address(Constants.ADDRESS_ZERO);
-
-        BigInteger value = IconAmount.of("0", IconAmount.Unit.ICX).toLoop();
-//        long timestamp = System.currentTimeMillis() * 1000L;
-//        BigInteger nonce = new BigInteger("1");
-
-        Transaction transaction = TransactionBuilder.newBuilder()
-                .nid(networkId)
-                .from(fromAddress)
-                .to(toAddress)
-                .value(value)
-                .call("claimIScore")
-                .build();
 
         return estimated.estimateStep(transaction).execute();
     }

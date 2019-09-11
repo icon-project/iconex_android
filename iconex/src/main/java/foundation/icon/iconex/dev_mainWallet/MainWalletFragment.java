@@ -38,8 +38,9 @@ import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.util.ScreenUnit;
-import foundation.icon.iconex.view.IScoreActivity;
+import foundation.icon.iconex.view.PRepIScoreActivity;
 import foundation.icon.iconex.view.PRepListActivity;
+import foundation.icon.iconex.view.PRepStakeActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
@@ -222,7 +223,10 @@ public class MainWalletFragment extends Fragment {
                     }
                     break;
                     case R.id.btn_stake: {
-                        Toast.makeText(getContext(), "not implement btn_stake", Toast.LENGTH_SHORT).show();
+                        int position = walletViewPager.getCurrentItem();
+                        Wallet wallet = ICONexApp.wallets.get(position);
+                        startActivity(new Intent(getContext(), PRepStakeActivity.class)
+                                .putExtra("wallet", (Serializable) wallet));
                         setBubbleMenuShow(false);
                     }
                     break;
@@ -234,7 +238,7 @@ public class MainWalletFragment extends Fragment {
                     case R.id.btn_iscore: {
                         int position = walletViewPager.getCurrentItem();
                         Wallet wallet = ICONexApp.wallets.get(position);
-                        startActivity(new Intent(getContext(), IScoreActivity.class)
+                        startActivity(new Intent(getContext(), PRepIScoreActivity.class)
                                 .putExtra("wallet", (Serializable) wallet));
                         setBubbleMenuShow(false);
                     }
