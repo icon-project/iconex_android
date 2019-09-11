@@ -1,9 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="275dp"
     android:layout_height="match_parent"
+    android:layout_gravity="start"
     android:background="@drawable/bg_gradient_primary2white"
-    android:layout_gravity="start">
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+
+        android:layout_marginTop="94dp"
+        android:src="@drawable/logo_lock_symbol_active" />
+
+    <Button
+        android:id="@+id/menu_createWallet"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+
+        android:fontFamily="@font/noto_sans_medium"
+        android:background="@android:color/transparent"
+        android:text="@string/titleCreateWallet"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/menu_loadWallet"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:fontFamily="@font/noto_sans_medium"
+        android:background="@android:color/transparent"
+        android:text="@string/titleLoadWallet"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/menu_exportWalletBundle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:fontFamily="@font/noto_sans_medium"
+        android:background="@android:color/transparent"
+        android:text="@string/exportWalletBundle"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@android:color/white"/>
+
+
+    <Button
+        android:id="@+id/menu_screenLock"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="30.5dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:background="@android:color/transparent"
+        android:text="@string/settingLock"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/menu_AppVer"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:background="@android:color/transparent"
+        android:text="@string/appVer"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/menu_iconexDiscalimers"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:background="@android:color/transparent"
+        android:text="@string/ICONexDisclaimers"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+
 </LinearLayout>

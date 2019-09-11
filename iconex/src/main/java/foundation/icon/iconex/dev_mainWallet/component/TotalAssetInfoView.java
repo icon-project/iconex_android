@@ -50,11 +50,11 @@ public class TotalAssetInfoView extends FrameLayout {
 
         // inflate Voted Power view ==================
         mVotedPower = new TotalAssetsLayout(getContext());
+        mVotedPower.txtLabel.setText("Voting Power");
         mVotedPower.txtUint.setVisibility(GONE);
         mVotedPower.btnToggle.setVisibility(GONE);
-        mVotedPower.txtAsset.setText("90.8 %");
 
-        // set viewpage Adapter
+        // set view page Adapter
         mViewPager.setAdapter(new PagerAdapter() {
             @NonNull
             @Override
@@ -105,7 +105,16 @@ public class TotalAssetInfoView extends FrameLayout {
     }
 
     public void bind(TotalAssetsViewData data) {
-        mTotalAsset.txtAsset.setText(data.getTotalAsset());
-        mVotedPower.txtAsset.setText(data.getVotedPower());
+        mTotalAsset.txtUint.setText(data.getTxtExchangeUnit());
+        mTotalAsset.txtAsset.setText(data.getTxtTotalAsset());
+        mVotedPower.txtAsset.setText(data.getTxtVotedPower());
+    }
+
+    public void setOnClickExchangeUnitButton(View.OnClickListener listener) {
+        mTotalAsset.setOnClickExchangeUnitButton(listener);
+    }
+
+    public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
+        mViewPager.addOnPageChangeListener(listener);
     }
 }

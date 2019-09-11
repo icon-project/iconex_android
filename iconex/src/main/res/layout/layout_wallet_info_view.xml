@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="148dp">
         <TextView
-            android:id="@+id/txt_coin"
+            android:id="@+id/txt_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -19,20 +19,20 @@
             android:text="ICON"
             android:textColor="@android:color/white"
             android:textSize="14dp"
-            app:layout_constraintEnd_toStartOf="@+id/dropdown_coin"
+            app:layout_constraintEnd_toStartOf="@+id/btn_symbol"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/dropdown_coin"
+            android:id="@+id/btn_symbol"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_coin"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_symbol"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txt_coin"
-            app:layout_constraintTop_toTopOf="@+id/txt_coin"
+            app:layout_constraintStart_toEndOf="@+id/txt_symbol"
+            app:layout_constraintTop_toTopOf="@+id/txt_symbol"
             app:srcCompat="@drawable/ic_arrow_drop" />
 
         <TextView
@@ -49,10 +49,10 @@
             android:textSize="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_coin" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_symbol" />
 
         <TextView
-            android:id="@+id/txt_exchang"
+            android:id="@+id/txt_exchange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
@@ -60,31 +60,32 @@
             android:text="9,000.00"
             android:textColor="#99FFFFFF"
             android:textSize="14dp"
-            app:layout_constraintEnd_toStartOf="@+id/txt_uint"
+            app:layout_constraintEnd_toStartOf="@+id/txt_unit"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_amount" />
 
         <TextView
-            android:id="@+id/txt_uint"
+            android:id="@+id/txt_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="USD"
             android:textColor="@android:color/white"
             android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_exchang"
-            app:layout_constraintEnd_toStartOf="@+id/toggle_unit"
-            app:layout_constraintStart_toEndOf="@+id/txt_exchang"
-            app:layout_constraintTop_toTopOf="@+id/txt_exchang" />
+            app:layout_constraintBottom_toBottomOf="@+id/txt_exchange"
+            app:layout_constraintEnd_toStartOf="@+id/btn_unit"
+            app:layout_constraintStart_toEndOf="@+id/txt_exchange"
+            app:layout_constraintTop_toTopOf="@+id/txt_exchange" />
 
-        <ImageView
-            android:id="@+id/toggle_unit"
+        <ImageButton
+            android:id="@+id/btn_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_exchang"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_exchange"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txt_uint"
-            app:layout_constraintTop_toTopOf="@+id/txt_exchang"
+            app:layout_constraintStart_toEndOf="@+id/txt_unit"
+            app:layout_constraintTop_toTopOf="@+id/txt_exchange"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/ic_toggle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

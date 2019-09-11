@@ -1,6 +1,8 @@
 package foundation.icon.iconex.dev_mainWallet.component;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,13 +26,14 @@ import foundation.icon.iconex.dev_mainWallet.items.WalletItem;
 import foundation.icon.iconex.dev_mainWallet.items.WalletWalletItem;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.util.ScreenUnit;
 
 public class WalletCardView extends FrameLayout {
 
     public interface OnChangeIsScrollTopListener { void onChangeIsScrollTop(boolean isScrollTop); }
 
     private TextView txtAlias;
-    protected ImageView btnQrSacn;
+    protected ImageView btnQrScan;
     protected ImageView btnQrCode;
     protected ImageView btnMore;
     private RecyclerView recycler;
@@ -38,6 +42,12 @@ public class WalletCardView extends FrameLayout {
     private OnChangeIsScrollTopListener changeIsScrollTopListener = null;
     private RecyclerView.Adapter walletItemAdapter = null;
     private List<WalletItemViewData> walletItems = new ArrayList<>();
+
+    // item click listener
+    public interface OnClickWalletItemListner {
+        void onClickWalletItem(WalletItemViewData itemViewData);
+    }
+    private OnClickWalletItemListner mOnClickWalletItemListener = null;
 
     public WalletCardView(@NonNull Context context) {
         super(context);
@@ -48,17 +58,45 @@ public class WalletCardView extends FrameLayout {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_wallet_card, this, false);
 
         txtAlias = v.findViewById(R.id.txt_alias);
-        btnQrSacn = v.findViewById(R.id.btn_qr_scan);
+        btnQrScan = v.findViewById(R.id.btn_qr_scan);
         btnQrCode = v.findViewById(R.id.btn_qr_code);
         btnMore = v.findViewById(R.id.btn_more);
         recycler = v.findViewById(R.id.recycler);
 
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        int dp0_5 = ScreenUnit.dp2px(getContext(), 0.5f);
+        int dp20 = ScreenUnit.dp2px(getContext(), 20);
+        recycler.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                int itemCount = state.getItemCount();
+
+                Paint paint = new Paint();
+                paint.setColor(ContextCompat.getColor(getContext(), R.color.darkE6));
+                paint.setStrokeWidth(dp0_5);
+
+                int left =  getPaddingLeft() + dp20;
+                int right = parent.getWidth() - dp20;
+
+                int count = parent.getChildCount();
+                for (int i = 0; i < count; i++ ) {
+                    View child = parent.getChildAt(i);
+
+                    int position = parent.getChildAdapterPosition(child);
+                    if (position == 0 || position == itemCount - 1) continue;
+
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                    int top = child.getBottom() + params.bottomMargin - dp0_5;
+                    c.drawLine(left, top, right, top, paint);
+                }
+            }
+        });
         walletItemAdapter = new RecyclerView.Adapter() {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View v;
+                WalletItem v;
                 switch (viewType) {
                     default:
                     case 0: v = new ICXcoinWalletItem(parent.getContext()); break;
@@ -71,7 +109,20 @@ public class WalletCardView extends FrameLayout {
                         RecyclerView.LayoutParams.MATCH_PARENT,
                         RecyclerView.LayoutParams.WRAP_CONTENT
                 ));
-                return new RecyclerView.ViewHolder(v) {};
+
+                RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) { };
+                v.setOnClickWalletItem(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnClickWalletItemListener != null) {
+                            int position = holder.getAdapterPosition();
+                            WalletItemViewData itemViewData = walletItems.get(position);
+                            mOnClickWalletItemListener.onClickWalletItem(itemViewData);
+                        }
+                    }
+                });
+
+                return holder;
             }
 
             @Override
@@ -86,7 +137,7 @@ public class WalletCardView extends FrameLayout {
                     case ICXcoin: return 0;
                     case ETHcoin: return 1;
                     case Token: return 2;
-                    default: // maybe not reach hear(default).
+                    default: // <- maybe not reach hear(default).
                     case Wallet: return 3;
                 }
             }
@@ -134,8 +185,12 @@ public class WalletCardView extends FrameLayout {
         txtAlias.setText(alias);
     }
 
+    public void setOnClickWalletItemListner(OnClickWalletItemListner listner) {
+        mOnClickWalletItemListener = listner;
+    }
+
     public void setOnClickQrScanListener(View.OnClickListener listener) {
-        btnQrSacn.setOnClickListener(listener);
+        btnQrScan.setOnClickListener(listener);
     }
 
     public void setOnClickQrCodeListener(View.OnClickListener listener) {
@@ -149,17 +204,17 @@ public class WalletCardView extends FrameLayout {
     public void bindData(WalletCardViewData data) {
         switch (data.getWalletType()) {
             case ICXwallet: {
-                btnQrSacn.setEnabled(true);
+                btnQrScan.setEnabled(true);
                 btnQrCode.setEnabled(true);
                 btnMore.setEnabled(true);
             } break;
             case ETHwallet: {
-                btnQrSacn.setEnabled(false);
+                btnQrScan.setEnabled(false);
                 btnQrCode.setEnabled(true);
                 btnMore.setEnabled(true);
             } break;
             case TokenList: {
-                btnQrSacn.setEnabled(false);
+                btnQrScan.setEnabled(false);
                 btnQrCode.setEnabled(false);
                 btnMore.setEnabled(false);
             }

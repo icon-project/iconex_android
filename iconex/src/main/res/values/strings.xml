@@ -142,6 +142,7 @@
     <string name="settingLock">Screen Lock</string>
     <string name="settingLanguage">Language</string>
     <string name="appInfo">App Info</string>
+    <string name="appVer">App Ver. </string>
     <string name="ICONexDisclaimers">ICONex Disclaimer</string>
 
     <string name="currentVersion">Current Version</string>
@@ -174,6 +175,12 @@
 
     <string name="txState">Transaction Status</string>
     <string name="txType">Transaction Type</string>
+
+    <string name="history">History</string>
+    <string name="depositHistory">Deposit History</string>
+    
+    <string name="send">Send</string>
+    <string name="convert">Convert</string>
 
     <!-- Wallet Manage Menu -->
     <string name="menuManageToken">Manage Token</string>

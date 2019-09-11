@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.widgets.TTextInputLayout;
@@ -124,7 +125,7 @@ public class CreateWalletStep4Fragment extends Fragment implements View.OnClickL
             e.printStackTrace();
         }
 
-        startActivity(new Intent(getActivity(), MainActivity.class)
+        startActivity(new Intent(getActivity(), MainWalletActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 

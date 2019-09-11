@@ -125,6 +125,7 @@
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/wallet_item_layout"
         android:layout_width="0dp"
         android:layout_height="82dp"
 

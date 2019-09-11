@@ -21,6 +21,7 @@ import java.util.List;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
@@ -119,7 +120,7 @@ public class LoadInputWalletAliasFragment extends Fragment implements View.OnCli
         switch (v.getId()) {
             case R.id.btn_done:
                 saveWallet();
-                startActivity(new Intent(getActivity(), MainActivity.class)
+                startActivity(new Intent(getActivity(), MainWalletActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                 break;
 

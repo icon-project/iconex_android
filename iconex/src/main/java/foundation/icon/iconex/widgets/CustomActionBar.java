@@ -53,7 +53,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
             } break;
             case more: {
                 mBtnText.setVisibility(View.GONE);
-                mBtnEndIcon.setImageResource(R.drawable.ic_more_vert_darkgray);
+                mBtnEndIcon.setImageResource(R.drawable.ic_wallet_more_enabled);
             } break;
             case text: {
                 mBtnEndIcon.setVisibility(View.GONE);
@@ -175,7 +175,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
             } break;
             case more: {
                 mBtnText.setVisibility(View.GONE);
-                mBtnEndIcon.setImageResource(R.drawable.ic_more_vert_darkgray);
+                mBtnEndIcon.setImageResource(R.drawable.ic_wallet_more_enabled);
             } break;
             case text: {
                 mBtnEndIcon.setVisibility(View.GONE);
