@@ -26,6 +26,29 @@ import foundation.icon.iconex.R;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+/**
+ * Usage:
+ *         new ToolTip(this)
+ *                 .setText("Hello")
+ *                 .setPosition(this, findViewById(R.id.btn_start_icon))
+ *                 .show();
+ *
+ *         new ToolTip(this)
+ *                 .setText("Hello2")
+ *                 .setPosition(this, findViewById(R.id.btn_end_icon))
+ *                 .show();
+ *
+ *         new ToolTip(this)
+ *                 .setText("Hello3")
+ *                 .setPosition(this, findViewById(R.id.img_symbol))
+ *                 .show();
+ *
+ *         new ToolTip(this)
+ *                 .setText("Hello 4")
+ *                 .setPosition(this, findViewById(R.id.btn_action))
+ *                 .show();
+ */
+
 public class ToolTip extends Dialog implements View.OnClickListener {
 
     private ViewGroup container;
