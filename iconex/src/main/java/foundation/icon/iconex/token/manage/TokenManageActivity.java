@@ -25,7 +25,6 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     private Wallet mWallet;
 
     private CustomActionBar appbar;
-    private TextView btnEdit;
 
     private final String TAG_ADD = "TAG_ADD";
     private final String TAG_MOD = "TAG_MOD";
@@ -53,8 +52,8 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         appbar = findViewById(R.id.appbar);
         appbar.setTitle(getString(R.string.tokenManageTitle));
         appbar.setOnClickStartIcon(this);
-        btnEdit = findViewById(R.id.txt_mod);
-        btnEdit.setOnClickListener(this);
+
+        appbar.setOnClickEndIcon(this); // btnEdit, R.id.txt_mod
 
         fragmentManager = getSupportFragmentManager();
         listFragment = TokenListFragment.newInstance(mWallet);
@@ -74,7 +73,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
             case R.id.btn_close: // not use
             case R.id.btn_start_icon:
                 if (fragmentManager.getBackStackEntryCount() > 0) {
-                    if (btnEdit.isSelected()) {
+                    if (appbar.isTextButtonSelected()) {
                         Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
                         dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                             @Override
@@ -82,9 +81,13 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                                 fragmentManager.popBackStackImmediate();
                                 appbar.setTitle(getString(R.string.tokenManageTitle));
 
-                                btnEdit.setSelected(false);
-                                btnEdit.setText(getString(R.string.edit));
-                                btnEdit.setVisibility(View.INVISIBLE);
+//                                btnEdit.setSelected(false);
+//                                btnEdit.setText(getString(R.string.edit));
+//                                btnEdit.setVisibility(View.INVISIBLE);
+
+                                appbar.setTextButtonSelected(false);
+                                appbar.setTextButton(getString(R.string.edit));
+                                appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
                                 listFragment.tokenNotifyDataChanged();
                             }
@@ -104,9 +107,9 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                                 fragmentManager.popBackStackImmediate();
                                 appbar.setTitle(getString(R.string.tokenManageTitle));
 
-                                btnEdit.setSelected(false);
-                                btnEdit.setText(getString(R.string.edit));
-                                btnEdit.setVisibility(View.INVISIBLE);
+                                appbar.setTextButtonSelected(false);
+                                appbar.setTextButton(getString(R.string.edit));
+                                appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
                                 listFragment.tokenNotifyDataChanged();
                             }
@@ -122,9 +125,9 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                         fragmentManager.popBackStackImmediate();
                         appbar.setTitle(getString(R.string.tokenManageTitle));
 
-                        btnEdit.setSelected(false);
-                        btnEdit.setText(getString(R.string.edit));
-                        btnEdit.setVisibility(View.INVISIBLE);
+                        appbar.setTextButtonSelected(false);
+                        appbar.setTextButton(getString(R.string.edit));
+                        appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
                         listFragment.tokenNotifyDataChanged();
                     }
@@ -133,9 +136,9 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.txt_mod:
-                if (!btnEdit.isSelected()) {
-                    btnEdit.setSelected(true);
-                    btnEdit.setText(getString(R.string.complete));
+                if (!appbar.isTextButtonSelected()) {
+                    appbar.setTextButtonSelected(true);
+                    appbar.setTextButton(getString(R.string.complete));
 
                     modFragment.setEditable();
                 } else {
@@ -149,9 +152,10 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onTokenClick(WalletEntry entry) {
 
-        btnEdit.setVisibility(View.VISIBLE);
-        btnEdit.setSelected(false);
-        btnEdit.setText(getString(R.string.edit));
+        appbar.setIconEnd(CustomActionBar.IconEnd.text);
+        appbar.setTextButtonSelected(false);
+        appbar.setTextButton(getString(R.string.edit));
+
         appbar.setTitle(entry.getUserName());
 
         TOKEN_TYPE tokenType;
@@ -172,9 +176,9 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         fragmentManager.popBackStackImmediate();
         appbar.setTitle(getString(R.string.tokenManageTitle));
 
-        btnEdit.setSelected(false);
-        btnEdit.setText(getString(R.string.edit));
-        btnEdit.setVisibility(View.INVISIBLE);
+        appbar.setTextButtonSelected(false);
+        appbar.setTextButton(getString(R.string.edit));
+        appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
         listFragment.tokenNotifyDataChanged();
     }
@@ -182,8 +186,8 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onDone(String name) {
         appbar.setTitle(name);
-        btnEdit.setSelected(false);
-        btnEdit.setText(getString(R.string.edit));
+        appbar.setTextButtonSelected(false);
+        appbar.setTextButton(getString(R.string.edit));
     }
 
     @Override
@@ -221,9 +225,9 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         fragmentManager.popBackStackImmediate();
         appbar.setTitle(getString(R.string.tokenManageTitle));
 
-        btnEdit.setSelected(false);
-        btnEdit.setText(getString(R.string.edit));
-        btnEdit.setVisibility(View.INVISIBLE);
+        appbar.setTextButtonSelected(false);
+        appbar.setTextButton(getString(R.string.edit));
+        appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
         listFragment.tokenNotifyDataChanged();
     }
@@ -231,7 +235,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onBackPressed() {
         if (fragmentManager.getBackStackEntryCount() > 0) {
-            if (btnEdit.isSelected()) {
+            if (appbar.isTextButtonSelected()) {
                 Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
                 dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
                     @Override
@@ -239,9 +243,9 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                         fragmentManager.popBackStackImmediate();
                         appbar.setTitle(getString(R.string.tokenManageTitle));
 
-                        btnEdit.setSelected(false);
-                        btnEdit.setText(getString(R.string.edit));
-                        btnEdit.setVisibility(View.INVISIBLE);
+                        appbar.setSelected(false);
+                        appbar.setTextButton(getString(R.string.edit));
+                        appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
                         listFragment.tokenNotifyDataChanged();
                     }
@@ -261,9 +265,9 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                         fragmentManager.popBackStackImmediate();
                         appbar.setTitle(getString(R.string.tokenManageTitle));
 
-                        btnEdit.setSelected(false);
-                        btnEdit.setText(getString(R.string.edit));
-                        btnEdit.setVisibility(View.INVISIBLE);
+                        appbar.setTextButtonSelected(false);
+                        appbar.setTextButton(getString(R.string.edit));
+                        appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
                         listFragment.tokenNotifyDataChanged();
                     }
@@ -279,9 +283,9 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                 fragmentManager.popBackStackImmediate();
                 appbar.setTitle(getString(R.string.tokenManageTitle));
 
-                btnEdit.setSelected(false);
-                btnEdit.setText(getString(R.string.edit));
-                btnEdit.setVisibility(View.INVISIBLE);
+                appbar.setTextButtonSelected(false);
+                appbar.setTextButton(getString(R.string.edit));
+                appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
                 listFragment.tokenNotifyDataChanged();
             }
