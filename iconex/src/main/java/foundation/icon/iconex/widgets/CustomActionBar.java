@@ -57,6 +57,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
             } break;
             case text: {
                 mBtnEndIcon.setVisibility(View.GONE);
+                mBtnText.setVisibility(View.VISIBLE);
                 mBtnText.setText(mTextButton);
             } break;
             default: {
