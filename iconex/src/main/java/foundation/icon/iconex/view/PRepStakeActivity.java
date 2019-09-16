@@ -132,7 +132,7 @@ public class PRepStakeActivity extends AppCompatActivity {
         txtBalance = findViewById(R.id.balance_icx);
         txtUnstaked = findViewById(R.id.unstake_icx);
 
-        editStaked = findViewById(R.id.edit_staked);
+        editStaked = findViewById(R.id.edit_value);
         editStaked.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -153,7 +153,7 @@ public class PRepStakeActivity extends AppCompatActivity {
             }
         });
 
-        txtStakedPer = findViewById(R.id.staked_percentage);
+        txtStakedPer = findViewById(R.id.txt_percentage);
         txtDelegation = findViewById(R.id.delegation_percentage);
         txtTimeRequired = findViewById(R.id.txt_time_required);
         txtStepNPrice = findViewById(R.id.txt_limit_price);
