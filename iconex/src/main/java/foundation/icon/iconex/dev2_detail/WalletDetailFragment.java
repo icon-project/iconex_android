@@ -105,7 +105,7 @@ public class WalletDetailFragment extends Fragment {
                                 public void onNotifyWalletDataChange(WalletManageMenuDialog.UpdateDataType updateDataType) {
                                     switch (updateDataType) {
                                         case Rename: {
-                                            viewModel.name.setValue(viewModel.walletEntry.getValue().getName());
+                                            viewModel.name.setValue(viewModel.wallet.getValue().getAlias());
                                         } break;
                                         case Delete: {
                                             getActivity().finish();
@@ -193,7 +193,12 @@ public class WalletDetailFragment extends Fragment {
     }
 
     private void initDataSubscribe() {
-        actionbar.setTitle(viewModel.name.getValue());
+        viewModel.name.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String name) {
+                actionbar.setTitle(name);
+            }
+        });
         infoView.setTextSymbol(viewModel.walletEntry.getValue().getSymbol());
         infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
         infoView.setUnitList(viewModel.lstUnit.getValue());
