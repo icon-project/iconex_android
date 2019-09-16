@@ -258,6 +258,13 @@ class TTextInputLayout : LinearLayout {
         tvError.visibility = View.INVISIBLE
     }
 
+    fun setHint(hint: String) {
+        this.hint = hint
+        edit.hint = hint
+        tvHint.text = hint
+        tvFileName.text = hint
+    }
+
     fun setFileError(fileName: String, msg: String) {
         isError = true
 
