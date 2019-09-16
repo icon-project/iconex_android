@@ -14,6 +14,7 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.widgets.CustomActionBar;
 import loopchain.icon.wallet.core.Constants;
 
 public class TokenManageActivity extends AppCompatActivity implements View.OnClickListener, TokenListFragment.OnTokenListClickListener,
@@ -23,9 +24,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
 
     private Wallet mWallet;
 
-    private ViewGroup appbar;
-    private TextView txtTitle;
-    private Button btnBack;
+    private CustomActionBar appbar;
     private TextView btnEdit;
 
     private final String TAG_ADD = "TAG_ADD";
@@ -52,11 +51,8 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         mWallet = (Wallet) getIntent().getSerializableExtra("walletInfo");
 
         appbar = findViewById(R.id.appbar);
-        txtTitle = findViewById(R.id.txt_title);
-        txtTitle.setText(getString(R.string.tokenManageTitle));
-        btnBack = findViewById(R.id.btn_close);
-        btnBack.setBackgroundResource(R.drawable.ic_appbar_back);
-        btnBack.setOnClickListener(this);
+        appbar.setTitle(getString(R.string.tokenManageTitle));
+        appbar.setOnClickStartIcon(this);
         btnEdit = findViewById(R.id.txt_mod);
         btnEdit.setOnClickListener(this);
 
@@ -75,7 +71,8 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_close:
+            case R.id.btn_close: // not use
+            case R.id.btn_start_icon:
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     if (btnEdit.isSelected()) {
                         Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
@@ -83,7 +80,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onOk() {
                                 fragmentManager.popBackStackImmediate();
-                                txtTitle.setText(getString(R.string.tokenManageTitle));
+                                appbar.setTitle(getString(R.string.tokenManageTitle));
 
                                 btnEdit.setSelected(false);
                                 btnEdit.setText(getString(R.string.edit));
@@ -105,7 +102,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onOk() {
                                 fragmentManager.popBackStackImmediate();
-                                txtTitle.setText(getString(R.string.tokenManageTitle));
+                                appbar.setTitle(getString(R.string.tokenManageTitle));
 
                                 btnEdit.setSelected(false);
                                 btnEdit.setText(getString(R.string.edit));
@@ -123,7 +120,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                         dialog.show();
                     } else {
                         fragmentManager.popBackStackImmediate();
-                        txtTitle.setText(getString(R.string.tokenManageTitle));
+                        appbar.setTitle(getString(R.string.tokenManageTitle));
 
                         btnEdit.setSelected(false);
                         btnEdit.setText(getString(R.string.edit));
@@ -155,7 +152,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         btnEdit.setVisibility(View.VISIBLE);
         btnEdit.setSelected(false);
         btnEdit.setText(getString(R.string.edit));
-        txtTitle.setText(entry.getUserName());
+        appbar.setTitle(entry.getUserName());
 
         TOKEN_TYPE tokenType;
         if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
@@ -173,7 +170,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClose() {
         fragmentManager.popBackStackImmediate();
-        txtTitle.setText(getString(R.string.tokenManageTitle));
+        appbar.setTitle(getString(R.string.tokenManageTitle));
 
         btnEdit.setSelected(false);
         btnEdit.setText(getString(R.string.edit));
@@ -184,7 +181,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onDone(String name) {
-        txtTitle.setText(name);
+        appbar.setTitle(name);
         btnEdit.setSelected(false);
         btnEdit.setText(getString(R.string.edit));
     }
@@ -222,7 +219,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onListClose() {
         fragmentManager.popBackStackImmediate();
-        txtTitle.setText(getString(R.string.tokenManageTitle));
+        appbar.setTitle(getString(R.string.tokenManageTitle));
 
         btnEdit.setSelected(false);
         btnEdit.setText(getString(R.string.edit));
@@ -240,7 +237,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onOk() {
                         fragmentManager.popBackStackImmediate();
-                        txtTitle.setText(getString(R.string.tokenManageTitle));
+                        appbar.setTitle(getString(R.string.tokenManageTitle));
 
                         btnEdit.setSelected(false);
                         btnEdit.setText(getString(R.string.edit));
@@ -262,7 +259,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onOk() {
                         fragmentManager.popBackStackImmediate();
-                        txtTitle.setText(getString(R.string.tokenManageTitle));
+                        appbar.setTitle(getString(R.string.tokenManageTitle));
 
                         btnEdit.setSelected(false);
                         btnEdit.setText(getString(R.string.edit));
@@ -280,7 +277,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                 dialog.show();
             } else {
                 fragmentManager.popBackStackImmediate();
-                txtTitle.setText(getString(R.string.tokenManageTitle));
+                appbar.setTitle(getString(R.string.tokenManageTitle));
 
                 btnEdit.setSelected(false);
                 btnEdit.setText(getString(R.string.edit));

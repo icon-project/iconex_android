@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
     android:orientation="vertical"
     tools:context=".token.manage.TokenManageActivity">
 
-    <include
+    <foundation.icon.iconex.widgets.CustomActionBar
         android:id="@+id/appbar"
-        layout="@layout/layout_appbar_mod"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+
+        app:start_icon="back"/>
 
     <FrameLayout
         android:id="@+id/container"
