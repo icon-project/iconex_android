@@ -679,6 +679,12 @@ public class MainWalletFragment extends Fragment {
         return viewData;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((AsyncRequester) getActivity()).notifyWalletDatachage();
+    }
+
     // =========================== side menu listenenr
 
     private View.OnClickListener sideMenuListener = new View.OnClickListener() {

@@ -114,6 +114,13 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
 
                         RealmUtil.modWalletAlias(wallet.getAddress(), alias);
                         wallet.setAlias(alias);
+                        for (int i = 0; ICONexApp.wallets.size() > i; i++) {
+                            Wallet iWallet = ICONexApp.wallets.get(i);
+                            if (iWallet.getAddress().equals(wallet.getAddress())) {
+                                iWallet.setAlias(alias);
+                                break;
+                            }
+                        }
                         mOnNotifyWalletDataChangeListener.onNotifyWalletDataChange(UpdateDataType.Rename);
                         editTextDialog.dismiss();
                     }
