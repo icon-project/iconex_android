@@ -81,10 +81,6 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                                 fragmentManager.popBackStackImmediate();
                                 appbar.setTitle(getString(R.string.tokenManageTitle));
 
-//                                btnEdit.setSelected(false);
-//                                btnEdit.setText(getString(R.string.edit));
-//                                btnEdit.setVisibility(View.INVISIBLE);
-
                                 appbar.setTextButtonSelected(false);
                                 appbar.setTextButton(getString(R.string.edit));
                                 appbar.setIconEnd(CustomActionBar.IconEnd.none);
