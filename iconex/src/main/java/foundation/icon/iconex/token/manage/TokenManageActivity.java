@@ -202,6 +202,8 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         }
 
         transaction.commit();
+
+        appbar.setTitle(getString(R.string.addToken));
     }
 
     @Override
