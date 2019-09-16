@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
+import foundation.icon.iconex.dev_dialogs.EditText2Dialog;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
@@ -86,29 +86,28 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
             case R.id.btnClose:
                 break;
             case R.id.btnRename: {
-                EditTextDialog editTextDialog = new EditTextDialog(getContext(), getString(R.string.modWalletAlias));
-                editTextDialog.setHint(getString(R.string.hintWalletAlias));
-                editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.ALIAS);
-                editTextDialog.setAlias(wallet.getAlias());
-                editTextDialog.setOnConfirmCallback(new EditTextDialog.OnConfirmCallback() {
+                EditText2Dialog editText2Dialog = new EditText2Dialog(getContext(), getString(R.string.modWalletAlias));
+                editText2Dialog.setHint(getString(R.string.hintWalletAlias));
+                editText2Dialog.setText(wallet.getAlias());
+                editText2Dialog.setOnConfirm(new EditText2Dialog.OnConfirmListener() {
                     @Override
-                    public void onConfirm(String text) {
+                    public boolean onConfirm(String text) {
                         String alias = Utils.strip(text);
 
                         if (alias.isEmpty()) {
-                            editTextDialog.setError(getString(R.string.errWhiteSpace));
-                            return;
+                            editText2Dialog.setError(getString(R.string.errWhiteSpace));
+                            return false;
                         }
 
                         if (alias.trim().length() == 0) {
-                            editTextDialog.setError(getString(R.string.errWhiteSpace));
-                            return;
+                            editText2Dialog.setError(getString(R.string.errWhiteSpace));
+                            return false;
                         }
 
                         for (Wallet info : ICONexApp.wallets) {
                             if (info.getAlias().equals(alias)) {
-                                editTextDialog.setError(getString(R.string.duplicateWalletAlias));
-                                return;
+                                editText2Dialog.setError(getString(R.string.duplicateWalletAlias));
+                                return false;
                             }
                         }
 
@@ -122,10 +121,10 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                             }
                         }
                         mOnNotifyWalletDataChangeListener.onNotifyWalletDataChange(UpdateDataType.Rename);
-                        editTextDialog.dismiss();
+                        return true;
                     }
                 });
-                editTextDialog.show();
+                editText2Dialog.show();
             } break;
             case R.id.btnManageToken: {
                 Intent intent = new Intent(getContext(), TokenManageActivity.class);

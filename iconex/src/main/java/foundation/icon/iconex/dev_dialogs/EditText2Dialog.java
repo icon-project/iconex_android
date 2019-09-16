@@ -1,18 +1,19 @@
 package foundation.icon.iconex.dev_dialogs;
 
 import android.content.Context;
-import android.text.Layout;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.widgets.TTextInputLayout;
+import kotlin.jvm.functions.Function1;
 
 public class EditText2Dialog extends MessageDialog{
 
     private TTextInputLayout mInputText = null;
+
+    public interface OnConfirmListener { boolean onConfirm(String text);}
 
     public EditText2Dialog(@NotNull Context context, String title) {
         super(context);
@@ -37,7 +38,24 @@ public class EditText2Dialog extends MessageDialog{
         // init content ui
     }
 
+    public void setText(String text) {
+        mInputText.setText(text);
+    }
+
     public void setHint(String hint) {
         mInputText.setHint(hint);
+    }
+
+    public void setError(String error) {
+        mInputText.setError(error != null, error);
+    }
+
+    public void setOnConfirm(OnConfirmListener listner) {
+        setOnConfirmClick(new Function1<View, Boolean>() {
+            @Override
+            public Boolean invoke(View view) {
+                return listner.onConfirm(mInputText.getText());
+            }
+        });
     }
 }
