@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    android:paddingTop="40dp"
+    android:paddingBottom="40dp"
+    tools:context=".view.ui.prep.vote.PRepVoteFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_regular"
+            android:text="@string/vote"
+            android:textColor="@color/dark4D" />
+
+        <TextView
+            android:id="@+id/txt_vote_count"
+            style="@style/TextView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/nanum_square_light"
+            android:text="(-/10)"
+            android:textColor="@color/dark4D" />
+    </LinearLayout>
+
+    <foundation.icon.iconex.widgets.VoteGraph
+        android:id="@+id/vote_graph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/darkE6" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/sub_voted_icx"
+                style="@style/TextView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_light"
+                android:text="@string/votedIcx"
+                android:textColor="@color/dark4D"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/txt_voted_icx"
+                style="@style/TextView12"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanum_square_regular"
+                android:gravity="end|center_vertical"
+                android:text="0.0000"
+                android:textColor="@color/dark4D"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/sub_voted_icx"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/sub_available_icx"
+                style="@style/TextView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_light"
+                android:text="@string/availableIcx"
+                android:textColor="@color/dark4D"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/txt_available_icx"
+                style="@style/TextView12"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanum_square_regular"
+                android:gravity="end|center_vertical"
+                android:text="0.0000"
+                android:textColor="@color/dark4D"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/sub_available_icx"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/darkE6" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/darkFA"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/sort"
+                style="@style/TextView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_light"
+                android:text="@string/myVotesDecending"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/votes"
+                style="@style/TextView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_light"
+                android:text="@string/myVoteReset"
+                android:textColor="@color/darkB3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/darkE6" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/my_votes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+</LinearLayout>

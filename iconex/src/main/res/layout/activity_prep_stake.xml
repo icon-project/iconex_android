@@ -190,7 +190,7 @@
                         app:layout_constraintStart_toEndOf="@id/staked_sub">
 
                         <TextView
-                            android:id="@+id/staked_percentage"
+                            android:id="@+id/txt_percentage"
                             style="@style/TextView12"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -203,7 +203,7 @@
                             app:layout_constraintVertical_bias="0.5" />
 
                         <foundation.icon.iconex.widgets.MyEditText
-                            android:id="@+id/edit_staked"
+                            android:id="@+id/edit_value"
                             android:layout_width="0dp"
                             android:layout_height="30dp"
                             android:layout_marginEnd="4dp"
@@ -215,7 +215,7 @@
                             android:maxLines="1"
                             android:textSize="12dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/staked_percentage"
+                            app:layout_constraintEnd_toStartOf="@id/txt_percentage"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.5" />

@@ -192,7 +192,7 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_btn_rounded_01_light"
                 android:fontFamily="@font/noto_sans_regular"
-                android:text="@string/Claim"
+                android:text="@string/claim"
                 android:textColor="@color/txt_btn_rounded_01_light"
                 android:textSize="14dp"
                 android:enabled="false"/>

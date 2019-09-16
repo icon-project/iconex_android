@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/dark</item>
+        <item name="colorAccent">@color/redCoral</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@color/primary</item>
     </style>
@@ -83,6 +83,16 @@
     <style name="HintAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/edit_box_stroke</item>
         <item name="android:background">@color/redCoral</item>
+    </style>
+
+    <!-- Tab TextAppearance -->
+    <style name="TabTextAppearanceS" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">12dp</item>
+        <item name="android:fontFamily">@font/noto_sans_bold</item>
+    </style>
+
+    <style name="TabTextAppearanceN" parent="TabTextAppearanceS">
+        <item name="android:fontFamily">@font/noto_sans_regular</item>
     </style>
 
     <!-- Button -->
