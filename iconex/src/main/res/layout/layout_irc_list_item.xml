@@ -1,76 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
-    android:maxHeight="100dp"
-    android:orientation="vertical">
+    android:background="@android:color/white">
+
+    <CheckBox
+        android:id="@+id/check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="21dp"
+        android:button="@drawable/bg_checkbox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_irc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/btn_open"
+        android:layout_toEndOf="@id/check_box"
+        android:fontFamily="@font/noto_sans_regular"
+        android:text="-"
+        android:textColor="@color/dark4D"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/check_box"
+        app:layout_constraintEnd_toStartOf="@+id/btn_open"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/check_box"
+        app:layout_constraintTop_toTopOf="@+id/check_box" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:id="@+id/btn_open"
+        android:layout_width="64dp"
         android:layout_height="60dp"
-        android:paddingStart="24dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-        <CheckBox
-            android:id="@+id/check_box"
+        <ImageView
+            android:id="@+id/ic_arrow"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:button="@drawable/bg_check_box" />
-
-        <TextView
-            android:id="@+id/txt_irc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_toEndOf="@id/check_box"
-            android:layout_toStartOf="@+id/btn_open"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="start|center_vertical"
-            android:text="-"
-            android:textColor="@color/colorText"
-            android:textSize="16dp" />
-
-        <RelativeLayout
-            android:id="@+id/btn_open"
-            android:layout_width="72dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true">
-
-            <ImageView
-                android:id="@+id/ic_arrow"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/ic_arrow_down" />
-        </RelativeLayout>
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_arrow_list_open" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/view_address"
-        android:layout_width="match_parent"
-        android:layout_height="39dp"
-        android:paddingEnd="24dp"
-        android:paddingStart="24dp"
-        android:visibility="gone">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="21dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_open"
+        app:layout_constraintStart_toStartOf="@+id/txt_irc"
+        app:layout_constraintTop_toBottomOf="@+id/txt_irc">
 
         <TextView
             android:id="@+id/txt_address"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="start"
             android:text="-"
-            android:textColor="@color/colorText"
-            android:textSize="12dp" />
+            android:textColor="@color/dark4D"
+            android:textSize="10dp" />
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:background="#ededed" />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

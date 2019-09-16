@@ -131,7 +131,8 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                     finish();
                 break;
 
-            case R.id.txt_mod:
+            case R.id.txt_mod: // not use
+            case R.id.btn_text:
                 if (!appbar.isTextButtonSelected()) {
                     appbar.setTextButtonSelected(true);
                     appbar.setTextButton(getString(R.string.complete));

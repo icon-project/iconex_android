@@ -98,8 +98,6 @@ public class TokenListFragment extends Fragment {
         recyclerToken.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                int itemCount = state.getItemCount();
-
                 Paint paint = new Paint();
                 paint.setColor(ContextCompat.getColor(getContext(), R.color.darkE6));
                 paint.setStrokeWidth(dp0_5);
