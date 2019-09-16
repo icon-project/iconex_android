@@ -48,6 +48,7 @@
             android:fontFamily="@font/noto_sans_regular"
             android:textAllCaps="false"
             android:textColor="@color/dark4D"
+            android:textSize="14dp"
 
             android:text="@string/addToken"/>
     </FrameLayout>

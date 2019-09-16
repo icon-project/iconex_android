@@ -18,24 +18,27 @@
         android:paddingBottom="72dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorWhite90"
-        android:padding="16dp">
+        android:background="@color/darkFC">
 
         <Button
             android:id="@+id/btn_add"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_rounded_button_a"
-            android:gravity="center"
-            android:text="@string/add"
+
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_button_rounded12_primaryb6"
+            android:stateListAnimator="@null"
+
+            android:textSize="14dp"
+            android:fontFamily="@font/noto_sans_regular"
             android:textAllCaps="false"
-            android:textColor="@color/button_text"
-            android:textSize="16dp" />
-    </RelativeLayout>
+            android:textColor="@color/text_default_primary_disable_darkb3"
+
+            android:text="@string/add"/>
+    </FrameLayout>
 
 </RelativeLayout>
