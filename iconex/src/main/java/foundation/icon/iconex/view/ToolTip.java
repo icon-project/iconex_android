@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -35,7 +36,7 @@ public class ToolTip extends Dialog implements View.OnClickListener {
     private View mTopRight;
 
     private TextView mText;
-    private ImageButton mBtnClose;
+    private ViewGroup mBtnClose;
 
     @Override
     public void onClick(View v) {
@@ -105,36 +106,40 @@ public class ToolTip extends Dialog implements View.OnClickListener {
                 int winHalfHeight = windowSize.y / 2;
                 int winHalfWidth = windowSize.x / 2;
 
-                int[] location = new int[2];
-                target.getLocationOnScreen(location);
-                int left = location[0];
-                int top = location[1];
-                int right = left + target.getWidth();
-                int bottom = top + target.getHeight();
+                Rect rect = new Rect();
+                target.getGlobalVisibleRect(rect);
+
+                Rect root = new Rect();
+                a.findViewById(android.R.id.content).getGlobalVisibleRect(root);
+
+                rect.left -= root.left;
+                rect.right -= root.left;
+                rect.top -= root.top;
+                rect.bottom -= root.top;
 
                 int height = container.getHeight();
                 int width = container.getWidth();
 
                 WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
 
-                if (top < winHalfHeight) {
-                    if (left < winHalfWidth) { // target top - left
-                        layoutParams.y = bottom;
-                        layoutParams.x = right;
+                if (rect.top < winHalfHeight) {
+                    if (rect.left < winHalfWidth) { // target top - left
+                        layoutParams.y = rect.bottom;
+                        layoutParams.x = rect.left;
                         setTailDirection(TailDirection.TopLeft);
                     } else { // target top - right
-                        layoutParams.y = bottom;
-                        layoutParams.x = right - width;
+                        layoutParams.y = rect.bottom;
+                        layoutParams.x = rect.right - width;
                         setTailDirection(TailDirection.TopRight);
                     }
                 } else {
-                    if (left < winHalfWidth) { // target bottom - left
-                        layoutParams.y = top - height;
-                        layoutParams.x = left;
+                    if (rect.left < winHalfWidth) { // target bottom - left
+                        layoutParams.y = rect.top - height;
+                        layoutParams.x = rect.left;
                         setTailDirection(TailDirection.BottomLeft);
                     } else { // target bottom - right
-                        layoutParams.y = top - height;
-                        layoutParams.x = right - width;
+                        layoutParams.y = rect.top - height;
+                        layoutParams.x = rect.right - width;
                         setTailDirection(TailDirection.BottomRight);
                     }
                 }

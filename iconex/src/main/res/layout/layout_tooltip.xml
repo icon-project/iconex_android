@@ -23,29 +23,32 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_close"
             android:layout_marginStart="20dp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="14dp"
-            android:layout_marginEnd="10dp"
-            android:textSize="10dp"
             android:lineHeight="18dp"
+            android:text="Hello"
             android:textColor="@android:color/white"
-            android:text="Hello"/>
-
-        <ImageButton
-            android:id="@+id/btn_close"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="10dp"
-            android:background="@null"
-            android:src="@drawable/ic_appbar_close_w"
+            android:textSize="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/btn_close"
+            android:layout_width="44dp"
+            android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_appbar_close_w"
+                android:layout_gravity="center"/>
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
