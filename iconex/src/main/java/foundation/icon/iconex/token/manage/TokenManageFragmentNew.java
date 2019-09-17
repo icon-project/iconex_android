@@ -74,8 +74,10 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
 
     private ImageView btnScan;
     // private Button btnDel; move to actionbar
-    private ViewGroup btnAdd;
-    private ViewGroup btnComplete; // add complete button
+    private Button btnAdd;
+    private Button  btnComplete; // add complete button
+    private ViewGroup layoutAdd;
+    private ViewGroup  layoutComplete; // add complete button
 
     private ViewGroup layoutLoading;
 
@@ -145,14 +147,16 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
         btnAdd = v.findViewById(R.id.btn_add_token);
         btnComplete = v.findViewById(R.id.btn_complete);
 
+        layoutAdd = v.findViewById(R.id.layout_add_token);
+        layoutComplete = v.findViewById(R.id.layout_complete);
+
         initView();
 
         if (mMode == MyConstants.MODE_TOKEN.MOD) {
             setReadOnly();
         } else {
             btnScan.setVisibility(View.VISIBLE);
-            // btnDel.setVisibility(View.GONE);
-            btnAdd.setVisibility(View.VISIBLE);
+            layoutAdd.setVisibility(View.VISIBLE);
 
             editAddr.requestFocus();
             editName.setEnabled(true);
@@ -206,10 +210,10 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
     public void setEditable() {
         isEditable = true;
 
-        editName.setEnabled(true);
+        editName.setInputEnabled(true);
         editName.setText(editName.getText().toString());
 
-        // btnDel.setVisibility(View.VISIBLE);
+        layoutComplete.setVisibility(View.VISIBLE);
 
         editStatus = EDIT_STATUS.EDIT;
     }
@@ -253,7 +257,6 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
                         .putExtra(BarcodeCaptureActivity.AutoFocus, true)
                         .putExtra(BarcodeCaptureActivity.UseFlash, false), RC_SCAN);
             } break;
-
             case R.id.btn_complete: {
                 completeToken();
             } break;
@@ -326,13 +329,15 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
             @Override
             public void onChanged(@NotNull CharSequence s) {
                 if (s.length() > 0) {
-                    if (s.length() == 42) {
-                        boolean available = validateAddress(s.toString());
-                        if (available)
-                            if (tokenType == TokenManageActivity.TOKEN_TYPE.IRC)
-                                getIrcToken(s.toString());
-                            else
-                                getErcToken(s.toString());
+                    if (mMode != MyConstants.MODE_TOKEN.MOD) {
+                        if (s.length() == 42) {
+                            boolean available = validateAddress(s.toString());
+                            if (available)
+                                if (tokenType == TokenManageActivity.TOKEN_TYPE.IRC)
+                                    getIrcToken(s.toString());
+                                else
+                                    getErcToken(s.toString());
+                        }
                     }
                 } else {
                     editAddr.setError(false, null);
@@ -370,22 +375,22 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
     private void setReadOnly() {
         isEditable = false;
 
-        editAddr.setFocusable(false);
-        editAddr.setEnabled(false);
+        editAddr.setInputEnabled(false);
         editAddr.setText(mToken.getContractAddress());
 
         btnScan.setVisibility(View.GONE);
 
-        editName.setEnabled(false);
+        editName.setInputEnabled(false);
         editName.setText(mToken.getUserName());
 
-        editSym.setEnabled(false);
+        editSym.setInputEnabled(false);
         editSym.setText(mToken.getSymbol());
 
-        editDec.setEnabled(false);
+        editDec.setInputEnabled(false);
         editDec.setText(String.valueOf(mToken.getDefaultDec()));
 
-        // btnDel.setVisibility(View.GONE);
+        layoutAdd.setVisibility(View.GONE);
+        layoutComplete.setVisibility(View.GONE);
 
         editStatus = EDIT_STATUS.READ_ONLY;
     }
@@ -445,7 +450,7 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
         }
 
         if (editName.getText().toString().isEmpty()) {
-            editName.setError(true, null); // todo: add err script
+            editName.setError(true, getString(R.string.errTokenName));
             resultName = false;
         } else {
             editName.setError(false, null);

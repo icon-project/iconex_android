@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
     android:background="@android:color/white">
 
     <LinearLayout
@@ -30,6 +31,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/btn_qr_scan"
+                android:layout_marginRight="8dp"
+                app:layout_goneMarginRight="0dp"
                 app:hint="@string/tokenAddress" />
 
             <ImageButton
@@ -40,8 +43,7 @@
                 android:src="@drawable/ic_qrcode_scan"
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toTopOf="@id/edit_address"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="8dp"/>
+                app:layout_constraintRight_toRightOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <foundation.icon.iconex.widgets.TTextInputLayout
@@ -65,13 +67,15 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/btn_add_token"
+        android:id="@+id/layout_add_token"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/darkFC">
+        android:background="@color/darkFC"
+        android:visibility="gone">
 
         <Button
+            android:id="@+id/btn_add_token"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
@@ -83,29 +87,32 @@
             android:fontFamily="@font/noto_sans_regular"
             android:textAllCaps="false"
             android:textColor="@color/text_default_primary_disable_darkb3"
+            android:enabled="false"
 
             android:text="@string/add"/>
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/btn_complete"
+        android:id="@+id/layout_complete"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/darkFC">
+        android:background="@color/darkFC"
+        android:visibility="gone">
 
         <Button
+            android:id="@+id/btn_complete"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
             android:layout_margin="10dp"
-            android:background="@drawable/bg_button_rounded12_primaryb6"
+            android:background="@drawable/bg_btn_rounded12_dark4d"
             android:stateListAnimator="@null"
 
             android:textSize="14dp"
             android:fontFamily="@font/noto_sans_regular"
             android:textAllCaps="false"
-            android:textColor="@color/text_default_primary_disable_darkb3"
+            android:textColor="@android:color/white"
 
             android:text="@string/complete"/>
     </FrameLayout>

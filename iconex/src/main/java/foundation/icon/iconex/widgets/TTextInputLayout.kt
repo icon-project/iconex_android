@@ -207,6 +207,7 @@ class TTextInputLayout : LinearLayout {
         edit.setText(text)
         if (text.isNotEmpty())
             edit.setSelection(text.length)
+        tvHint.visibility = if (text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
     }
 
     fun setError(err: Boolean, msg: String?) {
@@ -284,6 +285,8 @@ class TTextInputLayout : LinearLayout {
     fun setInputEnabled(enabled: Boolean) {
         if (enabled) {
             edit.isFocusableInTouchMode = enabled
+        } else {
+            btnClear.visibility = View.INVISIBLE
         }
 
         edit.isEnabled = enabled
