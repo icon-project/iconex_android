@@ -26,6 +26,7 @@ import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.menu.WalletBackupActivityNew;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
+import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.util.Utils;
@@ -150,7 +151,7 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 }).show();
                 break;
             case R.id.btnChangeWalletPassword: {
-                getContext().startActivity(new Intent(getContext(), WalletPwdChangeActivity.class)
+                getContext().startActivity(new Intent(getContext(), WalletPwdChangeActivityNew.class)
                         .putExtra("walletInfo", (Serializable) wallet));
             } break;
             case R.id.btnRemoveWallet: {
