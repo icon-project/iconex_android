@@ -20,6 +20,7 @@ import java.io.Serializable;
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_dialogs.EditText2Dialog;
+import foundation.icon.iconex.dev_dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
@@ -138,38 +139,14 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 getContext().startActivity(intent);
             } break;
             case R.id.btnBackupWallet:
-                EditTextDialog editTextDialog = new EditTextDialog(getContext(), getString(R.string.enterWalletPassword));
-                editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.BACKUP);
-                editTextDialog.setOnPasswordCallback(new EditTextDialog.OnPasswordCallback() {
+                new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
                     @Override
-                    public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
-                        JsonObject keyStore = new Gson().fromJson(wallet.getKeyStore(), JsonObject.class);
-                        byte[] bytePrivKey;
-                        try {
-                            JsonObject crypto = null;
-                            if (keyStore.has("crypto"))
-                                crypto = keyStore.get("crypto").getAsJsonObject();
-                            else
-                                crypto = keyStore.get("Crypto").getAsJsonObject();
-
-                            bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, wallet.getAddress(), crypto, wallet.getCoinType());
-                            if (bytePrivKey != null) {
-                                getContext().startActivity(new Intent(getContext(), WalletBackUpActivity.class)
-                                        .putExtra("walletInfo", (Serializable) wallet)
-                                        .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
-
-                                editTextDialog.dismiss();
-                            } else {
-                                editTextDialog.setError(getString(R.string.errPassword));
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    public void onPass(byte[] bytePrivateKey) {
+                        getContext().startActivity(new Intent(getContext(), WalletBackUpActivity.class)
+                                .putExtra("walletInfo", (Serializable) wallet)
+                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
                     }
-                });
-                editTextDialog.show();
+                }).show();
                 break;
             case R.id.btnChangeWalletPassword: {
                 getContext().startActivity(new Intent(getContext(), WalletPwdChangeActivity.class)
