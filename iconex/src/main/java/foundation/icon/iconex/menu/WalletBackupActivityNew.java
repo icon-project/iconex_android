@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
@@ -29,6 +30,7 @@ import foundation.icon.iconex.view.ui.wallet.ViewWalletInfoActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.TTextInputLayout;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
 public class WalletBackupActivityNew extends AppCompatActivity implements View.OnClickListener {
@@ -113,27 +115,24 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
     }
 
     private void checkPermission() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            dialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            MessageDialog messageDialog = new MessageDialog(this);
+            messageDialog.setTitleText(getString(R.string.backupKeyStoreFileConfirm));
+            messageDialog.setSingleButton(false);
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
-                public void onOk() {
+                public Boolean invoke(View view) {
                     boolean result = downloadKeystore();
                     if (result) {
-                        BasicDialog dialog = new BasicDialog(WalletBackupActivityNew.this);
-                        dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
-                        dialog.show();
+                        MessageDialog messageDialog = new MessageDialog(WalletBackupActivityNew.this);
+                        messageDialog.setTitleText(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+                        messageDialog.show();
                     }
-                }
-
-                @Override
-                public void onCancel() {
-
+                    return true;
                 }
             });
-            dialog.show();
+            messageDialog.show();
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -150,30 +149,27 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Basic2ButtonDialog dialog = new Basic2ButtonDialog(WalletBackupActivityNew.this);
-                    dialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
-                    dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                    MessageDialog messageDialog = new MessageDialog(this);
+                    messageDialog.setTitleText(getString(R.string.backupKeyStoreFileConfirm));
+                    messageDialog.setSingleButton(false);
+                    messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
-                        public void onOk() {
+                        public Boolean invoke(View view) {
                             boolean result = downloadKeystore();
                             if (result) {
-                                BasicDialog dialog = new BasicDialog(WalletBackupActivityNew.this);
-                                dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
-                                dialog.show();
+                                MessageDialog messageDialog = new MessageDialog(WalletBackupActivityNew.this);
+                                messageDialog.setTitleText(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+                                messageDialog.show();
                             }
-                        }
-
-                        @Override
-                        public void onCancel() {
-
+                            return true;
                         }
                     });
-                    dialog.show();
+                    messageDialog.show();
 
                 } else {
-                    BasicDialog dialog = new BasicDialog(WalletBackupActivityNew.this);
-                    dialog.setMessage(getString(R.string.permissionStorageDenied));
-                    dialog.show();
+                    MessageDialog messageDialog = new MessageDialog(this);
+                    messageDialog.setTitleText(getString(R.string.permissionStorageDenied));
+                    messageDialog.show();
                 }
                 return;
             }
