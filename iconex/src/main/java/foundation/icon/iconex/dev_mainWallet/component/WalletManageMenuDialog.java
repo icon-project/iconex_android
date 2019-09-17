@@ -24,6 +24,7 @@ import foundation.icon.iconex.dev_dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
+import foundation.icon.iconex.menu.WalletBackupActivityNew;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
@@ -142,7 +143,7 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
                     @Override
                     public void onPass(byte[] bytePrivateKey) {
-                        getContext().startActivity(new Intent(getContext(), WalletBackUpActivity.class)
+                        getContext().startActivity(new Intent(getContext(), WalletBackupActivityNew.class)
                                 .putExtra("walletInfo", (Serializable) wallet)
                                 .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
                     }
