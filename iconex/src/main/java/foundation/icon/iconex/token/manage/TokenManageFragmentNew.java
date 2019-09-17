@@ -73,7 +73,9 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
     private TTextInputLayout editAddr, editName, editSym, editDec;
 
     private ImageView btnScan;
-    private Button btnDel, btnAdd;
+    // private Button btnDel; move to actionbar
+    private ViewGroup btnAdd;
+    private ViewGroup btnComplete; // add complete button
 
     private ViewGroup layoutLoading;
 
@@ -88,7 +90,7 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
 
         void onDone(String name);
     }
-    private TokenManageFragment.OnTokenManageListener mListener;
+    private OnTokenManageListener mListener;
 
     private enum EDIT_STATUS {
         READ_ONLY,
@@ -130,7 +132,7 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_token_manage, container, false);
+        View v = inflater.inflate(R.layout.fragment_token_manage_new, container, false);
 
         layoutLoading = v.findViewById(R.id.layout_loading);
 
@@ -140,9 +142,8 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
         editDec = v.findViewById(R.id.edit_decimals);
 
         btnScan = v.findViewById(R.id.btn_qr_scan);
-        // todo: add ui
-        btnDel = v.findViewById(R.id.btn_delete_token);
         btnAdd = v.findViewById(R.id.btn_add_token);
+        btnComplete = v.findViewById(R.id.btn_complete);
 
         initView();
 
@@ -150,7 +151,7 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
             setReadOnly();
         } else {
             btnScan.setVisibility(View.VISIBLE);
-            btnDel.setVisibility(View.GONE);
+            // btnDel.setVisibility(View.GONE);
             btnAdd.setVisibility(View.VISIBLE);
 
             editAddr.requestFocus();
@@ -163,8 +164,8 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof TokenManageFragment.OnTokenManageListener) {
-            mListener = (TokenManageFragment.OnTokenManageListener) context;
+        if (context instanceof TokenManageFragmentNew.OnTokenManageListener) {
+            mListener = (TokenManageFragmentNew.OnTokenManageListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnTokenManageListener");
@@ -208,12 +209,89 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
         editName.setEnabled(true);
         editName.setText(editName.getText().toString());
 
-        btnDel.setVisibility(View.VISIBLE);
+        // btnDel.setVisibility(View.VISIBLE);
 
         editStatus = EDIT_STATUS.EDIT;
     }
 
-    public void onEditDone() {
+    public void deleteToken() {
+        Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
+        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            @Override
+            public void onOk() {
+                try {
+                    RealmUtil.deleteToken(mWalletAddr, editAddr.getText().toString());
+                    RealmUtil.loadWallet();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                mListener.onClose();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+        dialog.setMessage(String.format(getString(R.string.msgTokenDelete), mToken.getUserName()));
+        dialog.show();
+    }
+
+    public boolean isEmpty() {
+        return editAddr.getText().toString().trim().isEmpty()
+                && editName.getText().toString().trim().isEmpty()
+                && editSym.getText().toString().isEmpty()
+                && editDec.getText().toString().trim().isEmpty();
+    }
+
+    // =================================== private method
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_qr_scan: {
+                startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
+                        .putExtra(BarcodeCaptureActivity.AutoFocus, true)
+                        .putExtra(BarcodeCaptureActivity.UseFlash, false), RC_SCAN);
+            } break;
+
+            case R.id.btn_complete: {
+                completeToken();
+            } break;
+            case R.id.btn_add_token: {
+                if (validateToken()) {
+                    addToken();
+                    mListener.onClose();
+                }
+            } break;
+        }
+    }
+
+    private void addToken() {
+        Token token = new Token();
+
+        String userName = editName.getText().toString();
+        String userSym = editSym.getText().toString();
+        int userDec = Integer.parseInt(editDec.getText().toString());
+
+        token.setContractAddress(editAddr.getText().toString());
+        token.setUserName(userName);
+        if (defaultName == null)
+            defaultName = userName;
+        token.setDefaultName(defaultName);
+        token.setUserSymbol(userSym);
+        token.setDefaultSymbol(defaultSym);
+        token.setUserDec(userDec);
+        token.setDefaultDec(defaultDec);
+
+        try {
+            RealmUtil.addToken(mWalletAddr, token);
+            RealmUtil.loadWallet();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void completeToken() {
         boolean check = validateToken();
         if (check) {
             try {
@@ -232,13 +310,6 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
             setReadOnly();
             mListener.onDone(editName.getText().toString());
         }
-    }
-
-    public boolean isEmpty() {
-        return editAddr.getText().toString().trim().isEmpty()
-                && editName.getText().toString().trim().isEmpty()
-                && editSym.getText().toString().isEmpty()
-                && editDec.getText().toString().trim().isEmpty();
     }
 
     // ============================= init View
@@ -292,8 +363,8 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
         editDec.setOnKeyPreImeListener(this);
 
         btnScan.setOnClickListener(this);
-        btnDel.setOnClickListener(this);
         btnAdd.setOnClickListener(this);
+        btnComplete.setOnClickListener(this);
     }
 
     private void setReadOnly() {
@@ -314,77 +385,9 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
         editDec.setEnabled(false);
         editDec.setText(String.valueOf(mToken.getDefaultDec()));
 
-        btnDel.setVisibility(View.GONE);
+        // btnDel.setVisibility(View.GONE);
 
         editStatus = EDIT_STATUS.READ_ONLY;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_qr_scan: {
-                startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
-                        .putExtra(BarcodeCaptureActivity.AutoFocus, true)
-                        .putExtra(BarcodeCaptureActivity.UseFlash, false), RC_SCAN);
-            } break;
-            case R.id.btn_delete_token: {
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        deleteToken();
-                        mListener.onClose();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-                dialog.setMessage(String.format(getString(R.string.msgTokenDelete), mToken.getUserName()));
-                dialog.show();
-            } break;
-            case R.id.btn_add_token: {
-                if (validateToken()) {
-                    addToken();
-                    mListener.onClose();
-                }
-            } break;
-        }
-    }
-
-    private void addToken() {
-        Token token = new Token();
-
-        String userName = editName.getText().toString();
-        String userSym = editSym.getText().toString();
-        int userDec = Integer.parseInt(editDec.getText().toString());
-
-        token.setContractAddress(editAddr.getText().toString());
-        token.setUserName(userName);
-        if (defaultName == null)
-            defaultName = userName;
-        token.setDefaultName(defaultName);
-        token.setUserSymbol(userSym);
-        token.setDefaultSymbol(defaultSym);
-        token.setUserDec(userDec);
-        token.setDefaultDec(defaultDec);
-
-        try {
-            RealmUtil.addToken(mWalletAddr, token);
-            RealmUtil.loadWallet();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void deleteToken() {
-        try {
-            RealmUtil.deleteToken(mWalletAddr, editAddr.getText().toString());
-            RealmUtil.loadWallet();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     // ====================================== validate methods
