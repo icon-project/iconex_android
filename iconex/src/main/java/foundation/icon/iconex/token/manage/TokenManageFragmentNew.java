@@ -39,6 +39,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
+import foundation.icon.iconex.dev_dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -47,6 +48,7 @@ import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.TTextInputLayout;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import retrofit2.Call;
@@ -219,10 +221,13 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
     }
 
     public void deleteToken() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+        MessageDialog messageDialog = new MessageDialog(getContext());
+        messageDialog.setTitleText(getString(R.string.msgTokenDelete2));
+        messageDialog.setSubText(mToken.getUserName());
+        messageDialog.setSingleButton(false);
+        messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
             @Override
-            public void onOk() {
+            public Boolean invoke(View view) {
                 try {
                     RealmUtil.deleteToken(mWalletAddr, editAddr.getText().toString());
                     RealmUtil.loadWallet();
@@ -230,15 +235,10 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
                     e.printStackTrace();
                 }
                 mListener.onClose();
-            }
-
-            @Override
-            public void onCancel() {
-
+                return true;
             }
         });
-        dialog.setMessage(String.format(getString(R.string.msgTokenDelete), mToken.getUserName()));
-        dialog.show();
+        messageDialog.show();
     }
 
     public boolean isEmpty() {
