@@ -59,6 +59,12 @@ import retrofit2.Response;
 
 import static foundation.icon.ICONexApp.network;
 
+/**
+ * !!!!!!!!!!!
+ * Not Use this fragment
+ * Go to TokenManageFragmentNew !!!!!!
+ */
+
 public class TokenManageFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = TokenManageFragment.class.getSimpleName();

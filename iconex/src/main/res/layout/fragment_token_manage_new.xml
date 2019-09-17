@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        
+        android:layout_marginTop="50dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <foundation.icon.iconex.widgets.TTextInputLayout
+                android:id="@+id/edit_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/btn_qr_scan"
+                app:hint="@string/tokenAddress"
+                android:layout_marginRight="8dp"/>
+
+            <ImageButton
+                android:id="@+id/btn_qr_scan"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_btn_outline_01"
+                android:src="@drawable/ic_qrcode_scan"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="@id/edit_address"
+                app:layout_constraintRight_toRightOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <foundation.icon.iconex.widgets.TTextInputLayout
+            android:id="@+id/edit_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="@string/tokenName"/>
+
+        <foundation.icon.iconex.widgets.TTextInputLayout
+            android:id="@+id/edit_symbol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="@string/tokenSymbol"/>
+
+        <foundation.icon.iconex.widgets.TTextInputLayout
+            android:id="@+id/edit_decimals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="@string/tokenDecimals"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/anim_loading" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

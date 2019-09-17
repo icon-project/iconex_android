@@ -290,6 +290,10 @@ class TTextInputLayout : LinearLayout {
         edit.isFocusable = enabled
     }
 
+    fun setSelection(index: Int) {
+        edit.setSelection(index)
+    }
+
     private var mOnFocusReleasedListener: OnFocusReleased? = null
     fun setOnFocusChangedListener(onFocusReleasedListener: OnFocusReleased) {
         mOnFocusReleasedListener = onFocusReleasedListener
