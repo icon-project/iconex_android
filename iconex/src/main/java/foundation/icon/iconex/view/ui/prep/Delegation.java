@@ -1,18 +1,24 @@
 package foundation.icon.iconex.view.ui.prep;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public class Delegation {
+public class Delegation implements Serializable {
 
-    private String address, status;
+    private String prepName, address;
+    private PRep.Status status;
     private PRep.Grade grade;
     private BigInteger value;
+
+    public String getPrepName() {
+        return prepName;
+    }
 
     public String getAddress() {
         return address;
     }
 
-    public String getStatus() {
+    public PRep.Status getStatus() {
         return status;
     }
 
@@ -24,26 +30,42 @@ public class Delegation {
         return value;
     }
 
-    public Delegation(Builder builder) {
+    Delegation(Builder builder) {
+        prepName = builder.prepName;
         address = builder.address;
         status = builder.status;
         grade = builder.grade;
         value = builder.value;
     }
 
+    public Builder newBuilder() {
+        return new Builder()
+                .name(prepName)
+                .address(address)
+                .status(status)
+                .grade(grade)
+                .value(value);
+    }
+
     public static class Builder {
-        private String address, status;
+        private String prepName, address;
+        private PRep.Status status;
         private PRep.Grade grade;
         private BigInteger value;
 
-        Builder() {
+        public Builder() {
+        }
 
+        public Builder name(String prepName) {
+            this.prepName = prepName;
+            return this;
         }
 
         public Builder address(String address) {
             this.address = address;
             return this;
         }
+
         public Builder grade(PRep.Grade grade) {
             this.grade = grade;
             return this;
@@ -54,7 +76,7 @@ public class Delegation {
             return this;
         }
 
-        public Builder status(String status) {
+        public Builder status(PRep.Status status) {
             this.status = status;
             return this;
         }

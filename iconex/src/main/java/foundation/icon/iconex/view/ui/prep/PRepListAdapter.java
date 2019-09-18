@@ -23,6 +23,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     private final Context mContext;
     private final Type mType;
     private List<PRep> preps;
+    private List<Delegation> delegations;
 
     public PRepListAdapter(Context context, Type type, List<PRep> preps) {
         mContext = context;
@@ -42,13 +43,13 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ItemVH h = (ItemVH) holder;
         PRep prep = preps.get(position);
+        ConstraintLayout.LayoutParams layoutParams =
+                (ConstraintLayout.LayoutParams) h.layoutVotes.getLayoutParams();
 
         switch (mType) {
             case NORMAL:
                 h.btnManage.setVisibility(View.GONE);
                 h.layoutMyVotes.setVisibility(View.GONE);
-                ConstraintLayout.LayoutParams layoutParams =
-                        (ConstraintLayout.LayoutParams) h.layoutVotes.getLayoutParams();
                 layoutParams.setMargins(layoutParams.getMarginStart(),
                         (int) mContext.getResources().getDimension(R.dimen.dp12),
                         layoutParams.getMarginEnd(),
@@ -64,6 +65,28 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                 break;
 
             case VOTE:
+                if (delegations.get(position) != null) {
+                    Delegation delegation = delegations.get(position);
+                    if (prep.getAddress().equals(delegation.getAddress()))
+                        h.btnManage.setImageResource(R.drawable.ic_add_list_disabled);
+                    else
+                        h.btnManage.setImageResource(R.drawable.ic_add_list_enabled);
+                } else
+                    h.btnManage.setImageResource(R.drawable.ic_add_list_enabled);
+
+                h.layoutMyVotes.setVisibility(View.GONE);
+                layoutParams.setMargins(layoutParams.getMarginStart(),
+                        (int) mContext.getResources().getDimension(R.dimen.dp12),
+                        layoutParams.getMarginEnd(),
+                        (int) mContext.getResources().getDimension(R.dimen.dp25));
+                h.layoutVotes.setLayoutParams(layoutParams);
+                h.tvPrepName.setText(prep.getName());
+                h.tvPrepGrade.setText(String.format(Locale.getDefault(),
+                        "(%s)", prep.getGrade().getLabel()));
+                h.tvTotalVotes.setText(String.format(Locale.getDefault(),
+                        "%s(%s%%)",
+                        Utils.formatFloating(Double.toString(prep.getDelegated().doubleValue()), 4),
+                        Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
                 break;
         }
     }
@@ -106,6 +129,10 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
     public void setData(List<PRep> preps) {
         this.preps = preps;
+    }
+
+    public void setDelegations(List<Delegation> delegations) {
+        this.delegations = delegations;
     }
 
     public enum Type {

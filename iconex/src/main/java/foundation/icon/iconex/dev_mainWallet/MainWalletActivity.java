@@ -40,6 +40,7 @@ import foundation.icon.iconex.view.LoadWalletActivity;
 import foundation.icon.iconex.view.PRepIScoreActivity;
 import foundation.icon.iconex.view.PRepListActivity;
 import foundation.icon.iconex.view.PRepStakeActivity;
+import foundation.icon.iconex.view.PRepVoteActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 
@@ -337,7 +338,9 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void vote(WalletCardViewData viewData) {
-        Toast.makeText(this, "not implement", Toast.LENGTH_SHORT).show();
+        Wallet wallet = findWalletByViewData(viewData);
+        startActivity(new Intent(this, PRepVoteActivity.class)
+                .putExtra("wallet", (Serializable) wallet));
     }
 
     @Override
