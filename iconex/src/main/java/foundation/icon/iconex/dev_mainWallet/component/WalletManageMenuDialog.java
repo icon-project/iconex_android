@@ -19,16 +19,21 @@ import java.io.Serializable;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
+import foundation.icon.iconex.dev_dialogs.EditText2Dialog;
+import foundation.icon.iconex.dev_dialogs.MessageDialog;
+import foundation.icon.iconex.dev_dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
+import foundation.icon.iconex.menu.WalletBackupActivityNew;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
+import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.wallet.Wallet;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -86,29 +91,28 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
             case R.id.btnClose:
                 break;
             case R.id.btnRename: {
-                EditTextDialog editTextDialog = new EditTextDialog(getContext(), getString(R.string.modWalletAlias));
-                editTextDialog.setHint(getString(R.string.hintWalletAlias));
-                editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.ALIAS);
-                editTextDialog.setAlias(wallet.getAlias());
-                editTextDialog.setOnConfirmCallback(new EditTextDialog.OnConfirmCallback() {
+                EditText2Dialog editText2Dialog = new EditText2Dialog(getContext(), getString(R.string.modWalletAlias));
+                editText2Dialog.setHint(getString(R.string.hintWalletAlias));
+                editText2Dialog.setText(wallet.getAlias());
+                editText2Dialog.setOnConfirm(new EditText2Dialog.OnConfirmListener() {
                     @Override
-                    public void onConfirm(String text) {
+                    public boolean onConfirm(String text) {
                         String alias = Utils.strip(text);
 
                         if (alias.isEmpty()) {
-                            editTextDialog.setError(getString(R.string.errWhiteSpace));
-                            return;
+                            editText2Dialog.setError(getString(R.string.errWhiteSpace));
+                            return false;
                         }
 
                         if (alias.trim().length() == 0) {
-                            editTextDialog.setError(getString(R.string.errWhiteSpace));
-                            return;
+                            editText2Dialog.setError(getString(R.string.errWhiteSpace));
+                            return false;
                         }
 
                         for (Wallet info : ICONexApp.wallets) {
                             if (info.getAlias().equals(alias)) {
-                                editTextDialog.setError(getString(R.string.duplicateWalletAlias));
-                                return;
+                                editText2Dialog.setError(getString(R.string.duplicateWalletAlias));
+                                return false;
                             }
                         }
 
@@ -122,10 +126,10 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                             }
                         }
                         mOnNotifyWalletDataChangeListener.onNotifyWalletDataChange(UpdateDataType.Rename);
-                        editTextDialog.dismiss();
+                        return true;
                     }
                 });
-                editTextDialog.show();
+                editText2Dialog.show();
             } break;
             case R.id.btnManageToken: {
                 Intent intent = new Intent(getContext(), TokenManageActivity.class);
@@ -139,100 +143,47 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 getContext().startActivity(intent);
             } break;
             case R.id.btnBackupWallet:
-                EditTextDialog editTextDialog = new EditTextDialog(getContext(), getString(R.string.enterWalletPassword));
-                editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.BACKUP);
-                editTextDialog.setOnPasswordCallback(new EditTextDialog.OnPasswordCallback() {
+                new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
                     @Override
-                    public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
-                        JsonObject keyStore = new Gson().fromJson(wallet.getKeyStore(), JsonObject.class);
-                        byte[] bytePrivKey;
-                        try {
-                            JsonObject crypto = null;
-                            if (keyStore.has("crypto"))
-                                crypto = keyStore.get("crypto").getAsJsonObject();
-                            else
-                                crypto = keyStore.get("Crypto").getAsJsonObject();
-
-                            bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, wallet.getAddress(), crypto, wallet.getCoinType());
-                            if (bytePrivKey != null) {
-                                getContext().startActivity(new Intent(getContext(), WalletBackUpActivity.class)
-                                        .putExtra("walletInfo", (Serializable) wallet)
-                                        .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
-
-                                editTextDialog.dismiss();
-                            } else {
-                                editTextDialog.setError(getString(R.string.errPassword));
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    public void onPass(byte[] bytePrivateKey) {
+                        getContext().startActivity(new Intent(getContext(), WalletBackupActivityNew.class)
+                                .putExtra("walletInfo", (Serializable) wallet)
+                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
                     }
-                });
-                editTextDialog.show();
+                }).show();
                 break;
             case R.id.btnChangeWalletPassword: {
-                getContext().startActivity(new Intent(getContext(), WalletPwdChangeActivity.class)
+                getContext().startActivity(new Intent(getContext(), WalletPwdChangeActivityNew.class)
                         .putExtra("walletInfo", (Serializable) wallet));
             } break;
             case R.id.btnRemoveWallet: {
-                final Basic2ButtonDialog dialog = new Basic2ButtonDialog(getContext());
-                dialog.setMessage(getString(R.string.warningRemoveWallet));
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                MessageDialog messageDialog = new MessageDialog(getContext());
+                messageDialog.setTitleText(getString(R.string.warningRemoveWallet));
+                messageDialog.setSingleButton(false);
+                messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                     @Override
-                    public void onOk() {
-                        EditTextDialog editTextDialog = new EditTextDialog(getContext(), getString(R.string.enterWalletPassword));
-                        editTextDialog.setHint(getString(R.string.hintWalletPassword));
-                        editTextDialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                        editTextDialog.setPasswordType(EditTextDialog.RESULT_PWD.REMOVE);
-                        editTextDialog.setOnPasswordCallback(new EditTextDialog.OnPasswordCallback() {
+                    public Boolean invoke(View view) {
+                        new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
                             @Override
-                            public void onConfirm(EditTextDialog.RESULT_PWD result, String pwd) {
-                                JsonObject keyStore = new Gson().fromJson(wallet.getKeyStore(), JsonObject.class);
-                                byte[] bytePrivKey;
+                            public void onPass(byte[] bytePrivateKey) {
+                                RealmUtil.removeWallet(wallet.getAddress());
                                 try {
-                                    JsonObject crypto = null;
-                                    if (keyStore.has("crypto"))
-                                        crypto = keyStore.get("crypto").getAsJsonObject();
-                                    else
-                                        crypto = keyStore.get("Crypto").getAsJsonObject();
-
-                                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, wallet.getAddress(), crypto, wallet.getCoinType());
-                                    if (bytePrivKey != null) {
-
-                                        RealmUtil.removeWallet(wallet.getAddress());
-                                        try {
-                                            RealmUtil.loadWallet();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                        if (ICONexApp.wallets.size() == 0) {
-                                            getContext().startActivity(new Intent(getContext(), IntroActivity.class)
-                                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-                                        } else {
-                                            mOnNotifyWalletDataChangeListener.onNotifyWalletDataChange(UpdateDataType.Delete);
-                                        }
-
-                                        editTextDialog.dismiss();
-                                    } else {
-                                        editTextDialog.setError(getString(R.string.errPassword));
-                                    }
+                                    RealmUtil.loadWallet();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                                if (ICONexApp.wallets.size() == 0) {
+                                    getContext().startActivity(new Intent(getContext(), IntroActivity.class)
+                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                                } else {
+                                    mOnNotifyWalletDataChangeListener.onNotifyWalletDataChange(UpdateDataType.Delete);
+                                }
                             }
-                        });
-                        editTextDialog.show();
-                        dialog.dismiss();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
+                        }).show();
+                        return true;
                     }
                 });
-                dialog.show();
+                messageDialog.show();
             } break;
         }
         this.dismiss();

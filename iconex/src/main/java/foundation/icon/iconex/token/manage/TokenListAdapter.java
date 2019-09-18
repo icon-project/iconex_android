@@ -30,7 +30,7 @@ public class TokenListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = mInflater.inflate(R.layout.layout_token_item, parent, false);
+        View v = mInflater.inflate(R.layout.item_navi, parent, false);
         return new ViewHolder(v);
     }
 
@@ -57,7 +57,7 @@ public class TokenListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
 
-            txtName = itemView.findViewById(R.id.txt_name);
+            txtName = itemView.findViewById(R.id.text);
 
             itemView.setOnClickListener(this);
         }

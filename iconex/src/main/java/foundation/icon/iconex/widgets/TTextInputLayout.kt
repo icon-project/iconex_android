@@ -207,6 +207,7 @@ class TTextInputLayout : LinearLayout {
         edit.setText(text)
         if (text.isNotEmpty())
             edit.setSelection(text.length)
+        tvHint.visibility = if (text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
     }
 
     fun setError(err: Boolean, msg: String?) {
@@ -258,6 +259,13 @@ class TTextInputLayout : LinearLayout {
         tvError.visibility = View.INVISIBLE
     }
 
+    fun setHint(hint: String) {
+        this.hint = hint
+        edit.hint = hint
+        tvHint.text = hint
+        tvFileName.text = hint
+    }
+
     fun setFileError(fileName: String, msg: String) {
         isError = true
 
@@ -277,10 +285,16 @@ class TTextInputLayout : LinearLayout {
     fun setInputEnabled(enabled: Boolean) {
         if (enabled) {
             edit.isFocusableInTouchMode = enabled
+        } else {
+            btnClear.visibility = View.INVISIBLE
         }
 
         edit.isEnabled = enabled
         edit.isFocusable = enabled
+    }
+
+    fun setSelection(index: Int) {
+        edit.setSelection(index)
     }
 
     private var mOnFocusReleasedListener: OnFocusReleased? = null

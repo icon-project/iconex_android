@@ -40,7 +40,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
 
-        android:src="@drawable/ic_arrow_down"
+        android:src="@drawable/ic_arrow_list_open"
         android:background="@color/transparent"
 
         app:layout_constraintBottom_toBottomOf="parent"

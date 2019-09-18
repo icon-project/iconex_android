@@ -458,7 +458,7 @@
     <string name="dialogTxHashCopyTxHash">Copy TxHash</string>
 
     <string name="dialogHeadTextWalletPassword">Enter Wallet Password</string>
-    <string name="dialogWalletPasswordHint">Password</string>
+    <string name="dialogWalletPasswordHint"><u>Password</u></string>
     <string name="dialogWalletPasswordForgotPassworld">Forgot password</string>
 
     <string name="dialogHeadTextMinExchangeRate">허용가능 최소 환전비율</string>
@@ -528,6 +528,11 @@
 
     <string name="myVotesEmptyGuide">P-Reps 탭에서 투표할 리스트 선택후,\nVoting Power를 분배해 주세요.</string>
     <string name="myVotesEmptyNotice">Voting Power를 사용한 ICX는 언제든지 돌려받을 수 있으며,\nNetworkd 발전 기여에 대한 보상으로 I-Scaore를 지급해 드립니다.</string>
+
+
+    <!-- New - wallet menu -->
+    <string name="msgTokenDelete2">삭제하시겠습니까?</string>
+    <string name="password">Password</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

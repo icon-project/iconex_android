@@ -57,6 +57,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
             } break;
             case text: {
                 mBtnEndIcon.setVisibility(View.GONE);
+                mBtnText.setVisibility(View.VISIBLE);
                 mBtnText.setText(mTextButton);
             } break;
             default: {
@@ -84,6 +85,14 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
         mTextButton = TextButton;
         mBtnEndIcon.setVisibility(View.GONE);
         mBtnText.setText(mTextButton);
+    }
+
+    public void setTextButtonSelected(boolean selected) {
+        mBtnText.setSelected(selected);
+    }
+
+    public boolean isTextButtonSelected() {
+        return mBtnText.isSelected();
     }
 
     public String getTitle() {
@@ -220,7 +229,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
         }
     }
 
-    enum IconStart {
+    public enum IconStart {
         menu, back, none;
 
         public static IconStart valueOf(int e) {
@@ -231,7 +240,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
             }
         }
     }
-    enum IconEnd {
+    public enum IconEnd {
         info, more, text, none;
 
         public static IconEnd valueOf(int e) {
