@@ -68,7 +68,7 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         TTextInputLayout.OnKeyPreIme onKeyPreIme = new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
-                setChangeEnable(editOldPwd.getText().toString(), editPwd.getText().toString(), editCheck.getText().toString());
+                setChangeEnable(editOldPwd.getText(), editPwd.getText(), editCheck.getText());
             }
         };
 
@@ -79,7 +79,7 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
             }
         };
 
-        // init input layout
+        // ================= init current password
         editOldPwd.setOnKeyPreImeListener(onKeyPreIme);
         editOldPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
@@ -105,22 +105,34 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         });
         editOldPwd.setOnEditorActionListener(onEditorAction);
 
+        // ==================== init new password
         editPwd.setOnKeyPreImeListener(onKeyPreIme);
         editPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
             public void onReleased() {
-                if (!editCheck.getText().toString().isEmpty()) {
-                    if (editPwd.getText().toString().isEmpty()) {
-                        editCheck.setError(true, getString(R.string.errPasswordNotMatched));
-                    } else {
-                        boolean result = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(), editCheck.getText().toString());
-                        if (!result) {
-                            editCheck.setError(true, getString(R.string.errPasswordNotMatched));
-                        } else {
-                            editCheck.setError(false, null);
-                        }
-                    }
+                int result = PasswordValidator.validatePassword(editPwd.getText().toString());
+                switch (result) {
+                    case PasswordValidator.LEAST_8:
+                        editPwd.setError(true, getString(R.string.errAtLeast));
+                        break;
+
+                    case PasswordValidator.NOT_MATCH_PATTERN:
+                        editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
+                        break;
+
+                    case PasswordValidator.HAS_WHITE_SPACE:
+                        editPwd.setError(true, getString(R.string.errWhiteSpace));
+                        break;
+
+                    case PasswordValidator.SERIAL_CHAR:
+                        editPwd.setError(true, getString(R.string.errSerialChar));
+                        break;
+
+                    default:
+                        editPwd.setError(false, null);
+                        break;
                 }
+
             }
         });
         editPwd.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -144,19 +156,20 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         });
         editPwd.setOnEditorActionListener(onEditorAction);
 
+        // ====================== init check password
         editCheck.setOnKeyPreImeListener(onKeyPreIme);
         editCheck.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
             public void onReleased() {
                 if (!editCheck.getText().toString().isEmpty()) {
                     if (editPwd.getText().toString().isEmpty()) {
-                        editPwd.setError(true, getString(R.string.errPasswordNotMatched));
+                        editCheck.setError(true, getString(R.string.errPasswordNotMatched));
                     } else {
                         boolean result = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(), editCheck.getText().toString());
                         if (!result) {
-                            editPwd.setError(true, getString(R.string.errPasswordNotMatched));
+                            editCheck.setError(true, getString(R.string.errPasswordNotMatched));
                         } else {
-                            editPwd.setError(false, null);
+                            editCheck.setError(false, null);
                         }
                     }
                 }
