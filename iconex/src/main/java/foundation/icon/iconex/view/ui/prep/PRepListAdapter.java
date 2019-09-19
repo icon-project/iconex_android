@@ -65,14 +65,15 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                 break;
 
             case VOTE:
-                if (delegations.get(position) != null) {
-                    Delegation delegation = delegations.get(position);
-                    if (prep.getAddress().equals(delegation.getAddress()))
-                        h.btnManage.setImageResource(R.drawable.ic_add_list_disabled);
-                    else
-                        h.btnManage.setImageResource(R.drawable.ic_add_list_enabled);
-                } else
-                    h.btnManage.setImageResource(R.drawable.ic_add_list_enabled);
+                h.btnManage.setImageResource(R.drawable.ic_add_list_enabled);
+                try {
+                    for (Delegation d : delegations) {
+                        if (prep.getAddress().equals(d.getAddress()))
+                            h.btnManage.setImageResource(R.drawable.ic_add_list_disabled);
+                    }
+                } catch (NullPointerException e) {
+                    // Do nothing.
+                }
 
                 h.layoutMyVotes.setVisibility(View.GONE);
                 layoutParams.setMargins(layoutParams.getMarginStart(),

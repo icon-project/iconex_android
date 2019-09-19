@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,12 +17,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.InterruptedIOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dev_dialogs.StakeDialog;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -31,9 +34,12 @@ import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomSeekbar;
 import foundation.icon.iconex.widgets.MyEditText;
 import foundation.icon.iconex.widgets.StakeGraph;
+import foundation.icon.icx.KeyWallet;
+import foundation.icon.icx.SignedTransaction;
 import foundation.icon.icx.Transaction;
 import foundation.icon.icx.TransactionBuilder;
 import foundation.icon.icx.data.Address;
+import foundation.icon.icx.data.Bytes;
 import foundation.icon.icx.data.IconAmount;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
 import foundation.icon.icx.transport.jsonrpc.RpcValue;
@@ -45,6 +51,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.response.TRResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
@@ -54,6 +61,7 @@ public class PRepStakeActivity extends AppCompatActivity {
     private static final String TAG = PRepStakeActivity.class.getSimpleName();
 
     private Wallet wallet;
+    private String privateKey;
     private BigInteger stepLimit, stepPrice, fee;
 
     private StakeGraph stakeGraph;
@@ -69,6 +77,7 @@ public class PRepStakeActivity extends AppCompatActivity {
     private CompositeDisposable compositeDisposable;
     private Disposable disposable;
     private Disposable seekDisposable;
+    private Disposable setStakeDisposable;
 
     private BigInteger ONE_HUNDRED = new BigInteger("100");
     private BigInteger totalBalance, staked, delegated, votingPower, availableStake;
@@ -78,8 +87,10 @@ public class PRepStakeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prep_stake);
 
-        if (getIntent() != null)
+        if (getIntent() != null) {
             wallet = (Wallet) getIntent().getSerializableExtra("wallet");
+            privateKey = getIntent().getStringExtra("privateKey");
+        }
 
         initView();
     }
@@ -163,7 +174,7 @@ public class PRepStakeActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showDialog();
             }
         });
     }
@@ -329,25 +340,33 @@ public class PRepStakeActivity extends AppCompatActivity {
                         BigInteger stakeValue = ConvertUtil.valueToBigInteger(value, 18);
                         fee = stepLimit.multiply(stepPrice);
 
-                        if (stakeValue.compareTo(staked) < 0) {
-                            txtTimeRequired.setText(getString(R.string.unstakeTimeRequired));
-                        } else {
-                            txtTimeRequired.setText(getString(R.string.stakeTimeRquired));
-                        }
-
                         String icx = ConvertUtil.getValue(stepPrice, 18);
                         String mIcx = icx.indexOf(".") < 0 ? icx : icx.replaceAll("0*$", "").replaceAll("\\.$", "");
-                        txtStepNPrice.setText(String.format(Locale.getDefault(), "%,d / %s",
-                                stepLimit.intValue(), mIcx));
-
                         String fee = ConvertUtil.getValue(stepLimit.multiply(stepPrice), 18);
                         String mFee = fee.indexOf(".") < 0 ? fee : fee.replaceAll("0*$", "").replaceAll("\\.$", "");
-                        txtFee.setText(mFee);
-                        txtFeeUsd.setText(String.format(Locale.getDefault(), "$%.2f",
-                                Double.parseDouble(ConvertUtil.getValue(PRepStakeActivity.this.fee, 18))
-                                        * Float.parseFloat(ICONexApp.EXCHANGE_TABLE.get("icxusd"))));
 
-                        btnSubmit.setEnabled(true);
+                        if (stakeValue.compareTo(staked) < 0) {
+                            txtTimeRequired.setText(getString(R.string.unstakeTimeRequired));
+                        } else if (stakeValue.compareTo(staked) > 0) {
+                            txtTimeRequired.setText(getString(R.string.stakeTimeRquired));
+                        } else {
+                            txtTimeRequired.setText("-");
+                        }
+
+                        if (stakeValue.compareTo(staked) == 0) {
+                            txtStepNPrice.setText("- / -");
+                            txtFee.setText("-");
+                            txtFeeUsd.setText("-");
+                            btnSubmit.setEnabled(false);
+                        } else {
+                            txtStepNPrice.setText(String.format(Locale.getDefault(), "%,d / %s",
+                                    stepLimit.intValue(), mIcx));
+                            txtFee.setText(mFee);
+                            txtFeeUsd.setText(String.format(Locale.getDefault(), "$%.2f",
+                                    Double.parseDouble(ConvertUtil.getValue(PRepStakeActivity.this.fee, 18))
+                                            * Float.parseFloat(ICONexApp.EXCHANGE_TABLE.get("icxusd"))));
+                            btnSubmit.setEnabled(true);
+                        }
                     }
 
                     @Override
@@ -357,7 +376,83 @@ public class PRepStakeActivity extends AppCompatActivity {
                 });
     }
 
-    private void setStake() {
+    private StakeDialog dialog;
 
+    private void showDialog() {
+        dialog = new StakeDialog(this);
+
+        if (txtTimeRequired.getText().toString().equals(getString(R.string.stakeTimeRquired)))
+            dialog.setTitle(getString(R.string.stake));
+        else
+            dialog.setTitle(getString(R.string.unstake));
+
+        dialog.setTimeRequired(txtTimeRequired.getText().toString());
+        dialog.setStepLimit(txtStepNPrice.getText().toString());
+        dialog.setEstimatedMaxFee(txtFee.getText().toString());
+        dialog.setExchangedFee(txtFeeUsd.getText().toString());
+
+        dialog.setOnConfirmClick(new Function1<View, Boolean>() {
+            @Override
+            public Boolean invoke(View view) {
+                setStake();
+                return true;
+            }
+        });
+
+        dialog.show();
+    }
+
+    private SignedTransaction getSignedTransaction() {
+        KeyWallet keyWallet = KeyWallet.load(new Bytes(privateKey));
+
+        String value = editStaked.getText().toString();
+        RpcObject params = new RpcObject.Builder()
+                .put("value", new RpcValue(ConvertUtil.valueToHexString(value, 18)))
+                .build();
+
+        Transaction transaction = TransactionBuilder.newBuilder()
+                .from(new Address(wallet.getAddress()))
+                .to(new Address(Constants.ADDRESS_ZERO))
+                .value(IconAmount.of("0", IconAmount.Unit.ICX).toLoop())
+                .stepLimit(stepLimit)
+                .nid(ICONexApp.NETWORK.getNid())
+                .call("setStake")
+                .params(params)
+                .build();
+
+        return new SignedTransaction(transaction, keyWallet);
+    }
+
+    private void setStake() {
+        setStakeDisposable = Completable.create(new CompletableOnSubscribe() {
+            @Override
+            public void subscribe(CompletableEmitter emitter) throws Exception {
+                try {
+                    PRepService service = new PRepService(ICONexApp.NETWORK.getUrl());
+                    SignedTransaction signedTransaction = getSignedTransaction();
+                    String tx = service.setStake(signedTransaction);
+                    Log.d(TAG, "Set stake=" + tx);
+
+                    emitter.onComplete();
+                } catch (InterruptedIOException e) {
+                    e.printStackTrace();
+                    emitter.onError(e);
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        CustomToast.makeText(PRepStakeActivity.this,
+                                "Failed", Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
     }
 }

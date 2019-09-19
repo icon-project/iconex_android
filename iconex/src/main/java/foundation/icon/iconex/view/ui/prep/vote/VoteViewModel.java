@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.wallet.Wallet;
@@ -31,6 +30,7 @@ public class VoteViewModel extends ViewModel {
     public MutableLiveData<List<Delegation>> getDelegations() {
         if (delegations == null) {
             delegations = new MutableLiveData<>();
+            delegations.setValue(new ArrayList<>());
         }
 
         return delegations;
@@ -41,8 +41,10 @@ public class VoteViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<PRep>> getPreps() {
-        if (preps == null)
+        if (preps == null) {
             preps = new MutableLiveData<>();
+            preps.setValue(new ArrayList<>());
+        }
 
         return preps;
     }

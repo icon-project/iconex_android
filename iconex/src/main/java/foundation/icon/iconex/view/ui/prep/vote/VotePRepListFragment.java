@@ -1,7 +1,6 @@
 package foundation.icon.iconex.view.ui.prep.vote;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.Serializable;
+import java.io.InterruptedIOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,6 @@ import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
-import foundation.icon.iconex.view.PRepSearchActivity;
 import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.view.ui.prep.PRepListAdapter;
@@ -63,6 +61,7 @@ public class VotePRepListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         vm = ViewModelProviders.of(getActivity()).get(VoteViewModel.class);
         delegations = vm.getDelegations().getValue();
         prepList = vm.getPreps().getValue();
@@ -86,6 +85,11 @@ public class VotePRepListFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnVotePRepListListener");
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         if (prepList != null && prepList.size() > 0) {
             adapter = new PRepListAdapter(getContext(),
@@ -121,20 +125,24 @@ public class VotePRepListFragment extends Fragment {
             @Override
             public void subscribe(ObservableEmitter<List<PRep>> emitter) throws Exception {
                 PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
-                RpcItem result = pRepService.getPreps();
-                BigInteger totalDelegated =
-                        ConvertUtil.hexStringToBigInt(
-                                result.asObject().getItem("totalDelegated").asString(), 0);
-                List<PRep> list = new ArrayList<>();
-                for (RpcItem i : result.asObject().getItem("preps").asArray().asList()) {
-                    RpcObject object = i.asObject();
-                    PRep prep = PRep.valueOf(object);
-                    prep.setTotalDelegated(totalDelegated);
-                    list.add(prep);
-                }
+                try {
+                    RpcItem result = pRepService.getPreps();
+                    BigInteger totalDelegated =
+                            ConvertUtil.hexStringToBigInt(
+                                    result.asObject().getItem("totalDelegated").asString(), 0);
+                    List<PRep> list = new ArrayList<>();
+                    for (RpcItem i : result.asObject().getItem("preps").asArray().asList()) {
+                        RpcObject object = i.asObject();
+                        PRep prep = PRep.valueOf(object);
+                        prep.setTotalDelegated(totalDelegated);
+                        list.add(prep);
+                    }
 
-                emitter.onNext(list);
-                emitter.onComplete();
+                    emitter.onNext(list);
+                    emitter.onComplete();
+                } catch (InterruptedIOException e) {
+                    e.printStackTrace();
+                }
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -148,7 +156,7 @@ public class VotePRepListFragment extends Fragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
 
                     @Override

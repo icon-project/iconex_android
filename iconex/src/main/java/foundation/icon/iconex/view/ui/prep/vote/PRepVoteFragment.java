@@ -93,6 +93,11 @@ public class PRepVoteFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnVoteLitener");
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         getDelegations();
     }

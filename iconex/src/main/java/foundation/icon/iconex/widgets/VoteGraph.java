@@ -56,7 +56,7 @@ public class VoteGraph extends LinearLayout {
         addView(v);
     }
 
-    private void setVoted(float percent) {
+    public void setVoted(float percent) {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(graph);
         constraintSet.setHorizontalWeight(R.id.voted, percent);
