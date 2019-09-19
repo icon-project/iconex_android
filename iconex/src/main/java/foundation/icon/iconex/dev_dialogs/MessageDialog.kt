@@ -23,7 +23,7 @@ open class MessageDialog: Dialog {
 
     private var mWrap2Button: LinearLayout
     private var mConfirmButton: Button
-    private var mCancleButton: Button
+    private var mCancelButton: Button
 
     private var mSingleButton: Button
 
@@ -44,7 +44,7 @@ open class MessageDialog: Dialog {
 
         mWrap2Button = findViewById(R.id.wrap_2button)
         mConfirmButton = findViewById(R.id.btn_confirm)
-        mCancleButton = findViewById(R.id.btn_cancel)
+        mCancelButton = findViewById(R.id.btn_cancel)
 
         mSingleButton = findViewById(R.id.btn_single_confirm)
 
@@ -53,8 +53,8 @@ open class MessageDialog: Dialog {
             if (b == null || b) { this.dismiss() }
         }
 
-        mCancleButton.setOnClickListener { v ->
-            var b = onCancleClick?.invoke(v)
+        mCancelButton.setOnClickListener { v ->
+            var b = onCancelClick?.invoke(v)
             if (b == null || b) { this.dismiss() }
         }
 
@@ -69,7 +69,7 @@ open class MessageDialog: Dialog {
     }
 
     var onConfirmClick: ((v: View) -> Boolean)? = null
-    var onCancleClick: ((v: View) -> Boolean)? = null
+    var onCancelClick: ((v: View) -> Boolean)? = null
     var onSingleClick: ((v: View) -> Boolean)? = null
 
     var isConfirmEnable: Boolean
@@ -81,12 +81,12 @@ open class MessageDialog: Dialog {
         set(s) = mConfirmButton.setText(s)
 
     var cancleButtonText: String
-        get() = mCancleButton.text.toString()
-        set(s) = mCancleButton.setText(s)
+        get() = mCancelButton.text.toString()
+        set(s) = mCancelButton.setText(s)
 
     var singleButtonText: String
         get() = mSingleButton.text.toString()
-        set(s) = mCancleButton.setText(s)
+        set(s) = mCancelButton.setText(s)
 
     var isSingleButton: Boolean
         get() = mSingleButton.visibility == View.VISIBLE
