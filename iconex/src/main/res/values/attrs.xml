@@ -17,6 +17,7 @@
             <enum name="file" value="3" />
         </attr>
         <attr name="hint" format="string" />
+        <attr name="appendText" format="string" />
     </declare-styleable>
 
     <!-- TDropdownLayout -->

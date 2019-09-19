@@ -24,7 +24,7 @@
                 android:id="@+id/layout_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -67,6 +67,20 @@
                     app:layout_constraintStart_toEndOf="@+id/edit"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.5" />
+
+                <TextView
+                    android:id="@+id/txt_append"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+
+                    android:fontFamily="@font/noto_sans_light"
+                    android:textSize="10dp"
+                    android:textColor="@color/dark4D"
+
+                    android:text="ICX"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

@@ -111,7 +111,7 @@ open class MessageDialog: Dialog {
     var subText: String?
         get() = if (mTextSub.visibility == View.GONE) null else mTextSub.text.toString()
         set(s) {
-            mTextSub.visibility = if (subText == null) View.GONE else View.VISIBLE
+            mTextSub.visibility = if (s == null || s == "") View.GONE else View.VISIBLE
             mTextSub.text = s
         }
 

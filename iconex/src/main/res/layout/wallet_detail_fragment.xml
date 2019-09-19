@@ -70,6 +70,7 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <foundation.icon.iconex.dev2_detail.component.TransactionFloatingMenu
+        android:id="@+id/floating_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 

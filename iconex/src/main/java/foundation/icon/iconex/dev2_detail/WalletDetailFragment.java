@@ -19,11 +19,13 @@ import androidx.lifecycle.ViewModelProviders;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev2_detail.component.SelectTokenDialog;
 import foundation.icon.iconex.dev2_detail.component.SelectType;
+import foundation.icon.iconex.dev2_detail.component.TransactionFloatingMenu;
 import foundation.icon.iconex.dev2_detail.component.TransactionItemView;
 import foundation.icon.iconex.dev2_detail.component.TransactionItemViewData;
 import foundation.icon.iconex.dev2_detail.component.TransactionListView;
@@ -51,6 +53,7 @@ public class WalletDetailFragment extends Fragment {
     private TransactionListView listView;
     private TransactionListViewHeader listHeaderView;
     private TransactionListViewHeader fixedListHeaderView;
+    private TransactionFloatingMenu floatingMenu;
 
     private WalletDetailViewModel viewModel;
 
@@ -68,6 +71,7 @@ public class WalletDetailFragment extends Fragment {
         listView = v.findViewById(R.id.transaction_list);
         listHeaderView = v.findViewById(R.id.transaction_list_header);
         fixedListHeaderView = v.findViewById(R.id.fixed_tansaction_list);
+        floatingMenu = v.findViewById(R.id.floating_menu);
 
         viewModel = ViewModelProviders.of(getActivity()).get(WalletDetailViewModel.class);
 
@@ -252,6 +256,9 @@ public class WalletDetailFragment extends Fragment {
                 updateListView(transactionItemViewData, selectType);
             }
         });
+        // floating menu
+        floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
+
     }
 
     private void updateListView(List<TransactionItemViewData> transactionItemViewData, SelectType selectType) {
