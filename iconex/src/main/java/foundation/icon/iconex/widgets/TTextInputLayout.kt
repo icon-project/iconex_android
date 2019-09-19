@@ -27,8 +27,10 @@ class TTextInputLayout : LinearLayout {
     private lateinit var edit: MyEditText
     private lateinit var btnClear: Button
     private lateinit var btnEye: Button
+    private lateinit var txtAppend: TextView
     private lateinit var tvHint: TextView
     private lateinit var tvError: TextView
+
 
     private lateinit var layoutFile: ViewGroup
     private lateinit var imgFile: ImageView
@@ -76,6 +78,7 @@ class TTextInputLayout : LinearLayout {
         edit = v.findViewById(R.id.edit)
         btnClear = v.findViewById(R.id.btn_clear_text)
         btnEye = v.findViewById(R.id.btn_eye)
+        txtAppend = v.findViewById(R.id.txt_append)
         tvHint = v.findViewById(R.id.tv_hint)
         tvError = v.findViewById(R.id.tv_err)
 
@@ -197,6 +200,8 @@ class TTextInputLayout : LinearLayout {
             tvHint.text = it
             tvFileName.text = it
         }
+
+        setAppendText(typedArray.getString(R.styleable.TTextInputLayout_appendText))
     }
 
     fun getText(): String {
@@ -208,6 +213,11 @@ class TTextInputLayout : LinearLayout {
         if (text.isNotEmpty())
             edit.setSelection(text.length)
         tvHint.visibility = if (text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+    }
+
+    fun setAppendText(text: String?) {
+        txtAppend.visibility = if (text == null || text == "") View.GONE else View.VISIBLE
+        txtAppend.text = text
     }
 
     fun setError(err: Boolean, msg: String?) {
