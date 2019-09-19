@@ -27,8 +27,10 @@ import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.detail.WalletDetailActivity;
+import foundation.icon.iconex.wallet.transfer.EtherTransferAcitivtyNew;
 import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
 import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
+import foundation.icon.iconex.wallet.transfer.ICONTransferActivityNew;
 import loopchain.icon.wallet.core.Constants;
 
 public class TransactionFloatingMenu extends FrameLayout implements View.OnClickListener {
@@ -146,13 +148,13 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
                     public void onPass(byte[] bytePrivateKey) {
                         if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                             getContext()
-                                    .startActivity(new Intent(getContext(), ICONTransferActivity.class)
+                                    .startActivity(new Intent(getContext(), ICONTransferActivityNew.class)
                                     .putExtra("walletInfo", (Serializable) wallet)
                                     .putExtra("walletEntry", (Serializable) entry)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
                         } else {
                             getContext()
-                                    .startActivity(new Intent(getContext(), EtherTransferActivity.class)
+                                    .startActivity(new Intent(getContext(), EtherTransferAcitivtyNew.class)
                                     .putExtra("walletInfo", (Serializable) wallet)
                                     .putExtra("walletEntry", (Serializable) entry)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
