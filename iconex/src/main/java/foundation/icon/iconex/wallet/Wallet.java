@@ -21,6 +21,7 @@ public class Wallet implements Serializable, Parcelable {
     private List<WalletEntry> walletEntries = null;
     private BigInteger staked = BigInteger.ZERO;
     private BigInteger iScore = BigInteger.ZERO;
+    private BigInteger votingPower = BigInteger.ZERO;
     private String createdAt = "";
 
     public String getCoinType() {
@@ -77,6 +78,14 @@ public class Wallet implements Serializable, Parcelable {
 
     public void setiScore(BigInteger iScore) {
         this.iScore = iScore;
+    }
+
+    public BigInteger getVotingPower() {
+        return votingPower;
+    }
+
+    public void setVotingPower(BigInteger votingPower) {
+        this.votingPower = votingPower;
     }
 
     public String getCreatedAt() {
