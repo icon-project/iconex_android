@@ -264,9 +264,10 @@ public class PRepStakeActivity extends AppCompatActivity {
         if (value.equals(BigInteger.ZERO))
             return 0.0f;
 
-        BigDecimal baseDec = new BigDecimal(base);
-        BigDecimal valueDec = new BigDecimal(value);
-        BigDecimal percentDec = valueDec.divide(baseDec).multiply(new BigDecimal(ONE_HUNDRED));
+//        BigDecimal baseDec = new BigDecimal(base);
+//        BigDecimal valueDec = new BigDecimal(value);
+//        Log.d(TAG, "base=" + baseDec + ", value=" + valueDec);
+        BigInteger percentDec = value.divide(base).multiply(ONE_HUNDRED);
 
         return percentDec.floatValue();
     }
