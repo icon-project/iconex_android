@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import java.io.InterruptedIOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Locale;
 
 import foundation.icon.ICONexApp;
@@ -264,10 +265,11 @@ public class PRepStakeActivity extends AppCompatActivity {
         if (value.equals(BigInteger.ZERO))
             return 0.0f;
 
-//        BigDecimal baseDec = new BigDecimal(base);
-//        BigDecimal valueDec = new BigDecimal(value);
-//        Log.d(TAG, "base=" + baseDec + ", value=" + valueDec);
-        BigInteger percentDec = value.divide(base).multiply(ONE_HUNDRED);
+        BigDecimal baseDec = new BigDecimal(base);
+        BigDecimal valueDec = new BigDecimal(value);
+        Log.d(TAG, "base=" + baseDec + ", value=" + valueDec);
+        BigDecimal percentDec = valueDec.divide(baseDec, 18, RoundingMode.HALF_UP)
+                .multiply(new BigDecimal(ONE_HUNDRED));
 
         return percentDec.floatValue();
     }
