@@ -67,6 +67,8 @@ public class ICONTransferActivityNew extends AppCompatActivity {
     // Fee UI
     private TextView labelStepLimit;
     private TextView labelEstimatedMaxFee;
+    private TextView symbolStepLimit;
+    private TextView symbolEstimatedMaxFee;
     private TextView txtStepLimit;
     private TextView txtEstimatedMaxFee;
 
@@ -111,6 +113,8 @@ public class ICONTransferActivityNew extends AppCompatActivity {
         // load Fee UI
         labelStepLimit = findViewById(R.id.lb_step_limit);
         labelEstimatedMaxFee = findViewById(R.id.lb_estimated_max_fee);
+        symbolStepLimit = findViewById(R.id.symbol_step_limit);
+        symbolEstimatedMaxFee = findViewById(R.id.symbol_estimated_max_fee);
         txtStepLimit = findViewById(R.id.txt_step_limit);
         txtEstimatedMaxFee = findViewById(R.id.txt_trans_fee);
     }
