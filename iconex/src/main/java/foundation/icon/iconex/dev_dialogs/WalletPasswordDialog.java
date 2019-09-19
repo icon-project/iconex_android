@@ -13,11 +13,18 @@ import org.jetbrains.annotations.NotNull;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
+import java.util.Observable;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.TTextInputLayout;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.schedulers.Schedulers;
 import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -75,25 +82,45 @@ public class WalletPasswordDialog extends MessageDialog {
             public Boolean invoke(View view) {
                 String pwd = mEditPassword.getText();
                 JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
-                byte[] bytePrivKey;
-                try {
-                    JsonObject crypto = null;
-                    if (keyStore.has("crypto"))
-                        crypto = keyStore.get("crypto").getAsJsonObject();
-                    else
-                        crypto = keyStore.get("Crypto").getAsJsonObject();
+                final byte[][] bytePrivKey = new byte[1][1];
 
-                    bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
-                    if (bytePrivKey != null) {
-                        mOnPassListener.onPass(bytePrivKey);
-                        return true;
-                    } else {
-                        mEditPassword.setError(true, getContext().getString(R.string.errPassword));
-                        return false;
+                Completable.fromAction(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        JsonObject crypto = null;
+                        if (keyStore.has("crypto"))
+                            crypto = keyStore.get("crypto").getAsJsonObject();
+                        else
+                            crypto = keyStore.get("Crypto").getAsJsonObject();
+
+                        bytePrivKey[0] = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                }).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CompletableObserver() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                if (bytePrivKey[0] != null) {
+                                    mOnPassListener.onPass(bytePrivKey[0]);
+                                    // return true
+                                    dismiss();
+                                } else {
+                                    mEditPassword.setError(true, getContext().getString(R.string.errPassword));
+                                    // return false
+                                    // x dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+                        });
                 return false;
             }
         });
