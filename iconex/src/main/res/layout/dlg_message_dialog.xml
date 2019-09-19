@@ -70,7 +70,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginBottom="50dp">
+                android:layout_marginBottom="45dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,7 +79,7 @@
 
                     <TextView
                         android:id="@+id/txt_title"
-                        android:textSize="14dp"
+                        style="@style/TextView14"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
@@ -92,10 +92,11 @@
 
                     <TextView
                         android:id="@+id/txt_sub"
-                        android:textSize="12dp"
+                        style="@style/TextView12"
                         android:layout_width="match_parent"
 
                         android:layout_height="wrap_content"
+                        android:lineHeight="20dp"
                         android:textAlignment="center"
                         android:textColor="@color/dark"
 
