@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -38,6 +39,7 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
+import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -67,7 +69,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ICONTransferActivityNew extends AppCompatActivity {
+public class ICONTransferActivityNew extends AppCompatActivity implements EnterDataFragment.OnEnterDataLisnter{
 
     // appbar UI
     private CustomActionBar appbar;
@@ -105,6 +107,7 @@ public class ICONTransferActivityNew extends AppCompatActivity {
     private TextView symbolEstimatedMaxFee;
     private TextView txtStepLimit;
     private TextView txtEstimatedMaxFee;
+    private TextView txtTransFee;
 
     // send button UI
     private Button btnSend;
@@ -140,12 +143,14 @@ public class ICONTransferActivityNew extends AppCompatActivity {
     private BigInteger inputPrice = BigInteger.ZERO;
     private BigInteger contractCall = BigInteger.ZERO;
 
-    private String txtRemain;
-    private String txtTransRemain;
+    private String txtStepICX, txtStepGloop, txtStepTrans;
 
     private String strLimit = "";
     private String strFee = "";
     private String strTransFee = "";
+
+    private String txtRemain;
+    private String txtTransRemain;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -327,7 +332,8 @@ public class ICONTransferActivityNew extends AppCompatActivity {
         symbolStepLimit = findViewById(R.id.symbol_step_limit);
         symbolEstimatedMaxFee = findViewById(R.id.symbol_estimated_max_fee);
         txtStepLimit = findViewById(R.id.txt_step_limit);
-        txtEstimatedMaxFee = findViewById(R.id.txt_trans_fee);
+        txtEstimatedMaxFee = findViewById(R.id.txt_estimated_max_fee);
+        txtTransFee = findViewById(R.id.txt_trans_fee);
 
         // load send button UI
         btnSend = findViewById(R.id.btn_send);
@@ -455,7 +461,38 @@ public class ICONTransferActivityNew extends AppCompatActivity {
         btnViewData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (data == null) {
+                    DataTypeDialog typeDialog = new DataTypeDialog(ICONTransferActivityNew.this);
+                    typeDialog.setOnTypeListener(new DataTypeDialog.OnTypeListener() {
+                        @Override
+                        public void onSelect(EnterDataFragment.DataType type) {
+                            data = new InputData();
+                            data.setAddress(wallet.getAddress());
+                            data.setBalance(balance);
+                            data.setStepPrice(stepPriceLoop);
+                            if (editSend.getText().toString().isEmpty())
+                                data.setAmount(BigInteger.ZERO);
+                            else
+                                data.setAmount(ConvertUtil.valueToBigInteger(editSend.getText().toString(), 18));
+                            data.setDataType(type);
 
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            FragmentTransaction transaction = fragmentManager.beginTransaction();
+                            transaction.add(R.id.container, EnterDataFragment.newInstance(data));
+                            transaction.addToBackStack("DATA");
+                            transaction.commit();
+
+                            typeDialog.dismiss();
+                        }
+                    });
+                    typeDialog.show();
+                } else {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.add(R.id.container, EnterDataFragment.newInstance(data));
+                    transaction.addToBackStack("DATA");
+                    transaction.commit();
+                }
             }
         });
 
@@ -639,6 +676,10 @@ public class ICONTransferActivityNew extends AppCompatActivity {
         return true;
     }
 
+    private void setLimitPrice(String limit, String price) {
+        txtStepLimit.setText(limit + " / " + price);
+    }
+
     private void setBalance(BigInteger balance) {
         this.balance = balance;
 
@@ -676,6 +717,7 @@ public class ICONTransferActivityNew extends AppCompatActivity {
         else
             fee = BigInteger.ZERO;
         strFee = ConvertUtil.getValue(fee, 18);
+        txtEstimatedMaxFee.setText(strFee);
 
         this.fee = ConvertUtil.getValue(fee, 18);
 
@@ -743,6 +785,8 @@ public class ICONTransferActivityNew extends AppCompatActivity {
                 if (feePrice != null) {
                     strTransFee = String.format(Locale.getDefault(), "%,.2f USD",
                             Double.parseDouble(strFee) * Double.parseDouble(feePrice));
+
+                    txtTransFee.setText("$ " + strTransFee);
                 }
             }
 
@@ -823,8 +867,25 @@ public class ICONTransferActivityNew extends AppCompatActivity {
 
                         }
                         String icx = ConvertUtil.getValue(stepPriceLoop, 18);
+                        String mIcx = icx.indexOf(".") < 0 ? icx : icx.replaceAll("0*$", "").replaceAll("\\.$", "");
                         stepPriceICX = ConvertUtil.valueToBigInteger(icx, 18);
+                        txtStepICX = mIcx;
+                        setLimitPrice(strLimit, txtStepICX);
+                        String gloop = ConvertUtil.getValue(stepPriceLoop, 9);
+                        String mGloop = gloop.indexOf(".") < 0 ? gloop : gloop.replaceAll("0*$", "").replaceAll("\\.$", "");
+                        txtStepGloop = String.format(Locale.getDefault(), "ICX (%s Gloop)", mGloop);
 
+                        String value = ConvertUtil.getValue(stepPriceLoop, 18);
+                        String strExc = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
+                        if (strExc == null)
+                            txtStepTrans = String.format(Locale.getDefault(), "-");
+                        else
+                            txtStepTrans = String.format(Locale.getDefault(), "%.2f", Double.parseDouble(value) * Double.parseDouble(strExc));
+
+                    } else {
+                        txtStepICX = "- ";
+                        txtStepTrans = "- ";
+                        setLimitPrice(strLimit, txtStepICX);
                     }
 
                     setRemain(editSend.getText());
@@ -871,6 +932,7 @@ public class ICONTransferActivityNew extends AppCompatActivity {
                         minStep = defaultLimit;
 
                     strLimit = minStep.toString();
+                    setLimitPrice(strLimit, txtStepICX);
                 }
 
                 @Override
@@ -885,6 +947,7 @@ public class ICONTransferActivityNew extends AppCompatActivity {
                         minStep = defaultLimit;
 
                     strLimit = minStep.toString();
+                    setLimitPrice(strLimit, txtStepICX);
                 }
             });
 
@@ -1132,4 +1195,43 @@ public class ICONTransferActivityNew extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
         }
     };
+
+    @Override
+    public void onSetData(InputData data) {
+        this.data = data;
+        minStep = new BigInteger(Integer.toString(this.data.getStepCost()));
+        strLimit = minStep.toString();
+        setLimitPrice(strLimit, txtStepICX);
+
+//        btnInput.setText(getString(R.string.view));
+//        btnInput.setSelected(true);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getSupportFragmentManager().popBackStackImmediate();
+
+        setSendEnable();
+    }
+
+    @Override
+    public void onDataCancel(InputData data) {
+        if (data.getData() == null)
+            this.data = null;
+
+        getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onDataDelete() {
+        this.data = null;
+
+//        btnInput.setText(R.string.input);
+//        btnInput.setSelected(false);
+
+        minStep = defaultLimit;
+        strLimit = minStep.toString();
+        setLimitPrice(strLimit, txtStepICX);
+
+        getSupportFragmentManager().popBackStackImmediate();
+    }
 }
