@@ -34,26 +34,28 @@
             android:textSize="14dp" />
     </RelativeLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/layout_button"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorWhite90"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@color/darkFC">
 
         <Button
             android:id="@+id/btn_add_contacts"
-            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:background="@drawable/bg_button_b"
-            android:gravity="center"
-            android:text="@string/addContacts"
+            android:layout_height="match_parent"
+
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_btn_rounded_01_light"
+            android:stateListAnimator="@null"
+
+            android:textSize="14dp"
+            android:fontFamily="@font/noto_sans_regular"
             android:textAllCaps="false"
-            android:textColor="@color/button_text"
-            android:textSize="13dp" />
-    </LinearLayout>
+            android:textColor="@color/txt_btn_rounded_01_light"
+            android:enabled="false"
+
+            android:text="@string/addContacts"/>
+    </FrameLayout>
 </RelativeLayout>

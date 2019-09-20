@@ -1,52 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
-    android:background="@color/colorWhite">
+    android:layout_height="80dp"
+    android:background="@color/colorWhite"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
 
     <TextView
         android:id="@+id/txt_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="22dp"
         android:fontFamily="@font/noto_sans_medium"
         android:text="Name"
         android:textColor="@color/colorText"
         android:textSize="12dp" />
 
-    <TextView
-        android:id="@+id/txt_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/txt_name"
-        android:layout_alignParentEnd="true"
-        android:fontFamily="@font/nanum_square_regular"
-        android:text="Date"
-        android:textColor="@color/colorRemittance"
-        android:textSize="12dp" />
+<!--    <TextView-->
+<!--        android:id="@+id/txt_date"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignBaseline="@id/txt_name"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:fontFamily="@font/nanum_square_regular"-->
+<!--        android:text="Date"-->
+<!--        android:textColor="@color/colorRemittance"-->
+<!--        android:textSize="12dp" />-->
 
+    <!--  TODO: DemiLight  -->
     <TextView
         android:id="@+id/txt_address"
         android:layout_width="73dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_below="@id/txt_name"
-        android:layout_marginTop="8dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="3dp"
         android:ellipsize="end"
         android:fontFamily="@font/noto_sans_regular"
         android:singleLine="true"
         android:text="Address"
-        android:textColor="@color/colorText"
+        android:textColor="@color/darkB3"
         android:textSize="10dp" />
 
     <TextView
         android:id="@+id/txt_symbol"
-        android:layout_width="32dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/txt_name"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/txt_date"
         android:layout_marginTop="8dp"
+        android:layout_marginLeft="5dp"
         android:fontFamily="@font/noto_sans_light"
         android:gravity="end|center_vertical"
         android:text="AAA"
@@ -57,8 +61,8 @@
         android:id="@+id/txt_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_alignBaseline="@id/txt_symbol"
-        android:layout_below="@id/txt_date"
         android:layout_toStartOf="@id/txt_symbol"
         android:fontFamily="@font/nanum_square_bold"
         android:gravity="end"
@@ -69,7 +73,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
         android:background="#ededed" />
 </RelativeLayout>

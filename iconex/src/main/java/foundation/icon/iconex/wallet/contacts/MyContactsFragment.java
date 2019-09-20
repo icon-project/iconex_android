@@ -20,9 +20,11 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.Contacts;
+import foundation.icon.iconex.dev_dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.ContactsDialog;
 import foundation.icon.iconex.realm.RealmUtil;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
 public class MyContactsFragment extends Fragment {
@@ -169,11 +171,12 @@ public class MyContactsFragment extends Fragment {
         @Override
         public void onDelete(int position) {
             final int pos = position;
-            Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-            dialog.setMessage(getString(R.string.msgDeleteContact));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            MessageDialog messageDialog = new MessageDialog(getContext());
+            messageDialog.setTitleText(getString(R.string.msgDeleteContact));
+            messageDialog.setSingleButton(false);
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
-                public void onOk() {
+                public Boolean invoke(View view) {
                     if (mType.equals(Constants.KS_COINTYPE_ICX)) {
                         RealmUtil.deleteContact(mType, ICONexApp.ICXContacts.get(pos).getName());
                         RealmUtil.loadContacts();
@@ -194,14 +197,10 @@ public class MyContactsFragment extends Fragment {
                     myContactsAdapter = new MyContactsAdapter(getActivity(), data, mEditable);
                     myContactsAdapter.setContactsClickListener(mClickListener);
                     recyclerContacts.setAdapter(myContactsAdapter);
-                }
-
-                @Override
-                public void onCancel() {
-
+                    return true;
                 }
             });
-            dialog.show();
+            messageDialog.show();
         }
 
         @Override

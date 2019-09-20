@@ -65,7 +65,6 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
             else
                 holder.txtName.setText(data.getName());
 
-            holder.txtDate.setText(getDate(data.getDate()));
             holder.txtAddr.setText(data.getAddress());
             holder.txtAmount.setText(String.format(mContext.getString(R.string.txWithdraw), data.getAmount()));
             holder.txtSymbol.setText(data.getSymbol());
@@ -75,7 +74,6 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
                 return;
             }
             holder.txtName.setText(data.getAlias());
-            holder.txtDate.setVisibility(View.INVISIBLE);
             holder.txtAddr.setText(data.getAddress());
             holder.txtAmount.setTextColor(mContext.getResources().getColor(R.color.colorText));
             holder.txtAmount.setText(getAsset(data));
@@ -91,13 +89,12 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView txtName, txtDate, txtAddr, txtAmount, txtSymbol;
+        TextView txtName, txtAddr, txtAmount, txtSymbol;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             txtName = itemView.findViewById(R.id.txt_name);
-            txtDate = itemView.findViewById(R.id.txt_date);
             txtAddr = itemView.findViewById(R.id.txt_address);
             txtAmount = itemView.findViewById(R.id.txt_amount);
             txtSymbol = itemView.findViewById(R.id.txt_symbol);
