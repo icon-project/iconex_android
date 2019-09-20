@@ -14,6 +14,7 @@ public class PRep implements Serializable {
     private String name, country, city, address, irep, irepUpdated, irepGen;
     private Grade grade;
     private BigInteger stake, totalDelegated, delegated, totalBlocks, validatedBlocks;
+    private String penalty, email, website, details, p2pEndPoint;
 
     public String getName() {
         return name;
@@ -71,6 +72,26 @@ public class PRep implements Serializable {
         return validatedBlocks;
     }
 
+    public String getPenalty() {
+        return penalty;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public String getP2pEndPoint() {
+        return p2pEndPoint;
+    }
+
     PRep(Builder b) {
         name = b.name;
         country = b.country;
@@ -85,6 +106,12 @@ public class PRep implements Serializable {
         delegated = b.delegated;
         totalBlocks = b.totalBlocks;
         validatedBlocks = b.validatedBlocks;
+
+        penalty = b.penalty;
+        email = b.email;
+        website = b.website;
+        details = b.details;
+        p2pEndPoint = b.p2pEndPoint;
     }
 
     public static class Builder {
@@ -92,6 +119,7 @@ public class PRep implements Serializable {
         private String name, country, city, address, irep, irepUpdated, irepGen;
         private Grade grade;
         private BigInteger stake, totalDelegated, delegated, totalBlocks, validatedBlocks;
+        private String penalty, email, website, details, p2pEndPoint;
 
         public Builder() {
         }
@@ -108,6 +136,11 @@ public class PRep implements Serializable {
 
         public Builder city(String city) {
             this.city = city;
+            return this;
+        }
+
+        public Builder grade(PRep.Grade grade) {
+            this.grade = grade;
             return this;
         }
 
@@ -142,8 +175,18 @@ public class PRep implements Serializable {
             return this;
         }
 
+        public Builder stake(BigInteger stake) {
+            this.stake = stake;
+            return this;
+        }
+
         public Builder totalDelegated(String totalDelegated) {
             this.totalDelegated = ConvertUtil.hexStringToBigInt(totalDelegated, 0);
+            return this;
+        }
+
+        public Builder totalDelegated(BigInteger totalDelegated) {
+            this.totalDelegated = totalDelegated;
             return this;
         }
 
@@ -152,13 +195,48 @@ public class PRep implements Serializable {
             return this;
         }
 
+        public Builder delegated(BigInteger delegated) {
+            this.delegated = delegated;
+            return this;
+        }
+
         public Builder totalBlocks(String totalBlocks) {
             this.totalBlocks = ConvertUtil.hexStringToBigInt(totalBlocks, 0);
             return this;
         }
 
+        public Builder totalBlocks(BigInteger totalBlocks) {
+            this.totalBlocks = totalBlocks;
+            return this;
+        }
+
         public Builder validatedBlocks(String validatedBlocks) {
             this.validatedBlocks = ConvertUtil.hexStringToBigInt(validatedBlocks, 0);
+            return this;
+        }
+
+        public Builder validatedBlocks(BigInteger validatedBlocks) {
+            this.validatedBlocks = validatedBlocks;
+            return this;
+        }
+
+        public Builder penalty(String penalty) {
+            this.penalty = penalty;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder website(String website) {
+            this.website = website;
+            return this;
+        }
+
+        public Builder p2pEndPoint(String p2pEndPoint) {
+            this.p2pEndPoint = p2pEndPoint;
             return this;
         }
 
@@ -182,6 +260,33 @@ public class PRep implements Serializable {
                 .totalBlocks(object.getItem("totalBlocks").asString())
                 .validatedBlocks(object.getItem("validatedBlocks").asString())
                 .build();
+    }
+
+    public PRep setDetails(RpcObject object) {
+        return newBuilder()
+                .penalty(object.getItem("penalty").asString())
+                .email(object.getItem("email").asString())
+                .website(object.getItem("website").asString())
+                .p2pEndPoint(object.getItem("p2pEndPoint").asString())
+                .build();
+    }
+
+    public Builder newBuilder() {
+        return new Builder()
+                .name(name)
+                .country(country)
+                .city(city)
+                .grade(grade)
+                .address(address)
+                .irep(irep)
+                .irepUpdated(irepUpdated)
+                .irepGen(irepGen)
+                .stake(stake)
+                .totalDelegated(totalDelegated)
+                .delegated(delegated)
+                .totalBlocks(totalBlocks)
+                .validatedBlocks(validatedBlocks);
+
     }
 
     public double delegatedPercent() {
@@ -217,6 +322,34 @@ public class PRep implements Serializable {
                 for (Grade g : values()) {
                     if (g.getGrade() == grade)
                         return g;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    public enum Status {
+        NORMAL(0),
+        SLASHED(1);
+
+        private int status;
+
+        Status(int status) {
+            this.status = status;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public static Status fromStatus(String hex) {
+            if (hex != null) {
+                int status = ConvertUtil.hexStringToBigInt(hex, 0).intValue();
+
+                for (Status s : values()) {
+                    if (s.getStatus() == status)
+                        return s;
                 }
             }
 

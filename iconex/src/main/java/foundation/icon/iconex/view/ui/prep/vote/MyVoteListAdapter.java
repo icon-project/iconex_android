@@ -11,8 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.view.ui.prep.Delegation;
@@ -49,7 +51,12 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MenuView.ItemView) {
+            ItemViewHolder h = (ItemViewHolder) holder;
+            Delegation delegation = delegations.get(position);
 
+            h.tvPrepName.setText(delegation.getPrepName());
+            h.tvPrepGrade.setText(String.format(Locale.getDefault(),
+                    "(%s)", delegation.getGrade().getLabel()));
         }
     }
 
@@ -105,13 +112,22 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.layout_info:
-                    if (layoutGraph.getVisibility() == View.GONE)
+                    if (layoutGraph.getVisibility() == View.GONE) {
                         layoutGraph.setVisibility(View.VISIBLE);
-                    else
+                        layoutMyVotes.setVisibility(View.GONE);
+                    } else {
                         layoutGraph.setVisibility(View.GONE);
+                        layoutMyVotes.setVisibility(View.VISIBLE);
+                    }
                     break;
 
                 case R.id.btn_prep_manage:
+                    Delegation delegation = delegations.get(getAdapterPosition());
+                    if (delegation.getValue().compareTo(BigInteger.ZERO) < 0) {
+                        // TODO: 2019-09-16 Show tooltip.
+                    } else {
+
+                    }
                     break;
             }
         }

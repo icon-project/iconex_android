@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.TextView
 import foundation.icon.iconex.R
 
-class UnstakeCancleDialog(context: Context) : MessageDialog(context) {
+class StakeDialog(context: Context) : MessageDialog(context) {
 
     private var mTxtTimeRequired: TextView
     private var mTxtStepLimit: TextView
@@ -13,12 +13,8 @@ class UnstakeCancleDialog(context: Context) : MessageDialog(context) {
     private var mTxtExchangedFee: TextView
 
     init {
-        // build dialog
-        // set Head
-        headText = context.getString(R.string.dialogHeatTextUnstakeCancel)
-
         // set Content
-        var v = View.inflate(context, R.layout.dlg_content_unstake_cancle, null)
+        var v = View.inflate(context, R.layout.dlg_content_set_stake, null)
         content = v
 
         // load Content Ui
@@ -28,6 +24,10 @@ class UnstakeCancleDialog(context: Context) : MessageDialog(context) {
         mTxtExchangedFee = findViewById(R.id.txt_exchanged_fee)
 
         isSingleButton = false
+    }
+
+    fun setTitle(title: String) {
+        headText = title
     }
 
     var timeRequired: String

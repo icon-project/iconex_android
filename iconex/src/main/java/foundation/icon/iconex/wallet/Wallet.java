@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,9 @@ public class Wallet implements Serializable, Parcelable {
     private String address = "";
     private String keyStore = "";
     private List<WalletEntry> walletEntries = null;
+    private BigInteger staked = BigInteger.ZERO;
+    private BigInteger iScore = BigInteger.ZERO;
+    private BigInteger votingPower = BigInteger.ZERO;
     private String createdAt = "";
 
     public String getCoinType() {
@@ -58,6 +62,30 @@ public class Wallet implements Serializable, Parcelable {
 
     public void setWalletEntries(List<WalletEntry> walletEntries) {
         this.walletEntries = walletEntries;
+    }
+
+    public BigInteger getStaked() {
+        return staked;
+    }
+
+    public void setStaked(BigInteger staked) {
+        this.staked = staked;
+    }
+
+    public BigInteger getiScore() {
+        return iScore;
+    }
+
+    public void setiScore(BigInteger iScore) {
+        this.iScore = iScore;
+    }
+
+    public BigInteger getVotingPower() {
+        return votingPower;
+    }
+
+    public void setVotingPower(BigInteger votingPower) {
+        this.votingPower = votingPower;
     }
 
     public String getCreatedAt() {

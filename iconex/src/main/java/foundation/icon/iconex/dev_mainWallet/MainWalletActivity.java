@@ -9,10 +9,11 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -26,6 +27,8 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev2_detail.WalletDetailActivity;
+import foundation.icon.iconex.dev_dialogs.MessageDialog;
+import foundation.icon.iconex.dev_dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.dev_mainWallet.component.WalletCardView;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
@@ -41,7 +44,6 @@ import foundation.icon.iconex.view.PRepIScoreActivity;
 import foundation.icon.iconex.view.PRepListActivity;
 import foundation.icon.iconex.view.PRepStakeActivity;
 import foundation.icon.iconex.view.PRepVoteActivity;
-import foundation.icon.iconex.view.ToolTip;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 
@@ -325,6 +327,9 @@ public class MainWalletActivity extends AppCompatActivity implements
     }
 
     // ========================= P-Peps Menu
+    private MessageDialog messageDialog;
+    private WalletPasswordDialog passwordDialog;
+
     @Override
     public void pReps(WalletCardViewData viewData) {
         startActivity(new Intent(this, PRepListActivity.class));
@@ -333,18 +338,49 @@ public class MainWalletActivity extends AppCompatActivity implements
     @Override
     public void stake(WalletCardViewData viewData) {
         Wallet wallet = findWalletByViewData(viewData);
-        startActivity(new Intent(this, PRepStakeActivity.class)
-                .putExtra("wallet", (Serializable) wallet));
+
+        passwordDialog = new WalletPasswordDialog(this, wallet,
+                new WalletPasswordDialog.OnPassListener() {
+                    @Override
+                    public void onPass(byte[] bytePrivateKey) {
+                        startActivity(new Intent(MainWalletActivity.this, PRepStakeActivity.class)
+                                .putExtra("wallet", (Serializable) wallet)
+                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
+                    }
+                });
+
+        BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
+        if (balance.compareTo(new BigInteger("5")) < 0) {
+            messageDialog = new MessageDialog(MainWalletActivity.this);
+            messageDialog.setTitleText(getString(R.string.notEnoughForStaking));
+            messageDialog.show();
+        } else {
+            passwordDialog.show();
+        }
     }
 
     @Override
     public void vote(WalletCardViewData viewData) {
         Wallet wallet = findWalletByViewData(viewData);
-        startActivity(
-                new Intent(this, PRepVoteActivity.class)
-                .putExtra("wallet", ((Serializable) wallet))
-        );
 
+        passwordDialog = new WalletPasswordDialog(this, wallet,
+                new WalletPasswordDialog.OnPassListener() {
+                    @Override
+                    public void onPass(byte[] bytePrivateKey) {
+                        startActivity(new Intent(MainWalletActivity.this, PRepVoteActivity.class)
+                                .putExtra("wallet", (Serializable) wallet)
+                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
+                    }
+                });
+
+        BigInteger votingPower = wallet.getVotingPower();
+        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
+            messageDialog = new MessageDialog(MainWalletActivity.this);
+            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
+            messageDialog.show();
+        } else {
+            passwordDialog.show();
+        }
     }
 
     @Override

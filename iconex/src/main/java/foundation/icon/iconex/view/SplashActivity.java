@@ -41,39 +41,39 @@ public class SplashActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-//        Handler localHandler = new Handler();
-//        localHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                VersionCheck versionCheck = new VersionCheck(SplashActivity.this,
-//                        new VersionCheck.VersionCheckCallback() {
-//                            @Override
-//                            public void onNeedUpdate() {
-//                                // Do nothing.
-//                            }
-//
-//                            @Override
-//                            public void onPass() {
-//                                if (isIconConnect) {
-////                                    if (ICONexApp.connectMethod == Constants.Method.NONE) {
-////                                        IconexConnect iconexConnect = new IconexConnect(SplashActivity.this, request);
-////                                        if (ICONexApp.wallets.size() > 0)
-////                                            iconexConnect.startConnectActivity();
-////                                        else
-////                                            IconexConnect.sendError(SplashActivity.this, request,
-////                                                    new ErrorCodes.Error(ErrorCodes.ERR_EMPTY, ErrorCodes.MSG_EMTPY));
-////                                    } else {
-////                                        finish();
-////                                    }
-//                                    finish();
-//                                } else
-//                                    checkPermissionConfirm();
-//                            }
-//                        });
-//                versionCheck.execute();
-//            }
-//        }, 500);
-        startActivity(new Intent(this, PRepVoteActivity.class));
+        Handler localHandler = new Handler();
+        localHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                VersionCheck versionCheck = new VersionCheck(SplashActivity.this,
+                        new VersionCheck.VersionCheckCallback() {
+                            @Override
+                            public void onNeedUpdate() {
+                                // Do nothing.
+                            }
+
+                            @Override
+                            public void onPass() {
+                                if (isIconConnect) {
+//                                    if (ICONexApp.connectMethod == Constants.Method.NONE) {
+//                                        IconexConnect iconexConnect = new IconexConnect(SplashActivity.this, request);
+//                                        if (ICONexApp.wallets.size() > 0)
+//                                            iconexConnect.startConnectActivity();
+//                                        else
+//                                            IconexConnect.sendError(SplashActivity.this, request,
+//                                                    new ErrorCodes.Error(ErrorCodes.ERR_EMPTY, ErrorCodes.MSG_EMTPY));
+//                                    } else {
+//                                        finish();
+//                                    }
+                                    finish();
+                                } else
+                                    checkPermissionConfirm();
+                            }
+                        });
+                versionCheck.execute();
+            }
+        }, 500);
+//        startActivity(new Intent(this, PRepVoteActivity.class));
     }
 
     private void checkPermissionConfirm() {

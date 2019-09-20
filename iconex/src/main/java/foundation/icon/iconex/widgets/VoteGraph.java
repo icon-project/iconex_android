@@ -56,14 +56,23 @@ public class VoteGraph extends LinearLayout {
         addView(v);
     }
 
-    private void setVoted(float percent) {
+    public void setVoted(float percent) {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(graph);
         constraintSet.setHorizontalWeight(R.id.voted, percent);
         constraintSet.setHorizontalWeight(R.id.available, 100 - percent);
         constraintSet.applyTo(graph);
 
-        votedPercent.setText(String.format(Locale.getDefault(), "%.1f", percent));
-        availablePercent.setText(String.format(Locale.getDefault(), "%.1f", 100 - percent));
+        if (percent == 0) {
+            available.setBackgroundResource(R.drawable.bg_graph_unstake);
+        } else if (percent == 100) {
+            voted.setBackgroundResource(R.drawable.bg_graph_stake);
+        } else {
+            voted.setBackgroundResource(R.drawable.bg_graph_stake_p);
+            available.setBackgroundResource(R.drawable.bg_graph_unstake_p);
+        }
+
+        votedPercent.setText(String.format(Locale.getDefault(), "%.1f%%", percent));
+        availablePercent.setText(String.format(Locale.getDefault(), "%.1f%%", 100 - percent));
     }
 }

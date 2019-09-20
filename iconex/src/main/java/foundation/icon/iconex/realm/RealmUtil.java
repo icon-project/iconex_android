@@ -13,9 +13,12 @@ import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.realm.data.CoinNToken;
 import foundation.icon.iconex.realm.data.ETHContacts;
 import foundation.icon.iconex.realm.data.ICXContacts;
+import foundation.icon.iconex.realm.data.MyVotes;
 import foundation.icon.iconex.realm.data.RecentETHSend;
 import foundation.icon.iconex.realm.data.RecentICXSend;
 import foundation.icon.iconex.token.Token;
+import foundation.icon.iconex.view.ui.prep.Delegation;
+import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import io.realm.Realm;
@@ -451,5 +454,45 @@ public class RealmUtil {
     private static String getTimeStamp() {
         long time = System.currentTimeMillis();
         return Long.toString(time);
+    }
+
+    public static List<Delegation> loadMyVotes(String owner) {
+        List<Delegation> delegations = new ArrayList<>();
+        Realm realm = Realm.getDefaultInstance();
+        List<MyVotes> myVotes = realm.where(MyVotes.class)
+                .equalTo("owner", owner).findAll();
+        for (MyVotes v : myVotes) {
+            Delegation d = new Delegation.Builder()
+                    .address(v.getPrepAddress())
+                    .name(v.getPrepName())
+                    .grade(PRep.Grade.fromGrade(v.getPrepGrade()))
+                    .build();
+
+            delegations.add(d);
+        }
+
+        return delegations;
+    }
+
+    public static void addMyVote(String owner, PRep pRep) {
+        MyVotes myVotes = new MyVotes();
+        myVotes.setOwner(owner);
+        myVotes.setPrepName(pRep.getName());
+        myVotes.setPrepAddress(pRep.getAddress());
+        myVotes.setPrepGrade(pRep.getGrade().getGrade());
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.insert(myVotes);
+        realm.commitTransaction();
+    }
+
+    public static void deleteMyVote(String owner, String prepAddress) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        MyVotes myVote = realm.where(MyVotes.class).equalTo("owner", owner)
+                .equalTo("prepAddress", prepAddress).findFirst();
+        myVote.deleteFromRealm();
+        realm.commitTransaction();
     }
 }
