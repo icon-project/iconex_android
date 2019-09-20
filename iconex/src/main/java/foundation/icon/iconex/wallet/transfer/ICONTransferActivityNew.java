@@ -305,6 +305,7 @@ public class ICONTransferActivityNew extends AppCompatActivity {
         txtTransBalance = findViewById(R.id.txt_trans_balance);
 
         editSend = findViewById(R.id.edit_send_amount);
+        txtTransSend = findViewById(R.id.txt_trans_amount);
         btnPlus10 = findViewById(R.id.btn_plus_10);
         btnPlus100 = findViewById(R.id.btn_plus_100);
         btnPlus1000 = findViewById(R.id.btn_plus_1000);
