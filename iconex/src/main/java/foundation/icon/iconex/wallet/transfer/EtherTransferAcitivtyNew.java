@@ -821,7 +821,7 @@ public class EtherTransferAcitivtyNew extends AppCompatActivity{
 
     private boolean validateGasLimit() {
         if (editLimit.getText().isEmpty()) {
-            editLimit.setError(true, null); // TODO
+            editLimit.setError(true, getString(R.string.errGasLimitEmpty));
             return false;
         } else {
             editLimit.setError(false, null);
@@ -837,19 +837,19 @@ public class EtherTransferAcitivtyNew extends AppCompatActivity{
             return true;
         else {
             if (!editData.getText().startsWith("0x")) {
-                editData.setError(true, null); //todo
+                editData.setError(true, getString(R.string.errInvalidData));
                 return false;
             } else {
                 try {
                     String data = editData.getText().toString().substring(2);
                     byte[] temp = Hex.decode(data);
                 } catch (Exception e) {
-                    editData.setError(true, null); //todo
+                    editData.setError(true, getString(R.string.errInvalidData));
 
                     return false;
                 }
 
-                editData.setError(false, null); //todo
+                editData.setError(false, null);
                 return true;
             }
         }
