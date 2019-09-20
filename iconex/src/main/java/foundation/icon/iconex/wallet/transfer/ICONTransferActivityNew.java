@@ -457,8 +457,7 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
             }
         });
-
-        btnViewData.setOnClickListener(new View.OnClickListener() {
+        editData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (data == null) {
@@ -486,7 +485,15 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
                         }
                     });
                     typeDialog.show();
-                } else {
+                }
+            }
+        });
+
+        btnViewData.setVisibility(View.GONE);
+        btnViewData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 if(data != null) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                     transaction.add(R.id.container, EnterDataFragment.newInstance(data));
@@ -1199,6 +1206,8 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
     @Override
     public void onSetData(InputData data) {
         this.data = data;
+        editData.setText(data.getData());
+        btnViewData.setVisibility(View.VISIBLE);
         minStep = new BigInteger(Integer.toString(this.data.getStepCost()));
         strLimit = minStep.toString();
         setLimitPrice(strLimit, txtStepICX);
@@ -1215,8 +1224,11 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
 
     @Override
     public void onDataCancel(InputData data) {
-        if (data.getData() == null)
+        if (data.getData() == null) {
             this.data = null;
+            editData.setText(null);
+            btnViewData.setVisibility(View.GONE);
+        }
 
         getSupportFragmentManager().popBackStackImmediate();
     }
@@ -1224,6 +1236,8 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
     @Override
     public void onDataDelete() {
         this.data = null;
+        editData.setText(null);
+        btnViewData.setVisibility(View.GONE);
 
 //        btnInput.setText(R.string.input);
 //        btnInput.setSelected(false);
