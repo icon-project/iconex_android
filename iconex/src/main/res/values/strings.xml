@@ -534,6 +534,15 @@
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>
     <string name="password">Password</string>
 
+    <!-- New - Transaction send  -->
+    <string name="sendBalanceAmount">전송 수량 (%s)</string>
+    <string name="stepLimit_price">적정 Step 한도 / 가격 (%s)</string>
+    <string name="maxFee">예상 최대 수수료 (%s)</string>
+    <string name="receiveAddress">받는 주소</string>
+
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- ========= -->

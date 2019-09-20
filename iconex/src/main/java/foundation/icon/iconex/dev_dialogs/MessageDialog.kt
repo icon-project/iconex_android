@@ -4,10 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import foundation.icon.iconex.R
 
 open class MessageDialog: Dialog {
@@ -24,6 +21,7 @@ open class MessageDialog: Dialog {
     private var mWrap2Button: LinearLayout
     private var mConfirmButton: Button
     private var mCancleButton: Button
+    private var mProgress: ProgressBar
 
     private var mSingleButton: Button
 
@@ -45,6 +43,7 @@ open class MessageDialog: Dialog {
         mWrap2Button = findViewById(R.id.wrap_2button)
         mConfirmButton = findViewById(R.id.btn_confirm)
         mCancleButton = findViewById(R.id.btn_cancel)
+        mProgress = findViewById(R.id.progress)
 
         mSingleButton = findViewById(R.id.btn_single_confirm)
 
@@ -66,6 +65,7 @@ open class MessageDialog: Dialog {
         headText = null
         subText = null
         isSingleButton = true
+        progressVisible = false
     }
 
     var onConfirmClick: ((v: View) -> Boolean)? = null
@@ -132,4 +132,9 @@ open class MessageDialog: Dialog {
             }
         }
 
+    var progressVisible: Boolean
+        get() = mProgress.visibility == View.VISIBLE
+        set(v) {
+            mProgress.visibility = if(v) View.VISIBLE else View.GONE
+        }
 }
