@@ -20,55 +20,10 @@
         android:layout_height="match_parent"
         android:background="@color/colorWhite">
 
-        <RelativeLayout
-            android:id="@+id/layout_data_limit"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentBottom="true"
-            android:background="#f7f7f7"
-            android:paddingBottom="13dp"
-            android:paddingEnd="24dp"
-            android:paddingStart="24dp"
-            android:paddingTop="13dp">
-
-            <TextView
-                android:id="@+id/txt_max"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:fontFamily="@font/nanum_square_bold"
-                android:text="/512 KB"
-                android:textColor="@color/dark4D"
-                android:textSize="12dp" />
-
-            <TextView
-                android:id="@+id/txt_limit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/txt_max"
-                android:fontFamily="@font/nanum_square_bold"
-                android:gravity="center"
-                android:textColor="@color/dark4D"
-                android:textSize="12dp" />
-
-            <TextView
-                android:id="@+id/txt_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:fontFamily="@font/noto_sans_regular"
-                android:text="TYPE"
-                android:textColor="@color/darkB3"
-                android:textSize="12dp" />
-        </RelativeLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/layout_data_limit"
+            android:layout_above="@id/layout_complete"
             android:clipToPadding="false"
             android:scrollbars="none">
 
@@ -91,7 +46,7 @@
             android:id="@+id/layout_complete"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_above="@id/layout_data_limit"
+            android:layout_alignParentBottom="true"
             android:background="@color/darkFC">
 
             <Button

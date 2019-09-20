@@ -164,7 +164,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".menu.appInfo.AppInfoActivity"
+            android:name=".menu.appInfo.AppInfoActivityOld"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />

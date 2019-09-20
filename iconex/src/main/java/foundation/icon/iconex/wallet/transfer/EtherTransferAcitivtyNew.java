@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -35,6 +38,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
@@ -44,12 +48,13 @@ import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
 import foundation.icon.iconex.wallet.transfer.data.ErcTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
+import foundation.icon.iconex.wallet.transfer.data.InputData;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.CustomSeekbar;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 
-public class EtherTransferAcitivtyNew extends AppCompatActivity{
+public class EtherTransferAcitivtyNew extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter{
 
     // appbar UI
     private CustomActionBar appbar;
@@ -391,6 +396,32 @@ public class EtherTransferAcitivtyNew extends AppCompatActivity{
         });
 
         // edit Data
+        editData.setInputEnabled(false);
+        btnViewData.setVisibility(View.GONE);
+        editData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editData.getText().length() <= 0) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.add(android.R.id.content, EtherDataEnterFragment.newInstance(editData.getText()));
+                    transaction.addToBackStack("DATA");
+                    transaction.commit();
+                }
+            }
+        });
+        btnViewData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editData.getText().length() > 0) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.add(android.R.id.content, EtherDataEnterFragment.newInstance(editData.getText()));
+                    transaction.addToBackStack("DATA");
+                    transaction.commit();
+                }
+            }
+        });
         editData.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
@@ -970,5 +1001,61 @@ public class EtherTransferAcitivtyNew extends AppCompatActivity{
 
             }
         }
+    }
+
+    @Override
+    public void onSetData(String data) {
+        editData.setText(data);
+        btnViewData.setVisibility(View.VISIBLE);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getSupportFragmentManager().popBackStackImmediate();
+
+        setSendEnable();
+    }
+
+    @Override
+    public void onDataCancel(String data) {
+        if (data == null) {
+            editData.setText("");
+            btnViewData.setVisibility(View.GONE);
+        } else {
+            btnViewData.setVisibility(View.VISIBLE);
+        }
+
+        getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onDataDelete() {
+        editData.setText("");
+        btnViewData.setVisibility(View.GONE);
+
+        getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0) {
+            Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+            dialog.setMessage(getString(R.string.cancelEnterData));
+            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                @Override
+                public void onOk() {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    fragmentManager.popBackStackImmediate();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+            dialog.show();
+        } else
+            super.onBackPressed();
     }
 }

@@ -306,8 +306,7 @@
                     android:id="@+id/edit_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:hint="Data (Optional)"
-                    app:inputType="readOnly"/>
+                    app:hint="Data (Optional)" />
 
                 <Button
                     android:id="@+id/btn_view_data"

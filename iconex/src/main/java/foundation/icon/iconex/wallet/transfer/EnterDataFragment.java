@@ -47,6 +47,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
     private TextView txtDataSize;
     private MyEditText editData;
 
+    private ViewGroup layoutDataLimit;
     private ViewGroup layoutComplete;
     private Button btnComplete;
 
@@ -93,6 +94,8 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
         btnOption = v.findViewById(R.id.btn_option);
         btnComplete = v.findViewById(R.id.btn_complete);
         layoutComplete = v.findViewById(R.id.layout_complete);
+        layoutDataLimit = v.findViewById(R.id.layout_data_limit);
+
         btnOption.setOnClickListener(this);
         btnComplete.setOnClickListener(this);
 
@@ -183,6 +186,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
             editData.setFocusable(false);
             btnOption.setText(getString(R.string.modified));
             layoutComplete.setVisibility(View.GONE);
+            layoutDataLimit.setVisibility(View.GONE);
 
         } // else new data
 
@@ -222,6 +226,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                     btnOption.setText(getString(R.string.delete));
                     editData.setSelection(editData.getText().toString().length());
                     layoutComplete.setVisibility(View.VISIBLE);
+                    layoutDataLimit.setVisibility(View.VISIBLE);
 
                     editData.setFocusableInTouchMode(true);
                     editData.requestFocus();
@@ -272,23 +277,20 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
     }
 
     private void showCancel() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-        dialog.setMessage(getString(R.string.cancelEnterData));
-        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+        MessageDialog messageDialog = new MessageDialog(getActivity());
+        messageDialog.setSingleButton(false);
+        messageDialog.setTitleText(getString(R.string.cancelEnterData));
+        messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
             @Override
-            public void onOk() {
+            public Boolean invoke(View view) {
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 if (mListener != null)
                     mListener.onDataCancel(data);
-            }
-
-            @Override
-            public void onCancel() {
-
+                return true;
             }
         });
-        dialog.show();
+        messageDialog.show();
     }
 
     private boolean isHexCharSet(char c) {
@@ -357,9 +359,9 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                             if (mListener != null)
                                 mListener.onSetData(data);
                         } else {
-                            BasicDialog dialog = new BasicDialog(getActivity());
-                            dialog.setMessage(getString(R.string.errIcxOwnNotEnough));
-                            dialog.show();
+                            MessageDialog messageDialog = new MessageDialog(getActivity());
+                            messageDialog.setTitleText(getString(R.string.errIcxOwnNotEnough));
+                            messageDialog.show();
 
                             data.setData(null);
                         }

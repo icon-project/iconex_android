@@ -457,6 +457,7 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
             }
         });
+        editData.setInputEnabled(false);
         editData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -469,10 +470,10 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
                             data.setAddress(wallet.getAddress());
                             data.setBalance(balance);
                             data.setStepPrice(stepPriceLoop);
-                            if (editSend.getText().toString().isEmpty())
+                            if (editSend.getText().isEmpty())
                                 data.setAmount(BigInteger.ZERO);
                             else
-                                data.setAmount(ConvertUtil.valueToBigInteger(editSend.getText().toString(), 18));
+                                data.setAmount(ConvertUtil.valueToBigInteger(editSend.getText(), 18));
                             data.setDataType(type);
 
                             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -1228,6 +1229,8 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
             this.data = null;
             editData.setText(null);
             btnViewData.setVisibility(View.GONE);
+        } else {
+            btnViewData.setVisibility(View.VISIBLE);
         }
 
         getSupportFragmentManager().popBackStackImmediate();
@@ -1236,7 +1239,7 @@ public class ICONTransferActivityNew extends AppCompatActivity implements EnterD
     @Override
     public void onDataDelete() {
         this.data = null;
-        editData.setText(null);
+        editData.setText("");
         btnViewData.setVisibility(View.GONE);
 
 //        btnInput.setText(R.string.input);
