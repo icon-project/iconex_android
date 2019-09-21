@@ -14,14 +14,16 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.wallet.main.MainActivity;
+import foundation.icon.iconex.widgets.CustomActionBar;
 
 public class SettingLockActivity extends AppCompatActivity implements AppLockManageFragment.OnAppLockManageListener,
         SetFingerprintLockFragment.OnSetFingerprintLockListener, SetLockNumFragment.OnSetLockNumListener {
 
     private static final String TAG = SettingLockActivity.class.getSimpleName();
 
-    private Button btnBack;
-    private TextView txtTitle;
+    // private Button btnBack;
+    // private TextView txtTitle;
+    private CustomActionBar appbar;
 
     private FragmentManager fm;
     private FragmentTransaction ft;
@@ -39,10 +41,9 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
         if (getIntent() != null)
             type = (MyConstants.TypeLock) getIntent().getSerializableExtra(ARG_TYPE);
 
-        txtTitle = findViewById(R.id.txt_title);
-        txtTitle.setText(getString(R.string.titleAppLock));
-        btnBack = findViewById(R.id.btn_close);
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        appbar = findViewById(R.id.appbar);
+        appbar.setTitle(getString(R.string.titleAppLock));
+        appbar.setOnClickStartIcon(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (fm.getBackStackEntryCount() > 1) {
@@ -50,9 +51,8 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
                         finish();
                     } else {
                         fm.popBackStackImmediate();
-                        txtTitle.setText(getString(R.string.titleAppLock));
+                        appbar.setTitle(getString(R.string.titleAppLock));
                         alFragment.refresh();
-                        btnBack.setBackgroundResource(R.drawable.ic_appbar_close);
                     }
                 } else {
                     startActivity(new Intent(SettingLockActivity.this, MainWalletActivity.class)
@@ -69,12 +69,11 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
             setFragment(alFragment);
         } else if (type == MyConstants.TypeLock.LOST) {
             setFragment(alFragment);
-            txtTitle.setText(getString(R.string.titleSetLockNum));
+            appbar.setTitle(getString(R.string.titleSetLockNum));
             setFragment(SetLockNumFragment.newInstance(SetLockNumFragment.TYPE.USE));
-            btnBack.setBackgroundResource(R.drawable.ic_appbar_back);
 
         } else if (type == MyConstants.TypeLock.RECOVER) {
-            txtTitle.setText(getString(R.string.titleFingerprintLock));
+            appbar.setTitle(getString(R.string.titleFingerprintLock));
             setFragment(SetFingerprintLockFragment.newInstance());
         }
 
@@ -93,10 +92,8 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
 
     @Override
     public void onSetLockNumUse(boolean isLocked) {
-        btnBack.setBackgroundResource(R.drawable.ic_appbar_back);
-
         if (isLocked) {
-            txtTitle.setText(getString(R.string.titleSetLockNum));
+            appbar.setTitle(getString(R.string.titleSetLockNum));
             setFragment(SetLockNumFragment.newInstance(SetLockNumFragment.TYPE.USE));
         } else {
             setFragment(SetLockNumFragment.newInstance(SetLockNumFragment.TYPE.DISUSE));
@@ -106,16 +103,14 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
     @Override
     public void onLockNumBack() {
         fm.popBackStackImmediate();
-        txtTitle.setText(getString(R.string.titleAppLock));
+        appbar.setTitle(getString(R.string.titleAppLock));
         alFragment.refresh();
-        btnBack.setBackgroundResource(R.drawable.ic_appbar_close);
     }
 
     @Override
     public void onResetAppLock() {
-        txtTitle.setText(getString(R.string.titleChangeLockNum));
+        appbar.setTitle(getString(R.string.titleChangeLockNum));
         setFragment(SetLockNumFragment.newInstance(SetLockNumFragment.TYPE.RESET));
-        btnBack.setBackgroundResource(R.drawable.ic_appbar_back);
     }
 
     @Override
@@ -124,17 +119,15 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
             finish();
         else {
             fm.popBackStackImmediate();
-            txtTitle.setText(getString(R.string.titleAppLock));
+            appbar.setTitle(getString(R.string.titleAppLock));
             alFragment.refresh();
-            btnBack.setBackgroundResource(R.drawable.ic_appbar_close);
         }
     }
 
     @Override
     public void onUnlockFinger() {
-        txtTitle.setText(getString(R.string.titleFingerprintLock));
+        appbar.setTitle(getString(R.string.titleFingerprintLock));
         setFragment(SetFingerprintLockFragment.newInstance());
-        btnBack.setBackgroundResource(R.drawable.ic_appbar_back);
     }
 
     @Override
@@ -144,9 +137,8 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
                 finish();
             } else {
                 fm.popBackStackImmediate();
-                txtTitle.setText(getString(R.string.titleAppLock));
+                appbar.setTitle(getString(R.string.titleAppLock));
                 alFragment.refresh();
-                btnBack.setBackgroundResource(R.drawable.ic_appbar_close);
             }
         } else {
             startActivity(new Intent(SettingLockActivity.this, MainWalletActivity.class)
