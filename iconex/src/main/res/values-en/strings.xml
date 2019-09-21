@@ -374,6 +374,8 @@
     <string name="titleFingerprintLock">Fingerprint Unlock Guide</string>
     <string name="fingerprintLockHeader">Do you want to unlock ICONex with your fingerprint?</string>
     <string name="fingerprintLockDetailed">You can have fast access to ICONex using your fingerprint.\n\You can unlock ICONex with every fingerprint registered on your mobile phone. Please make sure you have registered your own fingerprint.</string>
+    <string name="fingerprintLockDetailed0">You can have fast access to ICONex using your fingerprint.</string>
+    <string name="fingerprintLockDetailed1">You can unlock ICONex with every fingerprint registered on your mobile phone. Please make sure you have registered your own fingerprint.</string>
 
     <string name="titleSetLockNum">Activate Screen Lock</string>
     <string name="lockNumGuide">Enter 6-digit passcode</string>

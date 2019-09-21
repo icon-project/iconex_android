@@ -373,6 +373,8 @@
     <string name="titleFingerprintLock">지문으로 잠금 해제 안내</string>
     <string name="fingerprintLockHeader">지문으로 잠금 해제를 사용하겠습니까?</string>
     <string name="fingerprintLockDetailed">ICONex 앱을 실행할 때 지문을 사용하여 빠르게 잠금 해제가 가능합니다.\n\n휴대폰에 등록되어 있는 모든 지문으로 잠금 해제를 할 수 있습니다. 다른 사람의 지문이 등록되어 있는지 확인해주세요.</string>
+    <string name="fingerprintLockDetailed0">ICONex 앱을 실행할 때 지문을 사용하여 빠르게 잠금 해제가 가능합니다.</string>
+    <string name="fingerprintLockDetailed1">휴대폰에 등록되어 있는 모든 지문으로 잠금 해제를 할 수 있습니다. 다른 사람의 지문이 등록되어 있는지 확인해주세요.</string>
 
     <string name="titleSetLockNum">잠금 번호 설정</string>
     <string name="lockNumGuide">잠금 번호 6자리를 입력해주세요.</string>
