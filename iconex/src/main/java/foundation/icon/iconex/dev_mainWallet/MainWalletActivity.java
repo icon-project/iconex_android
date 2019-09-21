@@ -8,10 +8,12 @@ import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import org.spongycastle.util.encoders.Hex;
 
@@ -27,12 +29,14 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dev2_detail.WalletDetailActivity;
+import foundation.icon.iconex.dev_dialogs.IconDisclaimerDialogFragment;
 import foundation.icon.iconex.dev_dialogs.MessageDialog;
 import foundation.icon.iconex.dev_dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.dev_mainWallet.component.WalletCardView;
 import foundation.icon.iconex.dev_mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.dev_mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.TitleMsgDialog;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.menu.dev_appInfo.AppInfoActivity;
@@ -78,19 +82,9 @@ public class MainWalletActivity extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FrameLayout container = new FrameLayout(this);
-        container.setId(R.id.container);
-        setContentView(container, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        ));
-
-
-        MainWalletFragment fragment = MainWalletFragment.newInstance();
-
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.container, fragment, MAIN_WALLET_FRAGMENT_TAG)
+                .add(android.R.id.content, MainWalletFragment.newInstance(), MAIN_WALLET_FRAGMENT_TAG)
                 .commit();
 
         mainWalletServiceHelper = new MainWalletServiceHelper(this, this);
@@ -316,14 +310,11 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void iconexDisclamers() {
-        TitleMsgDialog dialog = new TitleMsgDialog(this);
-        dialog.setTitle(getString(R.string.ICONexDisclaimers));
-        SpannableStringBuilder builder = new SpannableStringBuilder(getString(R.string.disclaimersHeader)
-                + "\n\n" + getString(R.string.disclaimersContents));
-        builder.setSpan(new StyleSpan(Typeface.BOLD), 0, getString(R.string.disclaimersHeader).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        dialog.setMessage(builder.toString());
-        dialog.show();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(android.R.id.content, new IconDisclaimerDialogFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     // ========================= P-Peps Menu
@@ -388,5 +379,14 @@ public class MainWalletActivity extends AppCompatActivity implements
         Wallet wallet = findWalletByViewData(viewData);
         startActivity(new Intent(this, PRepIScoreActivity.class)
                 .putExtra("wallet", (Serializable) wallet));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
