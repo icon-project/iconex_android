@@ -18,9 +18,9 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.util.PreferenceUtil;
 
-public class DeveloperFragment extends Fragment {
+public class DeveloperFragmentOld extends Fragment {
 
-    private static final String TAG = DeveloperFragment.class.getSimpleName();
+    private static final String TAG = DeveloperFragmentOld.class.getSimpleName();
 
     private Button btnSwitch;
     private ViewGroup btnNetwork;
@@ -28,12 +28,12 @@ public class DeveloperFragment extends Fragment {
 
     private PreferenceUtil preferenceUtil;
 
-    public DeveloperFragment() {
+    public DeveloperFragmentOld() {
 
     }
 
-    public static DeveloperFragment newInstance() {
-        DeveloperFragment fragment = new DeveloperFragment();
+    public static DeveloperFragmentOld newInstance() {
+        DeveloperFragmentOld fragment = new DeveloperFragmentOld();
         return fragment;
     }
 

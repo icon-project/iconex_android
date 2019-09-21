@@ -43,7 +43,7 @@ import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.TitleMsgDialog;
 import foundation.icon.iconex.view.AuthActivity;
 import foundation.icon.iconex.menu.DrawerMenuFragment;
-import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
+import foundation.icon.iconex.menu.appInfo.AppInfoActivityOld;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
@@ -922,7 +922,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, SettingLockActivity.class)
                     .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.DEFAULT));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.APP_INFO) {
-            startActivity(new Intent(this, AppInfoActivity.class));
+            startActivity(new Intent(this, AppInfoActivityOld.class));
         } else if (menu == DrawerMenuFragment.SIDE_MENU.ICONex_DISCLAIMER) {
             TitleMsgDialog dialog = new TitleMsgDialog(this);
             dialog.setTitle(getString(R.string.ICONexDisclaimers));

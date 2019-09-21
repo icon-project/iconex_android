@@ -1,5 +1,6 @@
 package foundation.icon.iconex.dev_mainWallet;
 
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -216,6 +217,17 @@ public class MainWalletFragment extends Fragment {
         btnScreenLock.setOnClickListener(sideMenuListener);
         btnAppVer.setOnClickListener(sideMenuListener);
         btnICONexDisclaimers.setOnClickListener(sideMenuListener);
+
+        try {
+            String version = getActivity()
+                    .getPackageManager()
+                    .getPackageInfo(getActivity().getPackageName(), 0)
+                    .versionName;
+
+            btnAppVer.setText(getText(R.string.appVer) + " " + version);
+        } catch (PackageManager.NameNotFoundException e) {
+            btnAppVer.setText(getText(R.string.appVer) + " -");
+        }
 
         // init actiobar
         actionBar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {

@@ -31,6 +31,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".menu.dev_appInfo.AppInfoActivity"
+            android:configChanges="fontScale"
+            android:exported="false"
+            android:screenOrientation="portrait"/>/>
         <activity android:name=".menu.WalletBackupActivityNew"
             android:configChanges="fontScale"
             android:exported="false"

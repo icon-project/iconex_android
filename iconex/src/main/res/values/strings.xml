@@ -142,7 +142,6 @@
     <string name="settingLock">Screen Lock</string>
     <string name="settingLanguage">Language</string>
     <string name="appInfo">App Info</string>
-    <string name="appVer">App Ver. </string>
     <string name="ICONexDisclaimers">ICONex Disclaimer</string>
 
     <string name="currentVersion">Current Version</string>
@@ -538,6 +537,9 @@
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>
     <string name="password">Password</string>
 
+    <!-- New side Menu -->
+    <string name="appVer">앱 버전</string>
+
     <!-- New - Transaction send  -->
     <string name="sendBalanceAmount">전송 수량 (%s)</string>
     <string name="stepLimit_price">적정 Step 한도 / 가격 (%s)</string>
@@ -546,6 +548,7 @@
 
 
     <string name="type">Type</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
