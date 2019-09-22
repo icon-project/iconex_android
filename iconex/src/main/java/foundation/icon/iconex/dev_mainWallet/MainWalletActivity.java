@@ -374,13 +374,13 @@ public class MainWalletActivity extends AppCompatActivity implements
                 });
 
         BigInteger votingPower = wallet.getVotingPower();
-        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
-            messageDialog = new MessageDialog(MainWalletActivity.this);
-            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
-            messageDialog.show();
-        } else {
+//        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
+//            messageDialog = new MessageDialog(MainWalletActivity.this);
+//            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
+//            messageDialog.show();
+//        } else {
             passwordDialog.show();
-        }
+//        }
     }
 
     @Override

@@ -133,6 +133,10 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public void setData(List<Delegation> delegations) {
+        this.delegations = delegations;
+    }
+
     public interface OnClickListener {
         void onRemove();
 

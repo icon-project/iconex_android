@@ -1,6 +1,5 @@
-package foundation.icon.iconex.view;
+package foundation.icon.iconex.widgets;
 
-import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,14 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import foundation.icon.iconex.R;
 

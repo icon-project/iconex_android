@@ -532,6 +532,10 @@
     <!-- Dialog -->
     <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 5 ICX 이상 잔액이\n있어야 합니다.</string>
     <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
+    
+    <!-- Tool Tip -->
+    <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>
+    <string name="tipPRepMax">Vote 가능한 리스트는 최대 10개 입니다.</string>
 
 
     <!-- New - wallet menu -->

@@ -20,7 +20,7 @@
             android:id="@+id/btn_prep_manage"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_delete_list"
+            android:src="@drawable/bg_btn_prep_add"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

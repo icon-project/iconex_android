@@ -232,8 +232,8 @@ public class PRepStakeActivity extends AppCompatActivity {
 
                         float stakePercentage = calculatePercentage(totalBalance, staked);
                         float delegatedPercentage = calculatePercentage(staked, delegated);
-                        stakeGraph.setStake(stakePercentage);
-                        stakeGraph.setDelegation(delegatedPercentage);
+//                        stakeGraph.setStake(stakePercentage);
+//                        stakeGraph.setDelegation(delegatedPercentage);
 
                         editStaked.setText(String.format(Locale.getDefault(), "%.4f",
                                 Double.parseDouble(ConvertUtil.getValue(staked, 18))));

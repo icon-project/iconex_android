@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -73,6 +74,15 @@ public class PRepVoteFragment extends Fragment {
         wallet = vm.getWallet().getValue();
         delegations = RealmUtil.loadMyVotes(wallet.getAddress());
         vm.setDelegations(delegations);
+        vm.getDelegations().observe(this, new Observer<List<Delegation>>() {
+            @Override
+            public void onChanged(List<Delegation> delegations) {
+                if (adapter != null && delegations != null) {
+                    adapter.setData(delegations);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -91,7 +101,7 @@ public class PRepVoteFragment extends Fragment {
             mListener = (OnVoteListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnVoteLitener");
+                    + " must implement OnVoteListener");
         }
     }
 
