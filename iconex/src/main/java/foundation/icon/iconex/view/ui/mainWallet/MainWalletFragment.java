@@ -1,5 +1,6 @@
 package foundation.icon.iconex.view.ui.mainWallet;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -20,6 +21,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import org.spongycastle.util.encoders.Hex;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +32,7 @@ import java.util.Map;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.view.ui.mainWallet.component.TotalAssetInfoView;
@@ -39,6 +44,7 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
@@ -485,7 +491,20 @@ public class MainWalletFragment extends Fragment {
         walletCardView.setOnClickQrScanListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "not implement qr scan", Toast.LENGTH_SHORT).show();
+                WalletCardViewData viewData = getCurrentWalletCardData();
+                Wallet wallet = findWalletByViewData(viewData);
+                new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
+                    @Override
+                    public void onPass(byte[] bytePrivateKey) {
+                        getContext() // only icx wallet, icx coin wallet entry.
+                                .startActivity(new Intent(getContext(), ICONTransferActivity.class)
+                                        .putExtra("walletInfo", (Serializable) wallet)
+                                        .putExtra("walletEntry", (Serializable) wallet.getWalletEntries().get(0))
+                                        .putExtra("privateKey", Hex.toHexString(bytePrivateKey))
+                                        .putExtra("qr code scan start", true)
+                                );
+                    }
+                }).show();
             }
         });
 

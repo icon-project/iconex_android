@@ -43,11 +43,11 @@
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"/>
-        <activity android:name=".wallet.transfer.EtherTransferAcitivtyNew"
+        <activity android:name=".wallet.transfer.EtherTransferActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"/>
-        <activity android:name=".wallet.transfer.ICONTransferActivityNew"
+        <activity android:name=".wallet.transfer.ICONTransferActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"/>
@@ -106,7 +106,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wallet.transfer.ICONTransferActivity"
+            android:name=".wallet.transfer.OldICONTransferActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -145,7 +145,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity
-            android:name=".wallet.transfer.EtherTransferActivity"
+            android:name=".wallet.transfer.OldEtherTransferActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"

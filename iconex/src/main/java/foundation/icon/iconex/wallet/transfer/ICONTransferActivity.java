@@ -7,40 +7,36 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.JsonObject;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
-import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
-import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
@@ -54,7 +50,8 @@ import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
 import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
-import foundation.icon.iconex.widgets.MyEditText;
+import foundation.icon.iconex.widgets.CustomActionBar;
+import foundation.icon.iconex.widgets.TTextInputLayout;
 import foundation.icon.icx.IconService;
 import foundation.icon.icx.data.Address;
 import foundation.icon.icx.transport.http.HttpProvider;
@@ -65,60 +62,78 @@ import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.request.Transaction;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
-import loopchain.icon.wallet.service.crypto.PKIUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ICONTransferActivity extends AppCompatActivity implements View.OnClickListener, EnterDataFragment.OnEnterDataLisnter {
+public class ICONTransferActivity extends AppCompatActivity implements EnterDataFragment.OnEnterDataLisnter{
 
-    private static final String TAG = ICONTransferActivity.class.getSimpleName();
+    // appbar UI
+    private CustomActionBar appbar;
 
-    private ScrollView scroll;
-    private Button btnBack;
-    private TextView txtBalance;
-    private MyEditText editSend, editAddress, editLimit;
-    private View lineSend, lineAddress, lineLimit;
-    private TextView txtSendWarning, txtAddrWarning, txtLimitWarning;
-    private Button btnDelAmount, btnDelAddr, btnDelLimit;
-    private TextView txtTransSend;
-    private Button btnPlus10, btnPlus100, btnPlus1000, btnTheWhole;
-    private Button btnContacts, btnScan, btnInput;
-
-    private ViewGroup layoutNetwork, btnNetwork;
+    // Select Network UI
+    private ViewGroup layoutNetwork;
+    private ViewGroup btnNetwork;
     private TextView txtNetwork;
 
-    private TextView txtStepICX, txtStepGloop, txtStepTrans;
+    // available UI
+    private TextView labelBalance;
+    private TextView labelSymbol;
+    private TextView txtBalance;
+    private TextView txtTransBalance;
 
-    private TextView txtFee, txtTransFee;
-    private TextView txtRemain, txtTransRemain;
+    // Send Amount UI
+    private TTextInputLayout editSend;
+    private TextView txtTransSend;
+    private Button btnPlus10, btnPlus100, btnPlus1000, btnTheWhole;
 
+    // Receving Address UI
+    private TTextInputLayout editAddress;
+    private Button btnContact;
+    private Button btnQRcodeScan;
+
+    // Input Data UI
+    private ViewGroup layoutData;
+    private TTextInputLayout editData;
+    private Button btnViewData;
+
+    // Fee UI
+    private TextView labelStepLimit;
+    private TextView labelEstimatedMaxFee;
+    private TextView symbolStepLimit;
+    private TextView symbolEstimatedMaxFee;
+    private TextView txtStepLimit;
+    private TextView txtEstimatedMaxFee;
+    private TextView txtTransFee;
+
+    // send button UI
     private Button btnSend;
 
-    private BigInteger balance;
-
-    private final String CODE_EXCHANGE = "icxusd";
-    private String EXCHANGE_PRICE = "";
-    private String FEE;
-    private String timestamp = null;
-    private String txHash = null;
-
-    private NetworkService mService;
-    private boolean mBound = false;
-
+    // activity result
     private static final int RC_CONTACTS = 9001;
     private static final int RC_BARCODE_CAPTURE = 9002;
     private static final int RC_DATA = 9003;
 
-    private Wallet mWallet;
-    private WalletEntry mWalletEntry;
-    private String privKey;
+    // data field
+    private Wallet wallet;
+    private WalletEntry entry;
+    private String privateKey;
+
+    private BigInteger balance;
 
     private LoopChainClient LCClient = null;
     private BigInteger stepPriceLoop = null;
     private BigInteger stepPriceICX = null;
+
+    private final String CODE_EXCHANGE = "icxusd";
+    private String fee;
+
+    private NetworkService mService;
+    private boolean mBound = false;
+
+    private InputData data = null;
 
     private BigInteger defaultLimit = BigInteger.ZERO;
     private BigInteger minStep = BigInteger.ZERO;
@@ -127,419 +142,54 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     private BigInteger inputPrice = BigInteger.ZERO;
     private BigInteger contractCall = BigInteger.ZERO;
 
-    private InputData data = null;
-    private FragmentManager fragmentManager = null;
+    private String txtStepICX, txtStepGloop, txtStepTrans;
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
-            mService = binder.getService();
-            mService.registerExchangeCallback(mExchangeCallback);
-            mService.registerRemCallback(mTransferCallback);
+    private String strLimit = "";
+    private String strFee = "";
+    private String strTransFee = "";
 
-            if (mBound) {
-                mService.requestExchangeList(CODE_EXCHANGE);
-            } else {
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-            mBound = false;
-        }
-    };
-
-    private NetworkService.ExchangeCallback mExchangeCallback = new NetworkService.ExchangeCallback() {
-        @Override
-        public void onReceiveExchangeList() {
-            for (Map.Entry<String, String> entry : ICONexApp.EXCHANGE_TABLE.entrySet()) {
-                if (entry.getKey().equals(CODE_EXCHANGE))
-                    EXCHANGE_PRICE = entry.getValue();
-            }
-        }
-
-        @Override
-        public void onReceiveError(String resCode) {
-        }
-
-        @Override
-        public void onReceiveException(Throwable t) {
-        }
-    };
-
-    private OnKeyPreImeListener onKeyPreImeListener = new OnKeyPreImeListener() {
-        @Override
-        public void onBackPressed() {
-            setSendEnable();
-        }
-    };
-
-    private NetworkService.TransferCallback mTransferCallback = new NetworkService.TransferCallback() {
-        @Override
-        public void onReceiveTransactionResult(String id, String txHash) {
-
-            Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        @Override
-        public void onReceiveError(String address, int code) {
-            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onReceiveException(Throwable t) {
-            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
-        }
-    };
+    private String txtRemain;
+    private String txtTransRemain;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_icon_transfer);
+        setContentView(R.layout.activity_icon_transfer_new);
 
+        // activity field init
         if (getIntent() != null) {
-            mWallet = (Wallet) getIntent().getExtras().get("walletInfo");
-            mWalletEntry = (WalletEntry) getIntent().getExtras().get("walletEntry");
-            privKey = getIntent().getStringExtra("privateKey");
+            wallet = (Wallet) getIntent().getExtras().get("walletInfo");
+            entry = (WalletEntry) getIntent().getExtras().get("walletEntry");
+            privateKey = getIntent().getStringExtra("privateKey");
+
+            // for main wallet fragment - walletCardView.setOnClickQrScan
+            if (getIntent().getBooleanExtra("qr code scan start", false)) {
+                Intent intent = new Intent(ICONTransferActivity.this, BarcodeCaptureActivity.class);
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+
+                startActivityForResult(intent, RC_BARCODE_CAPTURE);
+            }
         }
 
-        EXCHANGE_PRICE = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
+        loadView();
+        initView();
 
-        scroll = findViewById(R.id.scroll);
+        // set appbar title
+        appbar.setTitle(wallet.getAlias());
 
-        ((TextView) findViewById(R.id.txt_title)).setText(mWallet.getAlias());
-        ((TextView) findViewById(R.id.txt_sub_balance))
-                .setText(String.format(getString(R.string.possessionAmount), mWalletEntry.getSymbol()));
-        ((TextView) findViewById(R.id.txt_send_amount))
-                .setText(String.format(getString(R.string.sendAmount), mWalletEntry.getSymbol()));
-        ((TextView) findViewById(R.id.txt_send_fee))
-                .setText(String.format(getString(R.string.estiFee), MyConstants.SYMBOL_ICON));
-        ((TextView) findViewById(R.id.txt_remain_amount))
-                .setText(String.format(getString(R.string.estiRemain), mWalletEntry.getSymbol()));
-        btnBack = findViewById(R.id.btn_back);
-        btnBack.setOnClickListener(this);
+        // set Symbol
+        String symbol = entry.getSymbol();
+        labelSymbol.setText(symbol);
+        editSend.setAppendText(symbol);
+        symbolStepLimit.setText(symbol);
+        symbolEstimatedMaxFee.setText(symbol);
 
-        layoutNetwork = findViewById(R.id.layout_network);
-        btnNetwork = findViewById(R.id.btn_network);
-        btnNetwork.setOnClickListener(this);
-        txtNetwork = findViewById(R.id.txt_network);
+        // set show data layout
+        boolean isToken = entry.getType().equals(MyConstants.TYPE_TOKEN);
+        layoutData.setVisibility(isToken ? View.GONE : View.VISIBLE);
 
-        if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN))
-            findViewById(R.id.layout_input_data).setVisibility(View.GONE);
-
-        txtBalance = findViewById(R.id.txt_balance);
-
-        lineSend = findViewById(R.id.line_send_amount);
-        lineAddress = findViewById(R.id.line_to_address);
-        lineLimit = findViewById(R.id.line_step_limit);
-
-        txtSendWarning = findViewById(R.id.txt_send_warning);
-        txtAddrWarning = findViewById(R.id.txt_address_warning);
-        txtLimitWarning = findViewById(R.id.txt_step_limit_warning);
-
-        editSend = findViewById(R.id.edit_send_amount);
-        editSend.setOnKeyPreImeListener(onKeyPreImeListener);
-        editSend.setLongClickable(false);
-        editSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        editSend.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    lineSend.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    scroll.smoothScrollTo(0, editSend.getScrollY());
-                } else {
-                    lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    if (editSend.getText().toString().length() > 0) {
-                        validateSendAmount(editSend.getText().toString());
-                    }
-                }
-            }
-        });
-        editSend.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    btnDelAmount.setVisibility(View.VISIBLE);
-                    String amount;
-
-                    if (s.toString().startsWith(".")) {
-                        editSend.setText("");
-                    } else {
-
-                        if (s.toString().indexOf(".") < 0) {
-                            if (s.length() > 10) {
-                                editSend.setText(s.subSequence(0, 10));
-                                editSend.setSelection(10);
-                            }
-                        } else {
-                            String[] values = s.toString().split("\\.");
-
-                            if (values.length == 2) {
-                                String decimal = values[0];
-                                String below = values[1];
-
-                                if (decimal.length() > 10) {
-                                    decimal = decimal.substring(0, 10);
-                                    editSend.setText(decimal + "." + below);
-                                    editSend.setSelection(editSend.getText().toString().length());
-                                } else if (below.length() > mWalletEntry.getDefaultDec()) {
-                                    below = below.substring(0, mWalletEntry.getDefaultDec());
-                                    editSend.setText(decimal + "." + below);
-                                    editSend.setSelection(editSend.getText().toString().length());
-                                }
-                            }
-                        }
-
-                        amount = editSend.getText().toString();
-                        String strPrice = ICONexApp.EXCHANGE_TABLE.get(mWalletEntry.getSymbol().toLowerCase() + "usd");
-                        if (strPrice != null) {
-                            Double transUSD = Double.parseDouble(amount)
-                                    * Double.parseDouble(strPrice);
-                            String strTransUSD = String.format("%,.2f", transUSD);
-
-                            txtTransSend.setText(String.format("%s USD", strTransUSD));
-                        }
-                        setRemain(amount);
-                    }
-                } else {
-                    btnDelAmount.setVisibility(View.INVISIBLE);
-                    txtTransSend.setText(String.format("%s USD", MyConstants.NO_BALANCE));
-                    btnSend.setEnabled(false);
-
-                    txtSendWarning.setVisibility(View.GONE);
-                    if (editSend.isFocused())
-                        lineSend.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
-                    setRemain(editSend.getText().toString());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        editSend.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_NEXT)) {
-                    editAddress.requestFocus();
-                    int[] location = new int[2];
-                    btnPlus10.getLocationInWindow(location);
-                    scroll.smoothScrollTo(0, location[1] - findViewById(R.id.appbar).getBottom());
-                }
-                return false;
-            }
-        });
-
-        btnDelAmount = findViewById(R.id.del_amount);
-        btnDelAmount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editSend.setText("");
-            }
-        });
-
-        editAddress = findViewById(R.id.edit_to_address);
-        editAddress.setOnKeyPreImeListener(onKeyPreImeListener);
-        editAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        editAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                } else {
-                    lineAddress.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    if (editAddress.getText().toString().length() > 0)
-                        validateAddress(editAddress.getText().toString());
-                }
-            }
-        });
-        editAddress.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    btnDelAddr.setVisibility(View.VISIBLE);
-                    if (s.toString().startsWith("hx")) {
-                        String tmp = s.toString().substring(2);
-                        if (tmp.length() != 40)
-                            btnSend.setEnabled(false);
-                        else
-                            setSendEnable();
-                    } else {
-                        btnSend.setEnabled(false);
-                    }
-                } else {
-                    btnDelAddr.setVisibility(View.INVISIBLE);
-                    btnSend.setEnabled(false);
-
-                    txtAddrWarning.setVisibility(View.GONE);
-                    if (editAddress.isFocused())
-                        lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        lineAddress.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        editAddress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_NEXT)) {
-//                    setSendEnable();
-                    editLimit.requestFocus();
-
-                    int[] location = new int[2];
-                    btnContacts.getLocationInWindow(location);
-                    scroll.smoothScrollTo(0, scroll.getScrollY() + location[1] - findViewById(R.id.appbar).getBottom());
-                }
-                return false;
-            }
-        });
-
-        btnDelAddr = findViewById(R.id.del_address);
-        btnDelAddr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editAddress.setText("");
-            }
-        });
-
-        editLimit = findViewById(R.id.edit_step_limit);
-        editLimit.setOnKeyPreImeListener(onKeyPreImeListener);
-        editLimit.setLongClickable(false);
-        editLimit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        editLimit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    lineLimit.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                } else {
-                    lineLimit.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    if (editLimit.getText().toString().length() > 0)
-                        validateLimit(editLimit.getText().toString());
-                }
-            }
-        });
-        editLimit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    btnDelLimit.setVisibility(View.VISIBLE);
-                } else {
-                    btnDelLimit.setVisibility(View.INVISIBLE);
-                    btnSend.setEnabled(false);
-
-                    txtLimitWarning.setVisibility(View.GONE);
-                    if (editLimit.isFocused())
-                        lineLimit.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        lineLimit.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
-
-                }
-
-                setRemain(editSend.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        editLimit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    setSendEnable();
-                }
-                return false;
-            }
-        });
-
-        btnDelLimit = findViewById(R.id.del_step_limit);
-        btnDelLimit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editLimit.setText("");
-            }
-        });
-
-        txtFee = findViewById(R.id.txt_fee);
-        txtTransFee = findViewById(R.id.txt_trans_fee);
-
-        txtRemain = findViewById(R.id.txt_remain);
-        txtTransRemain = findViewById(R.id.txt_trans_remain);
-        txtTransSend = findViewById(R.id.txt_trans_send_amount);
-
-        btnPlus10 = findViewById(R.id.btn_plus_10);
-        btnPlus10.setOnClickListener(this);
-        btnPlus100 = findViewById(R.id.btn_plus_100);
-        btnPlus100.setOnClickListener(this);
-        btnPlus1000 = findViewById(R.id.btn_plus_1000);
-        btnPlus1000.setOnClickListener(this);
-        btnTheWhole = findViewById(R.id.btn_plus_all);
-        btnTheWhole.setOnClickListener(this);
-
-        btnContacts = findViewById(R.id.btn_contacts);
-        btnContacts.setOnClickListener(this);
-        btnScan = findViewById(R.id.btn_qr_scan);
-        btnScan.setOnClickListener(this);
-
-        txtStepICX = findViewById(R.id.txt_step_icx);
-        txtStepGloop = findViewById(R.id.txt_step_gloop);
-        txtStepTrans = findViewById(R.id.txt_step_trans);
-
-        btnInput = findViewById(R.id.btn_input);
-        btnInput.setOnClickListener(this);
-
-        findViewById(R.id.info_step_limit).setOnClickListener(this);
-        findViewById(R.id.info_step_price).setOnClickListener(this);
-        findViewById(R.id.info_data).setOnClickListener(this);
-        findViewById(R.id.info_fee).setOnClickListener(this);
-
-        btnSend = findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(this);
-
+        // set LoopChainClient
         if (LCClient == null) {
             String url = null;
             switch (ICONexApp.network) {
@@ -558,9 +208,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
             try {
                 LCClient = new LoopChainClient(url);
-            } catch (Exception e) {
-
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }
 
         getStepPrice();
@@ -603,104 +251,240 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         } else
             layoutNetwork.setVisibility(View.GONE);
 
-        balance = new BigInteger(mWalletEntry.getBalance());
+        balance = new BigInteger(entry.getBalance());
 
         setBalance(balance);
     }
 
     @Override
-    public void onClick(View v) {
-        Intent intent;
-        String message;
-        BasicDialog info = new BasicDialog(this);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_CONTACTS) {
+            if (resultCode == ContactsActivity.CODE_RESULT) {
+                String address = data.getStringExtra("address");
+                editAddress.setText(address);
 
-        switch (v.getId()) {
-            case R.id.btn_back:
-                finish();
-                break;
+                setSendEnable();
+            }
+        } else if (requestCode == RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    editAddress.setText(barcode.displayValue);
+                    setSendEnable();
+                } else {
+                }
+            }
+        }
+    }
 
-            case R.id.btn_network:
-                BottomSheetMenuDialog networkDialog = new BottomSheetMenuDialog(this, getString(R.string.selectNetwork),
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0) {
+            Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+            dialog.setMessage(getString(R.string.cancelEnterData));
+            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                @Override
+                public void onOk() {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    fragmentManager.popBackStackImmediate();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+            dialog.show();
+        } else
+            super.onBackPressed();
+    }
+
+    private void loadView() {
+        // load appbar UI
+        appbar = findViewById(R.id.appbar);
+
+        // load select network UI
+        layoutNetwork = findViewById(R.id.layout_network);
+        btnNetwork = findViewById(R.id.btn_network);
+        txtNetwork = findViewById(R.id.txt_network);
+
+        // load available UI
+        labelBalance = findViewById(R.id.lb_balance);
+        labelSymbol = findViewById(R.id.lb_symbol);
+        txtBalance = findViewById(R.id.txt_balance);
+        txtTransBalance = findViewById(R.id.txt_trans_balance);
+
+        editSend = findViewById(R.id.edit_send_amount);
+        txtTransSend = findViewById(R.id.txt_trans_amount);
+        btnPlus10 = findViewById(R.id.btn_plus_10);
+        btnPlus100 = findViewById(R.id.btn_plus_100);
+        btnPlus1000 = findViewById(R.id.btn_plus_1000);
+        btnTheWhole = findViewById(R.id.btn_plus_all);
+
+        // load Receiving Address UI
+        editAddress = findViewById(R.id.edit_to_address);
+        btnContact = findViewById(R.id.btn_contacts);
+        btnQRcodeScan = findViewById(R.id.btn_qr_scan);
+
+        // load Input Data UI
+        layoutData = findViewById(R.id.layout_data);
+        editData = findViewById(R.id.edit_data);
+        btnViewData = findViewById(R.id.btn_view_data);
+
+        // load Fee UI
+        labelStepLimit = findViewById(R.id.lb_step_limit);
+        labelEstimatedMaxFee = findViewById(R.id.lb_estimated_max_fee);
+        symbolStepLimit = findViewById(R.id.symbol_step_limit);
+        symbolEstimatedMaxFee = findViewById(R.id.symbol_estimated_max_fee);
+        txtStepLimit = findViewById(R.id.txt_step_limit);
+        txtEstimatedMaxFee = findViewById(R.id.txt_estimated_max_fee);
+        txtTransFee = findViewById(R.id.txt_trans_fee);
+
+        // load send button UI
+        btnSend = findViewById(R.id.btn_send);
+    }
+
+    private void initView() {
+        // init appbar
+        appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
+            @Override
+            public void onClickAction(CustomActionBar.ClickAction action) {
+                switch (action) {
+                    case btnStart: finish(); break;
+                    case btnEnd:
+                        Toast.makeText(ICONTransferActivity.this, "not implement", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+
+        // init network layout
+        btnNetwork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetMenuDialog networkDialog = new BottomSheetMenuDialog(
+                        ICONTransferActivity.this,
+                        getString(R.string.selectNetwork),
                         BottomSheetMenuDialog.SHEET_TYPE.BASIC);
+
                 List<String> networks = new ArrayList<>();
                 networks.add(getString(R.string.networkMain));
                 networks.add(getString(R.string.networkTest));
 
                 networkDialog.setBasicData(networks);
-                networkDialog.setOnItemClickListener(mItemListener);
+                networkDialog.setOnItemClickListener(new BottomSheetMenuDialog.OnItemClickListener() {
+                    @Override
+                    public void onBasicItem(String item) {
+                        txtNetwork.setText(item);
+                        PreferenceUtil preferenceUtil = new PreferenceUtil(ICONTransferActivity.this);
+                        if (item.equals(getString(R.string.networkMain))) {
+                            ICONexApp.network = MyConstants.NETWORK_MAIN;
+                            preferenceUtil.setNetwork(ICONexApp.network);
+
+                        } else {
+                            ICONexApp.network = MyConstants.NETWORK_TEST;
+                            preferenceUtil.setNetwork(ICONexApp.network);
+                        }
+
+                        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                            IcxGetBalance icxGetBalance = new IcxGetBalance();
+                            icxGetBalance.execute();
+                        } else {
+                            TokenGetBalance tokenGetBalance = new TokenGetBalance();
+                            tokenGetBalance.execute();
+                        }
+                    }
+
+                    @Override
+                    public void onCoinItem(int position) {
+
+                    }
+
+                    @Override
+                    public void onMenuItem(String tag) {
+
+                    }
+                });
 
                 networkDialog.show();
-                break;
+            }
+        });
 
-            case R.id.btn_plus_10:
-                addPlus(10);
-                setSendEnable();
-                editSend.setSelection(editSend.getText().toString().length());
-                break;
-
-            case R.id.btn_plus_100:
-                addPlus(100);
-                setSendEnable();
-                editSend.setSelection(editSend.getText().toString().length());
-                break;
-
-            case R.id.btn_plus_1000:
-                addPlus(1000);
-                setSendEnable();
-                editSend.setSelection(editSend.getText().toString().length());
-                break;
-
-            case R.id.btn_plus_all:
-                if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                    if (balance.compareTo(ConvertUtil.valueToBigInteger(FEE, 18)) < 0) {
-                        editSend.setText("");
-                        lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                        txtSendWarning.setVisibility(View.VISIBLE);
-                        txtSendWarning.setText(getString(R.string.errICXFee));
-                    } else {
-                        BigInteger allIcx = balance.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
-                        editSend.setText(ConvertUtil.getValue(allIcx, mWalletEntry.getDefaultDec()));
-                        setSendEnable();
-                    }
-                } else {
-                    editSend.setText(ConvertUtil.getValue(new BigInteger(mWalletEntry.getBalance()), mWalletEntry.getDefaultDec()));
-                    setSendEnable();
+        // init plus buttons
+        View.OnClickListener onClickPlusButtons = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_plus_10: addPlus(10); break;
+                    case R.id.btn_plus_100: addPlus(100); break;
+                    case R.id.btn_plus_1000: addPlus(1000); break;
+                    case R.id.btn_plus_all:
+                        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                            if (balance.compareTo(ConvertUtil.valueToBigInteger(fee, 18)) < 0) {
+                                editSend.setText("");
+                                editSend.setError(true, getString(R.string.errICXFee));
+                            } else {
+                                BigInteger allIcx = balance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+                                editSend.setText(ConvertUtil.getValue(allIcx, entry.getDefaultDec()));
+                            }
+                        } else {
+                            editSend.setText(ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec()));
+                        }
+                        break;
                 }
 
-                editSend.setSelection(editSend.getText().toString().length());
-                break;
+                setSendEnable();
+                editSend.setSelection(editSend.getText().length());
+            }
+        };
+        btnPlus10.setOnClickListener(onClickPlusButtons);
+        btnPlus100.setOnClickListener(onClickPlusButtons);
+        btnPlus1000.setOnClickListener(onClickPlusButtons);
+        btnTheWhole.setOnClickListener(onClickPlusButtons);
 
-            case R.id.btn_contacts:
-                startActivityForResult(new Intent(this, ContactsActivity.class)
-                        .putExtra("coinType", mWallet.getCoinType())
-                        .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
-                break;
+        // init btn contact
+        btnContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(ICONTransferActivity.this, ContactsActivity.class)
+                        .putExtra("coinType", wallet.getCoinType())
+                        .putExtra("address", wallet.getAddress()), RC_CONTACTS);
+            }
+        });
 
-            case R.id.btn_qr_scan:
-                intent = new Intent(this, BarcodeCaptureActivity.class);
+        btnQRcodeScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ICONTransferActivity.this, BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
 
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
-                break;
-
-            case R.id.btn_input:
+            }
+        });
+        editData.setInputEnabled(false);
+        editData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (data == null) {
-                    DataTypeDialog typeDialog = new DataTypeDialog(this);
+                    DataTypeDialog typeDialog = new DataTypeDialog(ICONTransferActivity.this);
                     typeDialog.setOnTypeListener(new DataTypeDialog.OnTypeListener() {
                         @Override
                         public void onSelect(EnterDataFragment.DataType type) {
                             data = new InputData();
-                            data.setAddress(mWallet.getAddress());
+                            data.setAddress(wallet.getAddress());
                             data.setBalance(balance);
                             data.setStepPrice(stepPriceLoop);
-                            if (editSend.getText().toString().isEmpty())
+                            if (editSend.getText().isEmpty())
                                 data.setAmount(BigInteger.ZERO);
                             else
-                                data.setAmount(ConvertUtil.valueToBigInteger(editSend.getText().toString(), 18));
+                                data.setAmount(ConvertUtil.valueToBigInteger(editSend.getText(), 18));
                             data.setDataType(type);
 
-                            fragmentManager = getSupportFragmentManager();
+                            FragmentManager fragmentManager = getSupportFragmentManager();
                             FragmentTransaction transaction = fragmentManager.beginTransaction();
                             transaction.add(R.id.container, EnterDataFragment.newInstance(data));
                             transaction.addToBackStack("DATA");
@@ -710,202 +494,141 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                         }
                     });
                     typeDialog.show();
-                } else {
-                    fragmentManager = getSupportFragmentManager();
+                }
+            }
+        });
+
+        btnViewData.setVisibility(View.GONE);
+        btnViewData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 if(data != null) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                     transaction.add(R.id.container, EnterDataFragment.newInstance(data));
                     transaction.addToBackStack("DATA");
                     transaction.commit();
                 }
-                break;
+            }
+        });
 
-            case R.id.info_step_limit:
-                info.setMessage(getString(R.string.msgStepLimit));
-                info.show();
-                break;
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickSend();
+            }
+        });
 
-            case R.id.info_step_price:
-                message = getString(R.string.msgStepPrice);
-                info = new BasicDialog(this, BasicDialog.TYPE.SUPER, message.indexOf("-"), message.indexOf("-") + 3);
-                info.setMessage(getString(R.string.msgStepPrice));
-                info.show();
-                break;
 
-            case R.id.info_data:
-                info.setMessage(getString(R.string.msgIcxData));
-                info.show();
-                break;
+        // set common edit event
+        TTextInputLayout.OnKeyPreIme onKeyPreIme = new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                setSendEnable();
+            }
+        };
 
-            case R.id.info_fee:
-                info.setMessage(getString(R.string.msgICXEstimateFee));
-                info.show();
-                break;
+        // init editSend
+        editSend.setOnKeyPreImeListener(onKeyPreIme);
+        editSend.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+            @Override
+            public void onReleased() {
+                if (editSend.getText().length() > 0) {
+                    validateSendAmount(editSend.getText());
+                }
+            }
+        });
+        editSend.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
+            @Override
+            public void onChanged(@NotNull CharSequence s) {
+                if (s.length() > 0) {
+                    String amount;
 
-            case R.id.btn_send:
-                BigInteger value;
-                if (editSend.getText().toString().isEmpty())
-                    value = BigInteger.ZERO;
-                else
-                    value = ConvertUtil.valueToBigInteger(editSend.getText().toString(), mWalletEntry.getDefaultDec());
-                final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText().toString(), ConvertUtil.getValue(value, mWalletEntry.getDefaultDec()),
-                        txtFee.getText().toString(), Integer.toHexString(Integer.parseInt(editLimit.getText().toString())), mWalletEntry.getSymbol());
+                    if (s.toString().startsWith(".")) {
+                        editSend.setText("");
+                    } else {
 
-                SendConfirmDialog dialog = new SendConfirmDialog(this, txInfo);
-                dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        timestamp = getTimeStamp();
-                        Transaction tx;
-                        String nid;
-                        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
-                            nid = "0x1";
-                        else if (ICONexApp.network == MyConstants.NETWORK_TEST)
-                            nid = "0x2";
-                        else
-                            nid = "0x3";
-
-                        if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                            tx = new Transaction.Builder(mWalletEntry.getId(), nid, privKey)
-                                    .from(mWalletEntry.getAddress())
-                                    .to(editAddress.getText().toString())
-                                    .stepLimit(txInfo.getStepLimit())
-                                    .timestamp(timestamp)
-                                    .nonce("0x1")
-                                    .build();
-
-                            if (editSend.getText().toString().isEmpty())
-                                tx = tx.getBuilder().value(ConvertUtil.valueToHexString("0", 18)).build();
-                            else
-                                tx = tx.getBuilder().value(ConvertUtil.valueToHexString(editSend.getText().toString(), 18)).build();
-
-                            if (data != null) {
-                                tx = tx.getBuilder().dataType(Constants.DATA_MESSAGE)
-                                        .data(data.getData())
-                                        .build();
+                        if (s.toString().indexOf(".") < 0) {
+                            if (s.length() > 10) {
+                                editSend.setText(s.subSequence(0, 10).toString());
+                                editSend.setSelection(10);
                             }
                         } else {
-                            JsonObject data = new JsonObject();
-                            data.addProperty("method", "transfer");
-                            JsonObject params = new JsonObject();
-                            params.addProperty("_to", editAddress.getText().toString());
-                            params.addProperty("_value", ConvertUtil.valueToHexString(editSend.getText().toString(), mWalletEntry.getDefaultDec()));
-                            data.add("params", params);
-                            tx = new Transaction.Builder(mWalletEntry.getId(), nid, privKey)
-                                    .from(mWalletEntry.getAddress())
-                                    .to(mWalletEntry.getContractAddress())
-                                    .stepLimit(txInfo.getStepLimit())
-                                    .timestamp(timestamp)
-                                    .nonce("0x1")
-                                    .dataType(Constants.DATA_CALL)
-                                    .data(data.toString())
-                                    .dataTo(editAddress.getText().toString())
-                                    .build();
+                            String[] values = s.toString().split("\\.");
+
+                            if (values.length == 2) {
+                                String decimal = values[0];
+                                String below = values[1];
+
+                                if (decimal.length() > 10) {
+                                    decimal = decimal.substring(0, 10);
+                                    editSend.setText(decimal + "." + below);
+                                    editSend.setSelection(editSend.getText().toString().length());
+                                } else if (below.length() > entry.getDefaultDec()) {
+                                    below = below.substring(0, entry.getDefaultDec());
+                                    editSend.setText(decimal + "." + below);
+                                    editSend.setSelection(editSend.getText().toString().length());
+                                }
+                            }
                         }
 
-                        mService.requestICXTransaction(tx);
+                        amount = editSend.getText();
+                        String strPrice = ICONexApp.EXCHANGE_TABLE.get(entry.getSymbol().toLowerCase() + "usd");
+                        if (strPrice != null) {
+                            Double transUSD = Double.parseDouble(amount)
+                                    * Double.parseDouble(strPrice);
+                            String strTransUSD = String.format("%,.2f", transUSD);
+
+                            txtTransSend.setText(String.format("%s USD", strTransUSD));
+                        }
+                        setRemain(amount);
                     }
-                });
-                dialog.show();
-                break;
-        }
-    }
-
-    private void setRemain(String value) {
-        BigInteger fee;
-        BigInteger remain = null;
-        BigInteger send;
-
-        String strPrice = ICONexApp.EXCHANGE_TABLE.get(mWalletEntry.getSymbol().toLowerCase() + "usd");
-        String feePrice = ICONexApp.EXCHANGE_TABLE.get("icxusd");
-
-        if (stepPriceICX != null && !editLimit.getText().toString().isEmpty())
-            fee = stepPriceICX.multiply(new BigInteger(editLimit.getText().toString()));
-        else
-            fee = BigInteger.ZERO;
-        txtFee.setText(ConvertUtil.getValue(fee, 18));
-
-        FEE = ConvertUtil.getValue(fee, 18);
-
-        boolean isNegative = false;
-
-        if (value.isEmpty()) {
-
-            if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                if (balance.compareTo(fee) < 0) {
-                    remain = fee.subtract(balance);
-                    isNegative = true;
                 } else {
-                    remain = balance.subtract(fee);
-                    isNegative = false;
-                }
-            } else {
-                remain = balance;
-                isNegative = false;
-            }
-        } else {
-            send = ConvertUtil.valueToBigInteger(value, mWalletEntry.getDefaultDec());
-            switch (balance.compareTo(send)) {
-                case -1:
-                    if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                        remain = (send.add(fee)).subtract(balance);
-                        isNegative = true;
-                    } else {
-                        remain = send.subtract(balance);
-                        isNegative = true;
-                    }
-                    break;
-                case 0:
-                    if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                        remain = fee;
-                        isNegative = true;
-                    } else {
-                        remain = balance.subtract(send);
-                        isNegative = false;
-                    }
-                    break;
-                case 1:
-                    if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                        BigInteger realBigSend = send.add(fee);
-                        if (balance.compareTo(realBigSend) < 0) {
-                            remain = realBigSend.subtract(balance);
-                            isNegative = true;
-                        } else {
-                            remain = balance.subtract(realBigSend);
-                            isNegative = false;
-                        }
-                    } else {
-                        remain = balance.subtract(send);
-                        isNegative = false;
-                    }
-                    break;
-            }
-        }
+                    txtTransSend.setText(String.format("%s USD", MyConstants.NO_BALANCE));
+                    btnSend.setEnabled(false);
 
-        if (strPrice != null) {
-            Double remainUSD = Double.parseDouble(ConvertUtil.getValue(remain, mWalletEntry.getDefaultDec()))
-                    * Double.parseDouble(strPrice);
-            String strRemainUSD = String.format(Locale.getDefault(), "%,.2f", remainUSD);
-
-            if (stepPriceICX != null) {
-                if (feePrice != null) {
-                    txtTransFee.setText(String.format(Locale.getDefault(), "%,.2f USD",
-                            Double.parseDouble(txtFee.getText().toString()) * Double.parseDouble(feePrice)));
+                    editSend.setError(false, null);
+                    setRemain(editSend.getText());
                 }
             }
+        });
+        // editSend.setOnEditorActionListener(); nothing
 
-            if (isNegative) {
-                txtRemain.setText(String.format(getString(R.string.txWithdraw), ConvertUtil.getValue(remain, mWalletEntry.getDefaultDec())));
-                txtTransRemain.setText(String.format(getString(R.string.exchange_usd), String.format(getString(R.string.txWithdraw), strRemainUSD)));
-            } else {
-                txtRemain.setText(ConvertUtil.getValue(remain, mWalletEntry.getDefaultDec()));
-                txtTransRemain.setText(String.format(getString(R.string.exchange_usd), strRemainUSD));
+        // init editAddress
+        editAddress.setOnKeyPreImeListener(onKeyPreIme);
+        editAddress.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+            @Override
+            public void onReleased() {
+                if (editAddress.getText().length() > 0) {
+                    validateAddress(editAddress.getText());
+                }
             }
-        }
+        });
+        editAddress.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
+            @Override
+            public void onChanged(@NotNull CharSequence s) {
+                if (s.length() > 0) {
+                    if (s.toString().startsWith("hx")) {
+                        String tmp = s.toString().substring(2);
+                        if (tmp.length() != 40)
+                            btnSend.setEnabled(false);
+                        else
+                            setSendEnable();
+                    } else {
+                        btnSend.setEnabled(false);
+                    }
+                } else {
+                    btnSend.setEnabled(false);
+                    editAddress.setError(false, null);
+                }
+            }
+        });
+        // editAddress.setOnEditorActionListener(); nohing
     }
 
     private void addPlus(int plus) {
         BigInteger value;
-        String amount = editSend.getText().toString();
+        String amount = editSend.getText();
         if (amount.isEmpty()) {
             editSend.setText(Integer.toString(plus));
         } else {
@@ -928,96 +651,25 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private boolean validateSendAmount(String value) {
-        if (value.isEmpty()) {
-            lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtSendWarning.setVisibility(View.VISIBLE);
-            txtSendWarning.setText(getString(R.string.errNoSendAmount));
-
-            return false;
-        }
-
-        if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-            BigInteger sendAmount = ConvertUtil.valueToBigInteger(value, 18);
-            BigInteger canICX = balance.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
-
-            if (balance.compareTo(sendAmount) < 0) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNotEnough));
-
-                return false;
-            } else if (canICX.compareTo(sendAmount) < 0) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errICXFee));
-
-                return false;
-            }
-        } else {
-            WalletEntry own = mWallet.getWalletEntries().get(0);
-            BigInteger ownBalance = new BigInteger(own.getBalance());
-
-            BigInteger sendAmount = ConvertUtil.valueToBigInteger(value, mWalletEntry.getDefaultDec());
-            BigInteger canICX = ownBalance.subtract(ConvertUtil.valueToBigInteger(FEE, 18));
-            if (sendAmount.equals(BigInteger.ZERO)) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNonZero));
-
-                return false;
-            }
-
-            if (balance.compareTo(sendAmount) < 0) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNotEnough));
-
-                return false;
-            } else if (ownBalance.compareTo(canICX) < 0) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errICXFee));
-
-                return false;
-            }
-        }
-
-        if (editSend.hasFocus())
-            lineSend.setBackgroundColor(getResources().getColor(R.color.editActivated));
-        else
-            lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
-        editSend.setSelection(editSend.getText().toString().length());
-        txtSendWarning.setVisibility(View.GONE);
-
-        return true;
-    }
-
     private boolean validateAddress(String address) {
         if (address.isEmpty())
             return false;
 
-        if (address.equals(mWallet.getAddress())) {
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errSameAddress));
+        if (address.equals(wallet.getAddress())) {
+            editAddress.setError(true, getString(R.string.errSameAddress));
             return false;
         }
 
-        if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
             if (!(address.startsWith("hx") || address.startsWith("cx"))) {
-                lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
+                editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
                 return false;
             }
         }
 
-        if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
+        if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
             if (!address.startsWith("hx")) {
-                lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
+                editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
                 return false;
             }
 
@@ -1025,90 +677,201 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
 
         address = address.substring(2);
         if (address.length() != 40) {
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
+            editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
             return false;
         }
 
         if (address.contains(" ")) {
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errIncorrectICXAddr));
+            editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
             return false;
         }
 
-        if (editAddress.hasFocus())
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));
-        else
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.editNormal));
-        editAddress.setSelection(editAddress.getText().toString().length());
-        txtAddrWarning.setVisibility(View.GONE);
+        editAddress.setSelection(editAddress.getText().length());
+        editAddress.setError(false, null);
 
         return true;
     }
 
-    private boolean validateLimit(String limit) {
-        if (limit.isEmpty())
-            return false;
+    private void setLimitPrice(String limit, String price) {
+        txtStepLimit.setText(limit + " / " + price);
+    }
 
-        BigInteger targetLimit = new BigInteger(limit);
+    private void setBalance(BigInteger balance) {
+        this.balance = balance;
 
-        if (targetLimit.compareTo(minStep) < 0) {
-            lineLimit.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtLimitWarning.setVisibility(View.VISIBLE);
-            txtLimitWarning.setText(String.format(Locale.getDefault(), getString(R.string.errMinStep), minStep.toString()));
+        if (balance == null) {
+            txtBalance.setText(MyConstants.NO_BALANCE);
+            entry.setBalance(MyConstants.NO_BALANCE);
+        } else {
+            txtBalance.setText(ConvertUtil.getValue(balance, entry.getDefaultDec()));
+            entry.setBalance(balance.toString());
+        }
 
-            return false;
-        } else if (targetLimit.compareTo(maxStep) > 0) {
-            lineLimit.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtLimitWarning.setVisibility(View.VISIBLE);
-            txtLimitWarning.setText(String.format(Locale.getDefault(), getString(R.string.errMaxStep), maxStep.toString()));
+        String strPrice = ICONexApp.EXCHANGE_TABLE.get(entry.getSymbol().toLowerCase() + "usd");
+        if (strPrice != null) {
+            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, entry.getDefaultDec()))
+                    * Double.parseDouble(strPrice);
 
+            String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
+            ((TextView) findViewById(R.id.txt_trans_balance))
+                    .setText(String.format(getString(R.string.exchange_usd), strBalanceUSD));
+
+            setRemain(editSend.getText().toString());
+        }
+    }
+
+    private void setRemain(String value) {
+        BigInteger fee;
+        BigInteger remain = null;
+        BigInteger send;
+
+        String strPrice = ICONexApp.EXCHANGE_TABLE.get(entry.getSymbol().toLowerCase() + "usd");
+        String feePrice = ICONexApp.EXCHANGE_TABLE.get("icxusd");
+
+        if (stepPriceICX != null && !strLimit.isEmpty())
+            fee = stepPriceICX.multiply(new BigInteger(strLimit));
+        else
+            fee = BigInteger.ZERO;
+        strFee = ConvertUtil.getValue(fee, 18);
+        txtEstimatedMaxFee.setText(strFee);
+
+        this.fee = ConvertUtil.getValue(fee, 18);
+
+        boolean isNegative = false;
+
+        if (value.isEmpty()) {
+
+            if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                if (balance.compareTo(fee) < 0) {
+                    remain = fee.subtract(balance);
+                    isNegative = true;
+                } else {
+                    remain = balance.subtract(fee);
+                    isNegative = false;
+                }
+            } else {
+                remain = balance;
+                isNegative = false;
+            }
+        } else {
+            send = ConvertUtil.valueToBigInteger(value, entry.getDefaultDec());
+            switch (balance.compareTo(send)) {
+                case -1:
+                    if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                        remain = (send.add(fee)).subtract(balance);
+                        isNegative = true;
+                    } else {
+                        remain = send.subtract(balance);
+                        isNegative = true;
+                    }
+                    break;
+                case 0:
+                    if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                        remain = fee;
+                        isNegative = true;
+                    } else {
+                        remain = balance.subtract(send);
+                        isNegative = false;
+                    }
+                    break;
+                case 1:
+                    if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                        BigInteger realBigSend = send.add(fee);
+                        if (balance.compareTo(realBigSend) < 0) {
+                            remain = realBigSend.subtract(balance);
+                            isNegative = true;
+                        } else {
+                            remain = balance.subtract(realBigSend);
+                            isNegative = false;
+                        }
+                    } else {
+                        remain = balance.subtract(send);
+                        isNegative = false;
+                    }
+                    break;
+            }
+        }
+
+        if (strPrice != null) {
+            Double remainUSD = Double.parseDouble(ConvertUtil.getValue(remain, entry.getDefaultDec()))
+                    * Double.parseDouble(strPrice);
+            String strRemainUSD = String.format(Locale.getDefault(), "%,.2f", remainUSD);
+
+            if (stepPriceICX != null) {
+                if (feePrice != null) {
+                    strTransFee = String.format(Locale.getDefault(), "%,.2f USD",
+                            Double.parseDouble(strFee) * Double.parseDouble(feePrice));
+
+                    txtTransFee.setText("$ " + strTransFee);
+                }
+            }
+
+            if (isNegative) {
+                txtRemain = String.format(getString(R.string.txWithdraw), ConvertUtil.getValue(remain, entry.getDefaultDec()));
+                txtTransRemain = String.format(getString(R.string.exchange_usd), String.format(getString(R.string.txWithdraw), strRemainUSD));
+            } else {
+                txtRemain = ConvertUtil.getValue(remain, entry.getDefaultDec());
+                txtTransRemain = String.format(getString(R.string.exchange_usd), strRemainUSD);
+            }
+        }
+    }
+
+    private boolean validateSendAmount(String value) {
+        if (value.isEmpty()) {
+            editSend.setError(true, getString(R.string.errNoSendAmount));
             return false;
         }
 
-        if (editLimit.hasFocus())
-            lineLimit.setBackgroundColor(getResources().getColor(R.color.editActivated));
-        else
-            lineLimit.setBackgroundColor(getResources().getColor(R.color.editNormal));
-        editLimit.setSelection(editLimit.getText().toString().length());
-        txtLimitWarning.setVisibility(View.GONE);
+        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+            BigInteger sendAmount = ConvertUtil.valueToBigInteger(value, 18);
+            BigInteger canICX = balance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+
+            if (balance.compareTo(sendAmount) < 0) {
+                editSend.setError(true, getString(R.string.errNotEnough));
+
+                return false;
+            } else if (canICX.compareTo(sendAmount) < 0) {
+                editSend.setError(true, getString(R.string.errICXFee));
+
+                return false;
+            }
+        } else {
+            WalletEntry own = wallet.getWalletEntries().get(0);
+            BigInteger ownBalance = new BigInteger(own.getBalance());
+
+            BigInteger sendAmount = ConvertUtil.valueToBigInteger(value, entry.getDefaultDec());
+            BigInteger canICX = ownBalance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+            if (sendAmount.equals(BigInteger.ZERO)) {
+                editSend.setError(true, getString(R.string.errNonZero));
+                return false;
+            }
+
+            if (balance.compareTo(sendAmount) < 0) {
+                editSend.setError(true, getString(R.string.errNotEnough));
+                return false;
+            } else if (ownBalance.compareTo(canICX) < 0) {
+                editSend.setError(true, getString(R.string.errICXFee));
+                return false;
+            }
+        }
+
+        editSend.setSelection(editSend.getText().length());
+        editSend.setError(false, null);
 
         return true;
     }
 
     private void setSendEnable() {
-        boolean amount = validateSendAmount(editSend.getText().toString());
-        boolean address = validateAddress(editAddress.getText().toString());
-        boolean limit = validateLimit(editLimit.getText().toString());
+        boolean amount = validateSendAmount(editSend.getText());
+        boolean address = validateAddress(editAddress.getText());
 
-        if (amount && address && limit) {
-            btnSend.setEnabled(true);
-        } else {
-            btnSend.setEnabled(false);
-        }
-    }
-
-    public String getTxHash(byte[] _tbs) {
-        try {
-            byte[] hash = PKIUtils.hash(_tbs, PKIUtils.ALGORITHM_HASH);
-            return PKIUtils.hexEncode(hash);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    protected String getTimeStamp() {
-        long time = System.currentTimeMillis() * 1000;
-        return "0x" + Long.toHexString(time);
+        btnSend.setEnabled(amount && address);
     }
 
     private void getStepPrice() {
         int id = new Random().nextInt(999999) + 100000;
         try {
-            retrofit2.Call<LCResponse> responseCall = LCClient.getStepPrice(id, mWallet.getAddress());
+            retrofit2.Call<LCResponse> responseCall = LCClient.getStepPrice(id, wallet.getAddress());
             responseCall.enqueue(new Callback<LCResponse>() {
                 @Override
                 public void onResponse(retrofit2.Call<LCResponse> call, Response<LCResponse> response) {
@@ -1122,24 +885,26 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                         String icx = ConvertUtil.getValue(stepPriceLoop, 18);
                         String mIcx = icx.indexOf(".") < 0 ? icx : icx.replaceAll("0*$", "").replaceAll("\\.$", "");
                         stepPriceICX = ConvertUtil.valueToBigInteger(icx, 18);
-                        txtStepICX.setText(mIcx);
+                        txtStepICX = mIcx;
+                        setLimitPrice(strLimit, txtStepICX);
                         String gloop = ConvertUtil.getValue(stepPriceLoop, 9);
                         String mGloop = gloop.indexOf(".") < 0 ? gloop : gloop.replaceAll("0*$", "").replaceAll("\\.$", "");
-                        txtStepGloop.setText(String.format(Locale.getDefault(), "ICX (%s Gloop)", mGloop));
+                        txtStepGloop = String.format(Locale.getDefault(), "ICX (%s Gloop)", mGloop);
 
                         String value = ConvertUtil.getValue(stepPriceLoop, 18);
                         String strExc = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
                         if (strExc == null)
-                            txtStepTrans.setText(String.format(Locale.getDefault(), "-"));
+                            txtStepTrans = String.format(Locale.getDefault(), "-");
                         else
-                            txtStepTrans.setText(String.format(Locale.getDefault(), "%.2f", Double.parseDouble(value) * Double.parseDouble(strExc)));
+                            txtStepTrans = String.format(Locale.getDefault(), "%.2f", Double.parseDouble(value) * Double.parseDouble(strExc));
 
                     } else {
-                        txtStepICX.setText("- ");
-                        txtStepTrans.setText("- ");
+                        txtStepICX = "- ";
+                        txtStepTrans = "- ";
+                        setLimitPrice(strLimit, txtStepICX);
                     }
 
-                    setRemain(editSend.getText().toString());
+                    setRemain(editSend.getText());
                 }
 
                 @Override
@@ -1155,7 +920,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
     private void getStepLimit() {
         PreferenceUtil preferenceUtil = new PreferenceUtil(this);
         try {
-            Call<LCResponse> getStepCost = LCClient.getStepCost(1234, mWallet.getAddress());
+            Call<LCResponse> getStepCost = LCClient.getStepCost(1234, wallet.getAddress());
             getStepCost.enqueue(new Callback<LCResponse>() {
                 @Override
                 public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
@@ -1177,12 +942,13 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                         contractCall = new BigInteger(preferenceUtil.getContractCall());
                     }
 
-                    if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN))
+                    if (entry.getType().equals(MyConstants.TYPE_TOKEN))
                         minStep = defaultLimit.multiply(BigInteger.valueOf(2));
                     else
                         minStep = defaultLimit;
 
-                    editLimit.setText(minStep.toString());
+                    strLimit = minStep.toString();
+                    setLimitPrice(strLimit, txtStepICX);
                 }
 
                 @Override
@@ -1191,16 +957,17 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     inputPrice = new BigInteger(preferenceUtil.getInputPrice());
                     contractCall = new BigInteger(preferenceUtil.getContractCall());
 
-                    if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN))
+                    if (entry.getType().equals(MyConstants.TYPE_TOKEN))
                         minStep = defaultLimit.add(contractCall).multiply(BigInteger.valueOf(2));
                     else
                         minStep = defaultLimit;
 
-                    editLimit.setText(minStep.toString());
+                    strLimit = minStep.toString();
+                    setLimitPrice(strLimit, txtStepICX);
                 }
             });
 
-            Call<LCResponse> getMaxStep = LCClient.getStepMaxLimit(2345, mWallet.getAddress());
+            Call<LCResponse> getMaxStep = LCClient.getStepMaxLimit(2345, wallet.getAddress());
             getMaxStep.enqueue(new Callback<LCResponse>() {
                 @Override
                 public void onResponse(Call<LCResponse> call, Response<LCResponse> response) {
@@ -1225,39 +992,77 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private BottomSheetMenuDialog.OnItemClickListener mItemListener = new BottomSheetMenuDialog.OnItemClickListener() {
-        @Override
-        public void onBasicItem(String item) {
-            txtNetwork.setText(item);
-            PreferenceUtil preferenceUtil = new PreferenceUtil(ICONTransferActivity.this);
-            if (item.equals(getString(R.string.networkMain))) {
-                ICONexApp.network = MyConstants.NETWORK_MAIN;
-                preferenceUtil.setNetwork(ICONexApp.network);
+    protected String getTimeStamp() {
+        long time = System.currentTimeMillis() * 1000;
+        return "0x" + Long.toHexString(time);
+    }
 
-            } else {
-                ICONexApp.network = MyConstants.NETWORK_TEST;
-                preferenceUtil.setNetwork(ICONexApp.network);
+    private void onClickSend() {
+        BigInteger value;
+        if (editSend.getText().isEmpty())
+            value = BigInteger.ZERO;
+        else
+            value = ConvertUtil.valueToBigInteger(editSend.getText(), entry.getDefaultDec());
+        final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), ConvertUtil.getValue(value, entry.getDefaultDec()),
+                strFee, Integer.toHexString(Integer.parseInt(strLimit)), entry.getSymbol());
+
+        SendConfirmDialog dialog = new SendConfirmDialog(this, txInfo);
+        dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
+            @Override
+            public void onOk() {
+                String timestamp = getTimeStamp();
+                Transaction tx;
+                String nid;
+                if (ICONexApp.network == MyConstants.NETWORK_MAIN)
+                    nid = "0x1";
+                else if (ICONexApp.network == MyConstants.NETWORK_TEST)
+                    nid = "0x2";
+                else
+                    nid = "0x3";
+
+                if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                    tx = new Transaction.Builder(entry.getId(), nid, privateKey)
+                            .from(entry.getAddress())
+                            .to(editAddress.getText())
+                            .stepLimit(txInfo.getStepLimit())
+                            .timestamp(timestamp)
+                            .nonce("0x1")
+                            .build();
+
+                    if (editSend.getText().isEmpty())
+                        tx = tx.getBuilder().value(ConvertUtil.valueToHexString("0", 18)).build();
+                    else
+                        tx = tx.getBuilder().value(ConvertUtil.valueToHexString(editSend.getText(), 18)).build();
+
+                    if (data != null) {
+                        tx = tx.getBuilder().dataType(Constants.DATA_MESSAGE)
+                                .data(data.getData())
+                                .build();
+                    }
+                } else {
+                    JsonObject data = new JsonObject();
+                    data.addProperty("method", "transfer");
+                    JsonObject params = new JsonObject();
+                    params.addProperty("_to", editAddress.getText());
+                    params.addProperty("_value", ConvertUtil.valueToHexString(editSend.getText(), entry.getDefaultDec()));
+                    data.add("params", params);
+                    tx = new Transaction.Builder(entry.getId(), nid, privateKey)
+                            .from(entry.getAddress())
+                            .to(entry.getContractAddress())
+                            .stepLimit(txInfo.getStepLimit())
+                            .timestamp(timestamp)
+                            .nonce("0x1")
+                            .dataType(Constants.DATA_CALL)
+                            .data(data.toString())
+                            .dataTo(editAddress.getText())
+                            .build();
+                }
+
+                mService.requestICXTransaction(tx);
             }
-
-            if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                IcxGetBalance icxGetBalance = new IcxGetBalance();
-                icxGetBalance.execute();
-            } else {
-                TokenGetBalance tokenGetBalance = new TokenGetBalance();
-                tokenGetBalance.execute();
-            }
-        }
-
-        @Override
-        public void onCoinItem(int position) {
-
-        }
-
-        @Override
-        public void onMenuItem(String tag) {
-
-        }
-    };
+        });
+        dialog.show();
+    }
 
     private class IcxGetBalance extends AsyncTask<Void, BigInteger, BigInteger> {
         @Override
@@ -1280,7 +1085,7 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     .build();
             IconService iconService = new IconService(new HttpProvider(httpClient, url));
 
-            Address address = new Address(mWalletEntry.getAddress());
+            Address address = new Address(entry.getAddress());
             BigInteger result;
 
             try {
@@ -1320,8 +1125,8 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
                     .build();
             IconService iconService = new IconService(new HttpProvider(httpClient, url));
 
-            Address owner = new Address(mWalletEntry.getAddress());
-            Address score = new Address(mWalletEntry.getContractAddress());
+            Address owner = new Address(entry.getAddress());
+            Address score = new Address(entry.getContractAddress());
 
             RpcObject params = new RpcObject.Builder()
                     .put("_owner", new RpcValue(owner))
@@ -1352,108 +1157,106 @@ public class ICONTransferActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void setBalance(BigInteger balance) {
-        this.balance = balance;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
+            mService = binder.getService();
+            mService.registerExchangeCallback(mExchangeCallback);
+            mService.registerRemCallback(mTransferCallback);
 
-        if (balance == null) {
-            txtBalance.setText(MyConstants.NO_BALANCE);
-            mWalletEntry.setBalance(MyConstants.NO_BALANCE);
-        } else {
-            txtBalance.setText(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
-            mWalletEntry.setBalance(balance.toString());
+            if (mBound) {
+                mService.requestExchangeList(CODE_EXCHANGE);
+            } else {
+            }
         }
 
-        String strPrice = ICONexApp.EXCHANGE_TABLE.get(mWalletEntry.getSymbol().toLowerCase() + "usd");
-        if (strPrice != null) {
-            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()))
-                    * Double.parseDouble(strPrice);
-
-            String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
-            ((TextView) findViewById(R.id.txt_trans_balance))
-                    .setText(String.format(getString(R.string.exchange_usd), strBalanceUSD));
-
-            setRemain(editSend.getText().toString());
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
         }
-    }
+    };
+
+    private NetworkService.ExchangeCallback mExchangeCallback = new NetworkService.ExchangeCallback() {
+        @Override
+        public void onReceiveExchangeList() {
+
+        }
+
+        @Override
+        public void onReceiveError(String resCode) {
+        }
+
+        @Override
+        public void onReceiveException(Throwable t) {
+        }
+    };
+
+    private NetworkService.TransferCallback mTransferCallback = new NetworkService.TransferCallback() {
+        @Override
+        public void onReceiveTransactionResult(String id, String txHash) {
+
+            Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        @Override
+        public void onReceiveError(String address, int code) {
+            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onReceiveException(Throwable t) {
+            Toast.makeText(getApplicationContext(), getString(R.string.errTransferFailed), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     public void onSetData(InputData data) {
         this.data = data;
+        editData.setText(data.getData());
+        btnViewData.setVisibility(View.VISIBLE);
         minStep = new BigInteger(Integer.toString(this.data.getStepCost()));
-        editLimit.setText(minStep.toString());
+        strLimit = minStep.toString();
+        setLimitPrice(strLimit, txtStepICX);
 
-        btnInput.setText(getString(R.string.view));
-        btnInput.setSelected(true);
+//        btnInput.setText(getString(R.string.view));
+//        btnInput.setSelected(true);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        fragmentManager.popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
 
         setSendEnable();
     }
 
     @Override
     public void onDataCancel(InputData data) {
-        if (data.getData() == null)
+        if (data.getData() == null) {
             this.data = null;
+            editData.setText(null);
+            btnViewData.setVisibility(View.GONE);
+        } else {
+            btnViewData.setVisibility(View.VISIBLE);
+        }
 
-        fragmentManager.popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override
     public void onDataDelete() {
         this.data = null;
+        editData.setText("");
+        btnViewData.setVisibility(View.GONE);
 
-        btnInput.setText(R.string.input);
-        btnInput.setSelected(false);
+//        btnInput.setText(R.string.input);
+//        btnInput.setSelected(false);
 
         minStep = defaultLimit;
-        editLimit.setText(minStep.toString());
+        strLimit = minStep.toString();
+        setLimitPrice(strLimit, txtStepICX);
 
-        fragmentManager.popBackStackImmediate();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_CONTACTS) {
-            if (resultCode == ContactsActivity.CODE_RESULT) {
-                String address = data.getStringExtra("address");
-                editAddress.setText(address);
-
-                setSendEnable();
-            }
-        } else if (requestCode == RC_BARCODE_CAPTURE) {
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                    editAddress.setText(barcode.displayValue);
-                    setSendEnable();
-                } else {
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0) {
-            Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-            dialog.setMessage(getString(R.string.cancelEnterData));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                @Override
-                public void onOk() {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                    fragmentManager.popBackStackImmediate();
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
-            dialog.show();
-        } else
-            super.onBackPressed();
+        getSupportFragmentManager().popBackStackImmediate();
     }
 }
