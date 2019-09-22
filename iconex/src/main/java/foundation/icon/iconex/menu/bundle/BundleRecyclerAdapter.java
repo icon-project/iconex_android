@@ -55,7 +55,7 @@ public class BundleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (holder instanceof HeaderViewHolder) {
 
             HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-            headerHolder.txtCount.setText(String.format(mContext.getString(R.string.countSelectedWallet), getCount()));
+            headerHolder.txtCount.setText(getCount() + "");
 
         } else {
 

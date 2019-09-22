@@ -44,8 +44,8 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_export_wallet_bundle);
+        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.titleExportBundle));
         btnBack = findViewById(R.id.btn_close);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override

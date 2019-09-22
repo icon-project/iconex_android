@@ -348,7 +348,7 @@
     <string name="headerExportBundle">Select the wallets to bundle. Passwords are required.</string>
     <string name="exportBundleDetailed1">Wallet bundle backs up your wallets in one file. You can easily manage different wallets at once.</string>
     <string name="exportBundleEdtailed2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
-    <string name="countSelectedWallet">%d Selected Wallets</string>
+    <string name="countSelectedWallet">Selected Wallets</string>
 
     <string name="bundlePwdHeader">Please create the password for the wallet bundle and download the backup file. </string>
     <string name="bundlePwdDetailed1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
