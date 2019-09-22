@@ -13,6 +13,11 @@
         app:type="title"
         app:title="@string/exportWalletBundle"/>
 
+    <foundation.icon.iconex.menu.bundle.BundleStepView
+        android:id="@+id/step_bundle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <foundation.icon.iconex.widgets.NonSwipeViewPager
         android:background="@android:color/white"
         android:id="@+id/container"
