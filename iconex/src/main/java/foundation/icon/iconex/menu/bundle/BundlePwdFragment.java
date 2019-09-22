@@ -7,38 +7,25 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import org.jetbrains.annotations.NotNull;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.util.PasswordValidator;
-import foundation.icon.iconex.widgets.MyEditText;
+import foundation.icon.iconex.widgets.TTextInputLayout;
 
 public class BundlePwdFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = BundlePwdFragment.class.getSimpleName();
 
-    private ViewGroup layoutHeader, layoutInput;
-
-    private MyEditText editPwd, editCheck;
-    private View linePwd, lineCheck;
-    private TextView txtPwdWarning, txtCheckWarning;
-    private Button btnPwdDel, btnCheckDel;
+    private TTextInputLayout editPwd, editCheck;
 
     private Button btnExport;
-
-    private InputMethodManager mImm;
 
     private OnBundlePwdListener mListener;
 
@@ -54,69 +41,46 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mImm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_bundle_pwd, container, false);
 
-        layoutHeader = v.findViewById(R.id.layout_header);
-        layoutInput = v.findViewById(R.id.layout_input);
-
         editPwd = v.findViewById(R.id.edit_pwd);
         editPwd.setOnKeyPreImeListener(mKeyPreImeListener);
-        editPwd.setLongClickable(false);
-        editPwd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    linePwd.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                } else {
-                    linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
+            public void onReleased() {
+                int result = PasswordValidator.validatePassword(editPwd.getText());
+                switch (result) {
+                    case PasswordValidator.LEAST_8:
+                        editPwd.setError(true, getString(R.string.errAtLeast));
+                        break;
 
-                    int result = PasswordValidator.validatePassword(editPwd.getText().toString());
-                    switch (result) {
-                        case PasswordValidator.LEAST_8:
-                            showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
-                            break;
+                    case PasswordValidator.NOT_MATCH_PATTERN:
+                        editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
+                        break;
 
-                        case PasswordValidator.NOT_MATCH_PATTERN:
-                            showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
-                            break;
+                    case PasswordValidator.HAS_WHITE_SPACE:
+                        editPwd.setError(true, getString(R.string.errWhiteSpace));
+                        break;
 
-                        case PasswordValidator.HAS_WHITE_SPACE:
-                            showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
-                            break;
+                    case PasswordValidator.SERIAL_CHAR:
+                        editPwd.setError(true, getString(R.string.errSerialChar));
+                        break;
 
-                        case PasswordValidator.SERIAL_CHAR:
-                            showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
-                            break;
-
-                        default:
-                            hideWarning(editPwd, linePwd, txtPwdWarning);
-                    }
+                    default:
+                        editPwd.setError(false, null);
                 }
             }
         });
-        editPwd.addTextChangedListener(new TextWatcher() {
+        editPwd.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onChanged(@NotNull CharSequence s) {
                 if (s.length() > 0) {
-                    btnPwdDel.setVisibility(View.VISIBLE);
                     if (s.charAt(s.length() - 1) == ' ') {
-                        editPwd.setText(s.subSequence(0, s.length() - 1));
-                        if (editPwd.getText().toString().length() > 0)
-                            editPwd.setSelection(editPwd.getText().toString().length());
+                        editPwd.setText(s.subSequence(0, s.length() - 1).toString());
+                        if (editPwd.getText().length() > 0)
+                            editPwd.setSelection(editPwd.getText().length());
                     } else if (s.toString().contains(" ")) {
                         editPwd.setText(beforePwd);
                         editPwd.setSelection(beforePwd.length());
@@ -124,66 +88,41 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                         beforePwd = s.toString();
                     }
                 } else {
-                    btnPwdDel.setVisibility(View.INVISIBLE);
-                    txtPwdWarning.setVisibility(View.GONE);
-
-                    if (editPwd.isFocused())
-                        linePwd.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        linePwd.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
+                    editPwd.setError(false, null);
                     btnExport.setEnabled(false);
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
 
         editCheck = v.findViewById(R.id.edit_check);
         editCheck.setOnKeyPreImeListener(mKeyPreImeListener);
-        editCheck.setLongClickable(false);
-        editCheck.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editCheck.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    lineCheck.setBackgroundColor(getResources().getColor(R.color.editActivated));
+            public void onReleased() {
+                if (editCheck.getText().isEmpty()) {
+                    btnExport.setEnabled(false);
                 } else {
-                    lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
-                    if (editCheck.getText().toString().isEmpty()) {
-                        btnExport.setEnabled(false);
+                    if (editPwd.getText().isEmpty()) {
+                        editCheck.setError(true, getString(R.string.errPasswordNotMatched));
                     } else {
-                        if (editPwd.getText().toString().isEmpty()) {
-                            showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
+                        boolean result = PasswordValidator.checkPasswordMatch(editPwd.getText(), editCheck.getText());
+                        if (!result) {
+                            editCheck.setError(true, getString(R.string.errPasswordNotMatched));
                         } else {
-                            boolean result = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(), editCheck.getText().toString());
-                            if (!result) {
-                                showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
-                            } else {
-                                hideWarning(editCheck, lineCheck, txtCheckWarning);
-                            }
+                            editCheck.setError(false, null);
                         }
                     }
                 }
             }
         });
-        editCheck.addTextChangedListener(new TextWatcher() {
+        editCheck.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onChanged(@NotNull CharSequence s) {
                 if (s.length() > 0) {
-                    btnCheckDel.setVisibility(View.VISIBLE);
                     if (s.charAt(s.length() - 1) == ' ') {
-                        editCheck.setText(s.subSequence(0, s.length() - 1));
-                        if (editCheck.getText().toString().length() > 0)
-                            editCheck.setSelection(editCheck.getText().toString().length());
+                        editCheck.setText(s.subSequence(0, s.length() - 1).toString());
+                        if (editCheck.getText().length() > 0)
+                            editCheck.setSelection(editCheck.getText().length());
                     } else if (s.toString().contains(" ")) {
                         editCheck.setText(beforeCheck);
                         editCheck.setSelection(beforeCheck.length());
@@ -191,48 +130,17 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                         beforeCheck = s.toString();
                     }
                 } else {
-                    btnCheckDel.setVisibility(View.INVISIBLE);
-                    txtCheckWarning.setVisibility(View.GONE);
-                    if (editCheck.isFocused())
-                        lineCheck.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        lineCheck.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
+                    editCheck.setError(false, null);
                     btnExport.setEnabled(false);
                 }
             }
-
+        });
+        editCheck.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
             @Override
-            public void afterTextChanged(Editable s) {
-
+            public void onDone() {
+                setDownEnabled();
             }
         });
-        editCheck.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    hideInputMode();
-                    setDownEnabled();
-                }
-                return false;
-            }
-        });
-        editCheck.setOnEditTouchListener(new MyEditText.OnEditTouchListener() {
-            @Override
-            public void onTouch() {
-                showInputMode(editCheck);
-            }
-        });
-
-        linePwd = v.findViewById(R.id.line_pwd);
-        lineCheck = v.findViewById(R.id.line_check);
-        txtPwdWarning = v.findViewById(R.id.txt_pwd_warning);
-        txtCheckWarning = v.findViewById(R.id.txt_check_warning);
-
-        btnPwdDel = v.findViewById(R.id.btn_pwd_delete);
-        btnPwdDel.setOnClickListener(this);
-        btnCheckDel = v.findViewById(R.id.btn_check_delete);
-        btnCheckDel.setOnClickListener(this);
 
         btnExport = v.findViewById(R.id.btn_export);
         btnExport.setOnClickListener(this);
@@ -252,27 +160,27 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                 break;
 
             case R.id.btn_export:
-                int pwdResult = PasswordValidator.validatePassword(editPwd.getText().toString());
+                int pwdResult = PasswordValidator.validatePassword(editPwd.getText());
                 if (pwdResult == PasswordValidator.EMPTY) {
-                    showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+                    editPwd.setError(true, getString(R.string.errPwdEmpty));
                 } else if (pwdResult == PasswordValidator.LEAST_8) {
-                    showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+                    editPwd.setError(true, getString(R.string.errAtLeast));
                 } else if (pwdResult == PasswordValidator.HAS_WHITE_SPACE) {
-                    showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
+                    editPwd.setError(true, getString(R.string.errWhiteSpace));
                 } else if (pwdResult == PasswordValidator.NOT_MATCH_PATTERN) {
-                    showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
+                    editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
                 } else if (pwdResult == PasswordValidator.SERIAL_CHAR) {
-                    showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
+                    editPwd.setError(true, getString(R.string.errSerialChar));
                 } else {
-                    hideWarning(editPwd, linePwd, txtPwdWarning);
+                    editPwd.setError(false, null);
                 }
 
-                boolean checkResult = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(),
-                        editCheck.getText().toString());
+                boolean checkResult = PasswordValidator.checkPasswordMatch(editPwd.getText(),
+                        editCheck.getText());
                 if (!checkResult)
-                    showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
+                    editCheck.setError(true, getString(R.string.errPasswordNotMatched));
                 else
-                    hideWarning(editCheck, lineCheck, txtCheckWarning);
+                    editCheck.setError(false, null);
 
                 if ((pwdResult == PasswordValidator.OK)
                         && checkResult) {
@@ -301,74 +209,43 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
         mListener = null;
     }
 
-    private OnKeyPreImeListener mKeyPreImeListener = new OnKeyPreImeListener() {
+    private TTextInputLayout.OnKeyPreIme mKeyPreImeListener = new TTextInputLayout.OnKeyPreIme() {
         @Override
-        public void onBackPressed() {
-            hideInputMode();
+        public void onDone() {
             setDownEnabled();
         }
     };
 
-    private void showInputMode(View view) {
-        view.requestFocus();
-        mImm.showSoftInput(view, 0);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) layoutInput.getLayoutParams();
-        layoutParams.removeRule(RelativeLayout.BELOW);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutInput.setLayoutParams(layoutParams);
-    }
-
-    private void hideInputMode() {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) layoutInput.getLayoutParams();
-        layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.layout_header);
-        layoutInput.setLayoutParams(layoutParams);
-    }
-
-    private void showWarning(View line, TextView txtView, String msg) {
-        line.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-        txtView.setVisibility(View.VISIBLE);
-        txtView.setText(msg);
-    }
-
-    private void hideWarning(MyEditText edit, View line, TextView txtView) {
-        txtView.setVisibility(View.GONE);
-        if (edit.isFocused())
-            line.setBackgroundColor(getResources().getColor(R.color.editActivated));
-        else
-            line.setBackgroundColor(getResources().getColor(R.color.editNormal));
-    }
-
     private void setDownEnabled() {
-        int pwdResult = PasswordValidator.validatePassword(editPwd.getText().toString());
+        int pwdResult = PasswordValidator.validatePassword(editPwd.getText());
         if (pwdResult == PasswordValidator.EMPTY) {
-            showWarning(linePwd, txtPwdWarning, getString(R.string.errPwdEmpty));
+            editPwd.setError(true, getString(R.string.errPwdEmpty));
         } else if (pwdResult == PasswordValidator.LEAST_8) {
-            showWarning(linePwd, txtPwdWarning, getString(R.string.errAtLeast));
+            editPwd.setError(true, getString(R.string.errAtLeast));
         } else if (pwdResult == PasswordValidator.HAS_WHITE_SPACE) {
-            showWarning(linePwd, txtPwdWarning, getString(R.string.errWhiteSpace));
+            editPwd.setError(true, getString(R.string.errWhiteSpace));
         } else if (pwdResult == PasswordValidator.NOT_MATCH_PATTERN) {
-            showWarning(linePwd, txtPwdWarning, getString(R.string.errPasswordPatternMatch));
+            editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
         } else if (pwdResult == PasswordValidator.SERIAL_CHAR) {
-            showWarning(linePwd, txtPwdWarning, getString(R.string.errSerialChar));
+            editPwd.setError(true, getString(R.string.errSerialChar));
         } else {
-            hideWarning(editPwd, linePwd, txtPwdWarning);
+            editPwd.setError(false, null);
         }
 
         boolean checkResult = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(),
-                editCheck.getText().toString());
-        if (editCheck.getText().toString().trim().isEmpty()) {
-            showWarning(lineCheck, txtCheckWarning, getString(R.string.errCheckEmpty));
+                editCheck.getText());
+        if (editCheck.getText().trim().isEmpty()) {
+            editCheck.setError(true, getString(R.string.errCheckEmpty));
         } else if (!checkResult)
-            showWarning(lineCheck, txtCheckWarning, getString(R.string.errPasswordNotMatched));
+            editCheck.setError(true, getString(R.string.errPasswordNotMatched));
         else
-            hideWarning(editCheck, lineCheck, txtCheckWarning);
+            editCheck.setError(false, null);
 
         if ((pwdResult == PasswordValidator.OK)
                 && checkResult) {
             btnExport.setEnabled(true);
-            txtPwdWarning.setVisibility(View.GONE);
-            txtCheckWarning.setVisibility(View.GONE);
+            editPwd.setError(false, null);
+            editCheck.setError(false, null);
         } else {
             btnExport.setEnabled(false);
         }
