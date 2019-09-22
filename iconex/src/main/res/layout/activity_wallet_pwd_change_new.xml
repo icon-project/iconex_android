@@ -110,13 +110,13 @@
             android:layout_height="match_parent"
 
             android:layout_margin="10dp"
-            android:background="@drawable/bg_button_rounded12_primaryb6"
+            android:background="@drawable/bg_btn_rounded_01_light"
             android:stateListAnimator="@null"
 
             android:textSize="14dp"
             android:fontFamily="@font/noto_sans_regular"
             android:textAllCaps="false"
-            android:textColor="@color/text_default_primary_disable_darkb3"
+            android:textColor="@color/txt_btn_rounded_01_light"
             android:enabled="false"
 
             android:text="@string/change"/>

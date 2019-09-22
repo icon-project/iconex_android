@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -25,12 +26,13 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 import foundation.icon.iconex.widgets.MyEditText;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import retrofit2.Call;
@@ -40,11 +42,14 @@ import retrofit2.Response;
 public class EnterDataFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = EnterDataFragment.class.getSimpleName();
 
-    private TextView txtDataSize, txtMod;
+    private TextView txtDataSize;
     private MyEditText editData;
 
-    private ViewGroup layoutDelete;
-    private Button btnDelete;
+    private ViewGroup layoutDataLimit;
+    private ViewGroup layoutComplete;
+    private Button btnComplete;
+
+    private TextView btnOption;
 
     private InputData data;
     private State state;
@@ -82,15 +87,15 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
 
         View v = inflater.inflate(R.layout.fragment_enter_data, container, false);
 
-        ((TextView) v.findViewById(R.id.txt_title)).setText(R.string.data);
-        ((TextView) v.findViewById(R.id.txt_mod)).setText(R.string.complete);
         v.findViewById(R.id.btn_close).setOnClickListener(this);
 
-        layoutDelete = v.findViewById(R.id.layout_delete);
+        btnOption = v.findViewById(R.id.btn_option);
+        btnComplete = v.findViewById(R.id.btn_complete);
+        layoutComplete = v.findViewById(R.id.layout_complete);
+        layoutDataLimit = v.findViewById(R.id.layout_data_limit);
 
-        txtMod = v.findViewById(R.id.txt_mod);
-        txtMod.setVisibility(View.VISIBLE);
-        txtMod.setOnClickListener(this);
+        btnOption.setOnClickListener(this);
+        btnComplete.setOnClickListener(this);
 
         txtDataSize = v.findViewById(R.id.txt_limit);
 
@@ -143,13 +148,10 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                         beforeStr = dataStr;
                     }
 
-
-                    txtMod.setTextColor(getResources().getColor(R.color.colorWhite));
-                    txtMod.setEnabled(true);
+                    btnComplete.setEnabled(true);
                 } else {
                     txtDataSize.setText(String.format(Locale.getDefault(), "%d KB", 0));
-                    txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
-                    txtMod.setEnabled(false);
+                    btnComplete.setEnabled(false);
                 }
             }
 
@@ -158,9 +160,6 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
 
             }
         });
-
-        btnDelete = v.findViewById(R.id.btn_delete);
-        btnDelete.setOnClickListener(this);
 
         if (data.getDataType() == DataType.UTF) {
             editData.setHint(R.string.hintUtfData);
@@ -173,28 +172,23 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
         maxSize = 250;
         ((TextView) v.findViewById(R.id.txt_max)).setText(String.format(Locale.getDefault(), getString(R.string.dataMaxSize), maxSize));
 
-        if (data.getData() != null) {
-            if (data.getData().isEmpty()) {
-                txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
-                txtMod.setEnabled(false);
-            } else {
-                state = State.VIEW;
+        if (data.getData() != null && !data.getData().isEmpty()) {
+            // view mode
+            state = State.VIEW;
 
-                if (data.getDataType() == DataType.UTF)
-                    editData.setText(new String(Hex.decode(Utils.remove0x(data.getData()))));
-                else
-                    editData.setText(data.getData());
+            if (data.getDataType() == DataType.UTF)
+                editData.setText(new String(Hex.decode(Utils.remove0x(data.getData()))));
+            else
+                editData.setText(data.getData());
 
-                layoutDelete.setVisibility(View.VISIBLE);
-                editData.setFocusable(false);
+            editData.setFocusable(false);
+            btnOption.setText(getString(R.string.modified));
+            layoutComplete.setVisibility(View.GONE);
+            layoutDataLimit.setVisibility(View.GONE);
 
-                txtMod.setText(R.string.modified);
-            }
-        } else {
-            txtMod.setTextColor(getResources().getColor(R.color.buttonTextDisabled));
-            txtMod.setEnabled(false);
-        }
+        } // else new data
 
+        btnOption.setEnabled(data.getData() != null && !data.getData().isEmpty());
         editData.requestFocus();
 
         return v;
@@ -224,83 +218,77 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                 showCancel();
                 break;
 
-            case R.id.txt_mod:
+            case R.id.btn_option:
                 if (state == State.VIEW) {
-                    layoutDelete.setVisibility(View.GONE);
+                    // btn_option.getText() == Modify
+                    btnOption.setText(getString(R.string.delete));
                     editData.setSelection(editData.getText().toString().length());
-
-                    txtMod.setText(getString(R.string.complete));
+                    layoutComplete.setVisibility(View.VISIBLE);
+                    layoutDataLimit.setVisibility(View.VISIBLE);
 
                     editData.setFocusableInTouchMode(true);
                     editData.requestFocus();
 
                     state = State.INPUT;
                 } else {
-                    if (data.getDataType() == DataType.HEX) {
-                        if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
-                            BasicDialog err = new BasicDialog(getActivity());
-                            err.setMessage(getString(R.string.errInvalidData));
-                            err.show();
-
-                            break;
+                    // btn_option.getText() == Delete
+                    MessageDialog messageDialog = new MessageDialog(getActivity());
+                    messageDialog.setTitleText(getString(R.string.msgDeleteData));
+                    messageDialog.setSingleButton(false);
+                    messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                        @Override
+                        public Boolean invoke(View view) {
+                            if (mListener != null)
+                                mListener.onDataDelete();
+                            return true;
                         }
-
-                        try {
-                            Hex.decode(Utils.remove0x(editData.getText().toString()));
-                            data.setData(Utils.checkPrefix(editData.getText().toString()));
-                            getStepCost();
-                        } catch (Exception e) {
-                            BasicDialog err = new BasicDialog(getActivity());
-                            err.setMessage(getString(R.string.errInvalidData));
-                            err.show();
-                        }
-                    } else {
-                        String dataStr = editData.getText().toString();
-                        String hexStr = Hex.toHexString(dataStr.getBytes());
-                        data.setData(Utils.checkPrefix(hexStr));
-                        getStepCost();
-                    }
+                    });
+                    messageDialog.show();
                 }
                 break;
 
-            case R.id.btn_delete:
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-                dialog.setMessage(getString(R.string.msgDeleteData));
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        if (mListener != null)
-                            mListener.onDataDelete();
+            case R.id.btn_complete:
+                if (data.getDataType() == DataType.HEX) {
+                    if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
+                        MessageDialog messageDialog = new MessageDialog(getActivity());
+                        messageDialog.setTitleText(getString(R.string.errInvalidData));
+                        messageDialog.show();
+                        break;
                     }
-
-                    @Override
-                    public void onCancel() {
-
+                    try {
+                        Hex.decode(Utils.remove0x(editData.getText().toString()));
+                        data.setData(Utils.checkPrefix(editData.getText().toString()));
+                        getStepCost();
+                    } catch (Exception e) {
+                        MessageDialog messageDialog = new MessageDialog(getActivity());
+                        messageDialog.setTitleText(getString(R.string.errInvalidData));
+                        messageDialog.show();
                     }
-                });
-                dialog.show();
+                } else {
+                    String dataStr = editData.getText().toString();
+                    String hexStr = Hex.toHexString(dataStr.getBytes());
+                    data.setData(Utils.checkPrefix(hexStr));
+                    getStepCost();
+                }
                 break;
         }
     }
 
     private void showCancel() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-        dialog.setMessage(getString(R.string.cancelEnterData));
-        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+        MessageDialog messageDialog = new MessageDialog(getActivity());
+        messageDialog.setSingleButton(false);
+        messageDialog.setTitleText(getString(R.string.cancelEnterData));
+        messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
             @Override
-            public void onOk() {
+            public Boolean invoke(View view) {
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 if (mListener != null)
                     mListener.onDataCancel(data);
-            }
-
-            @Override
-            public void onCancel() {
-
+                return true;
             }
         });
-        dialog.show();
+        messageDialog.show();
     }
 
     private boolean isHexCharSet(char c) {
@@ -359,7 +347,6 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                     if (response.isSuccessful()) {
                         JsonObject result = response.body().getResult().getAsJsonObject();
                         int input = Integer.decode(result.get("input").getAsString());
-//                        int dataLength = editData.getText().toString().getBytes().length;
                         int dataLength = (data.getData() + "\"\"").getBytes().length;
                         Log.d(TAG, "data=" + (data.getData() + "\"\""));
                         int stepLimit = Integer.decode(result.get("default").getAsString()) + input * dataLength;
@@ -370,9 +357,9 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                             if (mListener != null)
                                 mListener.onSetData(data);
                         } else {
-                            BasicDialog dialog = new BasicDialog(getActivity());
-                            dialog.setMessage(getString(R.string.errIcxOwnNotEnough));
-                            dialog.show();
+                            MessageDialog messageDialog = new MessageDialog(getActivity());
+                            messageDialog.setTitleText(getString(R.string.errIcxOwnNotEnough));
+                            messageDialog.show();
 
                             data.setData(null);
                         }

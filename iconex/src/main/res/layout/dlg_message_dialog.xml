@@ -131,18 +131,29 @@
             android:textColor="@color/dark"
             android:textSize="14dp" />
 
-        <Button
-            android:id="@+id/btn_confirm"
-            style="@style/Widget.AppCompat.Button.Borderless"
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:background="@drawable/bg_rounded_rb_primary_00"
-            android:fontFamily="@font/noto_sans_regular"
-            android:text="@string/confirm"
-            android:textAllCaps="false"
-            android:textColor="@color/dlg_confirm_button"
-            android:textSize="14dp" />
+            android:layout_weight="2">
+            <Button
+                android:id="@+id/btn_confirm"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_rounded_rb_primary_00"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/confirm"
+                android:textAllCaps="false"
+                android:textColor="@color/dlg_confirm_button"
+                android:textSize="14dp" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:indeterminateDrawable="@drawable/anim_loading" />
+        </RelativeLayout>
     </LinearLayout>
 
     <Button

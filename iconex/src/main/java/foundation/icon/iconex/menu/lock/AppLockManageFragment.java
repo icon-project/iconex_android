@@ -21,7 +21,7 @@ public class AppLockManageFragment extends Fragment implements View.OnClickListe
 
     private static final String TAG = AppLockManageFragment.class.getSimpleName();
 
-    private ViewGroup layoutHeader, layoutUse, layoutFin;
+    private ViewGroup layoutHeader, layoutFin, layoutFooter;
 
     private Button btnUse, btnFin;
     private ViewGroup btnReset;
@@ -46,7 +46,7 @@ public class AppLockManageFragment extends Fragment implements View.OnClickListe
         View v = inflater.inflate(R.layout.fragment_app_lock_manage, container, false);
 
         layoutHeader = v.findViewById(R.id.layout_header);
-        layoutUse = v.findViewById(R.id.layout_use);
+        layoutFooter = v.findViewById(R.id.layout_footer);
         layoutFin = v.findViewById(R.id.layout_finger);
 
         btnUse = v.findViewById(R.id.switch_lock);
@@ -111,9 +111,7 @@ public class AppLockManageFragment extends Fragment implements View.OnClickListe
     public void refresh() {
         if (ICONexApp.isLocked) {
             layoutHeader.setVisibility(View.GONE);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layoutUse.getLayoutParams();
-            layoutParams.setMargins(0, 0, 0, 0);
-            layoutUse.setLayoutParams(layoutParams);
+            layoutFooter.setVisibility(View.GONE);
 
             btnUse.setSelected(true);
             btnReset.setVisibility(View.VISIBLE);
@@ -123,21 +121,19 @@ public class AppLockManageFragment extends Fragment implements View.OnClickListe
                 if (fm.isHardwareDetected())
                     layoutFin.setVisibility(View.VISIBLE);
                 else
-                    layoutFin.setVisibility(View.INVISIBLE);
+                    layoutFin.setVisibility(View.GONE);
 
             } else {
-                layoutFin.setVisibility(View.INVISIBLE);
+                layoutFin.setVisibility(View.GONE);
             }
 
         } else {
             layoutHeader.setVisibility(View.VISIBLE);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layoutUse.getLayoutParams();
-            layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen.dp40), 0, 0);
-            layoutUse.setLayoutParams(layoutParams);
+            layoutFooter.setVisibility(View.VISIBLE);
 
             btnUse.setSelected(false);
-            btnReset.setVisibility(View.INVISIBLE);
-            layoutFin.setVisibility(View.INVISIBLE);
+            btnReset.setVisibility(View.GONE);
+            layoutFin.setVisibility(View.GONE);
         }
 
         if (ICONexApp.useFingerprint)

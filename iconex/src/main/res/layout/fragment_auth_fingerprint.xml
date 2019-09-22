@@ -1,69 +1,47 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMain"
-    android:orientation="vertical"
-    tools:context=".view.ui.auth.AuthFingerprintFragment">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/layout_lock_num"
-        android:orientation="vertical">
-
-        <androidx.legacy.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/logo_iconex_01" />
-
-            <ImageView
-                android:id="@+id/img_icon_fingerprint"
-                android:layout_width="92dp"
-                android:layout_height="92dp"
-                android:layout_marginTop="40dp"
-                android:src="@drawable/img_finger_scan_white" />
-
-            <TextView
-                android:id="@+id/txt_helper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/img_icon_fingerprint"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/noto_sans_medium"
-                android:gravity="center_horizontal"
-                android:text="@string/appLockFingerprintGuide"
-                android:textColor="@color/colorWhite50"
-                android:textSize="14dp" />
-        </LinearLayout>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primary">
 
 
-        <androidx.legacy.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/img_icon_fingerprint"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/img_fingerscan_w"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
 
+
+    <TextView
+        android:id="@+id/txt_helper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/img_icon_fingerprint"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="40dp"
+        android:gravity="center_horizontal"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:textColor="#CCFFFFFF"
+        android:textSize="12dp"
+        android:lineHeight="20dp"
+
+        android:text="@string/appLockFingerprintGuide"/>
 
     <LinearLayout
         android:id="@+id/layout_lock_num"
         android:layout_width="wrap_content"
-        android:layout_height="72dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginBottom="40dp"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -72,11 +50,10 @@
             android:id="@+id/btn_lock_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
+            android:fontFamily="@font/noto_sans_regular"
             android:text="@string/unlockByLockNum"
             android:textColor="@color/colorWhite50"
-            android:textSize="12dp" />
+            android:textSize="10dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -84,4 +61,4 @@
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_arrow_right_lock" />
     </LinearLayout>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

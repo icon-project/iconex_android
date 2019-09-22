@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.widgets.TitleBar;
 import loopchain.icon.wallet.core.Constants;
 
 public class ContactsActivity extends AppCompatActivity implements ContactsFragment.OnContactsClickListener, MyContactsFragment.OnContactListener {
@@ -34,7 +35,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.contactsTitle));
+        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         btnClose = findViewById(R.id.btn_close);
         btnClose.setOnClickListener(new View.OnClickListener() {
@@ -44,7 +45,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
             }
         });
 
-        btnMod = findViewById(R.id.txt_mod);
+        btnMod = findViewById(R.id.btn_option);
         btnMod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

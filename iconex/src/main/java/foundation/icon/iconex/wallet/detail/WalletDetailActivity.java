@@ -46,8 +46,8 @@ import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
-import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
+import foundation.icon.iconex.wallet.transfer.OldEtherTransferActivity;
+import foundation.icon.iconex.wallet.transfer.OldICONTransferActivity;
 import foundation.icon.iconex.widgets.RefreshLayout.LoadingHeaderView;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
@@ -450,7 +450,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                             keyStore.get("crypto").getAsJsonObject(), mWallet.getCoinType());
                     if (bytePrivKey != null) {
                         if (result == EditTextDialog.RESULT_PWD.TRANSFER) {
-                            startActivity(new Intent(WalletDetailActivity.this, ICONTransferActivity.class)
+                            startActivity(new Intent(WalletDetailActivity.this, OldICONTransferActivity.class)
                                     .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("walletEntry", (Serializable) selectedEntry)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
@@ -492,7 +492,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
                     if (bytePrivKey != null) {
                         if (result == EditTextDialog.RESULT_PWD.TRANSFER) {
-                            startActivity(new Intent(WalletDetailActivity.this, EtherTransferActivity.class)
+                            startActivity(new Intent(WalletDetailActivity.this, OldEtherTransferActivity.class)
                                     .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("walletEntry", (Serializable) selectedEntry)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));

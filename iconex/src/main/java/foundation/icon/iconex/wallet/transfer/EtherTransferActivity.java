@@ -6,25 +6,24 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import androidx.annotation.Nullable;
-import androidx.core.widget.TextViewCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.TextViewCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongycastle.util.encoders.Hex;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Convert;
@@ -38,8 +37,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
-import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
@@ -50,44 +48,53 @@ import foundation.icon.iconex.wallet.contacts.ContactsActivity;
 import foundation.icon.iconex.wallet.transfer.data.ErcTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
-import foundation.icon.iconex.widgets.MyEditText;
+import foundation.icon.iconex.widgets.CustomActionBar;
+import foundation.icon.iconex.widgets.CustomSeekbar;
+import foundation.icon.iconex.widgets.TTextInputLayout;
 
-public class EtherTransferActivity extends AppCompatActivity implements View.OnClickListener {
+public class EtherTransferActivity extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter{
 
-    private static final String TAG = ICONTransferActivity.class.getSimpleName();
+    // appbar UI
+    private CustomActionBar appbar;
 
-    private ScrollView scroll;
-    private Button btnBack;
-    private MyEditText editSend, editAddress;
-    private View lineSend, lineAddress;
-    private TextView txtSendWarning, txtAddrWarning;
-    private Button btnDelAmount, btnDelAddr;
+    // available UI
+    private TextView labelBalance;
+    private TextView labelSymbol;
+    private TextView txtBalance;
+    private TextView txtTransBalance;
+
+    // Send Amount UI
+    private TTextInputLayout editSend;
     private TextView txtTransSend;
     private Button btnPlus10, btnPlus100, btnPlus1000, btnTheWhole;
-    private Button btnContacts, btnScan;
 
-    private TextView txtFee, txtTransFee;
-    private TextView txtRemain, txtTransRemain;
+    // Receving Address UI
+    private TTextInputLayout editAddress;
+    private Button btnContact;
+    private Button btnQRcodeScan;
 
-    private ViewGroup infoLimit, infoPrice, infoData, infoFee;
+    // Gas Limit UI
+    private TTextInputLayout editLimit;
 
-    private MyEditText editLimit;
-    private View lineLimit;
-    private TextView txtLimitWarning;
-    private Button btnDelLimit;
-
-    private ViewGroup layoutDataInfo;
-    private ImageView dataInput;
-    private ViewGroup layoutData;
-    private MyEditText editData;
-    private View lineData;
-    private TextView txtDataWarning;
-    private Button btnDelData;
-
+    // Gas Contorl UI
+    private TextView labelPrice;
     private TextView txtPrice;
-    private SeekBar seekPrice;
-    private ViewGroup priceDown, priceUp;
+    private TextView labelSlow;
+    private TextView labelFast;
+    private CustomSeekbar seekPrice;
 
+    // Input Data UI
+    private ViewGroup layoutDataInfo;
+    private TTextInputLayout editData;
+    private Button btnViewData;
+
+    // Fee UI
+    private TextView lbEstimatedMaxFee;
+    private TextView symbolEstimatedMaxFee;
+    private TextView txtFee;
+    private TextView txtTransFee;
+
+    // Send Button UI
     private Button btnSend;
 
     private BigInteger balance;
@@ -115,6 +122,9 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
     private static final int DEFAULT_PRICE = 21;
     private static final int DEFAULT_GAS_LIMIT = 21000;
     private static final int CONTRACT_GAS_LIMIT = 55000;
+
+    private String txtRemain;
+    private String txtTransRemain;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -155,17 +165,10 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         }
     };
 
-    private OnKeyPreImeListener onKeyPreImeListener = new OnKeyPreImeListener() {
-        @Override
-        public void onBackPressed() {
-            setSendEnable();
-        }
-    };
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ether_transfer);
+        setContentView(R.layout.activity_ether_transfer_new);
 
         if (getIntent() != null) {
             mWallet = (Wallet) getIntent().getExtras().get("walletInfo");
@@ -175,52 +178,89 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
         EXCHANGE_PRICE = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
 
-        scroll = findViewById(R.id.scroll);
+        // load appbar UI
+        appbar = findViewById(R.id.appbar);
 
-        ((TextView) findViewById(R.id.txt_title)).setText(mWallet.getAlias());
-        ((TextView) findViewById(R.id.txt_sub_balance))
-                .setText(String.format(getString(R.string.possessionAmount), mWalletEntry.getSymbol()));
-        ((TextView) findViewById(R.id.txt_send_amount))
-                .setText(String.format(getString(R.string.sendAmount), mWalletEntry.getSymbol()));
-        ((TextView) findViewById(R.id.txt_send_fee)).setText(String.format(getString(R.string.estiFee), MyConstants.SYMBOL_ETH));
-        ((TextView) findViewById(R.id.txt_remain_amount))
-                .setText(String.format(getString(R.string.estiRemain), mWalletEntry.getSymbol()));
-        btnBack = findViewById(R.id.btn_back);
-        btnBack.setOnClickListener(this);
+        // load available UI
+        labelBalance = findViewById(R.id.txt_sub_balance);
+        labelSymbol = findViewById(R.id.txt_sub_balance_symbol);
+        txtBalance = findViewById(R.id.txt_balance);
+        txtTransBalance = findViewById(R.id.txt_trans_balance);
 
         editSend = findViewById(R.id.edit_send_amount);
-        editSend.setOnKeyPreImeListener(onKeyPreImeListener);
-        editSend.setLongClickable(false);
-        editSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        txtTransSend = findViewById(R.id.txt_trans_amount);
+        btnPlus10 = findViewById(R.id.btn_plus_10);
+        btnPlus100 = findViewById(R.id.btn_plus_100);
+        btnPlus1000 = findViewById(R.id.btn_plus_1000);
+        btnTheWhole = findViewById(R.id.btn_plus_all);
 
-            }
-        });
-        editSend.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        // load Receiving Address UI
+        editAddress = findViewById(R.id.edit_to_address);
+        btnContact = findViewById(R.id.btn_contacts);
+        btnQRcodeScan = findViewById(R.id.btn_qr_scan);
+
+        // load Gas Control UI
+        editLimit = findViewById(R.id.edit_limit);
+        labelPrice = findViewById(R.id.lb_price);
+        txtPrice = findViewById(R.id.txt_price);
+        labelSlow = findViewById(R.id.lb_slow);
+        labelFast = findViewById(R.id.lb_fast);
+        seekPrice = findViewById(R.id.seek_price);
+
+        // load Input Data UI
+        layoutDataInfo = findViewById(R.id.layout_data_info);
+        editData = findViewById(R.id.edit_data);
+        btnViewData = findViewById(R.id.btn_view_data);
+
+        // load Fee UI
+        lbEstimatedMaxFee = findViewById(R.id.lb_estimated_max_fee);
+        symbolEstimatedMaxFee = findViewById(R.id.symbol_estimated_max_fee);
+        txtFee = findViewById(R.id.txt_fee);
+        txtTransFee = findViewById(R.id.txt_trans_fee);
+
+        // load Send Button UI
+        btnSend = findViewById(R.id.btn_send);
+
+        initView();
+    }
+
+    private void initView() {
+        // set symbol
+        appbar.setTitle(mWallet.getAlias());
+        labelSymbol.setText(mWalletEntry.getSymbol());
+        editSend.setAppendText(mWalletEntry.getSymbol());
+        symbolEstimatedMaxFee.setText(mWalletEntry.getSymbol());
+
+        // init appbar
+        appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    lineSend.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                } else {
-                    lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    if (editSend.getText().toString().length() > 0) {
-                        validateSendAmount(editSend.getText().toString());
-                    }
+            public void onClickAction(CustomActionBar.ClickAction action) {
+                switch (action) {
+                    case btnStart: finish(); break;
+                    case btnEnd: break;
                 }
             }
         });
-        editSend.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        // init send
+        editSend.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                setSendEnable();
             }
-
+        });
+        editSend.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onReleased() {
+                if (editSend.getText().length() > 0) {
+                    validateSendAmount(editSend.getText().toString());
+                }
+            }
+        });
+        editSend.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
+            @Override
+            public void onChanged(@NotNull CharSequence s) {
                 if (s.length() > 0) {
-
-                    btnDelAmount.setVisibility(View.VISIBLE);
 
                     String amount;
 
@@ -230,12 +270,12 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
                         if (s.toString().indexOf(".") < 0) {
                             if (s.length() > 10) {
-                                editSend.setText(s.subSequence(0, 10));
+                                editSend.setText(s.subSequence(0, 10).toString());
                                 editSend.setSelection(10);
                             }
                         } else {
                             if (mWalletEntry.getDefaultDec() == 0) {
-                                editSend.setText(s.subSequence(0, s.toString().indexOf(".")));
+                                editSend.setText(s.subSequence(0, s.toString().indexOf(".")).toString());
                                 editSend.setSelection(editSend.getText().toString().length());
 //                                return;
                             }
@@ -274,120 +314,57 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                         setRemain(amount);
                     }
                 } else {
-                    btnDelAmount.setVisibility(View.INVISIBLE);
                     txtTransSend.setText(String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE));
-
-                    txtSendWarning.setVisibility(View.GONE);
-                    if (editSend.isFocused())
-                        lineSend.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
+                    editSend.setError(false, null);
                 }
 
-                setRemain(editSend.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        editSend.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_NEXT)) {
-                    editAddress.requestFocus();
-
-                    int[] location = new int[2];
-                    btnPlus10.getLocationInWindow(location);
-                    scroll.smoothScrollTo(0, location[1] - findViewById(R.id.appbar).getBottom());
-                }
-                return false;
+                setRemain(editSend.getText());
             }
         });
 
-        editAddress = findViewById(R.id.edit_to_address);
-        editAddress.setOnKeyPreImeListener(onKeyPreImeListener);
-        editAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        // edit address
+        editAddress.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                } else {
-                    lineAddress.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    if (editAddress.getText().toString().length() > 0)
-                        validateAddress(editAddress.getText().toString());
-                }
+            public void onDone() {
+                setSendEnable();
             }
         });
-        editAddress.addTextChangedListener(new TextWatcher() {
+        editAddress.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0)
-                    btnDelAddr.setVisibility(View.VISIBLE);
-                else {
-                    btnDelAddr.setVisibility(View.INVISIBLE);
-
-                    txtAddrWarning.setVisibility(View.GONE);
-                    if (editAddress.isFocused())
-                        lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        lineAddress.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+            public void onReleased() {
+                if (editAddress.getText().toString().length() > 0)
+                    validateAddress(editAddress.getText().toString());
             }
         });
-        editAddress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        editAddress.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_NEXT)) {
-                    editLimit.requestFocus();
-
-                    int[] location = new int[2];
-                    btnContacts.getLocationInWindow(location);
-                    scroll.smoothScrollTo(0, scroll.getScrollY() + (location[1] - findViewById(R.id.appbar).getBottom()));
-                }
-                return false;
+            public void onChanged(@NotNull CharSequence s) {
+                if (s.length() <= 0 )
+                    editAddress.setError(false, null);
             }
         });
 
-        editLimit = findViewById(R.id.edit_limit);
-        editLimit.setLongClickable(false);
+        // edit limit
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN))
             editLimit.setText(String.valueOf(DEFAULT_GAS_LIMIT));
         else
             editLimit.setText(String.valueOf(CONTRACT_GAS_LIMIT));
-        editLimit.setOnKeyPreImeListener(onKeyPreImeListener);
-        editLimit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editLimit.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    lineLimit.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                } else {
-                    lineLimit.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    validateGasLimit();
-                }
+            public void onDone() {
+                setSendEnable();
             }
         });
-        editLimit.addTextChangedListener(new TextWatcher() {
+        editLimit.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public void onReleased() {
+                validateGasLimit();
             }
-
+        });
+        editLimit.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onChanged(@NotNull CharSequence s) {
                 if (s.length() > 0) {
-                    btnDelLimit.setVisibility(View.VISIBLE);
                     if (s.toString().startsWith(".")) {
                         editSend.setText("");
                     } else {
@@ -395,109 +372,95 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                         setRemain(calculateFee());
                     }
                 } else {
-                    btnDelLimit.setVisibility(View.INVISIBLE);
-
-                    txtLimitWarning.setVisibility(View.GONE);
-                    if (editLimit.isFocused())
-                        lineLimit.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        lineLimit.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
-                    ((TextView) findViewById(R.id.txt_fee)).setText(calculateFee());
+                    editLimit.setError(false, null);
+                    txtFee.setText(calculateFee());
                     setRemain(calculateFee());
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
         });
-        editLimit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        editLimit.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    boolean result = validateSendAmount(editSend.getText().toString())
-                            && validateAddress(editAddress.getText().toString())
-                            && validateGasLimit()
-                            && validateData();
-                    if (result) {
-                        btnSend.setEnabled(true);
-                    } else {
-                        btnSend.setEnabled(false);
-                    }
-                }
-                return false;
-            }
-        });
-
-        editData = findViewById(R.id.edit_data);
-        editData.setOnKeyPreImeListener(onKeyPreImeListener);
-        editData.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    lineData.setBackgroundColor(getResources().getColor(R.color.editActivated));
+            public void onDone() {
+                boolean result = validateSendAmount(editSend.getText().toString())
+                        && validateAddress(editAddress.getText().toString())
+                        && validateGasLimit()
+                        && validateData();
+                if (result) {
+                    btnSend.setEnabled(true);
                 } else {
-                    lineData.setBackgroundColor(getResources().getColor(R.color.editNormal));
-                    validateData();
+                    btnSend.setEnabled(false);
                 }
             }
         });
-        editData.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        // edit Data
+        editData.setInputEnabled(false);
+        btnViewData.setVisibility(View.GONE);
+        editData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editData.getText().length() <= 0) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.add(android.R.id.content, EtherDataEnterFragment.newInstance(editData.getText()));
+                    transaction.addToBackStack("DATA");
+                    transaction.commit();
+                }
             }
-
+        });
+        btnViewData.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onClick(View v) {
+                if (editData.getText().length() > 0) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.add(android.R.id.content, EtherDataEnterFragment.newInstance(editData.getText()));
+                    transaction.addToBackStack("DATA");
+                    transaction.commit();
+                }
+            }
+        });
+        editData.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                setSendEnable();
+            }
+        });
+        editData.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+            @Override
+            public void onReleased() {
+                validateData();
+            }
+        });
+        editData.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
+            @Override
+            public void onChanged(@NotNull CharSequence s) {
                 if (s.length() > 0) {
-                    btnDelData.setVisibility(View.VISIBLE);
                     editLimit.setText(String.valueOf(CONTRACT_GAS_LIMIT));
-                    setRemain(editSend.getText().toString());
+                    setRemain(editSend.getText());
                 } else {
-                    btnDelData.setVisibility(View.INVISIBLE);
-                    txtDataWarning.setVisibility(View.GONE);
-                    if (editData.isFocused())
-                        lineData.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                    else
-                        lineData.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
+                    editData.setError(false, null);
                     editLimit.setText(String.valueOf(DEFAULT_GAS_LIMIT));
-                    setRemain(editSend.getText().toString());
+                    setRemain(editSend.getText());
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
-        editData.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        editData.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    boolean result = validateSendAmount(editSend.getText().toString())
-                            && validateAddress(editAddress.getText().toString())
-                            && validateGasLimit()
-                            && validateData();
-                    if (result) {
-                        btnSend.setEnabled(true);
-                    } else {
-                        btnSend.setEnabled(false);
-                    }
+            public void onDone() {
+                boolean result = validateSendAmount(editSend.getText())
+                        && validateAddress(editAddress.getText())
+                        && validateGasLimit()
+                        && validateData();
+                if (result) {
+                    btnSend.setEnabled(true);
+                } else {
+                    btnSend.setEnabled(false);
                 }
-                return false;
             }
         });
 
-        lineSend = findViewById(R.id.line_send_amount);
-        lineAddress = findViewById(R.id.line_to_address);
-        lineLimit = findViewById(R.id.line_limit);
-        lineData = findViewById(R.id.line_data);
-
-        seekPrice = findViewById(R.id.seek_price);
+        // set seek bar
         seekPrice.setProgress(DEFAULT_PRICE);
         seekPrice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -521,7 +484,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
                 seekPrice.setProgress(progress);
                 txtPrice.setText(String.valueOf(progress));
 
-                ((TextView) findViewById(R.id.txt_fee)).setText(calculateFee());
+                txtFee.setText(calculateFee());
                 setRemain(calculateFee());
             }
 
@@ -532,70 +495,94 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        txtPrice.setText(String.valueOf(seekPrice.getProgress()));
+
+        // set plus button
+        View.OnClickListener onClickPlusButtons = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_plus_10: addPlus(10); break;
+                    case R.id.btn_plus_100: addPlus(100); break;
+                    case R.id.btn_plus_1000: addPlus(1000); break;
+                    case R.id.btn_plus_all:
+                        if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                            BigInteger balance = new BigInteger(mWalletEntry.getBalance());
+                            BigInteger bigFee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
+
+                            if (balance.compareTo(bigFee) == -1) {
+                                editSend.setText("");
+                                editSend.setError(true, getString(R.string.errETHFee));
+                            } else {
+                                editSend.setText(ConvertUtil.getValue(balance.subtract(bigFee), mWalletEntry.getDefaultDec()));
+                            }
+                        } else {
+                            editSend.setText(ConvertUtil.getValue(new BigInteger(mWalletEntry.getBalance()), mWalletEntry.getDefaultDec()));
+
+                        }
+                        break;
+                }
                 setSendEnable();
+                editSend.setSelection(editSend.getText().length());
+            }
+        };
+        btnPlus10.setOnClickListener(onClickPlusButtons);
+        btnPlus100.setOnClickListener(onClickPlusButtons);
+        btnPlus1000.setOnClickListener(onClickPlusButtons);
+        btnTheWhole.setOnClickListener(onClickPlusButtons);
+
+        btnContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(EtherTransferActivity.this, ContactsActivity.class)
+                        .putExtra("coinType", mWallet.getCoinType())
+                        .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
             }
         });
 
-        infoLimit = findViewById(R.id.info_limit);
-        infoLimit.setOnClickListener(this);
-        infoPrice = findViewById(R.id.info_price);
-        infoPrice.setOnClickListener(this);
-        infoData = findViewById(R.id.info_data);
-        infoData.setOnClickListener(this);
-        infoFee = findViewById(R.id.info_fee);
-        infoFee.setOnClickListener(this);
+        btnQRcodeScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EtherTransferActivity.this, BarcodeCaptureActivity.class);
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
 
-        priceDown = findViewById(R.id.price_down);
-        priceDown.setOnClickListener(this);
-        priceUp = findViewById(R.id.price_up);
-        priceUp.setOnClickListener(this);
+                startActivityForResult(intent, RC_BARCODE_CAPTURE);
+            }
+        });
 
-        txtSendWarning = findViewById(R.id.txt_send_warning);
-        txtAddrWarning = findViewById(R.id.txt_address_warning);
-        txtLimitWarning = findViewById(R.id.txt_limit_warning);
-        txtDataWarning = findViewById(R.id.txt_data_warning);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendConfirmDialog dialog = new SendConfirmDialog(EtherTransferActivity.this, makeTxInfo());
+                dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
+                    @Override
+                    public void onOk() {
+                        if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                            mService.requestETHTransaction(Integer.toString(mWalletEntry.getId()), txtPrice.getText().toString(),
+                                    editLimit.getText(), editAddress.getText(), editData.getText(),
+                                    editSend.getText(), privKey);
+                        } else {
+                            mService.requestTokenTransfer(Integer.toString(mWalletEntry.getId()), txtPrice.getText().toString(),
+                                    editLimit.getText(), mWalletEntry.getContractAddress(),
+                                    editAddress.getText(), editSend.getText(),
+                                    Integer.toString(mWalletEntry.getDefaultDec()), privKey);
+                        }
 
-        btnDelAmount = findViewById(R.id.del_amount);
-        btnDelAmount.setOnClickListener(this);
-        btnDelAddr = findViewById(R.id.del_address);
-        btnDelAddr.setOnClickListener(this);
-        btnDelLimit = findViewById(R.id.del_limit);
-        btnDelLimit.setOnClickListener(this);
-        btnDelData = findViewById(R.id.del_data);
-        btnDelData.setOnClickListener(this);
+                        timestamp = getTimeStamp();
+                        saveRecentSent();
 
-        txtRemain = findViewById(R.id.txt_remain);
-        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtRemain, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-        txtTransRemain = findViewById(R.id.txt_trans_remain);
-        txtPrice = findViewById(R.id.txt_price);
-        txtPrice.setText(String.valueOf(seekPrice.getProgress()));
+                        Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
 
-        txtTransSend = findViewById(R.id.txt_trans_send_amount);
-
-
-        btnPlus10 = findViewById(R.id.btn_plus_10);
-        btnPlus10.setOnClickListener(this);
-        btnPlus100 = findViewById(R.id.btn_plus_100);
-        btnPlus100.setOnClickListener(this);
-        btnPlus1000 = findViewById(R.id.btn_plus_1000);
-        btnPlus1000.setOnClickListener(this);
-        btnTheWhole = findViewById(R.id.btn_plus_all);
-        btnTheWhole.setOnClickListener(this);
-
-        btnContacts = findViewById(R.id.btn_contacts);
-        btnContacts.setOnClickListener(this);
-        btnScan = findViewById(R.id.btn_qr_scan);
-        btnScan.setOnClickListener(this);
-
-        layoutDataInfo = findViewById(R.id.layout_data_info);
-        dataInput = findViewById(R.id.arrow);
-        dataInput.setOnClickListener(this);
-        dataInput.setSelected(false);
-        layoutData = findViewById(R.id.layout_data);
-        layoutData.setVisibility(View.GONE);
-
-        btnSend = findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(this);
+                        finish();
+                    }
+                });
+                dialog.show();
+            }
+        });
 
         if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
             layoutDataInfo.setVisibility(View.GONE);
@@ -649,167 +636,6 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             }
 
             setRemain(editSend.getText().toString());
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_back:
-                finish();
-                break;
-
-            case R.id.del_amount:
-                editSend.setText("");
-                btnSend.setEnabled(false);
-                break;
-
-            case R.id.del_address:
-                editAddress.setText("");
-                btnSend.setEnabled(false);
-                break;
-
-            case R.id.del_limit:
-                editLimit.setText("");
-                btnSend.setEnabled(false);
-                break;
-
-            case R.id.del_data:
-                editData.setText("");
-                break;
-
-            case R.id.btn_plus_10:
-                addPlus(10);
-                setSendEnable();
-                editSend.setSelection(editSend.getText().toString().length());
-                break;
-
-            case R.id.btn_plus_100:
-                addPlus(100);
-                setSendEnable();
-                editSend.setSelection(editSend.getText().toString().length());
-                break;
-
-            case R.id.btn_plus_1000:
-                addPlus(1000);
-                setSendEnable();
-                editSend.setSelection(editSend.getText().toString().length());
-                break;
-
-            case R.id.btn_plus_all:
-                if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                    BigInteger balance = new BigInteger(mWalletEntry.getBalance());
-                    BigInteger bigFee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
-
-                    if (balance.compareTo(bigFee) == -1) {
-                        editSend.setText("");
-                        lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                        txtSendWarning.setVisibility(View.VISIBLE);
-                        txtSendWarning.setText(getString(R.string.errETHFee));
-                    } else {
-                        editSend.setText(ConvertUtil.getValue(balance.subtract(bigFee), mWalletEntry.getDefaultDec()));
-                        setSendEnable();
-                    }
-
-                } else {
-                    editSend.setText(ConvertUtil.getValue(new BigInteger(mWalletEntry.getBalance()), mWalletEntry.getDefaultDec()));
-                    setSendEnable();
-                }
-
-                editSend.setSelection(editSend.getText().toString().length());
-
-                break;
-
-            case R.id.btn_contacts:
-                startActivityForResult(new Intent(this, ContactsActivity.class)
-                        .putExtra("coinType", mWallet.getCoinType())
-                        .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
-                break;
-
-            case R.id.btn_qr_scan:
-                Intent intent = new Intent(this, BarcodeCaptureActivity.class);
-                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
-                intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
-
-                startActivityForResult(intent, RC_BARCODE_CAPTURE);
-                break;
-
-            case R.id.price_down:
-                if (seekPrice.getProgress() != 0)
-                    seekPrice.setProgress(seekPrice.getProgress() - 1);
-
-                setSendEnable();
-                break;
-
-            case R.id.price_up:
-                if (seekPrice.getProgress() < seekPrice.getMax())
-                    seekPrice.setProgress(seekPrice.getProgress() + 1);
-
-                setSendEnable();
-                break;
-
-            case R.id.arrow:
-                if (dataInput.isSelected()) {
-                    dataInput.setSelected(false);
-                    dataInput.setBackgroundResource(R.drawable.ic_arrow_down);
-                    layoutData.setVisibility(View.GONE);
-                } else {
-                    dataInput.setSelected(true);
-                    dataInput.setBackgroundResource(R.drawable.ic_arrow_up);
-                    layoutData.setVisibility(View.VISIBLE);
-                }
-                break;
-
-            case R.id.btn_send:
-                SendConfirmDialog dialog = new SendConfirmDialog(this, makeTxInfo());
-                dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                            mService.requestETHTransaction(Integer.toString(mWalletEntry.getId()), txtPrice.getText().toString(),
-                                    editLimit.getText().toString(), editAddress.getText().toString(), editData.getText().toString(),
-                                    editSend.getText().toString(), privKey);
-                        } else {
-                            mService.requestTokenTransfer(Integer.toString(mWalletEntry.getId()), txtPrice.getText().toString(),
-                                    editLimit.getText().toString(), mWalletEntry.getContractAddress(),
-                                    editAddress.getText().toString(), editSend.getText().toString(),
-                                    Integer.toString(mWalletEntry.getDefaultDec()), privKey);
-                        }
-
-                        timestamp = getTimeStamp();
-                        saveRecentSent();
-
-                        Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
-
-                        finish();
-                    }
-                });
-                dialog.show();
-                break;
-
-            case R.id.info_limit:
-                BasicDialog infoLimit = new BasicDialog(this);
-                infoLimit.setMessage(getString(R.string.msgEthGasLimit));
-                infoLimit.show();
-                break;
-
-            case R.id.info_price:
-                BasicDialog infoPrice = new BasicDialog(this);
-                infoPrice.setMessage(getString(R.string.msgEthGasPrice));
-                infoPrice.show();
-                break;
-
-            case R.id.info_data:
-                BasicDialog infoData = new BasicDialog(this);
-                infoData.setMessage(getString(R.string.msgEthData));
-                infoData.show();
-                break;
-
-            case R.id.info_fee:
-                BasicDialog infoFee = new BasicDialog(this);
-                infoFee.setMessage(getString(R.string.msgEthEstimateFee));
-                infoFee.show();
-                break;
         }
     }
 
@@ -882,22 +708,22 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         if (strPrice != null) {
             if (strPrice.equals(MyConstants.NO_EXCHANGE)) {
                 if (isNegative)
-                    txtRemain.setText(String.format(Locale.getDefault(), "- %s", remainValue));
+                    txtRemain = String.format(Locale.getDefault(), "- %s", remainValue);
                 else
-                    txtRemain.setText(remainValue);
+                    txtRemain = remainValue;
 
-                txtTransRemain.setText(String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE));
+                txtTransRemain= String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE) ;
 
             } else {
                 String strRemainUSD = String.format(Locale.getDefault(), "%,.2f", remainUSD);
 
                 if (isNegative) {
-                    txtRemain.setText(String.format(Locale.getDefault(), "- %s", remainValue));
-                    txtTransRemain.setText(String.format(Locale.getDefault(), "- %s",
-                            getString(R.string.exchange_usd, strRemainUSD)));
+                    txtRemain = String.format(Locale.getDefault(), "- %s", remainValue);
+                    txtTransRemain = String.format(Locale.getDefault(), "- %s",
+                            getString(R.string.exchange_usd, strRemainUSD));
                 } else {
-                    txtRemain.setText(remainValue);
-                    txtTransRemain.setText(String.format(getString(R.string.exchange_usd), strRemainUSD));
+                    txtRemain = remainValue;
+                    txtTransRemain = String.format(getString(R.string.exchange_usd), strRemainUSD);
                 }
 
                 Double feeUSD = Double.parseDouble(calculateFee())
@@ -910,11 +736,11 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
         } else {
             if (isNegative)
-                txtRemain.setText(String.format(Locale.getDefault(), "- %s", remainValue));
+                txtRemain = String.format(Locale.getDefault(), "- %s", remainValue);
             else
-                txtRemain.setText(remainValue);
+                txtRemain = remainValue;
 
-            txtTransRemain.setText(String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE));
+            txtTransRemain = String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE);
         }
     }
 
@@ -945,7 +771,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
     private boolean validateSendAmount(String value) {
         if (value.isEmpty()) {
-            txtSendWarning.setVisibility(View.GONE);
+            editSend.setError(false, null);
             return false;
         }
 
@@ -955,21 +781,15 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
             BigInteger canICX = balance.subtract(fee);
             if (sendAmount.equals(BigInteger.ZERO)) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errETHFee));
+                editSend.setError(true, getString(R.string.errETHFee));
 
                 return false;
             } else if (balance.compareTo(sendAmount) < 0) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNotEnough));
+                editSend.setError(true, getString(R.string.errNotEnough));
 
                 return false;
             } else if (canICX.compareTo(sendAmount) < 0) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errETHFee));
+                editSend.setError(true, getString(R.string.errETHFee));
 
                 return false;
             }
@@ -978,32 +798,21 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
             BigInteger ownBalance = new BigInteger(own.getBalance());
 
             if (sendAmount.equals(BigInteger.ZERO)) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errETHFee));
+                editSend.setError(true, getString(R.string.errETHFee));
 
                 return false;
             } else if (balance.compareTo(sendAmount) < 0) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errNotEnough));
+                editSend.setError(true, getString(R.string.errNotEnough));
 
                 return false;
             } else if (ownBalance.compareTo(fee) < 0) {
-                lineSend.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtSendWarning.setVisibility(View.VISIBLE);
-                txtSendWarning.setText(getString(R.string.errETHFee));
+                editSend.setError(true, getString(R.string.errETHFee));
 
                 return false;
             }
         }
 
-        if (editSend.hasFocus())
-            lineSend.setBackgroundColor(getResources().getColor(R.color.editActivated));
-        else
-            lineSend.setBackgroundColor(getResources().getColor(R.color.editNormal));
-        editSend.setSelection(editSend.getText().toString().length());
-        txtSendWarning.setVisibility(View.GONE);
+        editSend.setError(false, null);
         return true;
     }
 
@@ -1013,90 +822,63 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
         }
 
         if (address.equals(mWallet.getAddress())) {
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errSameAddress));
+            editAddress.setError(true, getString(R.string.errSameAddress));
             return false;
         }
 
         if (address.startsWith("0x")) {
             address = address.substring(2);
             if (address.length() != 40) {
-                lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-                txtAddrWarning.setVisibility(View.VISIBLE);
-                txtAddrWarning.setText(getString(R.string.errIncorrectETHAddr));
+                editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
 
                 return false;
             }
         } else if (address.contains(" ")) {
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errIncorrectETHAddr));
+            editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
 
             return false;
         } else {
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtAddrWarning.setVisibility(View.VISIBLE);
-            txtAddrWarning.setText(getString(R.string.errIncorrectETHAddr));
+            editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
 
             return false;
         }
 
-        if (editAddress.hasFocus())
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.editActivated));
-        else
-            lineAddress.setBackgroundColor(getResources().getColor(R.color.editNormal));
+        editAddress.setError(false, null);
         editAddress.setSelection(editAddress.getText().toString().length());
-        txtAddrWarning.setVisibility(View.GONE);
         return true;
     }
 
     private boolean validateGasLimit() {
-        if (editLimit.getText().toString().isEmpty()) {
-            lineLimit.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-            txtLimitWarning.setVisibility(View.VISIBLE);
-
+        if (editLimit.getText().isEmpty()) {
+            editLimit.setError(true, getString(R.string.errGasLimitEmpty));
             return false;
         } else {
-            if (editLimit.hasFocus())
-                lineLimit.setBackgroundColor(getResources().getColor(R.color.editActivated));
-            else
-                lineLimit.setBackgroundColor(getResources().getColor(R.color.editNormal));
-            txtLimitWarning.setVisibility(View.GONE);
-
+            editLimit.setError(false, null);
             return true;
         }
     }
 
     private boolean validateData() {
-        if (layoutData.getVisibility() == View.GONE)
+        if (layoutDataInfo.getVisibility() == View.GONE)
             return true;
 
-        if (editData.getText().toString().isEmpty())
+        if (editData.getText().isEmpty())
             return true;
         else {
-            if (!editData.getText().toString().startsWith("0x")) {
-                txtDataWarning.setVisibility(View.VISIBLE);
-                lineData.setBackgroundColor(getResources().getColor(R.color.colorWarning));
-
+            if (!editData.getText().startsWith("0x")) {
+                editData.setError(true, getString(R.string.errInvalidData));
                 return false;
             } else {
                 try {
                     String data = editData.getText().toString().substring(2);
                     byte[] temp = Hex.decode(data);
                 } catch (Exception e) {
-                    txtDataWarning.setVisibility(View.VISIBLE);
-                    lineData.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+                    editData.setError(true, getString(R.string.errInvalidData));
 
                     return false;
                 }
 
-                txtDataWarning.setVisibility(View.GONE);
-                if (editData.isFocused())
-                    lineData.setBackgroundColor(getResources().getColor(R.color.editActivated));
-                else
-                    lineData.setBackgroundColor(getResources().getColor(R.color.editNormal));
-
+                editData.setError(false, null);
                 return true;
             }
         }
@@ -1105,18 +887,18 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
     private String calculateFee() {
         BigInteger price = new BigInteger(txtPrice.getText().toString());
         BigInteger limit;
-        if (editLimit.getText().toString().isEmpty()
-                || editLimit.getText().toString().trim().length() == 0)
+        if (editLimit.getText().isEmpty()
+                || editLimit.getText().trim().length() == 0)
             limit = BigInteger.ZERO;
         else
-            limit = new BigDecimal(editLimit.getText().toString()).toBigInteger();
+            limit = new BigDecimal(editLimit.getText()).toBigInteger();
 
         return Convert.fromWei(limit.multiply(price).multiply(ETH_MULTI).toString(), Convert.Unit.ETHER).toPlainString();
     }
 
     private void setSendEnable() {
-        if (validateSendAmount(editSend.getText().toString())
-                && validateAddress(editAddress.getText().toString())
+        if (validateSendAmount(editSend.getText())
+                && validateAddress(editAddress.getText())
                 && validateGasLimit()
                 && validateData()) {
             btnSend.setEnabled(true);
@@ -1193,6 +975,7 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_CONTACTS) {
             if (resultCode == ContactsActivity.CODE_RESULT) {
                 String address = data.getStringExtra("address");
@@ -1216,5 +999,61 @@ public class EtherTransferActivity extends AppCompatActivity implements View.OnC
 
             }
         }
+    }
+
+    @Override
+    public void onSetData(String data) {
+        editData.setText(data);
+        btnViewData.setVisibility(View.VISIBLE);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getSupportFragmentManager().popBackStackImmediate();
+
+        setSendEnable();
+    }
+
+    @Override
+    public void onDataCancel(String data) {
+        if (data == null) {
+            editData.setText("");
+            btnViewData.setVisibility(View.GONE);
+        } else {
+            btnViewData.setVisibility(View.VISIBLE);
+        }
+
+        getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onDataDelete() {
+        editData.setText("");
+        btnViewData.setVisibility(View.GONE);
+
+        getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0) {
+            Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+            dialog.setMessage(getString(R.string.cancelEnterData));
+            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                @Override
+                public void onOk() {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    fragmentManager.popBackStackImmediate();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+            dialog.show();
+        } else
+            super.onBackPressed();
     }
 }

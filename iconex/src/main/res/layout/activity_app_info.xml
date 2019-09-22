@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="foundation.icon.iconex.menu.appInfo.AppInfoActivity">
+    tools:context="foundation.icon.iconex.menu.appInfo.AppInfoActivityOld">
 
     <include
         layout="@layout/layout_appbar_close"

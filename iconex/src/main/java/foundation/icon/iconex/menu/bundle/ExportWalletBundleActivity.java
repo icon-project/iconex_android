@@ -32,6 +32,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     private static final String TAG = ExportWalletBundleActivity.class.getSimpleName();
 
     private Button btnBack;
+    private BundleStepView stepView;
     private NonSwipeViewPager viewPager;
     private BundleViewPagerAdapter adapter;
 
@@ -44,8 +45,8 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_export_wallet_bundle);
+        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.titleExportBundle));
         btnBack = findViewById(R.id.btn_close);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +54,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
                 finish();
             }
         });
+        stepView = findViewById(R.id.step_bundle);
 
         viewPager = findViewById(R.id.container);
         adapter = new BundleViewPagerAdapter(getSupportFragmentManager());
@@ -63,7 +65,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     public void onNext(List<Wallet> bundle, HashMap<String, String> privSet) {
         mBundle = bundle;
         mPrivSet = privSet;
-
+        stepView.setStep(1);
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
     }
 

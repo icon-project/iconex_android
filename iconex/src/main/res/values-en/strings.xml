@@ -342,7 +342,7 @@
     <string name="headerExportBundle">Select the wallets to bundle. Passwords are required.</string>
     <string name="exportBundleDetailed1">Wallet bundle backs up your wallets in one file. You can easily manage different wallets at once.</string>
     <string name="exportBundleEdtailed2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
-    <string name="countSelectedWallet">%d Selected Wallets</string>
+    <string name="countSelectedWallet">Selected Wallets</string>
 
     <string name="bundlePwdHeader">Please create the password for the wallet bundle and download the backup file. </string>
     <string name="bundlePwdDetailed1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
@@ -374,6 +374,8 @@
     <string name="titleFingerprintLock">Fingerprint Unlock Guide</string>
     <string name="fingerprintLockHeader">Do you want to unlock ICONex with your fingerprint?</string>
     <string name="fingerprintLockDetailed">You can have fast access to ICONex using your fingerprint.\n\You can unlock ICONex with every fingerprint registered on your mobile phone. Please make sure you have registered your own fingerprint.</string>
+    <string name="fingerprintLockDetailed0">You can have fast access to ICONex using your fingerprint.</string>
+    <string name="fingerprintLockDetailed1">You can unlock ICONex with every fingerprint registered on your mobile phone. Please make sure you have registered your own fingerprint.</string>
 
     <string name="titleSetLockNum">Activate Screen Lock</string>
     <string name="lockNumGuide">Enter 6-digit passcode</string>

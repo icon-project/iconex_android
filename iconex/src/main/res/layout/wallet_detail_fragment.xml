@@ -41,17 +41,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <foundation.icon.iconex.dev2_detail.component.WalletDetailInfoView
+                <foundation.icon.iconex.view.ui.detailWallet.component.WalletDetailInfoView
                     android:id="@+id/wallet_detail_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                <foundation.icon.iconex.dev2_detail.component.TransactionListViewHeader
+                <foundation.icon.iconex.view.ui.detailWallet.component.TransactionListViewHeader
                     android:id="@+id/transaction_list_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                <foundation.icon.iconex.dev2_detail.component.TransactionListView
+                <foundation.icon.iconex.view.ui.detailWallet.component.TransactionListView
                     android:id="@+id/transaction_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -60,7 +60,7 @@
         </androidx.core.widget.NestedScrollView>
     </foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout>
 
-    <foundation.icon.iconex.dev2_detail.component.TransactionListViewHeader
+    <foundation.icon.iconex.view.ui.detailWallet.component.TransactionListViewHeader
         android:id="@+id/fixed_tansaction_list"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <foundation.icon.iconex.dev2_detail.component.TransactionFloatingMenu
+    <foundation.icon.iconex.view.ui.detailWallet.component.TransactionFloatingMenu
         android:id="@+id/floating_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

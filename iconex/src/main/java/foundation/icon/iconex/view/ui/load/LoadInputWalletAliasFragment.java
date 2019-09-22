@@ -21,12 +21,11 @@ import java.util.List;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
+import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import loopchain.icon.wallet.core.Constants;
 

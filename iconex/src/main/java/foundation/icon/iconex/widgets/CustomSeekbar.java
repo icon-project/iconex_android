@@ -55,16 +55,13 @@ public class CustomSeekbar extends FrameLayout {
         seekBar = findViewById(R.id.seekBar);
         seekBar.setMax(mMax);
         seekBar.setProgress(mProgress);
+        seekActive.setVisibility(mProgress == 0 ? INVISIBLE : VISIBLE);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mProgress = progress;
                 updateProgressbarView();
-                if (progress == 0) {
-                    seekActive.setVisibility(INVISIBLE);
-                } else {
-                    seekActive.setVisibility(VISIBLE);
-                }
+                seekActive.setVisibility(progress == 0 ? INVISIBLE : VISIBLE);
                 if (onSeekBarChangeListener != null) onSeekBarChangeListener.onProgressChanged(seekBar, progress, fromUser);
             }
 

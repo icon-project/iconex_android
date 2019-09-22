@@ -352,6 +352,7 @@
             
             <!-- ETH Fee -->
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_data_info"
                 android:layout_width="match_parent"
                 android:layout_height="93dp"
                 android:layout_marginTop="40dp"
@@ -371,7 +372,20 @@
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 
-                    android:text="Estimated Maximum Fee (ICX)"/>
+                    android:text="Estimated Maximum Fee"/>
+
+                <TextView
+                    android:id="@+id/symbol_estimated_max_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    app:layout_constraintLeft_toRightOf="@id/lb_estimated_max_fee"
+                    app:layout_constraintBaseline_toBaselineOf="@id/lb_estimated_max_fee"
+
+                    android:textSize="10dp"
+                    android:textColor="@color/dark80"
+
+                    android:text="(ETH)"/>
 
                 <TextView
                     android:id="@+id/txt_fee"

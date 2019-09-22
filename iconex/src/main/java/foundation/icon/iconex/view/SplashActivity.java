@@ -10,12 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.dialogs.PermissionConfirmDialog;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
 import foundation.icon.iconex.util.PreferenceUtil;
-import foundation.icon.iconex.wallet.main.MainActivity;
 import loopchain.icon.wallet.core.request.RequestData;
 
 public class SplashActivity extends AppCompatActivity {
