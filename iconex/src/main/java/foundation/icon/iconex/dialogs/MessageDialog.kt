@@ -32,6 +32,7 @@ open class MessageDialog: Dialog {
         setContentView(R.layout.dlg_message_dialog)
         window!!.setBackgroundDrawableResource(android.R.color.transparent)
         window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        setCancelable(false)
 
         mTextHead = findViewById(R.id.txt_head)
         mHeadLine = findViewById(R.id.headline)

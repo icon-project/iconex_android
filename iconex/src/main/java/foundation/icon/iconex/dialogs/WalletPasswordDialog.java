@@ -78,6 +78,9 @@ public class WalletPasswordDialog extends MessageDialog {
                 JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
                 final byte[][] bytePrivKey = new byte[1][1];
 
+                setConfirmEnable(false);
+                setProgressVisible(true);
+
                 Completable.fromAction(new Action() {
                     @Override
                     public void run() throws Exception {
@@ -99,12 +102,16 @@ public class WalletPasswordDialog extends MessageDialog {
 
                             @Override
                             public void onComplete() {
+                                if (!isShowing()) return;
+
                                 if (bytePrivKey[0] != null) {
                                     mOnPassListener.onPass(bytePrivKey[0]);
                                     // return true
                                     dismiss();
                                 } else {
                                     mEditPassword.setError(true, getContext().getString(R.string.errPassword));
+                                    setConfirmEnable(true);
+                                    setProgressVisible(false);
                                     // return false
                                     // x dismiss();
                                 }
