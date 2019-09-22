@@ -31,7 +31,6 @@ class TTextInputLayout : LinearLayout {
     private lateinit var tvHint: TextView
     private lateinit var tvError: TextView
 
-
     private lateinit var layoutFile: ViewGroup
     private lateinit var imgFile: ImageView
     private lateinit var tvFileName: TextView

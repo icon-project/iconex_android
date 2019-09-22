@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <foundation.icon.iconex.dev_mainWallet.component.TotalAssetInfoView
+                    <foundation.icon.iconex.view.ui.mainWallet.component.TotalAssetInfoView
                         android:id="@+id/info_total_asset"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                     </LinearLayout>
 
 
-                    <foundation.icon.iconex.dev_mainWallet.component.ExpanableViewPager
+                    <foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager
                         android:id="@+id/wallet_viewpager"
                         android:layout_width="0dp"
                         android:layout_height="450dp"
@@ -89,7 +89,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
-                    <foundation.icon.iconex.dev_mainWallet.component.WalletIndicator
+                    <foundation.icon.iconex.view.ui.mainWallet.component.WalletIndicator
                         android:id="@+id/wallet_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

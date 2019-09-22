@@ -25,11 +25,10 @@ import java.util.Random;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
+import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.widgets.DividerItemDecorator;
 import loopchain.icon.wallet.core.Constants;
 

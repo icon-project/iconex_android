@@ -10,12 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.view.ui.auth.AuthFingerprintFragment;
 import foundation.icon.iconex.view.ui.auth.AuthLockNumFragment;
 import foundation.icon.iconex.view.ui.auth.UserVerificationFragment;
-import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 
 public class AuthActivity extends AppCompatActivity implements AuthFingerprintFragment.OnFingerprintLockListener,

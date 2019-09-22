@@ -52,12 +52,12 @@
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".dev_mainWallet.MainWalletActivity"
+            android:name=".view.MainWalletActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".dev2_detail.WalletDetailActivity"
+            android:name=".view.WalletDetailActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />

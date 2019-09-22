@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -18,8 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.wallet.Wallet;

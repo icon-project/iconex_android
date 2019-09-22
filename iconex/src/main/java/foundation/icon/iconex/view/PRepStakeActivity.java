@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_dialogs.StakeDialog;
+import foundation.icon.iconex.dialogs.StakeDialog;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -33,6 +33,7 @@ import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomSeekbar;
+import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.iconex.widgets.MyEditText;
 import foundation.icon.iconex.widgets.StakeGraph;
 import foundation.icon.icx.KeyWallet;

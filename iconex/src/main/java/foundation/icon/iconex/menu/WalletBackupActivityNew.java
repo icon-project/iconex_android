@@ -22,9 +22,7 @@ import com.google.gson.JsonObject;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
 import foundation.icon.iconex.view.ui.wallet.ViewWalletInfoActivity;
 import foundation.icon.iconex.wallet.Wallet;

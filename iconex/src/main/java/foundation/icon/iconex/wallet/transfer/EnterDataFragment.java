@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,8 +26,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
-import foundation.icon.iconex.dev_dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.Utils;

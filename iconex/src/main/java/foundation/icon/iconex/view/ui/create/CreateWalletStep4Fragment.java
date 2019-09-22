@@ -17,9 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
+import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
-import foundation.icon.iconex.wallet.main.MainActivity;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 
 public class CreateWalletStep4Fragment extends Fragment implements View.OnClickListener {

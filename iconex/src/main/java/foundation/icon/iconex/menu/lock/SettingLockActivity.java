@@ -7,13 +7,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_mainWallet.MainWalletActivity;
-import foundation.icon.iconex.wallet.main.MainActivity;
+import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.widgets.CustomActionBar;
 
 public class SettingLockActivity extends AppCompatActivity implements AppLockManageFragment.OnAppLockManageListener,

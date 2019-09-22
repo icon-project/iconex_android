@@ -1,7 +1,6 @@
 package foundation.icon.iconex.wallet.transfer;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,20 +13,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import org.spongycastle.util.encoders.Hex;
-
-import java.util.Locale;
-
-import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dev_dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.BasicDialog;
-import foundation.icon.iconex.util.Utils;
-import foundation.icon.iconex.wallet.transfer.data.InputData;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.widgets.MyEditText;
 import kotlin.jvm.functions.Function1;
 
