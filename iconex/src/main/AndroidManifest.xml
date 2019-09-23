@@ -31,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".menu.dev_appInfo.AppInfoActivity"
+        <activity android:name=".menu.appInfo.AppInfoActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"/>/>
@@ -168,7 +168,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".menu.appInfo.AppInfoActivityOld"
+            android:name=".menu.appInfo.OldAppInfoActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />

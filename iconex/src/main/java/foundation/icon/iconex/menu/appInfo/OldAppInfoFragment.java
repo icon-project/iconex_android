@@ -17,18 +17,18 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.Utils;
 
-public class AppInfoFragmentOld extends Fragment {
+public class OldAppInfoFragment extends Fragment {
 
     TextView txtCurrent, txtLatest;
     Button btnUpdate;
     ViewGroup OSS, developer;
 
-    public AppInfoFragmentOld() {
+    public OldAppInfoFragment() {
         // Required empty public constructor
     }
 
-    public static AppInfoFragmentOld newInstance() {
-        AppInfoFragmentOld fragment = new AppInfoFragmentOld();
+    public static OldAppInfoFragment newInstance() {
+        OldAppInfoFragment fragment = new OldAppInfoFragment();
         return fragment;
     }
 

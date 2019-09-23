@@ -1,4 +1,4 @@
-package foundation.icon.iconex.menu.dev_appInfo;
+package foundation.icon.iconex.menu.appInfo;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,9 +18,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.menu.appInfo.AppInfoFragmentOld;
-import foundation.icon.iconex.menu.appInfo.DeveloperFragmentOld;
-import foundation.icon.iconex.menu.appInfo.OSSFragmentOld;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.service.VersionCheck;
 import foundation.icon.iconex.util.Utils;

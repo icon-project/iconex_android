@@ -12,11 +12,11 @@ import android.widget.TextView;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.ServiceConstants;
 
-public class AppInfoActivityOld extends AppCompatActivity implements AppInfoFragmentOld.OnAppInfoListener, DeveloperFragmentOld.DeveloperOnclick {
-    private static final String TAG = AppInfoActivityOld.class.getSimpleName();
+public class OldAppInfoActivity extends AppCompatActivity implements OldAppInfoFragment.OnAppInfoListener, OldDeveloperFragment.DeveloperOnclick {
+    private static final String TAG = OldAppInfoActivity.class.getSimpleName();
 
     private FragmentManager fragmentManager;
-    private AppInfoFragmentOld infoFragment;
+    private OldAppInfoFragment infoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class AppInfoActivityOld extends AppCompatActivity implements AppInfoFrag
             }
         });
 
-        infoFragment = AppInfoFragmentOld.newInstance();
+        infoFragment = OldAppInfoFragment.newInstance();
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.container, infoFragment);
@@ -63,7 +63,7 @@ public class AppInfoActivityOld extends AppCompatActivity implements AppInfoFrag
         findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_back);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, OSSFragmentOld.newInstance());
+        transaction.add(R.id.container, OldOSSFragment.newInstance());
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -74,7 +74,7 @@ public class AppInfoActivityOld extends AppCompatActivity implements AppInfoFrag
         findViewById(R.id.btn_close).setBackgroundResource(R.drawable.ic_appbar_back);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, DeveloperFragmentOld.newInstance());
+        transaction.add(R.id.container, OldDeveloperFragment.newInstance());
         transaction.addToBackStack(null);
         transaction.commit();
     }

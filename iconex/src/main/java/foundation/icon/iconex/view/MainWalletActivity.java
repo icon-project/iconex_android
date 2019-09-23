@@ -30,7 +30,7 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
-import foundation.icon.iconex.menu.dev_appInfo.AppInfoActivity;
+import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
