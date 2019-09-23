@@ -566,7 +566,7 @@ public class MainWalletFragment extends Fragment {
         int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
         String txtTotalAsset = viewData.getTotalAsset() == null ? "-" :
                 viewData.getTotalAsset().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
-        String txtVotingPower = "-";
+        String txtVotingPower = viewData.getVotedPower() + " %";
         viewData.setTxtExchangeUnit(currentExchangeUnit.name())
                 .setTxtTotalAsset(txtTotalAsset).setTxtVotedPower(txtVotingPower);
         mTotalAssetsData = viewData;

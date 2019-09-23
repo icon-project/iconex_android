@@ -12,6 +12,7 @@ import org.spongycastle.util.encoders.Hex;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import loopchain.icon.wallet.core.Constants;
 
 public class MainWalletActivity extends AppCompatActivity implements
         MainWalletFragment.AsyncRequester,
@@ -56,6 +58,7 @@ public class MainWalletActivity extends AppCompatActivity implements
     private List<String[]> cachedIcxBalance = new ArrayList<>();
     private List<String[]> cachedEthBalance = new ArrayList<>();
     private List<String[]> cachedErrBalance = new ArrayList<>();
+    private HashMap<String, MainWalletServiceHelper.PRepsRemoteData> cachedpRepsData = new HashMap<>();
 
     private Map<String, WalletEntry> indexedWalletEntry = new HashMap<>();
     private Map<String, WalletItemViewData> indexedWalletItemData = new HashMap<>();
@@ -97,6 +100,13 @@ public class MainWalletActivity extends AppCompatActivity implements
     @Override
     public void asyncRequestRefreshData() {
         mainWalletServiceHelper.requestRemoteData();
+        mainWalletServiceHelper.getPRepsRemoteData(new ArrayList<String>() {{
+            for (Wallet wallet : ICONexApp.wallets) {
+                if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                    add(wallet.getAddress());
+                }
+            }
+        }});
     }
 
     @Override
@@ -106,7 +116,7 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void notifyWalletDatachage() {
-        setBalances(cachedIcxBalance, cachedEthBalance, cachedErrBalance);
+        setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
     }
 
     // =================== Service listener (MainWalletServiceHelper.OnLoadRemoteDataListener)
@@ -117,7 +127,13 @@ public class MainWalletActivity extends AppCompatActivity implements
         cachedEthBalance = ethBalance;
         cachedErrBalance = errBalance;
 
-        setBalances(cachedIcxBalance, cachedEthBalance, cachedErrBalance);
+        setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
+    }
+
+    @Override
+    public void onLoadPRepsData(HashMap<String, MainWalletServiceHelper.PRepsRemoteData> pRepsData) {
+        cachedpRepsData = pRepsData;
+        setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
     }
 
     // =================== private methods
@@ -151,6 +167,44 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
     }
 
+    private void setPRepsData(List<String[]> icxBalance,
+                              List<String[]> ethBalance,
+                              List<String[]> errBalance,
+                              HashMap<String, MainWalletServiceHelper.PRepsRemoteData> pRepsData) {
+
+        BigDecimal totalAsset = setBalances(icxBalance, ethBalance, errBalance);
+
+        for (WalletCardViewData cardViewData : cachedlstWalletData) {
+            MainWalletServiceHelper.PRepsRemoteData data = pRepsData.get(cardViewData.getAddress());
+            if (data != null) {
+                cardViewData.setStaked(data.getStake());
+                cardViewData.setiScore(data.getiScore());
+            }
+        }
+
+        BigInteger totalVoted = BigInteger.ZERO;
+        BigInteger totalStake = BigInteger.ZERO;
+
+        for(String address : pRepsData.keySet()) {
+            MainWalletServiceHelper.PRepsRemoteData data = pRepsData.get(address);
+
+            totalVoted = totalVoted.add(data.getTotalDelegated());
+            totalStake = totalStake.add(data.getStake());
+        }
+
+        BigDecimal dTotalVoted = new BigDecimal(ConvertUtil.getValue(totalVoted, 18));
+        BigDecimal dTotalStake = new BigDecimal(ConvertUtil.getValue(totalStake, 18));
+        BigDecimal votedPower = dTotalStake.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO :
+                dTotalVoted.divide(dTotalStake, 1, RoundingMode.HALF_UP);
+
+        getMainWalletFragment().asyncResponseRefreash(
+                cachedlstWalletData,
+                new TotalAssetsViewData()
+                        .setTotalAsset(totalAsset)
+                        .setVotedPower(votedPower)
+        );
+    }
+
     private BigDecimal setBalance(String id, String address, String result, String unit) {
         String key = address + "," + id;
         WalletEntry walletEntry = indexedWalletEntry.get(key);
@@ -174,7 +228,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
     }
 
-    private void setBalances(
+    private BigDecimal setBalances(
             List<String[]> icxBalance,
             List<String[]> ethBalance,
             List<String[]> errBalance) {
@@ -203,10 +257,7 @@ public class MainWalletActivity extends AppCompatActivity implements
             setBalance(param[0], param[1], param[2], strUnit);
         }
 
-        getMainWalletFragment().asyncResponseRefreash(
-                cachedlstWalletData,
-                new TotalAssetsViewData().setTotalAsset(totalAsset)
-        );
+        return totalAsset;
     }
 
     private void setExchange(MainWalletFragment.ExchangeUnit exchangeUnit) {

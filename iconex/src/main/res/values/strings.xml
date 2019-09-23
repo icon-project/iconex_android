@@ -534,6 +534,9 @@
     <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 5 ICX 이상 잔액이\n있어야 합니다.</string>
     <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
 
+    <!--  New - main wallet  -->
+    <string name="staked">Staked</string>
+    <string name="iscore">I-Score</string>
 
     <!-- New - wallet menu -->
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>

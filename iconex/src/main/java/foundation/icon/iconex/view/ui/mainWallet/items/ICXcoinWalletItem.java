@@ -23,8 +23,6 @@ public class ICXcoinWalletItem extends WalletItem{
     public TextView txtExchanged;
     public TextView labelStaked;
     public TextView txtStaked;
-    public TextView labelVotingPower;
-    public TextView txtVotingPower;
     public TextView labelIScore;
     public TextView txtIScore;
 
@@ -45,8 +43,6 @@ public class ICXcoinWalletItem extends WalletItem{
         txtExchanged = v.findViewById(R.id.txt_exchanged);
         labelStaked = v.findViewById(R.id.lb_staked);
         txtStaked = v.findViewById(R.id.txt_staked);
-        labelVotingPower = v.findViewById(R.id.lb_voting_power);
-        txtVotingPower = v.findViewById(R.id.txt_voting_power);
         labelIScore = v.findViewById(R.id.lb_iscore);
         txtIScore = v.findViewById(R.id.txt_iscore);
 
@@ -64,8 +60,15 @@ public class ICXcoinWalletItem extends WalletItem{
         txtExchanged.setText(data.getTxtExchanged());
 
         txtStaked.setText(data.getStacked());
-        txtVotingPower.setText(data.getVotingPower());
         txtIScore.setText(data.getiScore());
+    }
+
+    public void setTextStaked(String textStaked) {
+        txtStaked.setText(textStaked);
+    }
+
+    public void setTextIScore(String textIScore) {
+        txtIScore.setText(textIScore);
     }
 
     @Override

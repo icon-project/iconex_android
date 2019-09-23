@@ -7,23 +7,37 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.service.NetworkService;
+import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.icx.transport.jsonrpc.RpcItem;
+import foundation.icon.icx.transport.jsonrpc.RpcObject;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.schedulers.Schedulers;
 import loopchain.icon.wallet.core.Constants;
 
 public class MainWalletServiceHelper {
     private static final String TAG = MainWalletServiceHelper.class.getSimpleName();
     private void Log(String log) { Log.d(TAG, log); }
 
-    public interface OnLoadRemoteDataListener { void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance); }
+    public interface OnLoadRemoteDataListener {
+        void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance);
+        void onLoadPRepsData(HashMap<String, PRepsRemoteData> pRepsData);
+    }
 
     private Context mContext;
     private NetworkService mService;
@@ -247,6 +261,151 @@ public class MainWalletServiceHelper {
         if (mIsBound) {
             mContext.unbindService(mConnection);
             mIsBound = false;
+        }
+    }
+
+    public void getPRepsRemoteData(List<String> icxAddresses) {
+        PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
+        Hashtable<String, BigInteger> pRepsResults = new Hashtable<>();
+        Log.d("GetPRepsData", "size=" +icxAddresses.size());
+        String err = "Get %s error: %s, address: %s";
+
+        Completable.merge(new ArrayList<Completable>() {{
+            for (String address : icxAddresses) {
+//                // ========== get stake
+//                add(Completable.fromAction(new Action() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            Log.d("GetPRepsData", address + " request stake");
+//                            RpcObject rpcObject = pRepService.getStake(address).asObject();
+//                            RpcItem stake = rpcObject.getItem("stake");
+//                            pRepsResults.put(address+"-stake", stake.asInteger());
+//                        } catch (Exception e) {
+//                            String msg = String.format(err, "stake", e.getMessage(), address);
+//                            Log.d("GetPRepsData", msg);
+//                        }
+//                    }
+//                }));
+                // ========== get i-score
+                add(Completable.fromAction(new Action() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.d("GetPRepsData", address + " request i-score");
+                            RpcObject rpcObject = pRepService.getIScore(address).asObject();
+                            RpcItem iscore = rpcObject.getItem("iscore");
+                            pRepsResults.put(address+"-iscore", iscore.asInteger());
+                        } catch (Exception e) {
+                            String msg = String.format(err, "i-score", e.getMessage(), address);
+                            Log.d("GetPRepsData", msg);
+                        }
+                    }
+                }));
+                // ========== get delegation
+                add(Completable.fromAction(new Action() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.d("GetPRepsData", address + " request delegation");
+                            RpcObject rpcObject = pRepService.getDelegation(address).asObject();
+                            RpcItem totalDelegated = rpcObject.getItem("totalDelegated");
+                            RpcItem votingPower = rpcObject.getItem("votingPower");
+                            pRepsResults.put(address+"-totalDelegated",totalDelegated.asInteger());
+                            pRepsResults.put(address+"-votingPower", votingPower.asInteger());
+                        } catch (Exception e) {
+                            String msg = String.format(err, "delegation", e.getMessage(), address);
+                            Log.d("GetPRepsData", msg);
+                        }
+                    }
+                }));
+            }
+        }}).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        HashMap<String, PRepsRemoteData> pRepsData = new HashMap<>();
+                        for(String address: icxAddresses) {
+                            PRepsRemoteData pRepsRemoteData = new PRepsRemoteData()
+                                    // .setStake(pRepsResults.get(address + "-stake"))
+                                    .setiScore(pRepsResults.get(address + "-iscore"))
+                                    .setTotalDelegated(pRepsResults.get(address + "-totalDelegated"))
+                                    .setVotingPower(pRepsResults.get(address + "-votingPower"));
+
+                            // get stake
+                            BigInteger stake = pRepsRemoteData.getTotalDelegated()
+                                    .add(pRepsRemoteData.getVotingPower());
+                            pRepsRemoteData.setStake(stake);
+
+                            Log.d("GetPRepsData", pRepsRemoteData.toString());
+                            pRepsData.put(address, pRepsRemoteData);
+                        }
+                        mListener.onLoadPRepsData(pRepsData);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+    public static class PRepsRemoteData {
+        public BigInteger stake;
+        public BigInteger iScore;
+        public BigInteger totalDelegated;
+        public BigInteger votingPower;
+
+        public BigInteger getStake() {
+            return stake;
+        }
+
+        public PRepsRemoteData setStake(BigInteger stake) {
+            this.stake = stake;
+            return this;
+        }
+
+        public BigInteger getiScore() {
+            return iScore;
+        }
+
+        public PRepsRemoteData setiScore(BigInteger iScore) {
+            this.iScore = iScore;
+            return this;
+        }
+
+        public BigInteger getTotalDelegated() {
+            return totalDelegated;
+        }
+
+        public PRepsRemoteData setTotalDelegated(BigInteger totalDelegated) {
+            this.totalDelegated = totalDelegated;
+            return this;
+        }
+
+        public BigInteger getVotingPower() {
+            return votingPower;
+        }
+
+        public PRepsRemoteData setVotingPower(BigInteger votingPower) {
+            this.votingPower = votingPower;
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return "PRepsRemoteData{" +
+                    "stake=" + stake +
+                    ", iScore=" + iScore +
+                    ", totalDelegated=" + totalDelegated +
+                    ", votingPower=" + votingPower +
+                    '}';
         }
     }
 }

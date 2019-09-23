@@ -25,7 +25,6 @@ public class WalletItemViewData {
 
     // only for icx coin
     private String stacked;
-    private String votingPower;
     private String iScore;
 
     // has drawable resource id, maybe not use
@@ -46,7 +45,6 @@ public class WalletItemViewData {
         txtAmount = data.txtAmount;
         txtExchanged = data.txtExchanged;
         stacked = data.stacked;
-        votingPower = data.votingPower;
         iScore = data.iScore;
         drawableSymbolresId = data.drawableSymbolresId;
         bgSymbolColor = data.bgSymbolColor;
@@ -82,7 +80,6 @@ public class WalletItemViewData {
                         .setTxtAmount(walletEntry.getBalance())
                         .setTxtExchanged("-")
                         .setStacked("-")
-                        .setVotingPower("-")
                         .setiScore("-");
             } break;
             case ETHcoin: {
@@ -188,15 +185,6 @@ public class WalletItemViewData {
 
     public WalletItemViewData setStacked(String stacked) {
         this.stacked = stacked;
-        return this;
-    }
-
-    public String getVotingPower() {
-        return votingPower;
-    }
-
-    public WalletItemViewData setVotingPower(String votingPower) {
-        this.votingPower = votingPower;
         return this;
     }
 
