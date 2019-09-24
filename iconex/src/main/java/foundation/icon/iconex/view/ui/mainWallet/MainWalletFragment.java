@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import java.util.Map;
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
+import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.view.ui.mainWallet.component.TotalAssetInfoView;
@@ -48,6 +50,7 @@ import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
+import jnr.ffi.annotations.In;
 
 public class MainWalletFragment extends Fragment {
 
@@ -245,8 +248,7 @@ public class MainWalletFragment extends Fragment {
                     }
                     break;
                     case btnEnd: {
-                        // TODO: not implement
-                        Toast.makeText(getContext(), "not implement", Toast.LENGTH_SHORT).show();
+                        showInfo();
                     }
                     break;
                     case btnToggle: {
@@ -750,4 +752,54 @@ public class MainWalletFragment extends Fragment {
             drawer.closeDrawer(Gravity.LEFT);
         }
     };
+
+    private void showInfo() {
+        startActivity(new Intent(getContext(), AboutActivity.class)
+                .putExtra(AboutActivity.PARAM_ABOUT_ITEM_LIST, new ArrayList<Parcelable>() {{
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo00)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo01)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo02)));
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo10)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo11)));
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo20)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo21)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo22)));
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo30)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo31)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo32)));
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo40)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo41)));
+                }}));
+    }
 }

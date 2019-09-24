@@ -535,6 +535,7 @@
     <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
 
     <!--  New - main wallet  -->
+    <string name="about">About</string>
     <string name="staked">Staked</string>
     <string name="iscore">I-Score</string>
 
@@ -551,9 +552,27 @@
     <string name="maxFee">예상 최대 수수료 (%s)</string>
     <string name="receiveAddress">받는 주소</string>
 
-
     <string name="type">Type</string>
 
+    <!--  New Main wallet info  -->
+
+    <string name="mainWalletInfo00">전체 자산 가치</string>
+    <string name="mainWalletInfo01">USD 환산금액이 표시되지 않은 토큰은 전체 자산 평가금액에서 제외됩니다.</string>
+    <string name="mainWalletInfo02">평가금액은 참고용으로만 활용해주세요.</string>
+
+    <string name="mainWalletInfo10">P-Rep</string>
+    <string name="mainWalletInfo11">P-Rep 이란...</string>
+
+    <string name="mainWalletInfo20">Stake</string>
+    <string name="mainWalletInfo21">원하는 수량 만큼 ICX를 잠금 상태로 전환하는 기능입니다.</string>
+    <string name="mainWalletInfo22">Stake를 실행하면, Voting Power가 1:1 비율로 생성됩니다.</string>
+
+    <string name="mainWalletInfo30">Voting Power</string>
+    <string name="mainWalletInfo31">Voting Power를 이용하여 P-Rep 후보자에게 투표할 수 있습니다.</string>
+    <string name="mainWalletInfo32">후보자가 P-Rep으로 선출되면 위임한 지분의 X.XX %에 대한 보상을 I-Score로 받을 수 있습니다.</string>
+
+    <string name="mainWalletInfo40">I-Score</string>
+    <string name="mainWalletInfo41">P-Rep 투표에 대한 기여도 점수이며, 1,000 I-Score를 1 ICX로 환급 받을 수 있습니다.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
