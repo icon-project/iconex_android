@@ -143,7 +143,8 @@ public class WalletCardView extends FrameLayout {
                     BigDecimal percent = staked.multiply(new BigDecimal(100))
                             .divide(staked.add(data.getAmount()), 1, BigDecimal.ROUND_UP);
                     icxCoinItem.setTextStaked(staked.setScale(4) + " (" + percent + "%)");
-                    icxCoinItem.setTextIScore(viewData.getiScore() + "");
+                    BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(viewData.getiScore(), 18));
+                    icxCoinItem.setTextIScore(iscore.setScale(4) + "");
                 }
             }
 

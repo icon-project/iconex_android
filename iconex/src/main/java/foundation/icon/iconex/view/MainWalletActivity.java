@@ -182,6 +182,7 @@ public class MainWalletActivity extends AppCompatActivity implements
             }
         }
 
+
         BigInteger totalVoted = BigInteger.ZERO;
         BigInteger totalStake = BigInteger.ZERO;
 
@@ -190,6 +191,15 @@ public class MainWalletActivity extends AppCompatActivity implements
 
             totalVoted = totalVoted.add(data.getTotalDelegated());
             totalStake = totalStake.add(data.getStake());
+        }
+
+        for (Wallet wallet : ICONexApp.wallets) {
+            MainWalletServiceHelper.PRepsRemoteData data = pRepsData.get(wallet.getAddress());
+            if (data != null) {
+                wallet.setStaked(data.getStake());
+                wallet.setiScore(data.getiScore());
+                wallet.setVotingPower(data.getVotingPower());
+            }
         }
 
         BigDecimal dTotalVoted = new BigDecimal(ConvertUtil.getValue(totalVoted, 18));
