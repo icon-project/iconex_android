@@ -620,8 +620,8 @@ public class MainWalletFragment extends Fragment {
         int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
         mWalletDataList = walletDataList;
 
-
         Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
+        mTokenDataList = new ArrayList<>();
         for (WalletCardViewData walletViewData : mWalletDataList) {
             for (WalletItemViewData itemViewData : walletViewData.getLstWallet()) {
                 // update balance, exchange (double -> string)
@@ -641,16 +641,19 @@ public class MainWalletFragment extends Fragment {
                 if (!mapTokenViewData.containsKey(tokenName)) {
                     topToken = new WalletItemViewData(itemViewData);
                     final WalletItemViewData _topToken = topToken;
-                    mapTokenViewData.put(tokenName,
-                            // create wallet card
-                            new WalletCardViewData()
-                                    .setWalletType(WalletCardViewData.WalletType.TokenList)
-                                    .setTitle(tokenName)
-                                    .setLstWallet(new ArrayList<WalletItemViewData>() {{
-                                        add(_topToken); // add top token
-                                    }})
-
-                    );
+                    // create wallet card
+                    WalletCardViewData cardviewData = new WalletCardViewData()
+                            .setWalletType(WalletCardViewData.WalletType.TokenList)
+                            .setTitle(tokenName)
+                            .setLstWallet(new ArrayList<WalletItemViewData>() {{
+                                add(_topToken); // add top token
+                            }});
+                    mapTokenViewData.put(tokenName, cardviewData);
+                    switch (itemViewData.getWalletItemType()) {
+                        case ICXcoin: mTokenDataList.add(0, cardviewData); break;
+                        case ETHcoin: mTokenDataList.add(mTokenDataList.size() > 0 ? 1 : 0, cardviewData); break;
+                        default: mTokenDataList.add(cardviewData); break;
+                    }
                 }
 
                 // wallet item view
@@ -693,9 +696,10 @@ public class MainWalletFragment extends Fragment {
             }
         }
 
-        mTokenDataList = new ArrayList<WalletCardViewData>() {{
-            addAll(mapTokenViewData.values());
-        }};
+//        mTokenDataList = new ArrayList<WalletCardViewData>() {{
+//            addAll(mapTokenViewData.values());
+//        }};
+
         for (WalletCardViewData cardViewData : mTokenDataList) {
             WalletItemViewData itemViewData = cardViewData.getLstWallet().get(0);
             // update balance, exchange (double -> string)
