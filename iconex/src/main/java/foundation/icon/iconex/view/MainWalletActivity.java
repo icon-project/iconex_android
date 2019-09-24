@@ -223,6 +223,7 @@ public class MainWalletActivity extends AppCompatActivity implements
 
         try {
             walletEntry.setBalance(result);
+            // if result == "-" then throw exception
             String strDecimal = ConvertUtil.getValue(new BigInteger(walletEntry.getBalance()), walletEntry.getDefaultDec());
             BigDecimal balance = new BigDecimal(strDecimal);
 
@@ -233,6 +234,8 @@ public class MainWalletActivity extends AppCompatActivity implements
             viewData.setAmount(balance).setExchanged(exchanged);
             return exchanged;
         } catch (Exception e) {
+            // if result == "-" then amount(balance), exchange set null
+            Log.d(TAG, "set balance "+ walletEntry.getName() + ": " +e.getMessage());
             viewData.setAmount(null).setExchanged(null);
             return null;
         }

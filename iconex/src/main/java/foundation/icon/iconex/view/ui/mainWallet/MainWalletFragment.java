@@ -40,6 +40,7 @@ import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.view.ui.mainWallet.component.TotalAssetInfoView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletFloatingMenu;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletIndicator;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
@@ -65,14 +66,9 @@ public class MainWalletFragment extends Fragment {
     private ExpanableViewPager walletViewPager;
     private WalletIndicator walletIndicator;
 
-    private ImageButton btnAction;
-    private ViewGroup bubbleMenuModal;
-    private ViewGroup bubbleMenu;
-    private Button btnPReps;
-    private Button btnStake;
-    private Button btnVote;
-    private Button btnIScore;
+    private WalletFloatingMenu floatingMenu;
 
+    // side menu
     private Button btnCreateWallet;
     private Button btnLoadWallet;
     private Button btnExportWalletBundle;
@@ -194,13 +190,7 @@ public class MainWalletFragment extends Fragment {
         walletViewPager = v.findViewById(R.id.wallet_viewpager);
         walletIndicator = v.findViewById(R.id.wallet_indicator);
 
-        btnAction = v.findViewById(R.id.btn_action);
-        bubbleMenuModal = v.findViewById(R.id.bubble_menu_modal);
-        bubbleMenu = v.findViewById(R.id.bubble_menu);
-        btnPReps = v.findViewById(R.id.btn_preps);
-        btnStake = v.findViewById(R.id.btn_stake);
-        btnVote = v.findViewById(R.id.btn_vote);
-        btnIScore = v.findViewById(R.id.btn_iscore);
+        floatingMenu = v.findViewById(R.id.floating_menu);
 
         btnCreateWallet = v.findViewById(R.id.menu_createWallet);
         btnLoadWallet = v.findViewById(R.id.menu_loadWallet);
@@ -317,78 +307,34 @@ public class MainWalletFragment extends Fragment {
             }
         });
 
-
         // init wallet viewpager.
         initWalletViewPager(content);
 
-        // init wallet indicator.
-        // noting.
-
-        // init btnAction
-
-        btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int visibility = bubbleMenuModal.getVisibility();
-                setBubbleMenuShow(visibility != ViewGroup.VISIBLE);
-            }
-        });
-
-        bubbleMenuModal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setBubbleMenuShow(false);
-            }
-        });
-
-        View.OnClickListener bublemenuListener = new View.OnClickListener() {
+        floatingMenu.setOnCilckMenuItemListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WalletCardViewData viewData = getCurrentWalletCardData();
 
                 switch (v.getId()) {
                     case R.id.btn_preps: {
-                        ((PRepsMenu) getActivity()).pReps(viewData);
-                        setBubbleMenuShow(false);
+                        ((MainWalletFragment.PRepsMenu) getActivity()).pReps(viewData);
                     }
                     break;
                     case R.id.btn_stake: {
-                        ((PRepsMenu) getActivity()).stake(viewData);
-                        setBubbleMenuShow(false);
+                        ((MainWalletFragment.PRepsMenu) getActivity()).stake(viewData);
                     }
                     break;
                     case R.id.btn_vote: {
-                        ((PRepsMenu) getActivity()).vote(viewData);
-                        setBubbleMenuShow(false);
+                        ((MainWalletFragment.PRepsMenu) getActivity()).vote(viewData);
                     }
                     break;
                     case R.id.btn_iscore: {
-                        ((PRepsMenu) getActivity()).iScore(viewData);
-                        setBubbleMenuShow(false);
+                        ((MainWalletFragment.PRepsMenu) getActivity()).iScore(viewData);
                     }
                     break;
                 }
             }
-        };
-
-        btnPReps.setOnClickListener(bublemenuListener);
-        btnStake.setOnClickListener(bublemenuListener);
-        btnVote.setOnClickListener(bublemenuListener);
-        btnIScore.setOnClickListener(bublemenuListener);
-
-        setBubbleMenuShow(false);
-    }
-
-    private void setBubbleMenuShow(boolean isShow) {
-        if (!isShow) {
-            bubbleMenuModal.setVisibility(View.GONE);
-            bubbleMenu.setVisibility(View.GONE);
-            btnAction.setImageResource(R.drawable.ic_vote_menu);
-        } else {
-            bubbleMenuModal.setVisibility(View.VISIBLE);
-            bubbleMenu.setVisibility(View.VISIBLE);
-            btnAction.setImageResource(R.drawable.ic_close_menu);
-        }
+        });
     }
 
     private void initWalletViewPager(View content) {
@@ -402,6 +348,14 @@ public class MainWalletFragment extends Fragment {
             public void onPageSelected(int position) {
                 updateCollapsable();
                 walletIndicator.setIndex(position);
+
+                WalletCardViewData cardViewData = mShownWalletDataList.get(position);
+                if (cardViewData.getWalletType() == WalletCardViewData.WalletType.ICXwallet) {
+                    floatingMenu.setEnableFloatingButton(true);
+
+                } else {
+                    floatingMenu.setEnableFloatingButton(false);
+                }
             }
         });
         walletViewPager.setOnStateChangeListener(new ExpanableViewPager.OnStateChangeListener() {
@@ -556,11 +510,14 @@ public class MainWalletFragment extends Fragment {
             case loadedWalletData: {
                 mShownWalletDataList.addAll(mWalletDataList);
                 actionBar.setTitle(getString(R.string.appbarSelectorWallets));
+                boolean isICX = getCurrentWalletCardData().getWalletType() == WalletCardViewData.WalletType.ICXwallet;
+                floatingMenu.setEnableFloatingButton(isICX);
             }
             break;
             case loadedTokenData: {
                 mShownWalletDataList.addAll(mTokenDataList);
                 actionBar.setTitle(getString(R.string.appbarSelectorCoinsNTokens));
+                floatingMenu.setEnableFloatingButton(false);
             }
             break;
         }
@@ -572,7 +529,7 @@ public class MainWalletFragment extends Fragment {
         int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
         String txtTotalAsset = viewData.getTotalAsset() == null ? "-" :
                 viewData.getTotalAsset().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
-        String txtVotingPower = viewData.getVotedPower() + " %";
+        String txtVotingPower = (viewData.getVotedPower() == null ? "-" : viewData.getVotedPower()) + " %";
         viewData.setTxtExchangeUnit(currentExchangeUnit.name())
                 .setTxtTotalAsset(txtTotalAsset).setTxtVotedPower(txtVotingPower);
         mTotalAssetsData = viewData;
@@ -629,8 +586,8 @@ public class MainWalletFragment extends Fragment {
                         itemViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
 
                 String txtExchanged = itemViewData.getExchanged() == null ? "-" :
-                        itemViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
-                                + " " + currentExchangeUnit.name();
+                        itemViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
+                txtExchanged += " " + currentExchangeUnit.name();
 
                 itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
 
