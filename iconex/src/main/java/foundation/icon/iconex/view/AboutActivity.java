@@ -31,7 +31,7 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

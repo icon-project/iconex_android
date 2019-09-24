@@ -223,19 +223,19 @@ public class WalletCardView extends FrameLayout {
 
         switch (data.getWalletType()) {
             case ICXwallet: {
-                btnQrScan.setEnabled(true);
-                btnQrCode.setEnabled(true);
-                btnMore.setEnabled(true);
+                btnQrScan.setVisibility(View.VISIBLE);
+                btnQrCode.setVisibility(View.VISIBLE);
+                btnMore.setVisibility(View.VISIBLE);
             } break;
             case ETHwallet: {
-                btnQrScan.setEnabled(false);
-                btnQrCode.setEnabled(true);
-                btnMore.setEnabled(true);
+                btnQrScan.setVisibility(View.GONE);
+                btnQrCode.setVisibility(View.VISIBLE);
+                btnMore.setVisibility(View.VISIBLE);
             } break;
             case TokenList: {
-                btnQrScan.setEnabled(false);
-                btnQrCode.setEnabled(false);
-                btnMore.setEnabled(false);
+                btnQrScan.setVisibility(View.GONE);
+                btnQrCode.setVisibility(View.GONE);
+                btnMore.setVisibility(View.GONE);
             }
         }
 

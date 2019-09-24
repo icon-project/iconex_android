@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -406,13 +407,16 @@ public class MainWalletFragment extends Fragment {
         walletViewPager.setOnStateChangeListener(new ExpanableViewPager.OnStateChangeListener() {
             @Override
             public void onChangeState(ExpanableViewPager.State state) {
+                Log.d("onChangeState", state.name());
                 switch (state) {
                     case Expaned: {
                         refresh.setRefreshEnable(false);
+                        actionBar.setIsShowIcToggle(false);
                     }
                     break;
                     case Collapsed: {
                         refresh.setRefreshEnable(true);
+                        actionBar.setIsShowIcToggle(true);
                     }
                     break;
                 }
