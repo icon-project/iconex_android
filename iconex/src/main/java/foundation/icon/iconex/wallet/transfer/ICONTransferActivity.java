@@ -1239,7 +1239,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
     public void onDataCancel(InputData data) {
         if (data.getData() == null) {
             this.data = null;
-            editData.setText(null);
+            editData.setText("");
             btnViewData.setVisibility(View.GONE);
         } else {
             btnViewData.setVisibility(View.VISIBLE);
