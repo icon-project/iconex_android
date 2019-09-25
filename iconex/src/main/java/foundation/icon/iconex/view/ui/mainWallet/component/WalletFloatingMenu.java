@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -86,17 +88,68 @@ public class WalletFloatingMenu extends FrameLayout {
     }
 
     public void setEnableFloatingButton(boolean enable) {
-        btnAction.setVisibility(enable ? VISIBLE : GONE);
+        if (enable == btnAction.isEnabled()) return;
+        btnAction.setEnabled(enable);
+        btnAction.clearAnimation();
+        if (enable) {
+            Animation aniBtnShow = AnimationUtils.loadAnimation(getContext(), R.anim.floating_button_show);
+            btnAction.setVisibility(VISIBLE);
+            btnAction.startAnimation(aniBtnShow);
+        } else {
+            Animation aniBtnDisappear = AnimationUtils.loadAnimation(getContext(), R.anim.floating_button_disappear);
+            btnAction.startAnimation(aniBtnDisappear);
+            aniBtnDisappear.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (!btnAction.isEnabled())
+                        btnAction.setVisibility(GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
     }
 
     private void setBubbleMenuShow(boolean isShow) {
+        Animation aniBtnClick = AnimationUtils.loadAnimation(getContext(), R.anim.floating_button_click);
+        btnAction.startAnimation(aniBtnClick);
+
+        bubbleMenu.clearAnimation();
+
         if (!isShow) {
             bubbleMenuModal.setVisibility(View.GONE);
-            bubbleMenu.setVisibility(View.GONE);
             btnAction.setImageResource(R.drawable.ic_vote_menu);
+            Animation aniMenuDisappear = AnimationUtils.loadAnimation(getContext(), R.anim.floating_menu_disappear);
+            bubbleMenu.startAnimation(aniMenuDisappear);
+            aniMenuDisappear.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    bubbleMenu.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         } else {
             bubbleMenuModal.setVisibility(View.VISIBLE);
             bubbleMenu.setVisibility(View.VISIBLE);
+            Animation aniMenuShow = AnimationUtils.loadAnimation(getContext(), R.anim.floating_menu_show);
+            bubbleMenu.startAnimation(aniMenuShow);
             btnAction.setImageResource(R.drawable.ic_close_menu);
             iconVotingMenu.setVisibility(GONE);
         }

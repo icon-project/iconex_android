@@ -12,8 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,9 +57,12 @@ import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
-import jnr.ffi.annotations.In;
+
+import static foundation.icon.iconex.view.MainWalletActivity.TAG;
 
 public class MainWalletFragment extends Fragment {
+
+    private static final String TAG  = MainWalletFragment.class.getSimpleName();
 
     private enum LoadState {loadedWalletData, loadedTokenData, unloaded}
 
@@ -69,9 +77,12 @@ public class MainWalletFragment extends Fragment {
     private WalletFloatingMenu floatingMenu;
 
     // side menu
+    private ImageView imgLogo01;
+    private ImageView imgLogo02;
     private Button btnCreateWallet;
     private Button btnLoadWallet;
     private Button btnExportWalletBundle;
+    private View line;
     private Button btnScreenLock;
     private Button btnAppVer;
     private Button btnICONexDisclaimers;
@@ -192,9 +203,12 @@ public class MainWalletFragment extends Fragment {
 
         floatingMenu = v.findViewById(R.id.floating_menu);
 
+        imgLogo01 = v.findViewById(R.id.img_logo_01);
+        imgLogo02 = v.findViewById(R.id.img_logo_02);
         btnCreateWallet = v.findViewById(R.id.menu_createWallet);
         btnLoadWallet = v.findViewById(R.id.menu_loadWallet);
         btnExportWalletBundle = v.findViewById(R.id.menu_exportWalletBundle);
+        line = v.findViewById(R.id.line);
         btnScreenLock = v.findViewById(R.id.menu_screenLock);
         btnAppVer = v.findViewById(R.id.menu_AppVer);
         btnICONexDisclaimers = v.findViewById(R.id.menu_iconexDiscalimers);
@@ -217,6 +231,29 @@ public class MainWalletFragment extends Fragment {
         btnScreenLock.setOnClickListener(sideMenuListener);
         btnAppVer.setOnClickListener(sideMenuListener);
         btnICONexDisclaimers.setOnClickListener(sideMenuListener);
+
+        imgLogo01.setVisibility(View.INVISIBLE);
+        imgLogo02.setVisibility(View.INVISIBLE);
+        btnCreateWallet.setVisibility(View.INVISIBLE);
+        btnLoadWallet.setVisibility(View.INVISIBLE);
+        btnExportWalletBundle.setVisibility(View.INVISIBLE);
+        btnScreenLock.setVisibility(View.INVISIBLE);
+        btnAppVer.setVisibility(View.INVISIBLE);
+        btnICONexDisclaimers.setVisibility(View.INVISIBLE);
+        line.setVisibility(View.INVISIBLE);
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                startAnimation();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                cancelAnimation();
+            }
+        });
 
         try {
             String version = getActivity()
@@ -529,7 +566,8 @@ public class MainWalletFragment extends Fragment {
         int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
         String txtTotalAsset = viewData.getTotalAsset() == null ? "-" :
                 viewData.getTotalAsset().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
-        String txtVotingPower = (viewData.getVotedPower() == null ? "-" : viewData.getVotedPower()) + " %";
+        String txtVotingPower = (viewData.getVotedPower() == null ? "-" :
+                viewData.getVotedPower().setScale(1)) + " %";
         viewData.setTxtExchangeUnit(currentExchangeUnit.name())
                 .setTxtTotalAsset(txtTotalAsset).setTxtVotedPower(txtVotingPower);
         mTotalAssetsData = viewData;
@@ -648,6 +686,9 @@ public class MainWalletFragment extends Fragment {
                         }
                     }
 
+                    if (itemViewData.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
+
+                    }
                 }
 
             }
@@ -766,5 +807,63 @@ public class MainWalletFragment extends Fragment {
                             AboutActivity.AboutItem.TYPE_PARAGRAPH,
                             getString(R.string.mainWalletInfo41)));
                 }}));
+    }
+
+    private void startAnimation() {
+        Animation aniLogo01 = AnimationUtils.loadAnimation(getContext(), R.anim.sidemenu_logo01);
+        Animation aniLogo02 = AnimationUtils.loadAnimation(getContext(), R.anim.sidemenu_logo02);
+        imgLogo01.startAnimation(aniLogo01);
+        imgLogo02.startAnimation(aniLogo02);
+
+        Animation aniMenuItem = AnimationUtils.loadAnimation(getContext(), R.anim.sidemenu_item_showup);
+
+        btnCreateWallet.startAnimation(aniMenuItem);
+        btnLoadWallet.startAnimation(aniMenuItem);
+        btnExportWalletBundle.startAnimation(aniMenuItem);
+        btnScreenLock.startAnimation(aniMenuItem);
+        btnAppVer.startAnimation(aniMenuItem);
+        btnICONexDisclaimers.startAnimation(aniMenuItem);
+
+        Animation aniLineAlpha = new AlphaAnimation(0, 0.5f);
+        aniLineAlpha.setFillAfter(true);
+        aniLineAlpha.setFillBefore(true);
+        aniLineAlpha.setStartOffset(200);
+        aniLineAlpha.setDuration(300);
+
+        line.startAnimation(aniLineAlpha);
+
+        imgLogo01.setVisibility(View.VISIBLE);
+        imgLogo02.setVisibility(View.VISIBLE);
+        btnCreateWallet.setVisibility(View.VISIBLE);
+        btnLoadWallet.setVisibility(View.VISIBLE);
+        btnExportWalletBundle.setVisibility(View.VISIBLE);
+        btnScreenLock.setVisibility(View.VISIBLE);
+        btnAppVer.setVisibility(View.VISIBLE);
+        btnICONexDisclaimers.setVisibility(View.VISIBLE);
+        line.setVisibility(View.VISIBLE);
+    }
+
+    private void cancelAnimation() {
+        imgLogo01.clearAnimation();
+        imgLogo02.clearAnimation();
+
+        btnCreateWallet.clearAnimation();
+        btnLoadWallet.clearAnimation();
+        btnExportWalletBundle.clearAnimation();
+        btnScreenLock.clearAnimation();
+        btnAppVer.clearAnimation();
+        btnICONexDisclaimers.clearAnimation();
+
+        line.clearAnimation();
+
+        imgLogo01.setVisibility(View.INVISIBLE);
+        imgLogo02.setVisibility(View.INVISIBLE);
+        btnCreateWallet.setVisibility(View.INVISIBLE);
+        btnLoadWallet.setVisibility(View.INVISIBLE);
+        btnExportWalletBundle.setVisibility(View.INVISIBLE);
+        btnScreenLock.setVisibility(View.INVISIBLE);
+        btnAppVer.setVisibility(View.INVISIBLE);
+        btnICONexDisclaimers.setVisibility(View.INVISIBLE);
+        line.setVisibility(View.INVISIBLE);
     }
 }

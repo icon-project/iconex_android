@@ -6,19 +6,32 @@
     android:background="@drawable/bg_gradient_primary2white"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_gravity="center">
 
-        android:layout_marginTop="94dp"
-        android:src="@drawable/logo_lock_symbol_active" />
+        <ImageView
+            android:id="@+id/img_logo_02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:src="@drawable/img_logo_icon_02_56_w"/>
+
+        <ImageView
+            android:id="@+id/img_logo_01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:src="@drawable/img_logo_icon_01_56_w"/>
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/menu_createWallet"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="30dp"
 
         android:fontFamily="@font/noto_sans_medium"
         android:background="@android:color/transparent"
@@ -47,6 +60,7 @@
         android:textColor="@android:color/white" />
 
     <View
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
 
@@ -54,7 +68,6 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:background="@android:color/white"/>
-
 
     <Button
         android:id="@+id/menu_screenLock"
@@ -85,6 +98,5 @@
         android:text="@string/ICONexDisclaimers"
         android:textAllCaps="false"
         android:textColor="@android:color/white" />
-
 
 </LinearLayout>
