@@ -134,18 +134,6 @@ public class WalletCardView extends FrameLayout {
                 WalletItemViewData data = walletItems.get(position);
                 WalletItem walletItem = (WalletItem) holder.itemView;
                 walletItem.bind(data);
-
-                // is icx coin item
-                if (data.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
-                    ICXcoinWalletItem icxCoinItem = (ICXcoinWalletItem) walletItem;
-                    if (data.getAmount() == null || data.getAmount().compareTo(BigDecimal.ZERO) == 0) return;
-                    BigDecimal staked = new BigDecimal(ConvertUtil.getValue(viewData.getStaked(), 18));
-                    BigDecimal percent = staked.multiply(new BigDecimal(100))
-                            .divide(staked.add(data.getAmount()), 1, BigDecimal.ROUND_UP);
-                    icxCoinItem.setTextStaked(staked.setScale(4) + " (" + percent + "%)");
-                    BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(viewData.getiScore(), 18));
-                    icxCoinItem.setTextIScore(iscore.setScale(4) + "");
-                }
             }
 
             @Override

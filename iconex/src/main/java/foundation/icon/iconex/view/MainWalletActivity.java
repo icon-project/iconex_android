@@ -95,6 +95,13 @@ public class MainWalletActivity extends AppCompatActivity implements
     public void asyncRequestInitData() {
         cachingWalletItemData();
         getMainWalletFragment().asyncResponseInit(cachedlstWalletData);
+        mainWalletServiceHelper.getPRepsRemoteData(new ArrayList<String>() {{
+            for (Wallet wallet : ICONexApp.wallets) {
+                if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                    add(wallet.getAddress());
+                }
+            }
+        }});
     }
 
     @Override
@@ -179,6 +186,10 @@ public class MainWalletActivity extends AppCompatActivity implements
             if (data != null) {
                 cardViewData.setStaked(data.getStake());
                 cardViewData.setiScore(data.getiScore());
+
+                WalletItemViewData walletItemViewData = cardViewData.getLstWallet().get(0);
+                walletItemViewData.setStacked(data.getStake());
+                walletItemViewData.setiScore(data.getiScore());
             }
         }
 

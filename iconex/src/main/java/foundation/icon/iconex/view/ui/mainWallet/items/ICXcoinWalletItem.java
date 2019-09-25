@@ -59,8 +59,8 @@ public class ICXcoinWalletItem extends WalletItem{
         txtAmount.setText(data.getTxtAmount());
         txtExchanged.setText(data.getTxtExchanged());
 
-        txtStaked.setText(data.getStacked());
-        txtIScore.setText(data.getiScore());
+        txtStaked.setText(data.getTxtStacked());
+        txtIScore.setText(data.getTxtIScore());
     }
 
     public void setTextStaked(String textStaked) {

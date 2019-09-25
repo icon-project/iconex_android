@@ -28,10 +28,13 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +43,7 @@ import java.util.Map;
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
@@ -48,6 +52,7 @@ import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletFloatingMenu;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletIndicator;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
+import foundation.icon.iconex.view.ui.mainWallet.items.ICXcoinWalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
@@ -617,24 +622,45 @@ public class MainWalletFragment extends Fragment {
 
         Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
         mTokenDataList = new ArrayList<>();
-        for (WalletCardViewData walletViewData : mWalletDataList) {
-            for (WalletItemViewData itemViewData : walletViewData.getLstWallet()) {
+        for (WalletCardViewData walletCard : mWalletDataList) { // wallet
+            for (WalletItemViewData entryViewData : walletCard.getLstWallet()) { // entry
                 // update balance, exchange (double -> string)
-                String txtAmount = itemViewData.getAmount() == null ? "-" : // decimal rounding 4
-                        itemViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
+                String txtAmount = entryViewData.getAmount() == null ? "-" : // decimal rounding 4
+                        entryViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
 
-                String txtExchanged = itemViewData.getExchanged() == null ? "-" :
-                        itemViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
+                String txtExchanged = entryViewData.getExchanged() == null ? "-" :
+                        entryViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
                 txtExchanged += " " + currentExchangeUnit.name();
 
-                itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
+                entryViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
 
+                if (entryViewData.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
+                    if (entryViewData.getStacked() != null && entryViewData.getAmount() != null) {
+                        BigDecimal staked = new BigDecimal(ConvertUtil.getValue(entryViewData.getStacked(), 18));
+                        BigDecimal balance = staked.add(entryViewData.getAmount());
 
-                String tokenName = itemViewData.getName();
+                        BigDecimal percent = balance.compareTo(BigDecimal.ZERO) == 0 ? null :
+                                staked.multiply(new BigDecimal(100))
+                                        .divide(balance, 1, BigDecimal.ROUND_UP);
+
+                        entryViewData.setTxtStacked(staked.setScale(4) + " (" + (percent == null ? " - " : percent) + "%)");
+                    } else {
+                        entryViewData.setTxtStacked("- ( - %)");
+                    }
+
+                    if (entryViewData.getiScore() != null) {
+                        BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(entryViewData.getiScore(), 18));
+                        entryViewData.setTxtIScore(iscore.setScale(4) + "");
+                    } else {
+                        entryViewData.setTxtIScore("-");
+                    }
+                }
+
+                String tokenName = entryViewData.getName();
                 WalletItemViewData topToken = null;
 
                 if (!mapTokenViewData.containsKey(tokenName)) {
-                    topToken = new WalletItemViewData(itemViewData);
+                    topToken = new WalletItemViewData(entryViewData);
                     final WalletItemViewData _topToken = topToken;
                     // create wallet card
                     WalletCardViewData cardviewData = new WalletCardViewData()
@@ -644,7 +670,7 @@ public class MainWalletFragment extends Fragment {
                                 add(_topToken); // add top token
                             }});
                     mapTokenViewData.put(tokenName, cardviewData);
-                    switch (itemViewData.getWalletItemType()) {
+                    switch (entryViewData.getWalletItemType()) {
                         case ICXcoin: mTokenDataList.add(0, cardviewData); break;
                         case ETHcoin: mTokenDataList.add(mTokenDataList.size() > 0 ? 1 : 0, cardviewData); break;
                         default: mTokenDataList.add(cardviewData); break;
@@ -656,18 +682,19 @@ public class MainWalletFragment extends Fragment {
                 lstTokenViewData.getLstWallet().add(
                         new WalletItemViewData()
                                 .setWalletItemType(WalletItemViewData.WalletItemType.Wallet)
-                                .setSymbol(walletViewData.getTitle())
-                                .setName(walletViewData.getAddress())
-                                .setAmount(itemViewData.getAmount())
-                                .setExchanged(itemViewData.getExchanged())
-                                .setTxtAmount(itemViewData.getTxtAmount())
-                                .setTxtExchanged(itemViewData.getTxtExchanged())
+                                .setEntryID(entryViewData.getEntryID())
+                                .setSymbol(walletCard.getTitle())
+                                .setName(walletCard.getAddress())
+                                .setAmount(entryViewData.getAmount())
+                                .setExchanged(entryViewData.getExchanged())
+                                .setTxtAmount(entryViewData.getTxtAmount())
+                                .setTxtExchanged(entryViewData.getTxtExchanged())
                 );
 
                 // accumulate top token
                 if (topToken == null) {
                     topToken = lstTokenViewData.getLstWallet().get(0);
-                    BigDecimal itemAmount = itemViewData.getAmount();
+                    BigDecimal itemAmount = entryViewData.getAmount();
                     if (itemAmount != null) {
                         BigDecimal tokenAmount = topToken.getAmount();
                         if (tokenAmount != null) {
@@ -676,7 +703,7 @@ public class MainWalletFragment extends Fragment {
                             topToken.setExchanged(itemAmount);
                         }
                     }
-                    BigDecimal itemExchanged = itemViewData.getExchanged();
+                    BigDecimal itemExchanged = entryViewData.getExchanged();
                     if (itemExchanged != null) {
                         BigDecimal tokenExchanged = topToken.getExchanged();
                         if (tokenExchanged != null) {
@@ -686,29 +713,67 @@ public class MainWalletFragment extends Fragment {
                         }
                     }
 
-                    if (itemViewData.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
+                    // if entry == icx coin
+                    if (entryViewData.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
 
+                        BigInteger walletStaked = walletCard.getStaked();
+                        if (walletStaked != null) {
+                            BigInteger topStacked = topToken.getStacked();
+                            if (topStacked != null) {
+                                topToken.setStacked(topStacked.add(walletStaked));
+                            } else {
+                                topToken.setStacked(walletStaked);
+                            }
+                        }
+
+                        BigInteger walletIScore = walletCard.getiScore();
+                        if (walletIScore != null) {
+                            BigInteger topIScore = topToken.getiScore();
+                            if (topIScore != null) {
+                                topToken.setiScore(topIScore.add(walletIScore));
+                            } else {
+                                topToken.setiScore(walletIScore);
+                            }
+                        }
                     }
                 }
 
             }
         }
 
-//        mTokenDataList = new ArrayList<WalletCardViewData>() {{
-//            addAll(mapTokenViewData.values());
-//        }};
-
         for (WalletCardViewData cardViewData : mTokenDataList) {
-            WalletItemViewData itemViewData = cardViewData.getLstWallet().get(0);
+            WalletItemViewData entryViewData = cardViewData.getLstWallet().get(0);
             // update balance, exchange (double -> string)
-            String txtAmount = itemViewData.getAmount() == null ? "-" : // decimal rounding 4
-                    itemViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
+            String txtAmount = entryViewData.getAmount() == null ? "-" : // decimal rounding 4
+                    entryViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
 
-            String txtExchanged = itemViewData.getExchanged() == null ? "-" :
-                    itemViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
+            String txtExchanged = entryViewData.getExchanged() == null ? "-" :
+                    entryViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
                             + " " + currentExchangeUnit.name();
 
-            itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
+            entryViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
+
+            if (entryViewData.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
+                if (entryViewData.getStacked() != null && entryViewData.getAmount() != null) {
+                    BigDecimal staked = new BigDecimal(ConvertUtil.getValue(entryViewData.getStacked(), 18));
+                    BigDecimal balance = staked.add(entryViewData.getAmount());
+
+                    BigDecimal percent = balance.compareTo(BigDecimal.ZERO) == 0 ? null :
+                            staked.multiply(new BigDecimal(100))
+                                    .divide(balance, 1, BigDecimal.ROUND_UP);
+
+                    entryViewData.setTxtStacked(staked.setScale(4) + " (" + (percent == null ? " - " : percent) + "%)");
+                } else {
+                    entryViewData.setTxtStacked("- ( - %)");
+                }
+
+                if (entryViewData.getiScore() != null) {
+                    BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(entryViewData.getiScore(), 18));
+                    entryViewData.setTxtIScore(iscore.setScale(4) + "");
+                } else {
+                    entryViewData.setTxtIScore("-");
+                }
+            }
         }
     }
 
@@ -827,7 +892,7 @@ public class MainWalletFragment extends Fragment {
         Animation aniLineAlpha = new AlphaAnimation(0, 0.5f);
         aniLineAlpha.setFillAfter(true);
         aniLineAlpha.setFillBefore(true);
-        aniLineAlpha.setStartOffset(200);
+        aniLineAlpha.setStartOffset(100);
         aniLineAlpha.setDuration(300);
 
         line.startAnimation(aniLineAlpha);

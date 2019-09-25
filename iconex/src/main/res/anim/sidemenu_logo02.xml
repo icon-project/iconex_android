@@ -14,7 +14,6 @@
         android:pivotX="50%"/>
 
     <alpha
-        android:startOffset="100"
         android:duration="400"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator"
         android:fromAlpha="0"
