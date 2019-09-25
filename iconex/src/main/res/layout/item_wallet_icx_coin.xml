@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/layout_bottom"
         android:layout_width="0dp"
-        android:layout_height="109dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
 
         app:layout_constraintTop_toTopOf="parent"
@@ -41,7 +41,7 @@
                 android:textSize="10dp"
                 android:textColor="@color/dark"
 
-                android:text="Stacked (%)"/>
+                android:text="@string/staked"/>
 
             <TextView
                 android:id="@+id/txt_staked"
@@ -57,43 +57,10 @@
                 android:text="90.5"/>
         </RelativeLayout>
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:layout_marginTop="5dp">
-
-            <TextView
-                android:id="@+id/lb_voting_power"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_alignParentLeft="true"
-
-                android:textSize="10dp"
-                android:textColor="@color/dark"
-
-                android:text="Voting Power (VP)"/>
-
-            <TextView
-                android:id="@+id/txt_voting_power"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_alignParentRight="true"
-
-                android:fontFamily="@font/nanum_square_regular"
-                android:textSize="10dp"
-                android:textColor="@color/dark"
-
-                android:text="0.0000"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
+            android:layout_marginBottom="23dp"
             android:layout_marginTop="5dp">
 
             <TextView
@@ -106,7 +73,7 @@
                 android:textSize="10dp"
                 android:textColor="@color/dark"
 
-                android:text="I-Score (ISC)"/>
+                android:text="@string/iscore"/>
 
             <TextView
                 android:id="@+id/txt_iscore"

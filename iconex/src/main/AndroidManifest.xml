@@ -13,6 +13,7 @@
         android:name="foundation.icon.ICONexApp"
         android:allowBackup="false"
         android:fullBackupContent="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -36,7 +37,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".menu.dev_appInfo.AppInfoActivity"
+            android:name=".view.AboutActivity"
+            android:configChanges="fontScale"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivity" />
+        <activity
+            android:name=".menu.appInfo.AppInfoActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -133,8 +140,8 @@
             android:name=".wallet.contacts.ContactsActivity"
             android:configChanges="fontScale"
             android:exported="false"
-            android:theme="@style/DialogActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivity" />
         <activity
             android:name=".menu.WalletBackUpActivity"
             android:configChanges="fontScale"
@@ -182,7 +189,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".menu.appInfo.AppInfoActivityOld"
+            android:name=".menu.appInfo.OldAppInfoActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />

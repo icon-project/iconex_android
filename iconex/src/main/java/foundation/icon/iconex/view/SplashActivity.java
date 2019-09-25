@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,6 +37,8 @@ public class SplashActivity extends AppCompatActivity {
 
         if (getIntent() != null)
             isIconConnect = getIntent().getBooleanExtra("icon_connect", false);
+
+        setAnimation();
     }
 
     @Override
@@ -71,7 +77,6 @@ public class SplashActivity extends AppCompatActivity {
                 versionCheck.execute();
             }
         }, 500);
-//        startActivity(new Intent(this, PRepVoteActivity.class));
     }
 
     private void checkPermissionConfirm() {
@@ -135,5 +140,19 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(new Intent(SplashActivity.this, AuthActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
+    }
+
+    private void setAnimation() {
+        ImageView imgLogo01 = findViewById(R.id.img_logo_01);
+        ImageView imgLogo02 = findViewById(R.id.img_logo_02);
+        TextView txtCopyright = findViewById(R.id.txt_copyright);
+
+        Animation aniLogo01 = AnimationUtils.loadAnimation(this, R.anim.logo_01_rotation);
+        Animation aniLogo02 = AnimationUtils.loadAnimation(this, R.anim.logo_02_rotation);
+        Animation aniFadeInOut = AnimationUtils.loadAnimation(this, R.anim.fadeinout);
+
+        imgLogo01.startAnimation(aniLogo01);
+        imgLogo02.startAnimation(aniLogo02);
+        txtCopyright.startAnimation(aniFadeInOut);
     }
 }

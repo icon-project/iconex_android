@@ -2,6 +2,7 @@ package foundation.icon.iconex.view.ui.mainWallet.viewdata;
 
 import android.util.Log;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,11 +12,22 @@ import foundation.icon.iconex.wallet.WalletEntry;
 
 public class WalletCardViewData {
     private static String TAG = WalletItemViewData.class.getSimpleName();
+
     public enum WalletType { ICXwallet, ETHwallet, TokenList }
 
     private WalletType walletType;
     private String title;
     private String address;
+
+    // for icx coin item
+    private BigInteger staked = BigInteger.ZERO;
+    private BigInteger iScore = BigInteger.ZERO;
+
+    private String txtStaked;
+    private String txtIScore;
+
+
+    // wallet entry view data
     private List<WalletItemViewData> lstWallet = new ArrayList<>();
 
     public WalletType getWalletType() {
@@ -54,11 +66,47 @@ public class WalletCardViewData {
         return this;
     }
 
+    public BigInteger getStaked() {
+        return staked;
+    }
+
+    public WalletCardViewData setStaked(BigInteger staked) {
+        this.staked = staked;
+        return this;
+    }
+
+    public BigInteger getiScore() {
+        return iScore;
+    }
+
+    public WalletCardViewData setiScore(BigInteger iScore) {
+        this.iScore = iScore;
+        return this;
+    }
+
+    public String getTxtStaked() {
+        return txtStaked;
+    }
+
+    public WalletCardViewData setTxtStaked(String txtStaked) {
+        this.txtStaked = txtStaked;
+        return this;
+    }
+
+    public String getTxtIScore() {
+        return txtIScore;
+    }
+
+    public WalletCardViewData setTxtIScore(String txtIScore) {
+        this.txtIScore = txtIScore;
+        return this;
+    }
+
     public static WalletCardViewData convertWallet2ViewData(Wallet wallet) {
         // create
         WalletCardViewData walletCardViewData = new WalletCardViewData();
 
-        // set aliase
+        // set alias
         walletCardViewData.setTitle(wallet.getAlias());
 
         // set address
@@ -68,6 +116,9 @@ public class WalletCardViewData {
         WalletType walletType = null;
         if ("ICX".equals(wallet.getCoinType().toUpperCase())) {
             walletType = WalletType.ICXwallet;
+            walletCardViewData.setStaked(wallet.getStaked());
+            walletCardViewData.setiScore(wallet.getiScore());
+
         } else if ("ETH".equals(wallet.getCoinType().toUpperCase())) {
             walletType = WalletType.ETHwallet;
         } else {

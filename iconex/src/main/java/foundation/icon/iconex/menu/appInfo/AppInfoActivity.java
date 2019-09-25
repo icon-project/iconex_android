@@ -1,4 +1,4 @@
-package foundation.icon.iconex.menu.dev_appInfo;
+package foundation.icon.iconex.menu.appInfo;
 
 import android.os.Bundle;
 

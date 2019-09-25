@@ -1,4 +1,4 @@
-package foundation.icon.iconex.menu.dev_appInfo;
+package foundation.icon.iconex.menu.appInfo;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +10,6 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.menu.appInfo.OSSFragmentOld;
-import foundation.icon.iconex.widgets.TitleBar;
 
 public class OpenSourceFragment extends Fragment {
 

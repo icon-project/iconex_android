@@ -9,14 +9,14 @@ import android.webkit.WebView;
 
 import foundation.icon.iconex.R;
 
-public class OSSFragmentOld extends Fragment {
+public class OldOSSFragment extends Fragment {
 
-    public OSSFragmentOld() {
+    public OldOSSFragment() {
         // Required empty public constructor
     }
 
-    public static OSSFragmentOld newInstance() {
-        OSSFragmentOld fragment = new OSSFragmentOld();
+    public static OldOSSFragment newInstance() {
+        OldOSSFragment fragment = new OldOSSFragment();
         return fragment;
     }
 

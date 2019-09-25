@@ -89,12 +89,14 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
     }
 
     public void setAmount(BigDecimal amount) {
-        String strAmount = amount.setScale(4, BigDecimal.ROUND_FLOOR) + "";
+        String strAmount =  amount == null ? "-" :
+                amount.setScale(4, BigDecimal.ROUND_FLOOR) + "";
         txtAmount.setText(strAmount);
     }
 
     public void setExchange(BigDecimal exchange, int scale) {
-        String strExchange = exchange.setScale(scale, BigDecimal.ROUND_FLOOR) + "";
+        String strExchange = exchange == null ? "-" :
+                exchange.setScale(scale, BigDecimal.ROUND_FLOOR) + "";
         txtExchange.setText(strExchange);
     }
 

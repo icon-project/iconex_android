@@ -76,7 +76,7 @@ open class MessageDialog: Dialog {
 
     var isConfirmEnable: Boolean
         get() = mConfirmButton.isEnabled
-        set(b) { mConfirmButton.isEnabled = b }
+        set(b) { mConfirmButton.setEnabled(b) }
 
     var confirmButtonText: String
         get() = mConfirmButton.text.toString()

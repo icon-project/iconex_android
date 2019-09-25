@@ -221,6 +221,7 @@ public class CustomActionBar extends RelativeLayout implements View.OnClickListe
             } break;
             case R.id.txt_title:
             case R.id.img_toggle: {
+                if(!mIsShowIcToggle) break;
                 if (mOnActionClickListener != null)
                     mOnActionClickListener.onClickAction(ClickAction.btnToggle);
 

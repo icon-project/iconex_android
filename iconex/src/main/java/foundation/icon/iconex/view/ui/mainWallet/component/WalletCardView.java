@@ -15,10 +15,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.mainWallet.items.ETHcoinWalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.items.ICXcoinWalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.items.TokenWalletItem;
@@ -31,6 +33,8 @@ import foundation.icon.iconex.util.ScreenUnit;
 public class WalletCardView extends FrameLayout {
 
     public interface OnChangeIsScrollTopListener { void onChangeIsScrollTop(boolean isScrollTop); }
+
+    private WalletCardViewData viewData = null;
 
     private TextView txtAlias;
     protected ImageView btnQrScan;
@@ -128,7 +132,8 @@ public class WalletCardView extends FrameLayout {
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 WalletItemViewData data = walletItems.get(position);
-                ((WalletItem) holder.itemView).bind(data);
+                WalletItem walletItem = (WalletItem) holder.itemView;
+                walletItem.bind(data);
             }
 
             @Override
@@ -202,21 +207,23 @@ public class WalletCardView extends FrameLayout {
     }
 
     public void bindData(WalletCardViewData data) {
+        viewData = data;
+
         switch (data.getWalletType()) {
             case ICXwallet: {
-                btnQrScan.setEnabled(true);
-                btnQrCode.setEnabled(true);
-                btnMore.setEnabled(true);
+                btnQrScan.setVisibility(View.VISIBLE);
+                btnQrCode.setVisibility(View.VISIBLE);
+                btnMore.setVisibility(View.VISIBLE);
             } break;
             case ETHwallet: {
-                btnQrScan.setEnabled(false);
-                btnQrCode.setEnabled(true);
-                btnMore.setEnabled(true);
+                btnQrScan.setVisibility(View.GONE);
+                btnQrCode.setVisibility(View.VISIBLE);
+                btnMore.setVisibility(View.VISIBLE);
             } break;
             case TokenList: {
-                btnQrScan.setEnabled(false);
-                btnQrCode.setEnabled(false);
-                btnMore.setEnabled(false);
+                btnQrScan.setVisibility(View.GONE);
+                btnQrCode.setVisibility(View.GONE);
+                btnMore.setVisibility(View.GONE);
             }
         }
 

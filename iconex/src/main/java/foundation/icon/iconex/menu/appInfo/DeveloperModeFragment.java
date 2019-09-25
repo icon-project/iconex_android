@@ -1,4 +1,4 @@
-package foundation.icon.iconex.menu.dev_appInfo;
+package foundation.icon.iconex.menu.appInfo;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.menu.appInfo.DeveloperFragmentOld;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.TDropdownLayout;

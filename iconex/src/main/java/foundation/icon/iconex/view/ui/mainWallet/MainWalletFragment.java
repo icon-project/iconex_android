@@ -5,13 +5,20 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,10 +28,13 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,12 +43,16 @@ import java.util.Map;
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
+import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.view.ui.mainWallet.component.TotalAssetInfoView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletFloatingMenu;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletIndicator;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
+import foundation.icon.iconex.view.ui.mainWallet.items.ICXcoinWalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
@@ -49,7 +63,11 @@ import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
 
+import static foundation.icon.iconex.view.MainWalletActivity.TAG;
+
 public class MainWalletFragment extends Fragment {
+
+    private static final String TAG  = MainWalletFragment.class.getSimpleName();
 
     private enum LoadState {loadedWalletData, loadedTokenData, unloaded}
 
@@ -61,17 +79,15 @@ public class MainWalletFragment extends Fragment {
     private ExpanableViewPager walletViewPager;
     private WalletIndicator walletIndicator;
 
-    private ImageButton btnAction;
-    private ViewGroup bubbleMenuModal;
-    private ViewGroup bubbleMenu;
-    private Button btnPReps;
-    private Button btnStake;
-    private Button btnVote;
-    private Button btnIScore;
+    private WalletFloatingMenu floatingMenu;
 
+    // side menu
+    private ImageView imgLogo01;
+    private ImageView imgLogo02;
     private Button btnCreateWallet;
     private Button btnLoadWallet;
     private Button btnExportWalletBundle;
+    private View line;
     private Button btnScreenLock;
     private Button btnAppVer;
     private Button btnICONexDisclaimers;
@@ -190,17 +206,14 @@ public class MainWalletFragment extends Fragment {
         walletViewPager = v.findViewById(R.id.wallet_viewpager);
         walletIndicator = v.findViewById(R.id.wallet_indicator);
 
-        btnAction = v.findViewById(R.id.btn_action);
-        bubbleMenuModal = v.findViewById(R.id.bubble_menu_modal);
-        bubbleMenu = v.findViewById(R.id.bubble_menu);
-        btnPReps = v.findViewById(R.id.btn_preps);
-        btnStake = v.findViewById(R.id.btn_stake);
-        btnVote = v.findViewById(R.id.btn_vote);
-        btnIScore = v.findViewById(R.id.btn_iscore);
+        floatingMenu = v.findViewById(R.id.floating_menu);
 
+        imgLogo01 = v.findViewById(R.id.img_logo_01);
+        imgLogo02 = v.findViewById(R.id.img_logo_02);
         btnCreateWallet = v.findViewById(R.id.menu_createWallet);
         btnLoadWallet = v.findViewById(R.id.menu_loadWallet);
         btnExportWalletBundle = v.findViewById(R.id.menu_exportWalletBundle);
+        line = v.findViewById(R.id.line);
         btnScreenLock = v.findViewById(R.id.menu_screenLock);
         btnAppVer = v.findViewById(R.id.menu_AppVer);
         btnICONexDisclaimers = v.findViewById(R.id.menu_iconexDiscalimers);
@@ -224,6 +237,29 @@ public class MainWalletFragment extends Fragment {
         btnAppVer.setOnClickListener(sideMenuListener);
         btnICONexDisclaimers.setOnClickListener(sideMenuListener);
 
+        imgLogo01.setVisibility(View.INVISIBLE);
+        imgLogo02.setVisibility(View.INVISIBLE);
+        btnCreateWallet.setVisibility(View.INVISIBLE);
+        btnLoadWallet.setVisibility(View.INVISIBLE);
+        btnExportWalletBundle.setVisibility(View.INVISIBLE);
+        btnScreenLock.setVisibility(View.INVISIBLE);
+        btnAppVer.setVisibility(View.INVISIBLE);
+        btnICONexDisclaimers.setVisibility(View.INVISIBLE);
+        line.setVisibility(View.INVISIBLE);
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                startAnimation();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                cancelAnimation();
+            }
+        });
+
         try {
             String version = getActivity()
                     .getPackageManager()
@@ -245,8 +281,7 @@ public class MainWalletFragment extends Fragment {
                     }
                     break;
                     case btnEnd: {
-                        // TODO: not implement
-                        Toast.makeText(getContext(), "not implement", Toast.LENGTH_SHORT).show();
+                        showInfo();
                     }
                     break;
                     case btnToggle: {
@@ -314,78 +349,34 @@ public class MainWalletFragment extends Fragment {
             }
         });
 
-
         // init wallet viewpager.
         initWalletViewPager(content);
 
-        // init wallet indicator.
-        // noting.
-
-        // init btnAction
-
-        btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int visibility = bubbleMenuModal.getVisibility();
-                setBubbleMenuShow(visibility != ViewGroup.VISIBLE);
-            }
-        });
-
-        bubbleMenuModal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setBubbleMenuShow(false);
-            }
-        });
-
-        View.OnClickListener bublemenuListener = new View.OnClickListener() {
+        floatingMenu.setOnCilckMenuItemListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WalletCardViewData viewData = getCurrentWalletCardData();
 
                 switch (v.getId()) {
                     case R.id.btn_preps: {
-                        ((PRepsMenu) getActivity()).pReps(viewData);
-                        setBubbleMenuShow(false);
+                        ((MainWalletFragment.PRepsMenu) getActivity()).pReps(viewData);
                     }
                     break;
                     case R.id.btn_stake: {
-                        ((PRepsMenu) getActivity()).stake(viewData);
-                        setBubbleMenuShow(false);
+                        ((MainWalletFragment.PRepsMenu) getActivity()).stake(viewData);
                     }
                     break;
                     case R.id.btn_vote: {
-                        ((PRepsMenu) getActivity()).vote(viewData);
-                        setBubbleMenuShow(false);
+                        ((MainWalletFragment.PRepsMenu) getActivity()).vote(viewData);
                     }
                     break;
                     case R.id.btn_iscore: {
-                        ((PRepsMenu) getActivity()).iScore(viewData);
-                        setBubbleMenuShow(false);
+                        ((MainWalletFragment.PRepsMenu) getActivity()).iScore(viewData);
                     }
                     break;
                 }
             }
-        };
-
-        btnPReps.setOnClickListener(bublemenuListener);
-        btnStake.setOnClickListener(bublemenuListener);
-        btnVote.setOnClickListener(bublemenuListener);
-        btnIScore.setOnClickListener(bublemenuListener);
-
-        setBubbleMenuShow(false);
-    }
-
-    private void setBubbleMenuShow(boolean isShow) {
-        if (!isShow) {
-            bubbleMenuModal.setVisibility(View.GONE);
-            bubbleMenu.setVisibility(View.GONE);
-            btnAction.setImageResource(R.drawable.ic_vote_menu);
-        } else {
-            bubbleMenuModal.setVisibility(View.VISIBLE);
-            bubbleMenu.setVisibility(View.VISIBLE);
-            btnAction.setImageResource(R.drawable.ic_close_menu);
-        }
+        });
     }
 
     private void initWalletViewPager(View content) {
@@ -399,18 +390,29 @@ public class MainWalletFragment extends Fragment {
             public void onPageSelected(int position) {
                 updateCollapsable();
                 walletIndicator.setIndex(position);
+
+                WalletCardViewData cardViewData = mShownWalletDataList.get(position);
+                if (cardViewData.getWalletType() == WalletCardViewData.WalletType.ICXwallet) {
+                    floatingMenu.setEnableFloatingButton(true);
+
+                } else {
+                    floatingMenu.setEnableFloatingButton(false);
+                }
             }
         });
         walletViewPager.setOnStateChangeListener(new ExpanableViewPager.OnStateChangeListener() {
             @Override
             public void onChangeState(ExpanableViewPager.State state) {
+                Log.d("onChangeState", state.name());
                 switch (state) {
                     case Expaned: {
                         refresh.setRefreshEnable(false);
+                        actionBar.setIsShowIcToggle(false);
                     }
                     break;
                     case Collapsed: {
                         refresh.setRefreshEnable(true);
+                        actionBar.setIsShowIcToggle(true);
                     }
                     break;
                 }
@@ -550,11 +552,14 @@ public class MainWalletFragment extends Fragment {
             case loadedWalletData: {
                 mShownWalletDataList.addAll(mWalletDataList);
                 actionBar.setTitle(getString(R.string.appbarSelectorWallets));
+                boolean isICX = getCurrentWalletCardData().getWalletType() == WalletCardViewData.WalletType.ICXwallet;
+                floatingMenu.setEnableFloatingButton(isICX);
             }
             break;
             case loadedTokenData: {
                 mShownWalletDataList.addAll(mTokenDataList);
                 actionBar.setTitle(getString(R.string.appbarSelectorCoinsNTokens));
+                floatingMenu.setEnableFloatingButton(false);
             }
             break;
         }
@@ -566,7 +571,8 @@ public class MainWalletFragment extends Fragment {
         int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
         String txtTotalAsset = viewData.getTotalAsset() == null ? "-" :
                 viewData.getTotalAsset().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
-        String txtVotingPower = "-";
+        String txtVotingPower = (viewData.getVotedPower() == null ? "-" :
+                viewData.getVotedPower().setScale(1)) + " %";
         viewData.setTxtExchangeUnit(currentExchangeUnit.name())
                 .setTxtTotalAsset(txtTotalAsset).setTxtVotedPower(txtVotingPower);
         mTotalAssetsData = viewData;
@@ -614,37 +620,61 @@ public class MainWalletFragment extends Fragment {
         int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
         mWalletDataList = walletDataList;
 
-
         Map<String, WalletCardViewData> mapTokenViewData = new HashMap<>();
-        for (WalletCardViewData walletViewData : mWalletDataList) {
-            for (WalletItemViewData itemViewData : walletViewData.getLstWallet()) {
+        mTokenDataList = new ArrayList<>();
+        for (WalletCardViewData walletCard : mWalletDataList) { // wallet
+            for (WalletItemViewData entryViewData : walletCard.getLstWallet()) { // entry
                 // update balance, exchange (double -> string)
-                String txtAmount = itemViewData.getAmount() == null ? "-" : // decimal rounding 4
-                        itemViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
+                String txtAmount = entryViewData.getAmount() == null ? "-" : // decimal rounding 4
+                        entryViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
 
-                String txtExchanged = itemViewData.getExchanged() == null ? "-" :
-                        itemViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
-                                + " " + currentExchangeUnit.name();
+                String txtExchanged = entryViewData.getExchanged() == null ? "-" :
+                        entryViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
+                txtExchanged += " " + currentExchangeUnit.name();
 
-                itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
+                entryViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
 
+                if (entryViewData.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
+                    if (entryViewData.getStacked() != null && entryViewData.getAmount() != null) {
+                        BigDecimal staked = new BigDecimal(ConvertUtil.getValue(entryViewData.getStacked(), 18));
+                        BigDecimal balance = staked.add(entryViewData.getAmount());
 
-                String tokenName = itemViewData.getName();
+                        BigDecimal percent = balance.compareTo(BigDecimal.ZERO) == 0 ? null :
+                                staked.multiply(new BigDecimal(100))
+                                        .divide(balance, 1, BigDecimal.ROUND_UP);
+
+                        entryViewData.setTxtStacked(staked.setScale(4) + " (" + (percent == null ? " - " : percent) + "%)");
+                    } else {
+                        entryViewData.setTxtStacked("- ( - %)");
+                    }
+
+                    if (entryViewData.getiScore() != null) {
+                        BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(entryViewData.getiScore(), 18));
+                        entryViewData.setTxtIScore(iscore.setScale(4) + "");
+                    } else {
+                        entryViewData.setTxtIScore("-");
+                    }
+                }
+
+                String tokenName = entryViewData.getName();
                 WalletItemViewData topToken = null;
 
                 if (!mapTokenViewData.containsKey(tokenName)) {
-                    topToken = new WalletItemViewData(itemViewData);
+                    topToken = new WalletItemViewData(entryViewData);
                     final WalletItemViewData _topToken = topToken;
-                    mapTokenViewData.put(tokenName,
-                            // create wallet card
-                            new WalletCardViewData()
-                                    .setWalletType(WalletCardViewData.WalletType.TokenList)
-                                    .setTitle(tokenName)
-                                    .setLstWallet(new ArrayList<WalletItemViewData>() {{
-                                        add(_topToken); // add top token
-                                    }})
-
-                    );
+                    // create wallet card
+                    WalletCardViewData cardviewData = new WalletCardViewData()
+                            .setWalletType(WalletCardViewData.WalletType.TokenList)
+                            .setTitle(tokenName)
+                            .setLstWallet(new ArrayList<WalletItemViewData>() {{
+                                add(_topToken); // add top token
+                            }});
+                    mapTokenViewData.put(tokenName, cardviewData);
+                    switch (entryViewData.getWalletItemType()) {
+                        case ICXcoin: mTokenDataList.add(0, cardviewData); break;
+                        case ETHcoin: mTokenDataList.add(mTokenDataList.size() > 0 ? 1 : 0, cardviewData); break;
+                        default: mTokenDataList.add(cardviewData); break;
+                    }
                 }
 
                 // wallet item view
@@ -652,18 +682,19 @@ public class MainWalletFragment extends Fragment {
                 lstTokenViewData.getLstWallet().add(
                         new WalletItemViewData()
                                 .setWalletItemType(WalletItemViewData.WalletItemType.Wallet)
-                                .setSymbol(walletViewData.getTitle())
-                                .setName(walletViewData.getAddress())
-                                .setAmount(itemViewData.getAmount())
-                                .setExchanged(itemViewData.getExchanged())
-                                .setTxtAmount(itemViewData.getTxtAmount())
-                                .setTxtExchanged(itemViewData.getTxtExchanged())
+                                .setEntryID(entryViewData.getEntryID())
+                                .setSymbol(walletCard.getTitle())
+                                .setName(walletCard.getAddress())
+                                .setAmount(entryViewData.getAmount())
+                                .setExchanged(entryViewData.getExchanged())
+                                .setTxtAmount(entryViewData.getTxtAmount())
+                                .setTxtExchanged(entryViewData.getTxtExchanged())
                 );
 
                 // accumulate top token
                 if (topToken == null) {
                     topToken = lstTokenViewData.getLstWallet().get(0);
-                    BigDecimal itemAmount = itemViewData.getAmount();
+                    BigDecimal itemAmount = entryViewData.getAmount();
                     if (itemAmount != null) {
                         BigDecimal tokenAmount = topToken.getAmount();
                         if (tokenAmount != null) {
@@ -672,7 +703,7 @@ public class MainWalletFragment extends Fragment {
                             topToken.setExchanged(itemAmount);
                         }
                     }
-                    BigDecimal itemExchanged = itemViewData.getExchanged();
+                    BigDecimal itemExchanged = entryViewData.getExchanged();
                     if (itemExchanged != null) {
                         BigDecimal tokenExchanged = topToken.getExchanged();
                         if (tokenExchanged != null) {
@@ -682,25 +713,67 @@ public class MainWalletFragment extends Fragment {
                         }
                     }
 
+                    // if entry == icx coin
+                    if (entryViewData.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
+
+                        BigInteger walletStaked = walletCard.getStaked();
+                        if (walletStaked != null) {
+                            BigInteger topStacked = topToken.getStacked();
+                            if (topStacked != null) {
+                                topToken.setStacked(topStacked.add(walletStaked));
+                            } else {
+                                topToken.setStacked(walletStaked);
+                            }
+                        }
+
+                        BigInteger walletIScore = walletCard.getiScore();
+                        if (walletIScore != null) {
+                            BigInteger topIScore = topToken.getiScore();
+                            if (topIScore != null) {
+                                topToken.setiScore(topIScore.add(walletIScore));
+                            } else {
+                                topToken.setiScore(walletIScore);
+                            }
+                        }
+                    }
                 }
 
             }
         }
 
-        mTokenDataList = new ArrayList<WalletCardViewData>() {{
-            addAll(mapTokenViewData.values());
-        }};
         for (WalletCardViewData cardViewData : mTokenDataList) {
-            WalletItemViewData itemViewData = cardViewData.getLstWallet().get(0);
+            WalletItemViewData entryViewData = cardViewData.getLstWallet().get(0);
             // update balance, exchange (double -> string)
-            String txtAmount = itemViewData.getAmount() == null ? "-" : // decimal rounding 4
-                    itemViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
+            String txtAmount = entryViewData.getAmount() == null ? "-" : // decimal rounding 4
+                    entryViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
 
-            String txtExchanged = itemViewData.getExchanged() == null ? "-" :
-                    itemViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
+            String txtExchanged = entryViewData.getExchanged() == null ? "-" :
+                    entryViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
                             + " " + currentExchangeUnit.name();
 
-            itemViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
+            entryViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
+
+            if (entryViewData.getWalletItemType() == WalletItemViewData.WalletItemType.ICXcoin) {
+                if (entryViewData.getStacked() != null && entryViewData.getAmount() != null) {
+                    BigDecimal staked = new BigDecimal(ConvertUtil.getValue(entryViewData.getStacked(), 18));
+                    BigDecimal balance = staked.add(entryViewData.getAmount());
+
+                    BigDecimal percent = balance.compareTo(BigDecimal.ZERO) == 0 ? null :
+                            staked.multiply(new BigDecimal(100))
+                                    .divide(balance, 1, BigDecimal.ROUND_UP);
+
+                    entryViewData.setTxtStacked(staked.setScale(4) + " (" + (percent == null ? " - " : percent) + "%)");
+                } else {
+                    entryViewData.setTxtStacked("- ( - %)");
+                }
+
+                if (entryViewData.getiScore() != null) {
+                    BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(entryViewData.getiScore(), 18));
+                    entryViewData.setTxtIScore(iscore.setScale(4) + "");
+                } else {
+                    entryViewData.setTxtIScore("-");
+                }
+            }
         }
     }
 
@@ -750,4 +823,112 @@ public class MainWalletFragment extends Fragment {
             drawer.closeDrawer(Gravity.LEFT);
         }
     };
+
+    private void showInfo() {
+        startActivity(new Intent(getContext(), AboutActivity.class)
+                .putExtra(AboutActivity.PARAM_ABOUT_ITEM_LIST, new ArrayList<Parcelable>() {{
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo00)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo01)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo02)));
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo10)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo11)));
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo20)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo21)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo22)));
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo30)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo31)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo32)));
+
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_HEAD,
+                            getString(R.string.mainWalletInfo40)));
+                    add(new AboutActivity.AboutItem(
+                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
+                            getString(R.string.mainWalletInfo41)));
+                }}));
+    }
+
+    private void startAnimation() {
+        Animation aniLogo01 = AnimationUtils.loadAnimation(getContext(), R.anim.sidemenu_logo01);
+        Animation aniLogo02 = AnimationUtils.loadAnimation(getContext(), R.anim.sidemenu_logo02);
+        imgLogo01.startAnimation(aniLogo01);
+        imgLogo02.startAnimation(aniLogo02);
+
+        Animation aniMenuItem = AnimationUtils.loadAnimation(getContext(), R.anim.sidemenu_item_showup);
+
+        btnCreateWallet.startAnimation(aniMenuItem);
+        btnLoadWallet.startAnimation(aniMenuItem);
+        btnExportWalletBundle.startAnimation(aniMenuItem);
+        btnScreenLock.startAnimation(aniMenuItem);
+        btnAppVer.startAnimation(aniMenuItem);
+        btnICONexDisclaimers.startAnimation(aniMenuItem);
+
+        Animation aniLineAlpha = new AlphaAnimation(0, 0.5f);
+        aniLineAlpha.setFillAfter(true);
+        aniLineAlpha.setFillBefore(true);
+        aniLineAlpha.setStartOffset(100);
+        aniLineAlpha.setDuration(300);
+
+        line.startAnimation(aniLineAlpha);
+
+        imgLogo01.setVisibility(View.VISIBLE);
+        imgLogo02.setVisibility(View.VISIBLE);
+        btnCreateWallet.setVisibility(View.VISIBLE);
+        btnLoadWallet.setVisibility(View.VISIBLE);
+        btnExportWalletBundle.setVisibility(View.VISIBLE);
+        btnScreenLock.setVisibility(View.VISIBLE);
+        btnAppVer.setVisibility(View.VISIBLE);
+        btnICONexDisclaimers.setVisibility(View.VISIBLE);
+        line.setVisibility(View.VISIBLE);
+    }
+
+    private void cancelAnimation() {
+        imgLogo01.clearAnimation();
+        imgLogo02.clearAnimation();
+
+        btnCreateWallet.clearAnimation();
+        btnLoadWallet.clearAnimation();
+        btnExportWalletBundle.clearAnimation();
+        btnScreenLock.clearAnimation();
+        btnAppVer.clearAnimation();
+        btnICONexDisclaimers.clearAnimation();
+
+        line.clearAnimation();
+
+        imgLogo01.setVisibility(View.INVISIBLE);
+        imgLogo02.setVisibility(View.INVISIBLE);
+        btnCreateWallet.setVisibility(View.INVISIBLE);
+        btnLoadWallet.setVisibility(View.INVISIBLE);
+        btnExportWalletBundle.setVisibility(View.INVISIBLE);
+        btnScreenLock.setVisibility(View.INVISIBLE);
+        btnAppVer.setVisibility(View.INVISIBLE);
+        btnICONexDisclaimers.setVisibility(View.INVISIBLE);
+        line.setVisibility(View.INVISIBLE);
+    }
 }

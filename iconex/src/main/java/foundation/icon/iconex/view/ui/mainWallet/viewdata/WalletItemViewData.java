@@ -3,6 +3,7 @@ package foundation.icon.iconex.view.ui.mainWallet.viewdata;
 import android.util.Log;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.wallet.WalletEntry;
@@ -14,6 +15,8 @@ public class WalletItemViewData {
     private int entryID;
     private BigDecimal amount = null;
     private BigDecimal exchanged = null;
+    private BigInteger stacked = null;
+    private BigInteger iScore = null;
 
     // common flied
     private WalletItemType walletItemType;
@@ -24,9 +27,8 @@ public class WalletItemViewData {
     private String txtExchanged;
 
     // only for icx coin
-    private String stacked;
-    private String votingPower;
-    private String iScore;
+    private String txtStacked;
+    private String txtIScore;
 
     // has drawable resource id, maybe not use
     private int drawableSymbolresId;
@@ -45,9 +47,8 @@ public class WalletItemViewData {
         name = data.name;
         txtAmount = data.txtAmount;
         txtExchanged = data.txtExchanged;
-        stacked = data.stacked;
-        votingPower = data.votingPower;
-        iScore = data.iScore;
+        txtStacked = data.txtStacked;
+        txtIScore = data.txtIScore;
         drawableSymbolresId = data.drawableSymbolresId;
         bgSymbolColor = data.bgSymbolColor;
         symbolLetter = data.symbolLetter;
@@ -81,9 +82,8 @@ public class WalletItemViewData {
                         .setDrawableSymbolresId(R.drawable.img_logo_icon_sel)
                         .setTxtAmount(walletEntry.getBalance())
                         .setTxtExchanged("-")
-                        .setStacked("-")
-                        .setVotingPower("-")
-                        .setiScore("-");
+                        .setTxtStacked("-")
+                        .setTxtIScore("-");
             } break;
             case ETHcoin: {
                 itemViewData
@@ -137,6 +137,24 @@ public class WalletItemViewData {
         return this;
     }
 
+    public BigInteger getStacked() {
+        return stacked;
+    }
+
+    public WalletItemViewData setStacked(BigInteger stacked) {
+        this.stacked = stacked;
+        return this;
+    }
+
+    public BigInteger getiScore() {
+        return iScore;
+    }
+
+    public WalletItemViewData setiScore(BigInteger iScore) {
+        this.iScore = iScore;
+        return this;
+    }
+
     public WalletItemType getWalletItemType() {
         return walletItemType;
     }
@@ -182,30 +200,21 @@ public class WalletItemViewData {
         return this;
     }
 
-    public String getStacked() {
-        return stacked;
+    public String getTxtStacked() {
+        return txtStacked;
     }
 
-    public WalletItemViewData setStacked(String stacked) {
-        this.stacked = stacked;
+    public WalletItemViewData setTxtStacked(String txtStacked) {
+        this.txtStacked = txtStacked;
         return this;
     }
 
-    public String getVotingPower() {
-        return votingPower;
+    public String getTxtIScore() {
+        return txtIScore;
     }
 
-    public WalletItemViewData setVotingPower(String votingPower) {
-        this.votingPower = votingPower;
-        return this;
-    }
-
-    public String getiScore() {
-        return iScore;
-    }
-
-    public WalletItemViewData setiScore(String iScore) {
-        this.iScore = iScore;
+    public WalletItemViewData setTxtIScore(String txtIScore) {
+        this.txtIScore = txtIScore;
         return this;
     }
 
