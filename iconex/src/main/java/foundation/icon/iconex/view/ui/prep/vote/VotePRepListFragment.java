@@ -19,11 +19,13 @@ import java.util.List;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.view.ui.prep.PRepListAdapter;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.DividerItemDecorator;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
@@ -45,8 +47,9 @@ public class VotePRepListFragment extends Fragment {
     private RecyclerView list;
     private PRepListAdapter adapter;
 
+    private Wallet wallet;
     private List<PRep> prepList;
-    private List<Delegation> delegations;
+    private List<Delegation> delegations = new ArrayList<>();
 
     private Disposable disposable;
 
@@ -63,6 +66,7 @@ public class VotePRepListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         vm = ViewModelProviders.of(getActivity()).get(VoteViewModel.class);
+        wallet = vm.getWallet().getValue();
         delegations = vm.getDelegations().getValue();
         prepList = vm.getPreps().getValue();
     }
@@ -94,8 +98,9 @@ public class VotePRepListFragment extends Fragment {
         if (prepList != null && prepList.size() > 0) {
             adapter = new PRepListAdapter(getContext(),
                     PRepListAdapter.Type.VOTE,
-                    prepList);
+                    prepList, getActivity());
             adapter.setDelegations(delegations);
+            adapter.setOnPRepAddListener(mAddListener);
             list.setAdapter(adapter);
         }
 
@@ -164,12 +169,20 @@ public class VotePRepListFragment extends Fragment {
                         adapter = new PRepListAdapter(
                                 getContext(),
                                 PRepListAdapter.Type.VOTE,
-                                prepList);
+                                prepList, getActivity());
+                        adapter.setOnPRepAddListener(mAddListener);
 
                         list.setAdapter(adapter);
                     }
                 });
     }
+
+    private PRepListAdapter.OnPRepAddListener mAddListener = new PRepListAdapter.OnPRepAddListener() {
+        @Override
+        public void onAdd(PRep prep) {
+            RealmUtil.addMyVote(wallet.getAddress(), prep);
+        }
+    };
 
     public interface OnVotePRepListListener {
     }

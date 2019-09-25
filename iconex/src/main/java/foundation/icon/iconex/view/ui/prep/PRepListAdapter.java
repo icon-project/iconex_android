@@ -39,13 +39,14 @@ public class PRepListAdapter extends RecyclerView.Adapter {
         this.preps = preps;
     }
 
-    public PRepListAdapter(Context context, Type type, List<PRep> preps, AppCompatActivity root) {
+    public PRepListAdapter(Context context, Type type, List<PRep> preps, Activity root) {
         mContext = context;
         mType = type;
         this.preps = preps;
         this.root = root;
 
-        vm = ViewModelProviders.of(root).get(VoteViewModel.class);
+        vm = ViewModelProviders.of((AppCompatActivity) root).get(VoteViewModel.class);
+        delegations = vm.getDelegations().getValue();
     }
 
     @NonNull
@@ -142,25 +143,29 @@ public class PRepListAdapter extends RecyclerView.Adapter {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_prep_manage:
+                    ToolTip toolTip = new ToolTip(mContext);
                     if (btnManage.isSelected()) {
-                        ToolTip toolTip = new ToolTip(mContext);
-                        if (delegations.size() == 10) {
-                            toolTip.setText(mContext.getString(R.string.tipPRepMax));
-                        } else {
-                            toolTip.setText(mContext.getString(R.string.tipAddedPRep));
-                        }
-
+                        toolTip.setText(mContext.getString(R.string.tipAddedPRep));
                         toolTip.setPosition(root, btnManage);
                     } else {
-                        PRep prep = preps.get(getAdapterPosition());
-                        Delegation delegation = new Delegation.Builder()
-                                .address(prep.getAddress())
-                                .grade(prep.getGrade())
-                                .name(prep.getName())
-                                .build();
-                        delegations.add(delegation);
-                        vm.setDelegations(delegations);
-                        notifyDataSetChanged();
+                        if (delegations.size() == 10) {
+                            toolTip.setText(mContext.getString(R.string.tipPRepMax));
+                            toolTip.setPosition(root, btnManage);
+                        } else {
+                            PRep prep = preps.get(getAdapterPosition());
+                            Delegation delegation = new Delegation.Builder()
+                                    .address(prep.getAddress())
+                                    .grade(prep.getGrade())
+                                    .name(prep.getName())
+                                    .build();
+                            delegations.add(delegation);
+                            vm.setDelegations(delegations);
+
+                            notifyItemChanged(getAdapterPosition());
+
+                            if (mAddListener != null)
+                                mAddListener.onAdd(prep);
+                        }
                     }
                     break;
             }
@@ -173,6 +178,16 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
     public void setDelegations(List<Delegation> delegations) {
         this.delegations = delegations;
+    }
+
+    private OnPRepAddListener mAddListener = null;
+
+    public void setOnPRepAddListener(OnPRepAddListener listener) {
+        mAddListener = listener;
+    }
+
+    public interface OnPRepAddListener {
+        void onAdd(PRep prep);
     }
 
     public enum Type {

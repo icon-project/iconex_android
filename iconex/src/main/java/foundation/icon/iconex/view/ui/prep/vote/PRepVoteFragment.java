@@ -2,6 +2,7 @@ package foundation.icon.iconex.view.ui.prep.vote;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,14 +73,18 @@ public class PRepVoteFragment extends Fragment {
 
         vm = ViewModelProviders.of(getActivity()).get(VoteViewModel.class);
         wallet = vm.getWallet().getValue();
-        delegations = RealmUtil.loadMyVotes(wallet.getAddress());
-        vm.setDelegations(delegations);
+        delegations = vm.getDelegations().getValue();
         vm.getDelegations().observe(this, new Observer<List<Delegation>>() {
             @Override
             public void onChanged(List<Delegation> delegations) {
+                Log.d(TAG, "Delegate observer onChanged");
                 if (adapter != null && delegations != null) {
                     adapter.setData(delegations);
-                    adapter.notifyDataSetChanged();
+                    list.setAdapter(adapter);
+                } else {
+                    adapter = new MyVoteListAdapter(PRepVoteFragment.this.getContext(),
+                            delegations);
+                    list.setAdapter(adapter);
                 }
             }
         });
@@ -213,9 +218,7 @@ public class PRepVoteFragment extends Fragment {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        adapter = new MyVoteListAdapter(PRepVoteFragment.this.getContext(),
-                                delegations);
-                        list.setAdapter(adapter);
+                        vm.setDelegations(delegations);
                     }
 
                     @Override

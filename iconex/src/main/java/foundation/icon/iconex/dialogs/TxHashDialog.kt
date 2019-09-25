@@ -38,8 +38,8 @@ class TxHashDialog(context: Context) : MessageDialog(context) {
         }
 
         onConfirmClick = {
-            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.primaryClip = ClipData.newPlainText("TxHash", txHash)
+            var clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+//            clipboard.primaryClip = ClipData.newPlainText("TxHash", txHash)
             Toast.makeText(context, "TODO: Copied TxHash", Toast.LENGTH_SHORT).show()
 
             true

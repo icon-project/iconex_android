@@ -124,7 +124,7 @@ public class PRepStakeActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 stakeGraph.setStake(i);
 
-                if (!editStaked.isFocused()) {
+                if (b) {
                     editStaked.setText(calculateIcx(i));
                     editStaked.setSelection(editStaked.getText().toString().length());
                 }

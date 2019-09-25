@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.io.Serializable;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.view.ui.prep.vote.PRepVoteFragment;
 import foundation.icon.iconex.view.ui.prep.vote.VotePRepListFragment;
 import foundation.icon.iconex.view.ui.prep.vote.VoteViewModel;
@@ -49,6 +50,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private void initData() {
         vm = ViewModelProviders.of(this).get(VoteViewModel.class);
         vm.setWallet(wallet);
+        vm.setDelegations(RealmUtil.loadMyVotes(wallet.getAddress()));
 
         voteFragment = PRepVoteFragment.newInstance();
         prepsFragment = VotePRepListFragment.newInstance();
@@ -62,8 +64,8 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(PRepVoteActivity.this, PRepSearchActivity.class)
-                                .putExtra("preps", (Serializable) vm.getPreps())
-                                .putExtra("delegations", (Serializable) vm.getDelegations()),
+                                .putExtra("preps", (Serializable) vm.getPreps().getValue())
+                                .putExtra("delegations", (Serializable) vm.getDelegations().getValue()),
                         1000);
             }
         });

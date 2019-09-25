@@ -20,19 +20,19 @@ import java.util.Map;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
-import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
 import foundation.icon.iconex.dialogs.IconDisclaimerDialogFragment;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
-import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.menu.dev_appInfo.AppInfoActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
+import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 
@@ -355,15 +355,32 @@ public class MainWalletActivity extends AppCompatActivity implements
 //            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
 //            messageDialog.show();
 //        } else {
-            passwordDialog.show();
+        passwordDialog.show();
 //        }
     }
 
     @Override
     public void iScore(WalletCardViewData viewData) {
         Wallet wallet = findWalletByViewData(viewData);
-        startActivity(new Intent(this, PRepIScoreActivity.class)
-                .putExtra("wallet", (Serializable) wallet));
+
+        passwordDialog = new WalletPasswordDialog(this, wallet,
+                new WalletPasswordDialog.OnPassListener() {
+                    @Override
+                    public void onPass(byte[] bytePrivateKey) {
+                        startActivity(new Intent(MainWalletActivity.this, PRepIScoreActivity.class)
+                                .putExtra("wallet", (Serializable) wallet)
+                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
+                    }
+                });
+
+        BigInteger votingPower = wallet.getVotingPower();
+//        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
+//            messageDialog = new MessageDialog(MainWalletActivity.this);
+//            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
+//            messageDialog.show();
+//        } else {
+        passwordDialog.show();
+//        }
     }
 
     @Override
