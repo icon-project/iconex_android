@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentManager;
@@ -30,6 +32,8 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -42,6 +46,7 @@ import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
@@ -237,7 +242,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             public void onClickAction(CustomActionBar.ClickAction action) {
                 switch (action) {
                     case btnStart: finish(); break;
-                    case btnEnd: break;
+                    case btnEnd: showInfo(); break;
                 }
             }
         });
@@ -1055,5 +1060,38 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             dialog.show();
         } else
             super.onBackPressed();
+    }
+
+    private void showInfo() {
+        startActivity(new Intent(this, AboutActivity.class)
+                .putExtra(AboutActivity.PARAM_ABOUT_TITLE, getString(R.string.guidance))
+                .putExtra(AboutActivity.PARAM_ABOUT_ITEM_LIST, new ArrayList<Parcelable>() {{
+                    add(getHeadText(R.string.data));
+                    addAll(getParagraph(R.string.msgEthData));
+
+                    add(getHeadText(R.string.gasLimit));
+                    addAll(getParagraph(R.string.msgEthGasLimit));
+
+                    add(getHeadText(R.string.gasPrice));
+                    addAll(getParagraph(R.string.msgEthGasPrice));
+
+                    add(getHeadText(R.string.maxFee));
+                    addAll(getParagraph(R.string.msgEthEstimateFee));
+                }}));
+    }
+
+    private AboutActivity.AboutItem getHeadText(@StringRes int resId) {
+        String headText = getString(resId);
+        return new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_HEAD, headText);
+    }
+
+    private List<AboutActivity.AboutItem> getParagraph(@StringRes int resId) {
+        String paragraphText = getString(resId);
+        String[] split = paragraphText.replace("\n", "").split("다\\.");
+        return new ArrayList<AboutActivity.AboutItem>() {{
+            for(String str : split) {
+                add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, str + "다."));
+            }
+        }};
     }
 }

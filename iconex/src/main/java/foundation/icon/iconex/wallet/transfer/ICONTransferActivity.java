@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -45,6 +48,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
@@ -355,7 +359,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                 switch (action) {
                     case btnStart: finish(); break;
                     case btnEnd:
-                        Toast.makeText(ICONTransferActivity.this, "not implement", Toast.LENGTH_SHORT).show();
+                        showInfo();
                         break;
                 }
             }
@@ -1258,5 +1262,39 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         setLimitPrice(strLimit, txtStepICX);
 
         getSupportFragmentManager().popBackStackImmediate();
+    }
+
+
+    private void showInfo() {
+        startActivity(new Intent(this, AboutActivity.class)
+                .putExtra(AboutActivity.PARAM_ABOUT_TITLE, getString(R.string.guidance))
+                .putExtra(AboutActivity.PARAM_ABOUT_ITEM_LIST, new ArrayList<Parcelable>() {{
+                    add(getHeadText(R.string.data));
+                    addAll(getParagraph(R.string.msgIcxData));
+
+                    add(getHeadText(R.string.icxStepLimit));
+                    addAll(getParagraph(R.string.msgStepLimit));
+
+                    add(getHeadText(R.string.icxStepPrice));
+                    addAll(getParagraph(R.string.msgStepPrice));
+
+                    add(getHeadText(R.string.maxFee));
+                    addAll(getParagraph(R.string.msgICXEstimateFee));
+                }}));
+    }
+
+    private AboutActivity.AboutItem getHeadText(@StringRes int resId) {
+        String headText = getString(resId);
+        return new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_HEAD, headText);
+    }
+
+    private List<AboutActivity.AboutItem> getParagraph(@StringRes int resId) {
+        String paragraphText = getString(resId);
+        String[] split = paragraphText.replace("\n", "").split("다\\.");
+        return new ArrayList<AboutActivity.AboutItem>() {{
+            for(String str : split) {
+                add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, str + "다."));
+            }
+        }};
     }
 }

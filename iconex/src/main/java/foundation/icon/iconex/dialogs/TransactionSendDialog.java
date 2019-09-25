@@ -90,16 +90,16 @@ public class TransactionSendDialog extends MessageDialog {
             ErcTxInfo txInfo = (ErcTxInfo) mTxInfo;
             labelSendAmount.setText(getStringFormat(R.string.sendBalanceAmount, txInfo.getSymbol()));
             labelLimitPrice.setText(getStringFormat(R.string.stepLimit_price, SYMBOL_ETH));
-            labelFee.setText(getStringFormat(R.string.maxFee, SYMBOL_ETH));
+            labelFee.setText(getStringFormat(R.string.estiFee, SYMBOL_ETH));
         } else if (mTxInfo instanceof EthTxInfo) {
             labelSendAmount.setText(getStringFormat(R.string.sendBalanceAmount, SYMBOL_ETH));
             labelLimitPrice.setText(getStringFormat(R.string.stepLimit_price, SYMBOL_ETH));
-            labelFee.setText(getStringFormat(R.string.maxFee, SYMBOL_ETH));
+            labelFee.setText(getStringFormat(R.string.estiFee, SYMBOL_ETH));
         } else {
             ICONTxInfo txInfo = (ICONTxInfo) mTxInfo;
             labelSendAmount.setText(getStringFormat(R.string.sendBalanceAmount, txInfo.getSymbol()));
             labelLimitPrice.setText(getStringFormat(R.string.stepLimit_price, SYMBOL_ICON));
-            labelFee.setText(getStringFormat(R.string.maxFee, SYMBOL_ICON));
+            labelFee.setText(getStringFormat(R.string.estiFee, SYMBOL_ICON));
         }
 
         txtReceive.setText(mTxInfo.getToAddress());

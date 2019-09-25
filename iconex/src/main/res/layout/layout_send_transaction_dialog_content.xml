@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
-        android:text="@string/maxFee"
+        android:text="@string/estiFee"
         android:textColor="@color/dark80"
         android:textSize="10dp"
         app:layout_constraintStart_toStartOf="parent"

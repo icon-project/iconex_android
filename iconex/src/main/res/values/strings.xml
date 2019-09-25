@@ -550,12 +550,13 @@
     <!-- New - Transaction send  -->
     <string name="sendBalanceAmount">전송 수량 (%s)</string>
     <string name="stepLimit_price">적정 Step 한도 / 가격 (%s)</string>
-    <string name="maxFee">예상 최대 수수료 (%s)</string>
+    <string name="maxFee">예상 최대 수수료</string>
     <string name="receiveAddress">받는 주소</string>
 
     <string name="type">Type</string>
 
     <!--  New Main wallet info  -->
+    <string name="guidance">안내</string>
 
     <string name="mainWalletInfo00">전체 자산 가치</string>
     <string name="mainWalletInfo01">USD 환산금액이 표시되지 않은 토큰은 전체 자산 평가금액에서 제외됩니다.</string>
