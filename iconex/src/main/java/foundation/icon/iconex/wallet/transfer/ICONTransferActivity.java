@@ -185,9 +185,9 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         appbar.setTitle(wallet.getAlias());
 
         // set Symbol
-        String symbol = entry.getSymbol();
+        String symbol = "(" + entry.getSymbol() + ")";
         labelSymbol.setText(symbol);
-        editSend.setAppendText(symbol);
+        editSend.setAppendText(symbol.substring(1, symbol.length() -1));
         symbolStepLimit.setText(symbol);
         symbolEstimatedMaxFee.setText(symbol);
 

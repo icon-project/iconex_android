@@ -233,9 +233,10 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private void initView() {
         // set symbol
         appbar.setTitle(mWallet.getAlias());
-        labelSymbol.setText(mWalletEntry.getSymbol());
-        editSend.setAppendText(mWalletEntry.getSymbol());
-        symbolEstimatedMaxFee.setText(mWalletEntry.getSymbol());
+        String symbol = "(" + mWalletEntry.getSymbol() + ")";
+        labelSymbol.setText(symbol);
+        editSend.setAppendText(symbol.substring(1, symbol.length() -1));
+        symbolEstimatedMaxFee.setText(symbol);
 
         // init appbar
         appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
@@ -469,6 +470,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         });
 
         // set seek bar
+        labelSlow.setText(1 + " (" +getString(R.string.slow) +")");
+        labelFast.setText("(" +getString(R.string.fast) +") " + 99);
         seekPrice.setProgress(DEFAULT_PRICE);
         seekPrice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

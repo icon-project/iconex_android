@@ -105,7 +105,7 @@
                     android:gravity="center_vertical"
                     android:textColor="@android:color/white"
                     android:layout_marginLeft="10dp"
-                    android:text="@string/send"
+                    android:text="@string/transfer"
                     android:layout_weight="1"/>
 
 
@@ -116,7 +116,8 @@
                 android:id="@+id/btn_convert"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="24dp"
