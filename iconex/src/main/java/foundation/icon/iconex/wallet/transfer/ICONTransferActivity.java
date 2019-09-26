@@ -28,6 +28,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
+import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -284,30 +285,6 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         } else if (requestCode == RC_DATA) {
             IconEnterDataActivity.activityResultHelper(resultCode, data, this);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0) {
-            Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-            dialog.setMessage(getString(R.string.cancelEnterData));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                @Override
-                public void onOk() {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                    fragmentManager.popBackStackImmediate();
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
-            dialog.show();
-        } else
-            super.onBackPressed();
     }
 
     private void loadView() {
@@ -1224,7 +1201,11 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
     @Override
     public void onSetData(InputData data) {
         this.data = data;
-        editData.setText(data.getData());
+
+        if (data.getDataType() == EnterDataFragment.DataType.UTF)
+            editData.setText(new String(Hex.decode(Utils.remove0x(data.getData()))));
+        else
+            editData.setText(data.getData());
         btnViewData.setVisibility(View.VISIBLE);
         minStep = new BigInteger(Integer.toString(this.data.getStepCost()));
         strLimit = minStep.toString();

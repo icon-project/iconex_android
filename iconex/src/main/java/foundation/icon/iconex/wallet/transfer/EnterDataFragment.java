@@ -231,7 +231,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                     editData.requestFocus();
 
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    imm.showSoftInput(editData, InputMethodManager.SHOW_IMPLICIT);
 
                     state = State.INPUT;
                 } else {
@@ -278,7 +278,7 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private void showCancel() {
+    public void showCancel() {
         if (data.getData() == null && editData.getText().length() > 0) {
             MessageDialog messageDialog = new MessageDialog(getActivity());
             messageDialog.setSingleButton(false);
@@ -295,18 +295,6 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
         } else {
             if (mListener != null)
                 mListener.onDataCancel(data);
-        }
-    }
-
-    private boolean isHexCharSet(char c) {
-        if (c >= 48 && c <= 57) {
-            return true;
-        } else if (c >= 65 && c <= 90) {
-            return true;
-        } else if (c >= 97 && c <= 122) {
-            return true;
-        } else {
-            return false;
         }
     }
 

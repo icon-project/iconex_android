@@ -24,8 +24,7 @@ public class IconEnterDataActivity extends AppCompatActivity implements EnterDat
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(android.R.id.content, EnterDataFragment.newInstance(data));
-        transaction.addToBackStack("DATA");
+        transaction.add(android.R.id.content, EnterDataFragment.newInstance(data), DATA);
         transaction.commit();
     }
 
@@ -45,6 +44,11 @@ public class IconEnterDataActivity extends AppCompatActivity implements EnterDat
     public void onDataDelete() {
         setResult(3);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        ((EnterDataFragment) getSupportFragmentManager().findFragmentByTag(DATA)).showCancel();
     }
 
     public static void activityResultHelper(int resultCode, Intent intent, EnterDataFragment.OnEnterDataLisnter lisnter) {
