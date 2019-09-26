@@ -40,8 +40,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EnterDataFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = EnterDataFragment.class.getSimpleName();
+public class IconEnterDataFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = IconEnterDataFragment.class.getSimpleName();
 
     private TextView txtDataSize;
     private MyEditText editData;
@@ -61,12 +61,12 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
     private String beforeStr;
     private int maxSize;
 
-    public EnterDataFragment() {
+    public IconEnterDataFragment() {
         // Required empty public constructor
     }
 
-    public static EnterDataFragment newInstance(InputData data) {
-        EnterDataFragment fragment = new EnterDataFragment();
+    public static IconEnterDataFragment newInstance(InputData data) {
+        IconEnterDataFragment fragment = new IconEnterDataFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATA, data);
         fragment.setArguments(args);

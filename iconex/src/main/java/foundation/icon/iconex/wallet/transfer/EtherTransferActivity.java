@@ -124,6 +124,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
     private static final int RC_CONTACTS = 9001;
     private static final int RC_BARCODE_CAPTURE = 9002;
+    private static final int RC_DATA = 9003;
 
     private static final int DEFAULT_PRICE = 21;
     private static final int DEFAULT_GAS_LIMIT = 21000;
@@ -409,11 +410,11 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             @Override
             public void onClick(View v) {
                 if (editData.getText().length() <= 0) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(android.R.id.content, EtherDataEnterFragment.newInstance(editData.getText()));
-                    transaction.addToBackStack("DATA");
-                    transaction.commit();
+                    startActivityForResult(new Intent(
+                                    EtherTransferActivity.this, EtherEnterDataActivity.class
+                            ).putExtra(EtherEnterDataActivity.DATA, editData.getText()),
+                            RC_DATA
+                    );
                 }
             }
         });
@@ -421,11 +422,11 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             @Override
             public void onClick(View v) {
                 if (editData.getText().length() > 0) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(android.R.id.content, EtherDataEnterFragment.newInstance(editData.getText()));
-                    transaction.addToBackStack("DATA");
-                    transaction.commit();
+                    startActivityForResult(new Intent(
+                                    EtherTransferActivity.this, EtherEnterDataActivity.class
+                            ).putExtra(EtherEnterDataActivity.DATA, editData.getText()),
+                            RC_DATA
+                    );
                 }
             }
         });
@@ -1006,9 +1007,9 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                     btnSend.setEnabled(result);
                 } else {
                 }
-            } else {
-
             }
+        } else if (requestCode == RC_DATA) {
+            EtherEnterDataActivity.activityResultHelper(resultCode, data, this);
         }
     }
 
@@ -1016,56 +1017,18 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     public void onSetData(String data) {
         editData.setText(data);
         btnViewData.setVisibility(View.VISIBLE);
-
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        getSupportFragmentManager().popBackStackImmediate();
-
         setSendEnable();
     }
 
     @Override
-    public void onDataCancel(String data) {
-        if (data == null || data.length() <= 0) {
-            editData.setText("");
-            btnViewData.setVisibility(View.GONE);
-        } else {
-            btnViewData.setVisibility(View.VISIBLE);
-        }
-
-        getSupportFragmentManager().popBackStackImmediate();
+    public void onDataCancel() {
+        // nothing
     }
 
     @Override
     public void onDataDelete() {
         editData.setText("");
         btnViewData.setVisibility(View.GONE);
-
-        getSupportFragmentManager().popBackStackImmediate();
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0) {
-            Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-            dialog.setMessage(getString(R.string.cancelEnterData));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                @Override
-                public void onOk() {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                    fragmentManager.popBackStackImmediate();
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
-            dialog.show();
-        } else
-            super.onBackPressed();
     }
 
     private void showInfo() {

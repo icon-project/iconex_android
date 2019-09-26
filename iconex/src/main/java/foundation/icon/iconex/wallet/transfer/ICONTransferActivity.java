@@ -11,17 +11,13 @@ import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -33,7 +29,6 @@ import org.spongycastle.util.encoders.Hex;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -42,7 +37,6 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
@@ -75,7 +69,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ICONTransferActivity extends AppCompatActivity implements EnterDataFragment.OnEnterDataLisnter{
+public class ICONTransferActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter{
 
     // appbar UI
     private CustomActionBar appbar;
@@ -458,7 +452,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                     DataTypeDialog typeDialog = new DataTypeDialog(ICONTransferActivity.this);
                     typeDialog.setOnTypeListener(new DataTypeDialog.OnTypeListener() {
                         @Override
-                        public void onSelect(EnterDataFragment.DataType type) {
+                        public void onSelect(IconEnterDataFragment.DataType type) {
                             data = new InputData();
                             data.setAddress(wallet.getAddress());
                             data.setBalance(balance);
@@ -1202,7 +1196,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
     public void onSetData(InputData data) {
         this.data = data;
 
-        if (data.getDataType() == EnterDataFragment.DataType.UTF)
+        if (data.getDataType() == IconEnterDataFragment.DataType.UTF)
             editData.setText(new String(Hex.decode(Utils.remove0x(data.getData()))));
         else
             editData.setText(data.getData());

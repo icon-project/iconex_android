@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    tools:context=".wallet.transfer.EnterDataFragment">
+    tools:context=".wallet.transfer.IconEnterDataFragment">
 
     <foundation.icon.iconex.widgets.TitleBar
         android:layout_width="match_parent"

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -41,9 +42,7 @@ public class EtherDataEnterFragment extends Fragment {
     private OnEnterDataLisnter mListener;
     public interface OnEnterDataLisnter {
         void onSetData(String data);
-
-        void onDataCancel(String data);
-
+        void onDataCancel();
         void onDataDelete();
     }
 
@@ -98,20 +97,7 @@ public class EtherDataEnterFragment extends Fragment {
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessageDialog messageDialog = new MessageDialog(getActivity());
-                messageDialog.setSingleButton(false);
-                messageDialog.setTitleText(getString(R.string.cancelEnterData));
-                messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
-                    @Override
-                    public Boolean invoke(View view) {
-                        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                        if (mListener != null)
-                            mListener.onDataCancel(editData.getText().toString());
-                        return true;
-                    }
-                });
-                messageDialog.show();
+                showCancel();
             }
         });
 
@@ -126,6 +112,9 @@ public class EtherDataEnterFragment extends Fragment {
 
                     editData.setFocusableInTouchMode(true);
                     editData.requestFocus();
+
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(editData, InputMethodManager.SHOW_IMPLICIT);
 
                     state = State.INPUT;
                 } else {
@@ -166,6 +155,27 @@ public class EtherDataEnterFragment extends Fragment {
         editData.requestFocus();
 
         return v;
+    }
+
+    public void showCancel() {
+        String data = (String) getArguments().get("data");
+        if (data.length() <= 0 && editData.getText().length() > 0) {
+            MessageDialog messageDialog = new MessageDialog(getActivity());
+            messageDialog.setSingleButton(false);
+            messageDialog.setTitleText(getString(R.string.cancelEnterData));
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    if (mListener != null)
+                        mListener.onDataCancel();
+                    return true;
+                }
+            });
+            messageDialog.show();
+        } else {
+            if (mListener != null)
+                mListener.onDataCancel();
+        }
     }
 
     @Override

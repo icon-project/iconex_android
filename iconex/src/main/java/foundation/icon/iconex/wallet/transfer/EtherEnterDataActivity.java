@@ -10,32 +10,36 @@ import androidx.fragment.app.FragmentTransaction;
 
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 
-public class IconEnterDataActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter{
+public class EtherEnterDataActivity extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter {
 
     public static final String DATA = "DATA";
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        InputData data = (InputData) getIntent().getSerializableExtra(DATA);
+        String data = getIntent().getStringExtra(DATA);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(android.R.id.content, IconEnterDataFragment.newInstance(data), DATA);
+        transaction.add(android.R.id.content, EtherDataEnterFragment.newInstance(data), DATA);
         transaction.commit();
     }
 
     @Override
-    public void onSetData(InputData data) {
+    public void onBackPressed() {
+        ((EtherDataEnterFragment) getSupportFragmentManager().findFragmentByTag(DATA)).showCancel();
+    }
+
+    @Override
+    public void onSetData(String data) {
         setResult(1, new Intent().putExtra(DATA, data));
         finish();
     }
 
     @Override
-    public void onDataCancel(InputData data) {
-        setResult(2, new Intent().putExtra(DATA, data));
+    public void onDataCancel() {
+        setResult(2);
         finish();
     }
 
@@ -45,20 +49,14 @@ public class IconEnterDataActivity extends AppCompatActivity implements IconEnte
         finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        ((IconEnterDataFragment) getSupportFragmentManager().findFragmentByTag(DATA)).showCancel();
-    }
-
-    public static void activityResultHelper(int resultCode, Intent intent, IconEnterDataFragment.OnEnterDataLisnter lisnter) {
+    public static void activityResultHelper(int resultCode, Intent intent, EtherDataEnterFragment.OnEnterDataLisnter lisnter) {
         switch (resultCode) {
             case 1: { // setData
-                InputData data = (InputData) intent.getSerializableExtra(DATA);
+                String data = intent.getStringExtra(DATA);
                 lisnter.onSetData(data);
             } break;
             case 2: { // dataCancel
-                InputData data = (InputData) intent.getSerializableExtra(DATA);
-                lisnter.onDataCancel(data);
+                lisnter.onDataCancel();
             } break;
             case 3: { // dataDelete
                 lisnter.onDataDelete();
