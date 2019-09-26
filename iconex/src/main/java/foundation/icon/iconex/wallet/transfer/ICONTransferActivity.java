@@ -8,10 +8,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
+import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -523,7 +525,6 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
             }
         });
 
-
         // set common edit event
         TTextInputLayout.OnKeyPreIme onKeyPreIme = new TTextInputLayout.OnKeyPreIme() {
             @Override
@@ -533,6 +534,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         };
 
         // init editSend
+        editSend.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editSend.setOnKeyPreImeListener(onKeyPreIme);
         editSend.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
@@ -599,6 +601,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         // editSend.setOnEditorActionListener(); nothing
 
         // init editAddress
+        editAddress.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         editAddress.setOnKeyPreImeListener(onKeyPreIme);
         editAddress.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
@@ -627,7 +630,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                 }
             }
         });
-        // editAddress.setOnEditorActionListener(); nohing
+        // editAddress.setOnEditorActionListener(); nothing
     }
 
     private void addPlus(int plus) {
@@ -1225,9 +1228,6 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         strLimit = minStep.toString();
         setLimitPrice(strLimit, txtStepICX);
 
-//        btnInput.setText(getString(R.string.view));
-//        btnInput.setSelected(true);
-
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         getSupportFragmentManager().popBackStackImmediate();
@@ -1237,7 +1237,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
 
     @Override
     public void onDataCancel(InputData data) {
-        if (data.getData() == null) {
+        if (data.getData() == null ) {
             this.data = null;
             editData.setText("");
             btnViewData.setVisibility(View.GONE);
@@ -1253,9 +1253,6 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         this.data = null;
         editData.setText("");
         btnViewData.setVisibility(View.GONE);
-
-//        btnInput.setText(R.string.input);
-//        btnInput.setSelected(false);
 
         minStep = defaultLimit;
         strLimit = minStep.toString();
@@ -1278,7 +1275,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                     add(getHeadText(R.string.icxStepPrice));
                     addAll(getParagraph(R.string.msgStepPrice));
 
-                    add(getHeadText(R.string.maxFee));
+                    add(getHeadText(R.string.estimateFee));
                     addAll(getParagraph(R.string.msgICXEstimateFee));
                 }}));
     }

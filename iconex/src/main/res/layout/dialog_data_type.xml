@@ -65,7 +65,7 @@
             android:fontFamily="@font/noto_sans_medium"
             android:gravity="center_horizontal|center_vertical"
             android:lineSpacingExtra="10dp"
-            android:text="@string/type"
+            android:text="@string/inputType"
             android:textColor="@color/dark80"
             android:layout_marginTop="20dp"
             android:textSize="10dp" />

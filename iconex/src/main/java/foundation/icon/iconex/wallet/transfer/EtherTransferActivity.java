@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
+import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -248,6 +249,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         });
 
         // init send
+        editSend.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editSend.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
@@ -328,6 +330,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         });
 
         // edit address
+        editAddress.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         editAddress.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
@@ -1020,7 +1023,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
     @Override
     public void onDataCancel(String data) {
-        if (data == null) {
+        if (data == null || data.length() <= 0) {
             editData.setText("");
             btnViewData.setVisibility(View.GONE);
         } else {
@@ -1075,7 +1078,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                     add(getHeadText(R.string.gasPrice));
                     addAll(getParagraph(R.string.msgEthGasPrice));
 
-                    add(getHeadText(R.string.maxFee));
+                    add(getHeadText(R.string.estimateFee));
                     addAll(getParagraph(R.string.msgEthEstimateFee));
                 }}));
     }

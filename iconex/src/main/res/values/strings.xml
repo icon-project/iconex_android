@@ -547,13 +547,16 @@
     <!-- New side Menu -->
     <string name="appVer">앱 버전</string>
 
-    <!-- New - Transaction send  -->
-    <string name="sendBalanceAmount">전송 수량 (%s)</string>
-    <string name="stepLimit_price">적정 Step 한도 / 가격 (%s)</string>
-    <string name="maxFee">예상 최대 수수료</string>
-    <string name="receiveAddress">받는 주소</string>
 
-    <string name="type">Type</string>
+    <!-- New - Transfer -->
+    <string name="availableBalance">사용 가능 잔액</string>
+    <string name="sendBalance">전송 수량</string>
+    <string name="viewData">데이터 보기</string>
+    <string name="stepLimit_Price">적정 Step 한도 / 가격</string>
+    <string name="estimateFee">예상 최대 수수료</string>
+    <string name="maxBalance">전액</string>
+    <string name="transfer">전송</string>
+
 
     <!--  New Main wallet info  -->
     <string name="guidance">안내</string>
