@@ -83,7 +83,7 @@ public class PRepVoteFragment extends Fragment {
                     list.setAdapter(adapter);
                 } else {
                     adapter = new MyVoteListAdapter(PRepVoteFragment.this.getContext(),
-                            delegations);
+                            delegations, getActivity());
                     list.setAdapter(adapter);
                 }
             }

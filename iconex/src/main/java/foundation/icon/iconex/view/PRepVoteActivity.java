@@ -7,8 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.tabs.TabLayout;
@@ -21,6 +25,7 @@ import foundation.icon.iconex.view.ui.prep.vote.PRepVoteFragment;
 import foundation.icon.iconex.view.ui.prep.vote.VotePRepListFragment;
 import foundation.icon.iconex.view.ui.prep.vote.VoteViewModel;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.widgets.NonSwipeViewPager;
 
 public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragment.OnVoteListener,
         VotePRepListFragment.OnVotePRepListListener {
@@ -32,6 +37,9 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private TabLayout tabLayout;
     private ImageButton btnSearch;
     private ViewGroup layoutButton;
+    private NonSwipeViewPager container;
+    private ViewPagerAdapter adapter;
+
     private PRepVoteFragment voteFragment;
     private VotePRepListFragment prepsFragment;
 
@@ -59,6 +67,10 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private void initView() {
         ((TextView) findViewById(R.id.txt_title)).setText(wallet.getAlias());
 
+        container = findViewById(R.id.container);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        container.setAdapter(adapter);
+
         btnSearch = findViewById(R.id.btn_search);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,17 +90,13 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, voteFragment)
-                                .commit();
+                        container.setCurrentItem(tab.getPosition());
                         btnSearch.setVisibility(View.GONE);
                         layoutButton.setVisibility(View.VISIBLE);
                         break;
 
                     case 1:
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, prepsFragment)
-                                .commit();
+                        container.setCurrentItem(tab.getPosition());
                         btnSearch.setVisibility(View.VISIBLE);
                         layoutButton.setVisibility(View.GONE);
                         break;
@@ -121,7 +129,6 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             }
 
             @Override
-
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
@@ -137,5 +144,27 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
 
         } else
             super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
+        public ViewPagerAdapter(@NonNull FragmentManager fm) {
+            super(fm);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return PRepVoteFragment.newInstance();
+            } else {
+                return VotePRepListFragment.newInstance();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
     }
 }

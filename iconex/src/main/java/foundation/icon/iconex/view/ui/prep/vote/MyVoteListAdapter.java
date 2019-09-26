@@ -30,6 +30,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     private Activity root;
     private List<Delegation> delegations = new ArrayList<>();
 
+    private int currentManage = -1;
+
     public MyVoteListAdapter(Context context, List<Delegation> delegations, Activity root) {
         this.context = context;
 
@@ -62,6 +64,9 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             h.tvPrepName.setText(delegation.getPrepName());
             h.tvPrepGrade.setText(String.format(Locale.getDefault(),
                     "(%s)", delegation.getGrade().getLabel()));
+
+            if (!delegation.getValue().equals(BigInteger.ZERO))
+                h.btnManage.setEnabled(false);
         }
     }
 
@@ -108,9 +113,6 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             btnManage.setBackgroundResource(R.drawable.bg_btn_prep_delete);
             btnManage.setOnClickListener(this);
 
-            if (!delegations.get(getAdapterPosition()).getValue().equals(BigInteger.ZERO))
-                btnManage.setEnabled(false);
-
             layoutGraph = v.findViewById(R.id.layout_graph);
             editDelegation = v.findViewById(R.id.edit_value);
             txtPercent = v.findViewById(R.id.txt_percentage);
@@ -124,9 +126,16 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     if (layoutGraph.getVisibility() == View.GONE) {
                         layoutGraph.setVisibility(View.VISIBLE);
                         layoutMyVotes.setVisibility(View.GONE);
+
+                        if (currentManage > -1) {
+                            notifyItemChanged(currentManage);
+                            currentManage = getAdapterPosition();
+                        }
                     } else {
                         layoutGraph.setVisibility(View.GONE);
                         layoutMyVotes.setVisibility(View.VISIBLE);
+
+                        currentManage = -1;
                     }
                     break;
 
@@ -148,9 +157,21 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
         this.delegations = delegations;
     }
 
+    public void setMax(int max) {
+
+    }
+
+    private OnClickListener mListener = null;
+
+    public void setOnClickListener(OnClickListener listener) {
+        mListener = listener;
+    }
+
     public interface OnClickListener {
         void onRemove();
 
         void onManage();
+
+        void onDetail();
     }
 }
