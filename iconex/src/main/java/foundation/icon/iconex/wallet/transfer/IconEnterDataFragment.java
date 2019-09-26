@@ -304,13 +304,9 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
         else
             txtLength.setTextColor(getResources().getColor(R.color.colorWarning));
 
-        if (byteLength < 1024) {
-            txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength) + " B"));
-            return;
-        } else {
-            txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength / 1024) + " KB"));
-            return;
-        }
+        txtLength.setText(String.format(Locale.getDefault(), "%.0f KB",
+                Math.floor(byteLength / 1024) + (byteLength % 1024 == 0 ? 0 : 1)));
+
     }
 
     private boolean checkBalance(int stepLimit) {
