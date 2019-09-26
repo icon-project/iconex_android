@@ -33,6 +33,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".wallet.transfer.IconEnterDataActivity"
+            android:configChanges="fontScale"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivity"/>
+
         <activity android:name=".view.AboutActivity"
             android:configChanges="fontScale"
             android:exported="false"

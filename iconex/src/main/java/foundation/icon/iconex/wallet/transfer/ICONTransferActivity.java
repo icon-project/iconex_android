@@ -281,6 +281,8 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                 } else {
                 }
             }
+        } else if (requestCode == RC_DATA) {
+            IconEnterDataActivity.activityResultHelper(resultCode, data, this);
         }
     }
 
@@ -490,11 +492,11 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                                 data.setAmount(ConvertUtil.valueToBigInteger(editSend.getText(), 18));
                             data.setDataType(type);
 
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            FragmentTransaction transaction = fragmentManager.beginTransaction();
-                            transaction.add(R.id.container, EnterDataFragment.newInstance(data));
-                            transaction.addToBackStack("DATA");
-                            transaction.commit();
+                            startActivityForResult(new Intent(
+                                    ICONTransferActivity.this, IconEnterDataActivity.class
+                                    ).putExtra(IconEnterDataActivity.DATA, data),
+                                    RC_DATA
+                            );
 
                             typeDialog.dismiss();
                         }
@@ -509,11 +511,11 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
             @Override
             public void onClick(View v) {
                  if(data != null) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(R.id.container, EnterDataFragment.newInstance(data));
-                    transaction.addToBackStack("DATA");
-                    transaction.commit();
+                     startActivityForResult(new Intent(
+                                     ICONTransferActivity.this, IconEnterDataActivity.class
+                             ).putExtra(IconEnterDataActivity.DATA, data),
+                             RC_DATA
+                     );
                 }
             }
         });
@@ -1228,10 +1230,6 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         strLimit = minStep.toString();
         setLimitPrice(strLimit, txtStepICX);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        getSupportFragmentManager().popBackStackImmediate();
-
         setSendEnable();
     }
 
@@ -1244,8 +1242,6 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         } else {
             btnViewData.setVisibility(View.VISIBLE);
         }
-
-        getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override
@@ -1257,8 +1253,6 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         minStep = defaultLimit;
         strLimit = minStep.toString();
         setLimitPrice(strLimit, txtStepICX);
-
-        getSupportFragmentManager().popBackStackImmediate();
     }
 
 

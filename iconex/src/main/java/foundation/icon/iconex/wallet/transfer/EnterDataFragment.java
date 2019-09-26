@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -229,6 +230,9 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                     editData.setFocusableInTouchMode(true);
                     editData.requestFocus();
 
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
                     state = State.INPUT;
                 } else {
                     // btn_option.getText() == Delete
@@ -275,20 +279,23 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
     }
 
     private void showCancel() {
-        MessageDialog messageDialog = new MessageDialog(getActivity());
-        messageDialog.setSingleButton(false);
-        messageDialog.setTitleText(getString(R.string.cancelEnterData));
-        messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
-            @Override
-            public Boolean invoke(View view) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                        | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                if (mListener != null)
-                    mListener.onDataCancel(data);
-                return true;
-            }
-        });
-        messageDialog.show();
+        if (data.getData() == null && editData.getText().length() > 0) {
+            MessageDialog messageDialog = new MessageDialog(getActivity());
+            messageDialog.setSingleButton(false);
+            messageDialog.setTitleText(getString(R.string.cancelEnterData));
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    if (mListener != null)
+                        mListener.onDataCancel(data);
+                    return true;
+                }
+            });
+            messageDialog.show();
+        } else {
+            if (mListener != null)
+                mListener.onDataCancel(data);
+        }
     }
 
     private boolean isHexCharSet(char c) {
