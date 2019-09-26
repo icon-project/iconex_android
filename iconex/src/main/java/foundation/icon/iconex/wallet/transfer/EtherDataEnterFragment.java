@@ -16,8 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.spongycastle.util.encoders.Hex;
+
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
+import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.widgets.MyEditText;
 import kotlin.jvm.functions.Function1;
 
@@ -138,8 +142,22 @@ public class EtherDataEnterFragment extends Fragment {
         btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null)
-                    mListener.onSetData(editData.getText().toString());
+                if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
+                    MessageDialog messageDialog = new MessageDialog(getActivity());
+                    messageDialog.setTitleText(getString(R.string.errInvalidData));
+                    messageDialog.show();
+                    return;
+                }
+                try {
+                    Hex.decode(Utils.remove0x(editData.getText().toString()));
+                    if (mListener != null)
+                        mListener.onSetData(Utils.checkPrefix(editData.getText().toString()));
+                } catch (Exception e) {
+                    MessageDialog messageDialog = new MessageDialog(getActivity());
+                    messageDialog.setTitleText(getString(R.string.errInvalidData));
+                    messageDialog.show();
+                }
+
             }
         });
 

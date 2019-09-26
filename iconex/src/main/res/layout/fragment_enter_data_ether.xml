@@ -36,6 +36,7 @@
             android:textColor="@color/dark4D"
             android:gravity="top"
             android:hint="@string/hintUtfData"
+            android:inputType="textUri"
             android:padding="24dp" />
     </ScrollView>
 
