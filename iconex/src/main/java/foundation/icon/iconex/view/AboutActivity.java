@@ -22,6 +22,7 @@ import foundation.icon.iconex.R;
 
 public class AboutActivity extends AppCompatActivity {
 
+    public static final String PARAM_ABOUT_TITLE = "PARAM_ABOUT_TITLE";
     public static final String PARAM_ABOUT_ITEM_LIST = "PARAM_ABOUT_ITEM_LIST";
 
     ArrayList<Parcelable> lstAboutItem = new ArrayList<>();
@@ -40,6 +41,11 @@ public class AboutActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
+            String title = intent.getStringExtra(PARAM_ABOUT_TITLE);
+            if (title != null) {
+                ((TextView) findViewById(R.id.txt_title)).setText(title);
+            }
+
             lstAboutItem = intent.getParcelableArrayListExtra(PARAM_ABOUT_ITEM_LIST);
         }
 

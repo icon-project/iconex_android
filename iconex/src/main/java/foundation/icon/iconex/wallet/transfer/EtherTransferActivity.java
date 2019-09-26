@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
+import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentManager;
@@ -30,6 +33,8 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -42,6 +47,7 @@ import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
@@ -227,9 +233,10 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private void initView() {
         // set symbol
         appbar.setTitle(mWallet.getAlias());
-        labelSymbol.setText(mWalletEntry.getSymbol());
-        editSend.setAppendText(mWalletEntry.getSymbol());
-        symbolEstimatedMaxFee.setText(mWalletEntry.getSymbol());
+        String symbol = "(" + mWalletEntry.getSymbol() + ")";
+        labelSymbol.setText(symbol);
+        editSend.setAppendText(symbol.substring(1, symbol.length() -1));
+        symbolEstimatedMaxFee.setText(symbol);
 
         // init appbar
         appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
@@ -237,12 +244,13 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             public void onClickAction(CustomActionBar.ClickAction action) {
                 switch (action) {
                     case btnStart: finish(); break;
-                    case btnEnd: break;
+                    case btnEnd: showInfo(); break;
                 }
             }
         });
 
         // init send
+        editSend.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editSend.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
@@ -323,6 +331,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         });
 
         // edit address
+        editAddress.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         editAddress.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
@@ -461,6 +470,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         });
 
         // set seek bar
+        labelSlow.setText(1 + " (" +getString(R.string.slow) +")");
+        labelFast.setText("(" +getString(R.string.fast) +") " + 99);
         seekPrice.setProgress(DEFAULT_PRICE);
         seekPrice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -1015,7 +1026,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
     @Override
     public void onDataCancel(String data) {
-        if (data == null) {
+        if (data == null || data.length() <= 0) {
             editData.setText("");
             btnViewData.setVisibility(View.GONE);
         } else {
@@ -1055,5 +1066,38 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             dialog.show();
         } else
             super.onBackPressed();
+    }
+
+    private void showInfo() {
+        startActivity(new Intent(this, AboutActivity.class)
+                .putExtra(AboutActivity.PARAM_ABOUT_TITLE, getString(R.string.guidance))
+                .putExtra(AboutActivity.PARAM_ABOUT_ITEM_LIST, new ArrayList<Parcelable>() {{
+                    add(getHeadText(R.string.data));
+                    addAll(getParagraph(R.string.msgEthData));
+
+                    add(getHeadText(R.string.gasLimit));
+                    addAll(getParagraph(R.string.msgEthGasLimit));
+
+                    add(getHeadText(R.string.gasPrice));
+                    addAll(getParagraph(R.string.msgEthGasPrice));
+
+                    add(getHeadText(R.string.estimateFee));
+                    addAll(getParagraph(R.string.msgEthEstimateFee));
+                }}));
+    }
+
+    private AboutActivity.AboutItem getHeadText(@StringRes int resId) {
+        String headText = getString(resId);
+        return new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_HEAD, headText);
+    }
+
+    private List<AboutActivity.AboutItem> getParagraph(@StringRes int resId) {
+        String paragraphText = getString(resId);
+        String[] split = paragraphText.replace("\n", "").split("다\\.");
+        return new ArrayList<AboutActivity.AboutItem>() {{
+            for(String str : split) {
+                add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, str + "다."));
+            }
+        }};
     }
 }

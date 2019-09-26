@@ -51,6 +51,10 @@ public class TransactionSendDialog extends MessageDialog {
     private TextView txtFee;
     private TextView txtTransFee;
 
+    private TextView symbolSendBalance;
+    private TextView symbolLimitPrice;
+    private TextView symbolFee;
+
     private TextView txtReceive;
 
     private TxInfo mTxInfo;
@@ -80,6 +84,10 @@ public class TransactionSendDialog extends MessageDialog {
         txtFee = findViewById(R.id.txt_fee);
         txtTransFee = findViewById(R.id.txt_trans_fee);
 
+        symbolSendBalance = findViewById(R.id.symbol_send_balance);
+        symbolLimitPrice = findViewById(R.id.symbol_limit_price);
+        symbolFee = findViewById(R.id.symbol_fee);
+
         txtReceive = findViewById(R.id.txt_receive);
 
         // set button
@@ -88,18 +96,18 @@ public class TransactionSendDialog extends MessageDialog {
         // init content ui
         if (mTxInfo instanceof ErcTxInfo) {
             ErcTxInfo txInfo = (ErcTxInfo) mTxInfo;
-            labelSendAmount.setText(getStringFormat(R.string.sendBalanceAmount, txInfo.getSymbol()));
-            labelLimitPrice.setText(getStringFormat(R.string.stepLimit_price, SYMBOL_ETH));
-            labelFee.setText(getStringFormat(R.string.maxFee, SYMBOL_ETH));
+            symbolSendBalance.setText(txInfo.getSymbol());
+            labelLimitPrice.setText(SYMBOL_ETH);
+            labelFee.setText(SYMBOL_ETH);
         } else if (mTxInfo instanceof EthTxInfo) {
-            labelSendAmount.setText(getStringFormat(R.string.sendBalanceAmount, SYMBOL_ETH));
-            labelLimitPrice.setText(getStringFormat(R.string.stepLimit_price, SYMBOL_ETH));
-            labelFee.setText(getStringFormat(R.string.maxFee, SYMBOL_ETH));
+            symbolSendBalance.setText(SYMBOL_ETH);
+            labelLimitPrice.setText(SYMBOL_ETH);
+            labelFee.setText(SYMBOL_ETH);
         } else {
             ICONTxInfo txInfo = (ICONTxInfo) mTxInfo;
-            labelSendAmount.setText(getStringFormat(R.string.sendBalanceAmount, txInfo.getSymbol()));
-            labelLimitPrice.setText(getStringFormat(R.string.stepLimit_price, SYMBOL_ICON));
-            labelFee.setText(getStringFormat(R.string.maxFee, SYMBOL_ICON));
+            symbolSendBalance.setText(txInfo.getSymbol());
+            labelLimitPrice.setText(SYMBOL_ICON);
+            labelFee.setText(SYMBOL_ICON);
         }
 
         txtReceive.setText(mTxInfo.getToAddress());

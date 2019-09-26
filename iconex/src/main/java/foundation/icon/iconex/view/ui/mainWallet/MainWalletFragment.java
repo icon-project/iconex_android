@@ -572,7 +572,7 @@ public class MainWalletFragment extends Fragment {
         String txtTotalAsset = viewData.getTotalAsset() == null ? "-" :
                 viewData.getTotalAsset().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
         String txtVotingPower = (viewData.getVotedPower() == null ? "-" :
-                viewData.getVotedPower().setScale(1)) + " %";
+                viewData.getVotedPower().setScale(1, BigDecimal.ROUND_HALF_UP)) + " %";
         viewData.setTxtExchangeUnit(currentExchangeUnit.name())
                 .setTxtTotalAsset(txtTotalAsset).setTxtVotedPower(txtVotingPower);
         mTotalAssetsData = viewData;
@@ -643,14 +643,14 @@ public class MainWalletFragment extends Fragment {
                                 staked.multiply(new BigDecimal(100))
                                         .divide(balance, 1, BigDecimal.ROUND_UP);
 
-                        entryViewData.setTxtStacked(staked.setScale(4) + " (" + (percent == null ? " - " : percent) + "%)");
+                        entryViewData.setTxtStacked(staked.setScale(4, BigDecimal.ROUND_HALF_UP) + " (" + (percent == null ? " - " : percent) + "%)");
                     } else {
                         entryViewData.setTxtStacked("- ( - %)");
                     }
 
                     if (entryViewData.getiScore() != null) {
                         BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(entryViewData.getiScore(), 18));
-                        entryViewData.setTxtIScore(iscore.setScale(4) + "");
+                        entryViewData.setTxtIScore(iscore.setScale(4, BigDecimal.ROUND_HALF_UP) + "");
                     } else {
                         entryViewData.setTxtIScore("-");
                     }
@@ -762,14 +762,14 @@ public class MainWalletFragment extends Fragment {
                             staked.multiply(new BigDecimal(100))
                                     .divide(balance, 1, BigDecimal.ROUND_UP);
 
-                    entryViewData.setTxtStacked(staked.setScale(4) + " (" + (percent == null ? " - " : percent) + "%)");
+                    entryViewData.setTxtStacked(staked.setScale(4, BigDecimal.ROUND_HALF_UP) + " (" + (percent == null ? " - " : percent) + "%)");
                 } else {
                     entryViewData.setTxtStacked("- ( - %)");
                 }
 
                 if (entryViewData.getiScore() != null) {
                     BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(entryViewData.getiScore(), 18));
-                    entryViewData.setTxtIScore(iscore.setScale(4) + "");
+                    entryViewData.setTxtIScore(iscore.setScale(4, BigDecimal.ROUND_HALF_UP) + "");
                 } else {
                     entryViewData.setTxtIScore("-");
                 }

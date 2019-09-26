@@ -168,15 +168,15 @@ class TTextInputLayout : LinearLayout {
 
     private fun setTypedArray(typedArray: TypedArray) {
         when (typedArray.getInt(R.styleable.TTextInputLayout_inputType, 0)) {
-            0 -> {
+            0 -> { // text
                 layoutInput.visibility = View.VISIBLE
                 edit.inputType = InputType.TYPE_CLASS_TEXT
             }
-            1 -> {
+            1 -> { // password
                 layoutInput.visibility = View.VISIBLE
                 edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
-            2 -> {
+            2 -> { // readOnly
                 layoutInput.visibility = View.VISIBLE
                 edit.isEnabled = false
                 edit.isFocusable = false
@@ -186,7 +186,7 @@ class TTextInputLayout : LinearLayout {
                 btnEye.visibility = View.VISIBLE
                 tvHint.visibility = View.VISIBLE
             }
-            3 -> {
+            3 -> { // file
                 layoutInput.visibility = View.GONE
                 layoutFile.visibility = View.VISIBLE
             }
@@ -304,6 +304,10 @@ class TTextInputLayout : LinearLayout {
 
     fun setSelection(index: Int) {
         edit.setSelection(index)
+    }
+
+    fun setInputType(type: Int) {
+        edit.inputType = type
     }
 
     private var mOnFocusReleasedListener: OnFocusReleased? = null

@@ -12,9 +12,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="@string/sendBalanceAmount"
+        android:text="@string/sendBalance"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/symbol_send_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="(ICX)"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lb_send_balance"
+        app:layout_constraintStart_toEndOf="@+id/lb_send_balance" />
 
     <TextView
         android:id="@+id/txt_send_balance"
@@ -40,11 +49,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="@string/stepLimit_price"
+        android:text="@string/stepLimit_Price"
         android:textColor="@color/dark80"
         android:textSize="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line" />
+
+    <TextView
+        android:id="@+id/symbol_limit_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="(ICX)"
+        android:textColor="@color/dark80"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lb_limit_price"
+        app:layout_constraintStart_toEndOf="@+id/lb_limit_price" />
 
     <TextView
         android:id="@+id/txt_limit_price"
@@ -61,11 +81,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
-        android:text="@string/maxFee"
+        android:text="@string/estimateFee"
         android:textColor="@color/dark80"
         android:textSize="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lb_limit_price" />
+
+    <TextView
+        android:id="@+id/symbol_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="(ICX)"
+        android:textColor="@color/dark80"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lb_fee"
+        app:layout_constraintStart_toEndOf="@+id/lb_fee" />
 
     <TextView
         android:id="@+id/txt_fee"
@@ -93,7 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:text="@string/receiveAddress"
+        android:text="@string/receivingAddress"
         android:textColor="@color/dark80"
         android:textSize="10dp"
         app:layout_constraintStart_toStartOf="parent"

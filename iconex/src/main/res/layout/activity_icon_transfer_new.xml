@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:start_icon="back"
         app:end_icon="info"
-        app:text="지갑 명"/>
+        app:text="지갑명"/>
 
     <ScrollView
         android:layout_width="0dp"
@@ -110,7 +110,7 @@
                     android:textSize="14dp"
                     android:textColor="@color/dark4D"
 
-                    android:text="Available Balance"/>
+                    android:text="@string/availableBalance"/>
 
                 <TextView
                     android:id="@+id/lb_symbol"
@@ -167,7 +167,7 @@
                     android:id="@+id/edit_send_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:hint="Send amount"
+                    app:hint="@string/sendBalance"
                     app:appendText="ICX"/>
 
                 <TextView
@@ -241,7 +241,7 @@
                         android:textColor="@color/dark80"
 
                         android:textAllCaps="false"
-                        android:text="Max"/>
+                        android:text="@string/maxBalance"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -256,7 +256,7 @@
                     android:id="@+id/edit_to_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:hint="Receiving Address"/>
+                    app:hint="@string/receivingAddress"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -275,7 +275,7 @@
                         android:textColor="@color/dark80"
 
                         android:textAllCaps="false"
-                        android:text="My Address"/>
+                        android:text="@string/selectAddress"/>
 
                     <Button
                         android:id="@+id/btn_qr_scan"
@@ -290,7 +290,7 @@
                         android:textColor="@color/dark80"
 
                         android:textAllCaps="false"
-                        android:text="QR Code"/>
+                        android:text="@string/scanTheQRCode"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -306,7 +306,7 @@
                     android:id="@+id/edit_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:hint="Data (Optional)" />
+                    app:hint="@string/ethData" />
 
                 <Button
                     android:id="@+id/btn_view_data"
@@ -319,7 +319,7 @@
                     android:textColor="@color/dark80"
 
                     android:textAllCaps="false"
-                    android:text="View Data"/>
+                    android:text="@string/viewData"/>
             </LinearLayout>
                     
             <!-- Fee -->
@@ -343,7 +343,7 @@
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 
-                    android:text="Step Limit / Price"/>
+                    android:text="@string/stepLimit_Price"/>
 
                 <TextView
                     android:id="@+id/symbol_step_limit"
@@ -369,7 +369,7 @@
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 
-                    android:text="Estimated Maximum Fee"/>
+                    android:text="@string/estimateFee"/>
 
                 <TextView
                     android:id="@+id/symbol_estimated_max_fee"
@@ -450,7 +450,7 @@
             android:background="@drawable/bg_btn_rounded_01_light"
             android:enabled="false"
             android:fontFamily="@font/nanum_square_regular"
-            android:text="Send"
+            android:text="@string/transfer"
             android:textAllCaps="false"
             android:textColor="@color/primary"
             android:textSize="14dp" />
