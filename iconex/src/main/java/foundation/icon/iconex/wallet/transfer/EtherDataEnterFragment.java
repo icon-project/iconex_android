@@ -126,6 +126,8 @@ public class EtherDataEnterFragment extends Fragment {
                     MessageDialog messageDialog = new MessageDialog(getActivity());
                     messageDialog.setTitleText(getString(R.string.msgDeleteData));
                     messageDialog.setSingleButton(false);
+                    messageDialog.setConfirmButtonText(getString(R.string.yes));
+                    messageDialog.setCancleButtonText(getString(R.string.no));
                     messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
                         public Boolean invoke(View view) {
