@@ -2,7 +2,9 @@ package foundation.icon.iconex.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +23,8 @@ import java.util.Map;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
 import foundation.icon.iconex.dialogs.IconDisclaimerDialogFragment;
@@ -36,6 +40,8 @@ import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.wallet.main.MainActivity;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
 public class MainWalletActivity extends AppCompatActivity implements
@@ -52,6 +58,8 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     // service connect
     private MainWalletServiceHelper mainWalletServiceHelper = null;
+
+    private boolean isFingerprintInvalidated = false;
 
     // cache data
     private List<WalletCardViewData> cachedlstWalletData = new ArrayList<>();
@@ -70,6 +78,17 @@ public class MainWalletActivity extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (getIntent().getExtras() != null) {
+            MyConstants.MainPopUp popUp = (MyConstants.MainPopUp) getIntent().getExtras().get("popup");
+            if (popUp == MyConstants.MainPopUp.BUNDLE) {
+                MessageDialog messageDialog = new MessageDialog(this);
+                messageDialog.setTitleText(getString(R.string.msgLoadBundle));
+                messageDialog.show();
+            }
+        }
+
+        isFingerprintInvalidated = getIntent().getBooleanExtra(AuthActivity.EXTRA_INVALIDATED, false);
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(android.R.id.content, MainWalletFragment.newInstance(), MAIN_WALLET_FRAGMENT_TAG)
@@ -82,6 +101,8 @@ public class MainWalletActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         mainWalletServiceHelper.resume();
+
+        showRecoverFingerprintAuth();
     }
 
     @Override
@@ -447,6 +468,24 @@ public class MainWalletActivity extends AppCompatActivity implements
             getSupportFragmentManager().popBackStackImmediate();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void showRecoverFingerprintAuth() {
+        if (isFingerprintInvalidated) {
+            isFingerprintInvalidated = false;
+            MessageDialog messageDialog = new MessageDialog(this);
+            messageDialog.setTitleText(getString(R.string.authMsgRecoverFingerprintAuth));
+            messageDialog.setSingleButton(false);
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    startActivity(new Intent(MainWalletActivity.this, SettingLockActivity.class)
+                            .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.RECOVER));
+                    return true;
+                }
+            });
+            messageDialog.show();
         }
     }
 }
