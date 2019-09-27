@@ -696,7 +696,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             ((TextView) findViewById(R.id.txt_trans_balance))
                     .setText("$ " + strBalanceUSD);
 
-            setRemain(editSend.getText().toString());
+            setRemain(editSend.getText());
         }
     }
 
@@ -928,6 +928,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                         minStep = defaultLimit;
 
                     strLimit = minStep.toString();
+                    setRemain(editSend.getText());
                     setLimitPrice(strLimit, txtStepICX);
                 }
 
@@ -943,6 +944,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                         minStep = defaultLimit;
 
                     strLimit = minStep.toString();
+                    setRemain(editSend.getText());
                     setLimitPrice(strLimit, txtStepICX);
                 }
             });
@@ -1203,6 +1205,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         btnViewData.setVisibility(View.VISIBLE);
         minStep = new BigInteger(Integer.toString(this.data.getStepCost()));
         strLimit = minStep.toString();
+        setRemain(editSend.getText());
         setLimitPrice(strLimit, txtStepICX);
 
         setSendEnable();
@@ -1227,6 +1230,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
         minStep = defaultLimit;
         strLimit = minStep.toString();
+        setRemain(editSend.getText());
         setLimitPrice(strLimit, txtStepICX);
     }
 
