@@ -272,21 +272,6 @@ public class MainWalletServiceHelper {
 
         Completable.merge(new ArrayList<Completable>() {{
             for (String address : icxAddresses) {
-//                // ========== get stake
-//                add(Completable.fromAction(new Action() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            Log.d("GetPRepsData", address + " request stake");
-//                            RpcObject rpcObject = pRepService.getStake(address).asObject();
-//                            RpcItem stake = rpcObject.getItem("stake");
-//                            pRepsResults.put(address+"-stake", stake.asInteger());
-//                        } catch (Exception e) {
-//                            String msg = String.format(err, "stake", e.getMessage(), address);
-//                            Log.d("GetPRepsData", msg);
-//                        }
-//                    }
-//                }));
                 // ========== get i-score
                 add(Completable.fromAction(new Action() {
                     @Override
