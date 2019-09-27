@@ -311,19 +311,19 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
                         if (strPrice != null) {
                             if (strPrice.equals(MyConstants.NO_EXCHANGE)) {
-                                txtTransSend.setText(String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE));
+                                txtTransSend.setText("$ -");
                             } else {
                                 Double transUSD = Double.parseDouble(amount)
                                         * Double.parseDouble(strPrice);
                                 String strTransUSD = String.format(Locale.getDefault(), "%,.2f", transUSD);
 
-                                txtTransSend.setText(String.format(getString(R.string.exchange_usd), strTransUSD));
+                                txtTransSend.setText("$ " + strTransUSD);
                             }
                         }
                         setRemain(amount);
                     }
                 } else {
-                    txtTransSend.setText(String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE));
+                    txtTransSend.setText("$ -");
                     editSend.setError(false, null);
                 }
 
@@ -635,16 +635,16 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         if (strPrice != null) {
             if (strPrice.equals(MyConstants.NO_EXCHANGE)) {
                 ((TextView) findViewById(R.id.txt_trans_balance))
-                        .setText(String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE));
+                        .setText("$ -");
 
-                txtTransSend.setText(String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE));
+                txtTransSend.setText("$ -");
             } else {
                 Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()))
                         * Double.parseDouble(strPrice);
 
                 String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
                 ((TextView) findViewById(R.id.txt_trans_balance))
-                        .setText(String.format(getString(R.string.exchange_usd), strBalanceUSD));
+                        .setText("$ " + strBalanceUSD);
             }
 
             setRemain(editSend.getText().toString());

@@ -558,12 +558,12 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                                     * Double.parseDouble(strPrice);
                             String strTransUSD = String.format("%,.2f", transUSD);
 
-                            txtTransSend.setText(String.format("%s USD", strTransUSD));
+                            txtTransSend.setText(String.format("$ %s", strTransUSD));
                         }
                         setRemain(amount);
                     }
                 } else {
-                    txtTransSend.setText(String.format("%s USD", MyConstants.NO_BALANCE));
+                    txtTransSend.setText(String.format("$ %s", MyConstants.NO_BALANCE));
                     btnSend.setEnabled(false);
 
                     editSend.setError(false, null);
@@ -694,7 +694,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
             String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
             ((TextView) findViewById(R.id.txt_trans_balance))
-                    .setText(String.format(getString(R.string.exchange_usd), strBalanceUSD));
+                    .setText("$ " + strBalanceUSD);
 
             setRemain(editSend.getText().toString());
         }
