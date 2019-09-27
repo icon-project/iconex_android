@@ -458,9 +458,7 @@
     <string name="dialogTxHashTrackerLink"><u>ICON Tracker로 이동</u></string>
     <string name="dialogTxHashCopyTxHash">Copy TxHash</string>
 
-    <string name="dialogHeadTextWalletPassword">Enter Wallet Password</string>
-    <string name="dialogWalletPasswordHint"><u>Password</u></string>
-    <string name="dialogWalletPasswordForgotPassworld">Forgot password</string>
+    <string name="forgot_passwword"><u>비밀번호를 잊으셨나요?</u></string>
 
     <string name="dialogHeadTextMinExchangeRate">허용가능 최소 환전비율</string>
     <string name="dialogTitleTextMinExchangeRate">암호화폐의 환율은 변동이 심하므로,\n최소환전비율 설정을 통해 자산을 보호하세요.</string>
