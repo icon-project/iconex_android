@@ -1,7 +1,10 @@
 package foundation.icon.iconex.dialogs;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,13 +37,13 @@ public class EditText2Dialog extends MessageDialog{
 
         // set Button
         setSingleButton(false);
-
-        // init content ui
     }
 
     public void setText(String text) {
         mInputText.setText(text);
     }
+
+    public String getText() { return mInputText.getText(); }
 
     public void setHint(String hint) {
         mInputText.setHint(hint);
@@ -57,5 +60,23 @@ public class EditText2Dialog extends MessageDialog{
                 return listner.onConfirm(mInputText.getText());
             }
         });
+    }
+
+    public void setSelection(int index) {
+        mInputText.setSelection(index);
+    }
+
+    public void setOnTextChangedListener(OnTextChangedListener listener) {
+        mInputText.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
+            @Override
+            public void onChanged(@NotNull CharSequence s) {
+                setConfirmEnable(listener.onChangeText(s.toString()));
+            }
+        });
+    }
+
+    public interface OnTextChangedListener {
+        // confirm button enable;
+        boolean onChangeText(String s);
     }
 }

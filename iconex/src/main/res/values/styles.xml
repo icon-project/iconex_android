@@ -60,6 +60,10 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="CustomDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
     <!-- TextView -->
     <style name="TextView10">
         <item name="android:textSize">10dp</item>

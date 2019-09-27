@@ -2,8 +2,10 @@ package foundation.icon.iconex.dialogs
 
 import android.app.Dialog
 import android.content.Context
-import android.view.View
-import android.view.ViewGroup
+import android.inputmethodservice.InputMethodService
+import android.os.Bundle
+import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import foundation.icon.iconex.R
 
@@ -26,7 +28,7 @@ open class MessageDialog: Dialog {
 
     private var mSingleButton: Button
 
-    constructor(context: Context) : super(context)
+    constructor(context: Context) : super(context, R.style.CustomDialog)
 
     init {
         setContentView(R.layout.dlg_message_dialog)
