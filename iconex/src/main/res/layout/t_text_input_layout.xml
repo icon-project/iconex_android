@@ -36,9 +36,9 @@
                     android:textColor="@color/dark4D"
                     android:textSize="14dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_clear_text"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/btn_clear_text"/>
 
                 <Button
                     android:id="@+id/btn_clear_text"
@@ -49,10 +49,8 @@
                     android:background="@drawable/ic_input_delete"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/edit"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5" />
+                    app:layout_constraintRight_toLeftOf="@id/btn_eye"/>
 
                 <Button
                     android:id="@+id/btn_eye"
@@ -63,9 +61,8 @@
                     android:background="@drawable/bg_btn_eye"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/edit"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/txt_append"
                     app:layout_constraintVertical_bias="0.5" />
 
                 <TextView
@@ -75,8 +72,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-
                     android:fontFamily="@font/noto_sans_light"
+                    android:visibility="gone"
                     android:textSize="10dp"
                     android:textColor="@color/dark4D"
 
