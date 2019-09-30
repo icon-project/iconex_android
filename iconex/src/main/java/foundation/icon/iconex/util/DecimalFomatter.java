@@ -14,7 +14,8 @@ public class DecimalFomatter {
         } else if ((decimal+"").split("\\.")[0].length() > 13) {
             string = String.format("%e", decimal);
         } else {
-            DecimalFormat decimalFormat = new DecimalFormat("#,###." + (scale == 2 ? "##" : "####"));
+            String repeated0 = new String(new char[scale]).replace("\0", "0");
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0." + repeated0);
             string = decimalFormat.format(decimal.setScale(scale, BigDecimal.ROUND_FLOOR));
         }
         return string;
