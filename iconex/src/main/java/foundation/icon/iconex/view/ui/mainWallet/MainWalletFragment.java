@@ -35,6 +35,7 @@ import org.spongycastle.util.encoders.Hex;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
@@ -569,8 +571,8 @@ public class MainWalletFragment extends Fragment {
 
     private void updateTotalAssetsView(TotalAssetsViewData viewData) {
         int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
-        String txtTotalAsset = viewData.getTotalAsset() == null ? "-" :
-                viewData.getTotalAsset().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
+        String txtTotalAsset = DecimalFomatter.format(viewData.getTotalAsset(), exchangeRound);
+
         String txtVotingPower = (viewData.getVotedPower() == null ? "-" :
                 viewData.getVotedPower().setScale(1, BigDecimal.ROUND_HALF_UP)) + " %";
         viewData.setTxtExchangeUnit(currentExchangeUnit.name())
@@ -625,11 +627,8 @@ public class MainWalletFragment extends Fragment {
         for (WalletCardViewData walletCard : mWalletDataList) { // wallet
             for (WalletItemViewData entryViewData : walletCard.getLstWallet()) { // entry
                 // update balance, exchange (double -> string)
-                String txtAmount = entryViewData.getAmount() == null ? "-" : // decimal rounding 4
-                        entryViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
-
-                String txtExchanged = entryViewData.getExchanged() == null ? "-" :
-                        entryViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
+                String txtAmount = DecimalFomatter.format(entryViewData.getAmount());
+                String txtExchanged = DecimalFomatter.format(entryViewData.getExchanged(), exchangeRound);
                 txtExchanged += " " + currentExchangeUnit.name();
 
                 entryViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
@@ -744,12 +743,8 @@ public class MainWalletFragment extends Fragment {
         for (WalletCardViewData cardViewData : mTokenDataList) {
             WalletItemViewData entryViewData = cardViewData.getLstWallet().get(0);
             // update balance, exchange (double -> string)
-            String txtAmount = entryViewData.getAmount() == null ? "-" : // decimal rounding 4
-                    entryViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
-
-            String txtExchanged = entryViewData.getExchanged() == null ? "-" :
-                    entryViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
-                            + " " + currentExchangeUnit.name();
+            String txtAmount = DecimalFomatter.format(entryViewData.getAmount());
+            String txtExchanged = DecimalFomatter.format(entryViewData.getExchanged(), exchangeRound);
 
             entryViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
 

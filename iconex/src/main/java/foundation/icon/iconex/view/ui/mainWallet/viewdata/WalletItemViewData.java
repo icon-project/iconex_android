@@ -79,28 +79,19 @@ public class WalletItemViewData {
                 itemViewData
                         .setName(walletEntry.getName())
                         .setSymbol(walletEntry.getSymbol())
-                        .setDrawableSymbolresId(R.drawable.img_logo_icon_sel)
-                        .setTxtAmount(walletEntry.getBalance())
-                        .setTxtExchanged("-")
-                        .setTxtStacked("-")
-                        .setTxtIScore("-");
+                        .setDrawableSymbolresId(R.drawable.img_logo_icon_sel);
             } break;
             case ETHcoin: {
                 itemViewData
                         .setName(walletEntry.getName())
                         .setSymbol(walletEntry.getSymbol())
-                        .setDrawableSymbolresId(R.drawable.img_logo_ethereum_nor)
-                        .setTxtAmount(walletEntry.getBalance())
-                        .setTxtExchanged("-");
+                        .setDrawableSymbolresId(R.drawable.img_logo_ethereum_nor);
             } break;
             case Token: {
                 itemViewData
                         .setName(walletEntry.getName())
                         .setSymbol(walletEntry.getSymbol())
-                        .setSymbolLetter(walletEntry.getName().charAt(0))
-                        //.setBgSymbolColor(tokenColor.getColor()) not this timing
-                        .setTxtAmount(walletEntry.getBalance())
-                        .setTxtExchanged("-");
+                        .setSymbolLetter(walletEntry.getName().charAt(0));
             }
             case Wallet:
             default: {
