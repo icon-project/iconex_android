@@ -4,8 +4,7 @@
     android:layout_height="80dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingStart="20dp"
-    android:paddingEnd="20dp"
-    android:clickable="true">
+    android:paddingEnd="20dp">
 
     <TextView
         android:id="@+id/txt_name"

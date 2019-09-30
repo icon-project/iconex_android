@@ -13,11 +13,10 @@ import foundation.icon.iconex.R;
 
 public class CustomToast{
 
-    public static Toast makeText(AppCompatActivity activity, String text, int duration) {
-        Toast toast = Toast.makeText(activity, text, duration);
+    public static Toast makeText(Context context, String text, int duration) {
+        Toast toast = Toast.makeText(context, text, duration);
 
-        ViewGroup container = activity.findViewById(R.id.content);
-        View view = LayoutInflater.from(activity).inflate(R.layout.layout_custom_toast, container);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_custom_toast, null);
         TextView textView = view.findViewById(R.id.text);
         textView.setText(text);
         toast.setView(view);

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.TxHashDialog;
 
 public class TransactionListView extends FrameLayout implements View.OnClickListener {
 
@@ -93,6 +94,14 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
                 ));
 
                 RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) { };
+                v.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = holder.getAdapterPosition();
+                        TransactionItemViewData viewData = lstViewData.get(position);
+                        new TxHashDialog(getContext(), viewData.getTxHash()).show();
+                    }
+                });
 
                 return holder;
             }
