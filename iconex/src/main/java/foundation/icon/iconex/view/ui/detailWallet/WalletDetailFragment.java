@@ -21,6 +21,7 @@ import java.util.List;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectTokenDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectType;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionFloatingMenu;
@@ -149,6 +150,17 @@ public class WalletDetailFragment extends Fragment {
         };
         fixedListHeaderView.setOnClickViewOption(onClickViewOption);
         listHeaderView.setOnClickViewOption(onClickViewOption);
+
+        View.OnClickListener onClickInfo = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessageDialog messageDialog = new MessageDialog(getContext());
+                messageDialog.setTitleText(getString(R.string.infoTx));
+                messageDialog.show();
+            }
+        };
+        fixedListHeaderView.setOnClickInfoButton(onClickInfo);
+        listHeaderView.setOnClickInfoButton(onClickInfo);
 
         listView.setOnScrollBottomListener(new TransactionListView.OnScrollBottomListener() {
             @Override
