@@ -43,6 +43,7 @@ import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
+import foundation.icon.iconex.dialogs.TransactionSendDialog;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -677,8 +678,13 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void setLimitPrice(String limit, String price) {
-        String fLimit = new DecimalFormat("#,##0").format(Integer.parseInt(limit));
-        txtStepLimit.setText(fLimit + " / " + price);
+        try {
+            String fLimit = new DecimalFormat("#,##0").format(Integer.parseInt(limit));
+            txtStepLimit.setText(fLimit + " / " + price);
+        } catch (Exception e) {
+            txtStepLimit.setText("- / -");
+        }
+
     }
 
     private void setBalance(BigInteger balance) {
