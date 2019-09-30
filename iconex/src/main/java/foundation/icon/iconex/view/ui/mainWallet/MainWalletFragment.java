@@ -615,6 +615,7 @@ public class MainWalletFragment extends Fragment {
             }
             break;
         }
+        walletViewPager.setCurrentItem(0);
         updateWalletView();
     }
 
