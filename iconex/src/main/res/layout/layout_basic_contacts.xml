@@ -17,18 +17,6 @@
         android:textColor="@color/colorText"
         android:textSize="12dp" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/txt_date"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignBaseline="@id/txt_name"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:fontFamily="@font/nanum_square_regular"-->
-<!--        android:text="Date"-->
-<!--        android:textColor="@color/colorRemittance"-->
-<!--        android:textSize="12dp" />-->
-
-    <!--  TODO: DemiLight  -->
     <TextView
         android:id="@+id/txt_address"
         android:layout_width="73dp"
@@ -37,7 +25,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="3dp"
         android:ellipsize="end"
-        android:fontFamily="@font/noto_sans_regular"
+        android:fontFamily="@font/noto_sans_light"
         android:singleLine="true"
         android:text="Address"
         android:textColor="@color/darkB3"

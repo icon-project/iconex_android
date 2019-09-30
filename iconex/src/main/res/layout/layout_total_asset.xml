@@ -16,13 +16,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- TODO: font DemiLight   -->
         <TextView
             android:id="@+id/lb_total_assets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14dp"
             android:textColor="#99FFFFFF"
+            android:fontFamily="@font/noto_sans_light"
             android:text="Total Assets"/>
 
         <TextView

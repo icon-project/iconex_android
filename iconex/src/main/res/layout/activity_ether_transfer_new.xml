@@ -281,7 +281,6 @@
 
                     android:text="53 Gwei"/>
 
-                <!-- TODO: font DemiLight -->
                 <TextView
                     android:id="@+id/lb_slow"
                     android:layout_width="wrap_content"
@@ -289,6 +288,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/lb_price"
                     app:layout_constraintStart_toStartOf="@+id/lb_price"
                     android:layout_marginTop="19dp"
+                    android:fontFamily="@font/noto_sans_light"
 
                     android:textSize="10dp"
                     android:textColor="@color/dark4D"
@@ -359,8 +359,6 @@
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="40dp"
                 android:background="@drawable/bg_outline_box_darkfc">
-
-                <!-- TODO: font Demi light -->
                 <TextView
                     android:id="@+id/lb_estimated_max_fee"
                     android:layout_width="wrap_content"
@@ -369,6 +367,7 @@
                     android:layout_marginTop="30dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:fontFamily="@font/noto_sans_light"
 
                     android:textSize="10dp"
                     android:textColor="@color/dark80"

@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!-- TODO: remove Hardcoding -->
     <foundation.icon.iconex.widgets.CustomActionBar
         android:id="@+id/appbar"
         android:layout_width="0dp"
@@ -332,7 +331,6 @@
                 android:layout_marginBottom="40dp"
                 android:background="@drawable/bg_outline_box_darkfc">
 
-                <!--TODO: font Demilight-->
                 <TextView
                     android:id="@+id/lb_step_limit"
                     android:layout_width="wrap_content"
@@ -342,6 +340,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="30dp"
 
+                    android:fontFamily="@font/noto_sans_light"
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 
@@ -439,7 +438,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!--TODO: HardCodeing-->
         <Button
             android:id="@+id/btn_send"
             style="@style/Widget.AppCompat.Button.Borderless"
