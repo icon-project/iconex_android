@@ -46,7 +46,7 @@
             android:text="9,000,000.02"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="40dp"
+            android:autoSizeTextType="uniform"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_symbol" />

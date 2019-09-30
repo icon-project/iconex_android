@@ -640,16 +640,16 @@ public class MainWalletFragment extends Fragment {
 
                         BigDecimal percent = balance.compareTo(BigDecimal.ZERO) == 0 ? null :
                                 staked.multiply(new BigDecimal(100))
-                                        .divide(balance, 1, BigDecimal.ROUND_UP);
+                                        .divide(balance, 1, BigDecimal.ROUND_HALF_UP);
 
-                        entryViewData.setTxtStacked(staked.setScale(4, BigDecimal.ROUND_HALF_UP) + " (" + (percent == null ? " - " : percent) + "%)");
+                        entryViewData.setTxtStacked(DecimalFomatter.format(staked) + " (" + (percent == null ? " - " : percent) + "%)");
                     } else {
                         entryViewData.setTxtStacked("- ( - %)");
                     }
 
                     if (entryViewData.getiScore() != null) {
                         BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(entryViewData.getiScore(), 18));
-                        entryViewData.setTxtIScore(iscore.setScale(4, BigDecimal.ROUND_HALF_UP) + "");
+                        entryViewData.setTxtIScore(DecimalFomatter.format(iscore));
                     } else {
                         entryViewData.setTxtIScore("-");
                     }

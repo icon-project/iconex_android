@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.DecimalFomatter;
 
 public class WalletDetailInfoView extends FrameLayout implements View.OnClickListener {
 
@@ -89,15 +90,11 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
     }
 
     public void setAmount(BigDecimal amount) {
-        String strAmount =  amount == null ? "-" :
-                amount.setScale(4, BigDecimal.ROUND_FLOOR) + "";
-        txtAmount.setText(strAmount);
+        txtAmount.setText(DecimalFomatter.format(amount));
     }
 
     public void setExchange(BigDecimal exchange, int scale) {
-        String strExchange = exchange == null ? "-" :
-                exchange.setScale(scale, BigDecimal.ROUND_FLOOR) + "";
-        txtExchange.setText(strExchange);
+        txtExchange.setText(DecimalFomatter.format(exchange, scale));
     }
 
     @Override
