@@ -325,6 +325,7 @@
 
             <!-- Data -->
             <LinearLayout
+                android:id="@+id/layout_data_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -353,7 +354,6 @@
             
             <!-- ETH Fee -->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_data_info"
                 android:layout_width="match_parent"
                 android:layout_height="93dp"
                 android:layout_marginTop="40dp"
