@@ -212,7 +212,7 @@ public class WalletDetailFragment extends Fragment {
                 actionbar.setTitle(name);
             }
         });
-        infoView.setTextSymbol(viewModel.walletEntry.getValue().getSymbol());
+        infoView.setTextSymbol(viewModel.walletEntry.getValue().getName());
         infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
         infoView.setUnitList(viewModel.lstUnit.getValue());
         boolean isICX = "ICX".equals(viewModel.wallet.getValue().getCoinType());
@@ -223,7 +223,7 @@ public class WalletDetailFragment extends Fragment {
         viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
             @Override
             public void onChanged(WalletEntry walletEntry) {
-                infoView.setTextSymbol(walletEntry.getSymbol());
+                infoView.setTextSymbol(walletEntry.getName());
             }
         });
 

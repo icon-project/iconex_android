@@ -102,7 +102,7 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
         switch (v.getId()) {
             case R.id.txt_symbol:
             case R.id.btn_symbol: {
-                if (mOnClickListener != null)
+                if (mOnClickListener != null && btnSymbol.getVisibility() == VISIBLE)
                     mOnClickListener.onSymbolClick();
             } break;
             case R.id.txt_unit:
