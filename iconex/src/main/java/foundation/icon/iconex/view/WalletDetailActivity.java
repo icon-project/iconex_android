@@ -171,6 +171,9 @@ public class WalletDetailActivity extends AppCompatActivity {
                     WalletEntry entry = indexed.get(id);
                     if (entry == null) continue;
                     entry.setBalance(strBigIntBalane);
+                    if (entry.getId() == viewModel.walletEntry.getValue().getId()) {
+                        viewModel.walletEntry.getValue().setBalance(strBigIntBalane);
+                    }
                     try {
                         String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
                         BigDecimal balance = new BigDecimal(strDecimal);

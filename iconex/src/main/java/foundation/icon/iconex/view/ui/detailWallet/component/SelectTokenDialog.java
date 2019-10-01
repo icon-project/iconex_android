@@ -84,15 +84,20 @@ public class SelectTokenDialog extends BottomSheetDialog {
                 walletViewHolder.txtSymbol.setText(entry.getSymbol());
                 walletViewHolder.txtName.setText(entry.getName());
 
-                String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
-                BigDecimal balance = new BigDecimal(strDecimal);
+                try {
+                    String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
+                    BigDecimal balance = new BigDecimal(strDecimal);
 
-                String exchangeKey = entry.getSymbol().toLowerCase() + "usd";
-                BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
-                BigDecimal exchanged = balance.multiply(exchanger);
+                    String exchangeKey = entry.getSymbol().toLowerCase() + "usd";
+                    BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
+                    BigDecimal exchanged = balance.multiply(exchanger);
 
-                walletViewHolder.txtAmount.setText(balance.setScale(4, BigDecimal.ROUND_FLOOR) + "");
-                walletViewHolder.txtExchange.setText("$ " + exchanged.setScale(2, BigDecimal.ROUND_FLOOR));
+                    walletViewHolder.txtAmount.setText(balance.setScale(4, BigDecimal.ROUND_FLOOR) + "");
+                    walletViewHolder.txtExchange.setText("$ " + exchanged.setScale(2, BigDecimal.ROUND_FLOOR));
+                } catch (Exception e) {
+                    walletViewHolder.txtAmount.setText("-");
+                    walletViewHolder.txtExchange.setText("$ -");
+                }
             }
 
             @Override

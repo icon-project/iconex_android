@@ -267,7 +267,12 @@ public class WalletDetailFragment extends Fragment {
         });
         // floating menu
         floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
-
+        viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
+            @Override
+            public void onChanged(WalletEntry entry) {
+                floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
+            }
+        });
     }
 
     private void updateListView(List<TransactionItemViewData> transactionItemViewData, SelectType selectType) {
