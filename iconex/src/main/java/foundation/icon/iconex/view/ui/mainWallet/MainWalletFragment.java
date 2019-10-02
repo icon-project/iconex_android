@@ -527,7 +527,9 @@ public class MainWalletFragment extends Fragment {
                 new WalletManageMenuDialog(getActivity(), wallet, new WalletManageMenuDialog.OnNotifyWalletDataChangeListener() {
                     @Override
                     public void onNotifyWalletDataChange(WalletManageMenuDialog.UpdateDataType updateDataType) {
+                        walletViewPager.setCurrentItem(0);
                         ((AsyncRequester) getActivity()).notifyWalletDatachage();
+                        ((AsyncRequester) getActivity()).asyncRequestRefreshData();
                     }
                 }).show();
             }
