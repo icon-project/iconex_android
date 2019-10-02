@@ -557,6 +557,7 @@
     <string name="estimateFee">예상 최대 수수료</string>
     <string name="maxBalance">전액</string>
     <string name="transfer">전송</string>
+    <string name="errEtherGasLimit">21,000 이상으로 입력해주세요.</string>
 
 
     <!--  New Main wallet info  -->

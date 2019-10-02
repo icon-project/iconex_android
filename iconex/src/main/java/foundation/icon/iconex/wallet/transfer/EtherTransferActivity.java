@@ -356,6 +356,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         });
 
         // edit limit
+        editLimit.setInputType(InputType.TYPE_CLASS_NUMBER);
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN))
             editLimit.setText(String.valueOf(DEFAULT_GAS_LIMIT));
         else
@@ -454,6 +455,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                     editLimit.setText(String.valueOf(DEFAULT_GAS_LIMIT));
                     setRemain(editSend.getText());
                 }
+                editLimit.setError(false, null);
             }
         });
         editData.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
@@ -660,8 +662,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
 
-//        ((TextView) findViewById(R.id.txt_fee)).setText(ConvertUtil.getValue(bigFee, 18));
-
         boolean isNegative = false;
 
         if (editSend.getText().toString().isEmpty()) {
@@ -746,8 +746,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 ((TextView) findViewById(R.id.txt_trans_fee))
                         .setText(String.format(getString(R.string.exchange_usd), strFeeUSD));
             }
-
-
         } else {
             if (isNegative)
                 txtRemain = String.format(Locale.getDefault(), "- %s", remainValue);
@@ -865,6 +863,9 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private boolean validateGasLimit() {
         if (editLimit.getText().isEmpty()) {
             editLimit.setError(true, getString(R.string.errGasLimitEmpty));
+            return false;
+        } if (Integer.parseInt(editLimit.getText()) < 21000) {
+            editLimit.setError(true, getString(R.string.errEtherGasLimit));
             return false;
         } else {
             editLimit.setError(false, null);

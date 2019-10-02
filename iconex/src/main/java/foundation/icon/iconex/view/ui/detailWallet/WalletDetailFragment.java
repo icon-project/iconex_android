@@ -54,7 +54,7 @@ public class WalletDetailFragment extends Fragment {
     private TransactionListViewHeader listHeaderView;
     private TransactionListViewHeader fixedListHeaderView;
     private TransactionFloatingMenu floatingMenu;
-    private boolean loadMoreable = false;
+    private boolean moreLoadable = false;
 
     private WalletDetailViewModel viewModel;
 
@@ -127,19 +127,19 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onRefreshBefore(int scrollY, int headerHeight) {
                 super.onRefreshBefore(scrollY, headerHeight);
-                loadMoreable = false;
+                moreLoadable = false;
             }
 
             @Override
             public void onRefreshComplete(int scrollY, int headerHeight, boolean isRefreshSuccess) {
                 super.onRefreshComplete(scrollY, headerHeight, isRefreshSuccess);
-                loadMoreable = true;
+                moreLoadable = true;
             }
 
             @Override
             public void onRefreshCancel(int scrollY, int headerHeight) {
                 super.onRefreshCancel(scrollY, headerHeight);
-                loadMoreable = true;
+                moreLoadable = true;
             }
         });
         refresh.setOnRefreshListener(new OnRefreshListener() {
@@ -199,7 +199,7 @@ public class WalletDetailFragment extends Fragment {
                 Boolean loadMore = viewModel.isLoadMore.getValue();
                 Boolean isNoLoadMore= viewModel.isNoLoadMore.getValue();
 
-                if (!refresh && !loadMore && !isNoLoadMore && loadMoreable)
+                if (!refresh && !loadMore && !isNoLoadMore && moreLoadable)
                     viewModel.isLoadMore.setValue(true);
             }
         });
