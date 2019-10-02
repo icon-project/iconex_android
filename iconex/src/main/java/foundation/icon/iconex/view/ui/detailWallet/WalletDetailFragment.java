@@ -39,6 +39,7 @@ import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
+import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.ICONexApp.network;
 
@@ -191,6 +192,10 @@ public class WalletDetailFragment extends Fragment {
         };
         fixedListHeaderView.setOnClickInfoButton(onClickInfo);
         listHeaderView.setOnClickInfoButton(onClickInfo);
+
+        boolean isICX = viewModel.wallet.getValue().getCoinType().equals(Constants.KS_COINTYPE_ICX);
+        fixedListHeaderView.setInfoButtonVisible(isICX);
+        listHeaderView.setInfoButtonVisible(isICX);
 
         listView.setOnScrollBottomListener(new TransactionListView.OnScrollBottomListener() {
             @Override

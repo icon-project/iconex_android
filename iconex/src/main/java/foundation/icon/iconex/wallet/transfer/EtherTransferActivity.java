@@ -586,12 +586,9 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                                     editAddress.getText(), editSend.getText(),
                                     Integer.toString(mWalletEntry.getDefaultDec()), privKey);
                         }
-
                         timestamp = getTimeStamp();
                         saveRecentSent();
-
                         Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
-
                         finish();
                     }
                 });

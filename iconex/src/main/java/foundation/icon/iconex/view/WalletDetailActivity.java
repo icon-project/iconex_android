@@ -12,9 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,10 +65,8 @@ public class WalletDetailActivity extends AppCompatActivity {
         serviceHelper.setOnServiceReadyListener(new WalletDetailServiceHelper.OnServiceReadyListener() {
             @Override
             public void onReady() {
-                if ("ICX".equals(viewModel.wallet.getValue().getCoinType())) {
-                    serviceHelper.loadIcxTxList();
-                    serviceHelper.requestBalance();
-                }
+                serviceHelper.loadTxList();
+                serviceHelper.requestBalance();
             }
         });
 
@@ -90,7 +86,7 @@ public class WalletDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(WalletEntry walletEntry) {
                 if (serviceHelper.isBind()) {
-                    serviceHelper.loadIcxTxList();
+                    serviceHelper.loadTxList();
                     serviceHelper.requestBalance();
                 }
             }
@@ -100,7 +96,7 @@ public class WalletDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    serviceHelper.loadIcxTxList();
+                    serviceHelper.loadTxList();
                     serviceHelper.requestBalance();
                 }
             }
@@ -126,23 +122,20 @@ public class WalletDetailActivity extends AppCompatActivity {
                 String symbol = viewModel.walletEntry.getValue().getSymbol();
 
                 for (TransactionItemViewData viewData: viewDataes) {
-                    viewData.setTxtName("state: " +viewData.getState());
                     viewData.setTxtAddress(viewData.getTxHash());
 
                     Log.d(TAG, viewData.getDate());
-                    String date = viewData.getDate().substring(0, viewData.getDate().indexOf("T"));
-                    String time = viewData.getDate().substring(date.length() + 1, viewData.getDate().indexOf("."));
-
-                    Timestamp timestamp = Timestamp.valueOf(date + " " + time + ".0000");
-
-                    Calendar calendar = Calendar.getInstance(Locale.KOREA);
-                    calendar.setTimeInMillis(timestamp.getTime());
-
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                     try {
-                        Date tmpDate = sdf.parse(date
-                                + " " + time);
+                        Date tmpDate;
+                        try {
+                            String date = viewData.getDate().substring(0, viewData.getDate().indexOf("T"));
+                            String time  = viewData.getDate().substring(date.length() + 1, viewData.getDate().indexOf("."));
+                            tmpDate = sdf.parse(date + " " + time);
+                        } catch (Exception e) {
+                            tmpDate = new Date(Long.parseLong(viewData.getDate()) / 1000);
+                        }
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                         viewData.setTxtDate(format.format(tmpDate));
                     } catch (Exception e) {

@@ -10,12 +10,17 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
+import foundation.icon.iconex.control.RecentSendInfo;
+import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.wallet.Wallet;
@@ -69,7 +74,7 @@ public class WalletDetailServiceHelper {
         mOnServiceReadyListener = listener;
     }
 
-    public void loadIcxTxList() {
+    public void loadTxList() {
         Log.d(TAG, "Load ICX Tx List");
         mCacheTxData = new ArrayList<>();
         Wallet wallet = mViewModle.wallet.getValue();
@@ -85,6 +90,23 @@ public class WalletDetailServiceHelper {
                 mService.requestIrcTxList(wallet.getAddress(),
                         walletEntry.getContractAddress(), 1);
             }
+        } else { // ether
+            RealmUtil.loadRecents();
+            List<TransactionItemViewData> viewDataList = new ArrayList<>();
+            for(RecentSendInfo tx: ICONexApp.ETHSendInfo) {
+                TransactionItemViewData viewData = new TransactionItemViewData();
+                viewData.setFrom(wallet.getAddress());
+                viewData.setTo(tx.getAddress());
+                viewData.setState(1);
+                viewData.setTxHash(tx.getTxHash());
+                viewData.setDate(tx.getDate());
+                viewData.setAmount(DecimalFomatter.format(new BigDecimal(tx.getAmount())));
+                viewDataList.add(viewData);
+            }
+
+            mViewModle.lstTxData.setValue(viewDataList);
+            mViewModle.isNoLoadMore.setValue(false);
+            mViewModle.isRefreshing.setValue(false);
         }
     }
 
