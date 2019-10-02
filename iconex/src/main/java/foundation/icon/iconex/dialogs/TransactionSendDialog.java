@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.StringRes;
+import androidx.constraintlayout.widget.Group;
 
 import org.jetbrains.annotations.NotNull;
 import org.web3j.abi.FunctionEncoder;
@@ -42,76 +42,90 @@ import static foundation.icon.MyConstants.SYMBOL_ICON;
 
 public class TransactionSendDialog extends MessageDialog {
 
-    private TextView labelSendAmount;
-    private TextView txtSendAmount;
+    // send balance
+    private TextView labelSendBalance;
+    private TextView symbolSendBalance;
+    private TextView txtSendBalance;
 
+    // limit / price
     private TextView labelLimitPrice;
+    private TextView symbolLimitPrice;
     private TextView txtLimitPrice;
+    private Group groupLimitPrice;
+
+    // estimated fee
     private TextView labelFee;
+    private TextView symbolFee;
     private TextView txtFee;
     private TextView txtTransFee;
 
-    private TextView symbolSendBalance;
-    private TextView symbolLimitPrice;
-    private TextView symbolFee;
+    // receive address
+    private TextView labelAddress;
+    private TextView txtAddress;
 
-    private TextView txtReceive;
-
-    private TxInfo mTxInfo;
+    private final TxInfo mTxInfo;
 
     public TransactionSendDialog(@NotNull Context context, TxInfo txInfo) {
         super(context);
-
         mTxInfo = txInfo;
-
-        setHeadText(getContext().getString(R.string.send));
-
         buildDialog();
+        initView();
     }
 
     private void buildDialog() {
+        // set head
+        setHeadText(getContext().getString(R.string.transfer));
+        // set content
         View content = View.inflate(getContext(), R.layout.layout_send_transaction_dialog_content, null);
         setContent(content);
-
-        // load content ui
-        labelSendAmount = findViewById(R.id.lb_send_balance);
-        txtSendAmount = findViewById(R.id.txt_send_balance);
-
+        // load view
+        // send balance
+        labelSendBalance = findViewById(R.id.lb_send_balance);
+        symbolSendBalance = findViewById(R.id.symbol_send_balance);
+        txtSendBalance = findViewById(R.id.txt_send_balance);
+        // limit / price
         labelLimitPrice = findViewById(R.id.lb_limit_price);
+        symbolLimitPrice = findViewById(R.id.symbol_limit_price);
         txtLimitPrice = findViewById(R.id.txt_limit_price);
-
+        groupLimitPrice = findViewById(R.id.group_limit_price);
+        // estimated fee
         labelFee = findViewById(R.id.lb_fee);
+        symbolFee = findViewById(R.id.symbol_fee);
         txtFee = findViewById(R.id.txt_fee);
         txtTransFee = findViewById(R.id.txt_trans_fee);
-
-        symbolSendBalance = findViewById(R.id.symbol_send_balance);
-        symbolLimitPrice = findViewById(R.id.symbol_limit_price);
-        symbolFee = findViewById(R.id.symbol_fee);
-
-        txtReceive = findViewById(R.id.txt_receive);
-
+        // receive address
+        labelAddress = findViewById(R.id.lb_receive);
+        txtAddress = findViewById(R.id.txt_receive);
         // set button
         setSingleButton(false);
+        setConfirmButtonText(getContext().getString(R.string.withdraw));
+    }
 
-        // init content ui
+    private void initView() {
+        // set symbol
         if (mTxInfo instanceof ErcTxInfo) {
             ErcTxInfo txInfo = (ErcTxInfo) mTxInfo;
-            symbolSendBalance.setText(txInfo.getSymbol());
-            labelLimitPrice.setText(SYMBOL_ETH);
-            labelFee.setText(SYMBOL_ETH);
+            symbolSendBalance.setText("(" + txInfo.getSymbol() + ")");
+            groupLimitPrice.setVisibility(View.GONE);
+            symbolFee.setText("(" + SYMBOL_ETH);
         } else if (mTxInfo instanceof EthTxInfo) {
-            symbolSendBalance.setText(SYMBOL_ETH);
-            labelLimitPrice.setText(SYMBOL_ETH);
-            labelFee.setText(SYMBOL_ETH);
+            symbolSendBalance.setText("(" + SYMBOL_ETH + ")");
+            groupLimitPrice.setVisibility(View.GONE);
+            symbolFee.setText("(" + SYMBOL_ETH + ")");
         } else {
             ICONTxInfo txInfo = (ICONTxInfo) mTxInfo;
-            symbolSendBalance.setText(txInfo.getSymbol());
-            labelLimitPrice.setText(SYMBOL_ICON);
-            labelFee.setText(SYMBOL_ICON);
+            symbolSendBalance.setText("(" + txInfo.getSymbol() + ")");
+            symbolLimitPrice.setText("(" + SYMBOL_ICON + ")");
+            symbolFee.setText("(" + SYMBOL_ICON + ")");
+            // tx icon -> set limit/price value
+            txtLimitPrice.setText(txInfo.getLimitPrice());
         }
-
-        txtReceive.setText(mTxInfo.getToAddress());
-
+        // set value
+        txtSendBalance.setText(mTxInfo.getSendAmount());
+        txtFee.setText(mTxInfo.getFee());
+        txtTransFee.setText(mTxInfo.getTransFee());
+        txtAddress.setText(mTxInfo.getToAddress());
+        // set confirm button
         setOnConfirmClick(new Function1<View, Boolean>() {
             @Override
             public Boolean invoke(View view) {
@@ -120,16 +134,12 @@ public class TransactionSendDialog extends MessageDialog {
                 } else if (mTxInfo instanceof EthTxInfo) {
                     getEstimateEtherGas();
                 } else {
-                    dismiss();
                     mOnDialogListener.onOk();
+                    return true;
                 }
-                return true;
+                return false;
             }
         });
-    }
-
-    private String getStringFormat(@StringRes int resId, String symbol) {
-        return String.format(getContext().getString(resId), symbol);
     }
 
     private void getEstimateEtherGas() {
@@ -142,9 +152,9 @@ public class TransactionSendDialog extends MessageDialog {
         estimateERCGas.execute();
     }
 
-    private SendConfirmDialog.OnDialogListener mOnDialogListener;
+    private OnDialogListener mOnDialogListener;
 
-    public void setOnDialogListener(SendConfirmDialog.OnDialogListener listener) {
+    public void setOnDialogListener(OnDialogListener listener) {
         mOnDialogListener = listener;
     }
 
@@ -158,12 +168,9 @@ public class TransactionSendDialog extends MessageDialog {
         private final int NOT_ENOUGH = 1;
         private final int EXCEPTION = 2;
 
-        private String errMsg;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             setProgressVisible(true);
             setConfirmEnable(false);
         }
@@ -204,20 +211,20 @@ public class TransactionSendDialog extends MessageDialog {
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
 
+            BasicDialog dialog;
             switch (result) {
-                case NOT_ENOUGH: {
-                    MessageDialog messageDialog = new MessageDialog(getContext());
-                    messageDialog.setTitleText(getContext().getString(R.string.errNeedFee));
-                    messageDialog.show();
+                case NOT_ENOUGH:
+                    dialog = new BasicDialog(getContext());
+                    dialog.setMessage(getContext().getString(R.string.errNeedFee));
+                    dialog.show();
                     dismiss();
-                } break;
+                    break;
 
-                case EXCEPTION: {
-                    MessageDialog messageDialog = new MessageDialog(getContext());
-                    messageDialog.setTitleText("Exception=" + errMsg);
-                    messageDialog.show();
+                case EXCEPTION:
+                    dialog = new BasicDialog(getContext());
+                    dialog.show();
                     dismiss();
-                } break;
+                    break;
 
                 default:
                     dismiss();
@@ -286,9 +293,9 @@ public class TransactionSendDialog extends MessageDialog {
             super.onPostExecute(result);
 
             if (result == NOT_ENOUGH) {
-                MessageDialog messageDialog = new MessageDialog(getContext());
-                messageDialog.setTitleText(getContext().getString(R.string.errNeedFee));
-                messageDialog.show();
+                BasicDialog dialog = new BasicDialog(getContext());
+                dialog.setMessage(getContext().getString(R.string.errNeedFee));
+                dialog.show();
                 dismiss();
             } else {
                 dismiss();

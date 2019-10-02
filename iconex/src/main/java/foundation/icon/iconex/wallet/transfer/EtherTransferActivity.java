@@ -44,6 +44,7 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
+import foundation.icon.iconex.dialogs.TransactionSendDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -572,8 +573,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendConfirmDialog dialog = new SendConfirmDialog(EtherTransferActivity.this, makeTxInfo());
-                dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
+                TransactionSendDialog dialog = new TransactionSendDialog(EtherTransferActivity.this, makeTxInfo());
+                dialog.setOnDialogListener(new TransactionSendDialog.OnDialogListener() {
                     @Override
                     public void onOk() {
                         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
@@ -928,6 +929,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             txInfo.setPrice(txtPrice.getText().toString());
             txInfo.setLimit(editLimit.getText().toString());
             txInfo.setData(editData.getText().toString());
+            txInfo.setTransFee(txtTransFee.getText().toString());
 
             return txInfo;
         } else {
@@ -943,6 +945,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             txInfo.setContract(mWalletEntry.getContractAddress());
             txInfo.setDecimals(mWalletEntry.getDefaultDec());
             txInfo.setSymbol(mWalletEntry.getUserSymbol());
+            txInfo.setTransFee(txtTransFee.getText().toString());
 
             return txInfo;
         }
@@ -981,7 +984,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             contactName = "";
 
         RealmUtil.addRecentSend(MyConstants.Coin.ETH, "", contactName,
-                editAddress.getText().toString(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
+                mWalletEntry.getAddress(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }
 

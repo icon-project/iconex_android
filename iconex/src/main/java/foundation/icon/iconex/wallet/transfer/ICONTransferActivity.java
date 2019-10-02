@@ -791,7 +791,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
             if (stepPriceICX != null) {
                 if (feePrice != null) {
-                    strTransFee = String.format(Locale.getDefault(), "%,.2f USD",
+                    strTransFee = String.format(Locale.getDefault(), "%,.2f",
                             Double.parseDouble(strFee) * Double.parseDouble(feePrice));
 
                     txtTransFee.setText("$ " + strTransFee);
@@ -1000,8 +1000,10 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), ConvertUtil.getValue(value, entry.getDefaultDec()),
                 strFee, Integer.toHexString(Integer.parseInt(strLimit)), entry.getSymbol());
 
-        SendConfirmDialog dialog = new SendConfirmDialog(this, txInfo);
-        dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
+        txInfo.setLimitPrice(txtStepLimit.getText().toString());
+        txInfo.setTransFee(txtTransFee.getText().toString());
+        TransactionSendDialog dialog = new TransactionSendDialog(this, txInfo);
+        dialog.setOnDialogListener(new TransactionSendDialog.OnDialogListener() {
             @Override
             public void onOk() {
                 String timestamp = getTimeStamp();
