@@ -54,4 +54,18 @@
 
         android:text="@string/etherscan"/>
 
+
+    <RelativeLayout
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/anim_loading" />
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

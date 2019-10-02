@@ -50,6 +50,7 @@ public class WalletDetailServiceHelper {
     public WalletDetailServiceHelper(Context context, WalletDetailViewModel viewModel) {
         mContext = context;
         mViewModle = viewModel;
+        viewModel.isNoLoadMore.setValue(true);
     }
 
     public void onStart() {
@@ -88,7 +89,7 @@ public class WalletDetailServiceHelper {
     }
 
     public void loadMoreIcxTxList() {
-        Log.d(TAG, "check Load more");
+        mViewModle.isNoLoadMore.setValue(mCacheTxData.size() >= mCountTxData);
         if (mCacheTxData.size() < mCountTxData) {
             Log.d(TAG, "load more");
             Wallet wallet = mViewModle.wallet.getValue();
@@ -165,6 +166,7 @@ public class WalletDetailServiceHelper {
                 }
             }
 
+            mViewModle.isNoLoadMore.setValue(mCacheTxData.size() >= mCountTxData);
             mViewModle.lstTxData.postValue(mCacheTxData);
         }
 

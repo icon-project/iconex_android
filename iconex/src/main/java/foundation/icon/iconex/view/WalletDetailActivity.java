@@ -237,6 +237,14 @@ public class WalletDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        viewModel.isNoLoadMore.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isNoLoadMore) {
+                Log.d(TAG, "onChanged() called with: isNoLoadMore = [" + isNoLoadMore + "]");
+            }
+        });
     }
 
     // on balance or change unit

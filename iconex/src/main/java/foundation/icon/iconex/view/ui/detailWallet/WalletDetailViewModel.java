@@ -32,6 +32,7 @@ public class WalletDetailViewModel extends ViewModel {
     public final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isLoadMore = new MutableLiveData<>();
     public final MutableLiveData<SelectType> selectType = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> isNoLoadMore = new MutableLiveData<>();
 
     // actionbar
     public final MutableLiveData<String> name = new MutableLiveData<>();

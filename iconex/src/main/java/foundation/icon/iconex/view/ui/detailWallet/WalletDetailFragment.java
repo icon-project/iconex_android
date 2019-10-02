@@ -3,6 +3,7 @@ package foundation.icon.iconex.view.ui.detailWallet;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ import static foundation.icon.ICONexApp.network;
 
 
 public class WalletDetailFragment extends Fragment {
+    private static final String TAG = WalletDetailFragment.class.getSimpleName();
 
     private CustomActionBar actionbar;
     private RefreshLayout refresh;
@@ -52,6 +54,7 @@ public class WalletDetailFragment extends Fragment {
     private TransactionListViewHeader listHeaderView;
     private TransactionListViewHeader fixedListHeaderView;
     private TransactionFloatingMenu floatingMenu;
+    private boolean loadMoreable = false;
 
     private WalletDetailViewModel viewModel;
 
@@ -120,7 +123,25 @@ public class WalletDetailFragment extends Fragment {
             }
         });
         // init RefreshLayout
-        refresh.addHeader(new RefreshLoadingView(getContext()));
+        refresh.addHeader(new RefreshLoadingView(getContext()) {
+            @Override
+            public void onRefreshBefore(int scrollY, int headerHeight) {
+                super.onRefreshBefore(scrollY, headerHeight);
+                loadMoreable = false;
+            }
+
+            @Override
+            public void onRefreshComplete(int scrollY, int headerHeight, boolean isRefreshSuccess) {
+                super.onRefreshComplete(scrollY, headerHeight, isRefreshSuccess);
+                loadMoreable = true;
+            }
+
+            @Override
+            public void onRefreshCancel(int scrollY, int headerHeight) {
+                super.onRefreshCancel(scrollY, headerHeight);
+                loadMoreable = true;
+            }
+        });
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() { viewModel.isRefreshing.setValue(true); }
@@ -174,7 +195,12 @@ public class WalletDetailFragment extends Fragment {
         listView.setOnScrollBottomListener(new TransactionListView.OnScrollBottomListener() {
             @Override
             public void onScrollBottom() {
-                viewModel.isLoadMore.setValue(true);
+                Boolean refresh = viewModel.isRefreshing.getValue();
+                Boolean loadMore = viewModel.isLoadMore.getValue();
+                Boolean isNoLoadMore= viewModel.isNoLoadMore.getValue();
+
+                if (!refresh && !loadMore && !isNoLoadMore && loadMoreable)
+                    viewModel.isLoadMore.setValue(true);
             }
         });
 
@@ -239,6 +265,7 @@ public class WalletDetailFragment extends Fragment {
         viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
+                Log.d(TAG, "onChanged() called with: aBoolean = [" + aBoolean + "]");
                 if(!aBoolean) refresh.stopRefresh(true);
             }
         });
@@ -280,6 +307,26 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onChanged(WalletEntry entry) {
                 floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
+            }
+        });
+
+        // loading set visible
+        viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Boolean refreash = viewModel.isRefreshing.getValue();
+                Boolean loadMore = viewModel.isLoadMore.getValue();
+
+                listView.setLoading(refreash || loadMore);
+            }
+        });
+        viewModel.isLoadMore.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Boolean refreash = viewModel.isRefreshing.getValue();
+                Boolean loadMore = viewModel.isLoadMore.getValue();
+
+                listView.setLoading(refreash || loadMore);
             }
         });
     }
