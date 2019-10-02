@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import foundation.icon.ICONexApp;
+import foundation.icon.iconex.R;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailFragment;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailServiceHelper;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailViewModel;
@@ -122,6 +123,8 @@ public class WalletDetailActivity extends AppCompatActivity {
                 viewModel.isRefreshing.postValue(false);
                 viewModel.isLoadMore.postValue(false);
 
+                String symbol = viewModel.walletEntry.getValue().getSymbol();
+
                 for (TransactionItemViewData viewData: viewDataes) {
                     viewData.setTxtName("state: " +viewData.getState());
                     viewData.setTxtAddress(viewData.getTxHash());
@@ -147,7 +150,20 @@ public class WalletDetailActivity extends AppCompatActivity {
                     }
 
                     boolean isRemittance = entry.getAddress().equals(viewData.getFrom());
-                    viewData.setTxtAmount((isRemittance ? "- " : "+ ") + viewData.getAmount());
+                    if (isRemittance) {
+                        if (viewData.getState() == 0) {
+                            viewData.setTxtName(getString(R.string.fail_transfer));
+                        } else {
+                            viewData.setTxtName(getString(R.string.complete_transfer));
+                        }
+                    } else {
+                        if (viewData.getState() == 0) {
+                            viewData.setTxtName(getString(R.string.fail_deposit));
+                        } else {
+                            viewData.setTxtName(getString(R.string.complete_deposit));
+                        }
+                    }
+                    viewData.setTxtAmount((isRemittance ? "- " : "+ ") + viewData.getAmount() + " " + symbol);
                     viewData.setDark(isRemittance);
                 }
 

@@ -144,6 +144,15 @@ public class WalletDetailFragment extends Fragment {
                     @Override
                     public void onSelect(SelectType selectType) {
                         viewModel.selectType.postValue(selectType);
+                        String s;
+                        switch (selectType) {
+                            default:
+                            case All: s = getString(R.string.all); break;
+                            case Send: s = getString(R.string.transfer); break;
+                            case Deposit: s = getString(R.string.deposit); break;
+                        }
+                        fixedListHeaderView.setTextViewOption(s);
+                        listHeaderView.setTextViewOption(s);
                     }
                 }).show();
             }
@@ -293,10 +302,6 @@ public class WalletDetailFragment extends Fragment {
             case All:
                 viewDataList.addAll(transactionItemViewData);
                 break;
-        }
-
-        for (TransactionItemViewData itemViewData: transactionItemViewData) {
-            itemViewData.setTxtAmount(itemViewData.getTxtAmount() + " " + viewModel.walletEntry.getValue().getSymbol());
         }
 
         listView.setViewDataList(viewDataList);

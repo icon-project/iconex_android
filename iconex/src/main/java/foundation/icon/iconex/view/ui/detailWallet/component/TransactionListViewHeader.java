@@ -49,7 +49,7 @@ public class TransactionListViewHeader extends FrameLayout {
     }
 
     public void setTextViewOption(String text) {
-        txtViewOption.setText(text + " ▼");
+        txtViewOption.setText(text);
     }
 
     public void setInfoButtonVisible(boolean isVisible) {

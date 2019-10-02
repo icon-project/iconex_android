@@ -40,7 +40,18 @@
             android:id="@+id/txt_view_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Completed · All ▼"
+            android:text="@string/all"
+            android:textColor="@color/dark"
+            android:textSize="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/txt_view_option_c"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_view_option_c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" ▼"
             android:textColor="@color/dark"
             android:textSize="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

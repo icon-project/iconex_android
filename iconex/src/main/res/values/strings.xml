@@ -580,6 +580,11 @@
     <string name="mainWalletInfo40">I-Score</string>
     <string name="mainWalletInfo41">P-Rep 투표에 대한 기여도 점수이며, 1,000 I-Score를 1 ICX로 환급 받을 수 있습니다.</string>
 
+    <string name="complete_transfer">전송완료</string>
+    <string name="fail_transfer">전송실패</string>
+    <string name="complete_deposit">입금완료</string>
+    <string name="fail_deposit">입금실패</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- ========= -->
