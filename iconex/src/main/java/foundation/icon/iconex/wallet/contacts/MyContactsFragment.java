@@ -35,6 +35,7 @@ public class MyContactsFragment extends Fragment {
 
     private ViewGroup noContacts;
 
+    private Button btnCancel;
     private Button btnAddContacts;
 
     public static final String ARG_COIN_TYPE = "ARG_COIN_TYPE";
@@ -70,6 +71,13 @@ public class MyContactsFragment extends Fragment {
         recyclerContacts = view.findViewById(R.id.recycler_contacts);
         noContacts = view.findViewById(R.id.layout_no_contacts);
 
+        btnCancel = view.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
         btnAddContacts = view.findViewById(R.id.btn_add_contacts);
         btnAddContacts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +141,7 @@ public class MyContactsFragment extends Fragment {
                 if (noContacts.getVisibility() == View.VISIBLE)
                     noContacts.setVisibility(View.GONE);
 
-                ((ContactsActivity) getActivity()).setBtnModVisibility(View.VISIBLE);
+                ((ContactsActivity) getActivity()).setBtnModEnable(true);
 
                 myContactsAdapter = new MyContactsAdapter(getActivity(), data, mEditable);
                 myContactsAdapter.setContactsClickListener(mClickListener);
@@ -190,7 +198,6 @@ public class MyContactsFragment extends Fragment {
 
                     if (data.size() == 0) {
                         noContacts.setVisibility(View.VISIBLE);
-                        ((ContactsActivity) getActivity()).setBtnModVisibility(View.INVISIBLE);
                     }
 
                     myContactsAdapter = new MyContactsAdapter(getActivity(), data, mEditable);
