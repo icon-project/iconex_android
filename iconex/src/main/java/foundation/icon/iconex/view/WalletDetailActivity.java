@@ -22,11 +22,14 @@ import java.util.TimeZone;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
+import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailFragment;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailServiceHelper;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailViewModel;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.WalletFragment;
@@ -287,5 +290,25 @@ public class WalletDetailActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         serviceHelper.onStop();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
+                WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {
+                    @Override
+                    public void onResult(Wallet wallet) {
+                        try { RealmUtil.loadWallet(); }
+                        catch (Exception e) { e.printStackTrace(); }
+                        viewModel.wallet.setValue(wallet);
+                    }
+                });
+            } break;
+            default: {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 }

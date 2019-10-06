@@ -314,6 +314,12 @@ public class WalletDetailFragment extends Fragment {
                 floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
             }
         });
+        viewModel.wallet.observe(this, new Observer<Wallet>() {
+            @Override
+            public void onChanged(Wallet wallet) {
+                floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
+            }
+        });
 
         // loading set visible
         viewModel.isRefreshing.observe(this, new Observer<Boolean>() {

@@ -1,5 +1,6 @@
 package foundation.icon.iconex.view.ui.mainWallet.component;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -41,17 +43,22 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
 
     private Wallet wallet;
 
+    private Activity activity;
+
     public enum UpdateDataType {
         Rename, Delete
     }
+
+    public static final int REQ_PASSWORD_CHANGE = 14930;
 
     public interface OnNotifyWalletDataChangeListener {
         void onNotifyWalletDataChange(UpdateDataType updateDataType);
     }
     private OnNotifyWalletDataChangeListener mOnNotifyWalletDataChangeListener = null;
 
-    public WalletManageMenuDialog(@NonNull Context context, Wallet wallet, OnNotifyWalletDataChangeListener listener) {
-        super(context, R.style.MyBottomSheetDialog);
+    public WalletManageMenuDialog(@NonNull Activity activity, Wallet wallet, OnNotifyWalletDataChangeListener listener) {
+        super(activity, R.style.MyBottomSheetDialog);
+        this.activity = activity;
         this.wallet = wallet;
         mOnNotifyWalletDataChangeListener = listener;
     }
@@ -168,8 +175,9 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 }).show();
                 break;
             case R.id.btnChangeWalletPassword: {
-                getContext().startActivity(new Intent(getContext(), WalletPwdChangeActivityNew.class)
-                        .putExtra("walletInfo", (Serializable) wallet));
+                activity.startActivityForResult(
+                        new Intent(getContext(), WalletPwdChangeActivityNew.class)
+                        .putExtra("walletInfo", (Serializable) wallet),REQ_PASSWORD_CHANGE);
             } break;
             case R.id.btnRemoveWallet: {
                 MessageDialog messageDialog = new MessageDialog(getContext());

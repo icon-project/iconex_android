@@ -38,6 +38,18 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
     private TTextInputLayout editOldPwd, editPwd, editCheck;
     private Button btnChange;
 
+    public interface OnResultListener {
+        void onResult(Wallet wallet);
+    }
+    public static boolean getActivityResult(int result, Intent intent, OnResultListener listener) {
+        if (result == RESULT_CODE) {
+            Wallet wallet = (Wallet) intent.getSerializableExtra("result");
+            listener.onResult(wallet);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
