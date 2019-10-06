@@ -18,7 +18,7 @@ import java.util.List;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
@@ -128,16 +128,15 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        BasicDialog dialog = new BasicDialog(this);
-        dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        MessageDialog messageDialog = new MessageDialog(this);
+        messageDialog.setTitleText(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+        messageDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 finish();
             }
         });
-        dialog.show();
+        messageDialog.show();
     }
 
     @Override
@@ -149,9 +148,9 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    BasicDialog dialog = new BasicDialog(ExportWalletBundleActivity.this);
-                    dialog.setMessage(getString(R.string.permissionStorageDenied));
-                    dialog.show();
+                    MessageDialog messageDialog = new MessageDialog(ExportWalletBundleActivity.this);
+                    messageDialog.setTitleText(getString(R.string.permissionStorageDenied));
+                    messageDialog.show();
                 }
                 return;
             }

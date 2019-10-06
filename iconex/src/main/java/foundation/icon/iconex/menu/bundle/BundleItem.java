@@ -1,5 +1,7 @@
 package foundation.icon.iconex.menu.bundle;
 
+import foundation.icon.iconex.wallet.Wallet;
+
 /**
  * Created by js on 2018. 3. 23..
  */
@@ -10,6 +12,7 @@ public class BundleItem {
     private String balance;
     private String symbol;
     private String keyStore;
+    private Wallet wallet;
     private boolean isSelected = false;
 
     public String getAlias() {
@@ -42,6 +45,14 @@ public class BundleItem {
 
     public void setKeyStore(String keyStore) {
         this.keyStore = keyStore;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
     }
 
     public boolean isSelected() {
