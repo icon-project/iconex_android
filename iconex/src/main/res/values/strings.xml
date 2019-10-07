@@ -540,6 +540,9 @@
     <string name="staked">Staked</string>
     <string name="iscore">I-Score</string>
     <string name="icon_voting">ICON Voting</string>
+    <string name="requestSend">전송 요청</string>
+    <string name="msgRequestSend">전송 요청 수량 입력 시, 입력한 수량 정보가 포함된 QR 코드로 변경됩니다.</string>
+    <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
 
     <!-- New - wallet menu -->
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>

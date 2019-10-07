@@ -1,5 +1,9 @@
 package foundation.icon.iconex.view.ui.mainWallet;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -50,6 +54,7 @@ import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.view.ui.mainWallet.component.TotalAssetInfoView;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletAddressCardView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletFloatingMenu;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletIndicator;
@@ -82,6 +87,7 @@ public class MainWalletFragment extends Fragment {
     private WalletIndicator walletIndicator;
 
     private WalletFloatingMenu floatingMenu;
+    private WalletAddressCardView walletAddressCard;
 
     // side menu
     private ImageView imgLogo01;
@@ -209,6 +215,7 @@ public class MainWalletFragment extends Fragment {
         walletIndicator = v.findViewById(R.id.wallet_indicator);
 
         floatingMenu = v.findViewById(R.id.floating_menu);
+        walletAddressCard = v.findViewById(R.id.wallet_address_card);
 
         imgLogo01 = v.findViewById(R.id.img_logo_01);
         imgLogo02 = v.findViewById(R.id.img_logo_02);
@@ -379,6 +386,20 @@ public class MainWalletFragment extends Fragment {
                 }
             }
         });
+
+        walletAddressCard.setOnDismissListener(new WalletAddressCardView.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                boolean isICX = getCurrentWalletCardData()
+                        .getWalletType() == WalletCardViewData.WalletType.ICXwallet;
+                floatingMenu.setEnableFloatingButton(isICX);
+
+                Animator aniShow = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_show);
+                aniShow.setTarget(walletViewPager);
+                walletViewPager.setVisibility(View.VISIBLE);
+                aniShow.start();
+            }
+        });
     }
 
     private void initWalletViewPager(View content) {
@@ -453,6 +474,8 @@ public class MainWalletFragment extends Fragment {
             }
         };
         walletViewPager.setAdapter(pagerAdapter);
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        walletViewPager.setCameraDistance(scale * 8000);
 
         content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -515,7 +538,21 @@ public class MainWalletFragment extends Fragment {
         walletCardView.setOnClickQrCodeListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "not implement qr code", Toast.LENGTH_SHORT).show();
+                WalletCardViewData viewData = getCurrentWalletCardData();
+                Wallet wallet = findWalletByViewData(viewData);
+                floatingMenu.setEnableFloatingButton(false);
+                walletAddressCard.show(wallet);
+
+                Animator aniDisappear = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_disappear);
+                aniDisappear.setTarget(walletViewPager);
+                aniDisappear.start();
+                aniDisappear.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        walletViewPager.setVisibility(View.GONE);
+                    }
+                });
             }
         });
 
