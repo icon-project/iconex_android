@@ -1,82 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:orientation="vertical"
-    tools:context="foundation.icon.iconex.view.ui.wallet.ViewWalletInfoActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    <include
-        android:id="@+id/appbar"
-        layout="@layout/layout_appbar_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <RelativeLayout
-        android:id="@+id/layout_info"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_below="@id/appbar"
-        android:paddingEnd="24dp"
-        android:paddingStart="24dp">
-
-        <TextView
-            android:id="@+id/txt_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:fontFamily="@font/noto_sans_medium"
-            android:text="COIN"
-            android:textColor="@color/colorText"
-            android:textSize="14dp" />
-
-        <TextView
-            android:id="@+id/txt_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:fontFamily="@font/nanum_square_regular"
-            android:text="DATE"
-            android:textColor="@color/colorText50"
-            android:textSize="14dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorText" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_indicator"
+    <foundation.icon.iconex.widgets.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        app:type="title"/>
 
-        <ImageView
-            android:id="@+id/indicator_1"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:background="@drawable/bg_info_indicator" />
-
-        <ImageView
-            android:id="@+id/indicator_2"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginStart="6dp"
-            android:background="@drawable/bg_info_indicator" />
-    </LinearLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewpager"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/layout_indicator"
-        android:layout_below="@id/layout_info" />
-</RelativeLayout>
+        android:orientation="vertical"
+        android:background="@android:color/white">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="40dp"
+            android:layout_above="@id/layout_indicator"
+            android:layout_below="@id/layout_info" />
+
+        <LinearLayout
+            android:id="@+id/layout_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/indicator_1"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/bg_info_indicator" />
+
+            <ImageView
+                android:id="@+id/indicator_2"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_info_indicator" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

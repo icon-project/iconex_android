@@ -20,6 +20,8 @@ import androidx.core.content.ContextCompat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
+
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
@@ -95,19 +97,9 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
                 Toast.makeText(this, getString(R.string.msgCopyPrivateKey), Toast.LENGTH_SHORT).show();
             } break;
             case R.id.btn_view_info: {
-                String coinName;
-                String format = "%1$s(%2$s)";
-                if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
-                    coinName = String.format(format, MyConstants.NAME_ICX, mWallet.getCoinType());
-                else
-                    coinName = String.format(format, MyConstants.NAME_ETH, mWallet.getCoinType());
-
                 startActivity(new Intent(this, ViewWalletInfoActivity.class)
-                        .putExtra("alias", mWallet.getAlias())
-                        .putExtra("coinName", coinName)
-                        .putExtra("address", mWallet.getAddress())
-                        .putExtra("privateKey", mPrivKey)
-                        .putExtra("date", mWallet.getCreatedAt()));
+                        .putExtra("wallet", (Serializable) mWallet)
+                        .putExtra("privateKey", mPrivKey));
             } break;
         }
     }

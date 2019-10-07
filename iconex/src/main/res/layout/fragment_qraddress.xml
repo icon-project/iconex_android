@@ -1,71 +1,60 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    tools:context="foundation.icon.iconex.view.ui.wallet.QRAddressFragment">
+    android:layout_height="wrap_content"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:background="@android:color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/noto_sans_medium"
+        android:text="@string/walletAddress"
+        android:textColor="@color/dark4D"
+        android:textSize="18dp" />
+
+    <RelativeLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="26dp">
+
+        <ImageView
+            android:id="@+id/img_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/anim_loading" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingEnd="24dp"
-        android:paddingStart="24dp">
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:fontFamily="@font/noto_sans_regular"
+        android:text="Address"
+        android:textColor="@color/dark4D"
+        android:textSize="10dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center_horizontal"
-            android:text="@string/walletAddress"
-            android:textColor="@color/colorText"
-            android:textSize="18dp" />
+    <Button
+        android:id="@+id/btn_copy"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="38dp"
+        android:background="@drawable/bg_btn_outline_01"
+        android:fontFamily="@font/noto_sans_light"
+        android:text="@string/copyAddress"
+        android:textAllCaps="false"
+        android:textColor="@color/txt_btn_outline_01"
+        android:textSize="10dp" />
+</LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="200dp"
-            android:layout_height="200dp">
-
-            <ImageView
-                android:id="@+id/img_qrcode"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp" />
-
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerInParent="true"
-                android:indeterminateDrawable="@drawable/anim_loading" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/txt_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="26dp"
-            android:layout_marginStart="26dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="Address"
-            android:textColor="@color/colorText"
-            android:textSize="14dp" />
-
-        <Button
-            android:id="@+id/btn_copy"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_button_b"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/copyAddress"
-            android:textAllCaps="false"
-            android:textColor="@color/button_text"
-            android:textSize="14dp" />
-    </LinearLayout>
-
-</RelativeLayout>

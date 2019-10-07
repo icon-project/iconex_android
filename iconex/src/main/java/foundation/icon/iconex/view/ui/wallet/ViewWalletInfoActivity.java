@@ -17,19 +17,17 @@ import java.util.Date;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.menu.WalletInfoViewPager;
+import foundation.icon.iconex.wallet.Wallet;
 
 public class ViewWalletInfoActivity extends AppCompatActivity {
 
     private static final String TAG = ViewWalletInfoActivity.class.getSimpleName();
 
-    private String walletAlias;
-    private String mCoinName;
-    private String mAddress;
-    private String mPrivKey;
-    private String mDate;
+    private Wallet wallet;
+    private String privateKey;
 
-    private Button btnBack;
-    private TextView txtCoinName, txtDate;
+    private Button btnClose;
+    private TextView txtTitle;
 
     private ViewPager viewPager;
     private WalletInfoViewPager adapter;
@@ -43,28 +41,20 @@ public class ViewWalletInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_wallet_info);
 
         if (getIntent() != null) {
-            walletAlias = getIntent().getStringExtra("alias");
-            mCoinName = getIntent().getStringExtra("coinName");
-            mAddress = getIntent().getStringExtra("address");
-            mPrivKey = getIntent().getStringExtra("privateKey");
-            mDate = getIntent().getStringExtra("date");
+            wallet = ((Wallet) getIntent().getSerializableExtra("wallet"));
+            privateKey = getIntent().getStringExtra("privateKey");
         }
 
-        ((TextView) findViewById(R.id.txt_title)).setText(walletAlias);
+        btnClose = findViewById(R.id.btn_close);
+        txtTitle = findViewById(R.id.txt_title);
 
-        btnBack = findViewById(R.id.btn_back);
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        txtCoinName = findViewById(R.id.txt_name);
-        txtCoinName.setText(mCoinName);
-
-        txtDate = findViewById(R.id.txt_date);
-        txtDate.setText(getDate());
+        txtTitle.setText(wallet.getAlias());
 
         viewPager = findViewById(R.id.viewpager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -115,17 +105,10 @@ public class ViewWalletInfoActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        adapter = new WalletInfoViewPager(getSupportFragmentManager(), mAddress, mPrivKey);
+        adapter = new WalletInfoViewPager(getSupportFragmentManager(), wallet.getAddress(), privateKey);
         viewPager.setAdapter(adapter);
 
         indicator1.setSelected(true);
         indicator2.setSelected(false);
-    }
-
-    private String getDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date(Long.parseLong(mDate)));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(calendar.getTime());
     }
 }
