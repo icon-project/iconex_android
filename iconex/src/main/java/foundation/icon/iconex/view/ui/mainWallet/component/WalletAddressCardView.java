@@ -34,6 +34,7 @@ import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.iconex.widgets.TTextInputLayout;
+import foundation.icon.iconex.widgets.WalletAddressQrcodeView;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,18 +43,10 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 import loopchain.icon.wallet.core.Constants;
 
-// TODO: implement request amount qrcode
+
 public class WalletAddressCardView extends FrameLayout {
 
-    private TextView txtName;
-    private ImageView imgQrCode;
-    private TextView txtAddress;
-    private Button btnCopyAddress;
-
-    private ViewGroup layoutRequestSend;
-    private TTextInputLayout editSendAmount;
-    private Button btnRequestSend;
-    private TextView txtTransSendAmount;
+    private WalletAddressQrcodeView walletAddressQrcodeView;
 
     private ImageButton btnClose;
 
@@ -68,13 +61,7 @@ public class WalletAddressCardView extends FrameLayout {
 
     public void show(Wallet wallet) {
         // bind data
-        txtName.setText(wallet.getAlias());
-        txtAddress.setText(wallet.getAddress());
-        setQrCode(wallet.getAddress(), imgQrCode);
-
-        // set only icx
-        boolean isICX = wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX);
-        layoutRequestSend.setVisibility(isICX ? VISIBLE : INVISIBLE);
+        walletAddressQrcodeView.bind(wallet.getAlias(), wallet);
 
         // animation start
         setVisibility(VISIBLE);
@@ -108,32 +95,12 @@ public class WalletAddressCardView extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.layout_wallet_address_card_view, this, true);
 
         // load ui
-        txtName = findViewById(R.id.txt_name);
-        imgQrCode = findViewById(R.id.img_qrcode);
-        txtAddress = findViewById(R.id.txt_address);
-        btnCopyAddress = findViewById(R.id.btn_copy_address);
-
-        layoutRequestSend = findViewById(R.id.layout_request_send);
-        editSendAmount = findViewById(R.id.edit_send_amount);
-        btnRequestSend = findViewById(R.id.btn_request_send);
-        txtTransSendAmount = findViewById(R.id.txt_trans_send_amount);
-
+        walletAddressQrcodeView = findViewById(R.id.wallet_address_qrcode_view);
         btnClose = findViewById(R.id.btn_close);
 
         // init ui
         float scale = getContext().getResources().getDisplayMetrics().density;
         setCameraDistance(scale * 8000);
-
-        btnCopyAddress.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData data = ClipData.newPlainText("address", txtAddress.getText().toString());
-                clipboard.setPrimaryClip(data);
-
-                CustomToast.makeText(getContext(), getContext().getString(R.string.msgCopyAddress), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         btnClose.setOnClickListener(new OnClickListener() {
             @Override
@@ -153,43 +120,5 @@ public class WalletAddressCardView extends FrameLayout {
                     listener.onDismiss();
             }
         });
-    }
-
-    private void setQrCode(String address, ImageView target){
-        final Bitmap[] qrCode = {null};
-        target.setImageBitmap(null);
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                QRCodeWriter qrCodeWriter = new QRCodeWriter();
-                int size = (int) getResources().getDimension(R.dimen.QRCodeSize);
-                BitMatrix matrix = qrCodeWriter.encode(address, BarcodeFormat.QR_CODE, size, size);
-                int height = matrix.getHeight();
-                int width = matrix.getWidth();
-                qrCode[0] = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        qrCode[0].setPixel(x, y, matrix.get(x, y) ? Color.BLACK : Color.WHITE);
-                    }
-                }
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        target.setImageBitmap(qrCode[0]);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
     }
 }

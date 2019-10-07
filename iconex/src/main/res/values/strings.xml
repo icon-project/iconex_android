@@ -543,6 +543,8 @@
     <string name="requestSend">전송 요청</string>
     <string name="msgRequestSend">전송 요청 수량 입력 시, 입력한 수량 정보가 포함된 QR 코드로 변경됩니다.</string>
     <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
+    <string name="messageRequestSend">ICX를 ICONex 지갑으로 보내주세요.</string>
+    <string name="chooseMsgRequestSend">전송 요청 메세지 보내기</string>
 
     <!-- New - wallet menu -->
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>

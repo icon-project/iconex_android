@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
+import foundation.icon.iconex.view.DepositActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
@@ -88,6 +90,7 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
     }
 
     private void toggleMenu() {
+        btnFloating.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.floating_button_click));
         boolean isShow = menu.getVisibility() == VISIBLE;
         if (isShow) {
             menuModal.setVisibility(GONE);
@@ -107,9 +110,11 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
             case R.id.btn_deposit: {
-                Toast.makeText(getContext(), "not implement btn_deposit", Toast.LENGTH_SHORT).show();
+                getContext().startActivity(new Intent(getContext(), DepositActivity.class)
+                .putExtra(DepositActivity.PARAM_WALLET, ((Serializable) wallet)));
             } break;
             case R.id.btn_send: { // Transfer
                 if (entry.getBalance().equals(MyConstants.NO_BALANCE)
@@ -157,9 +162,6 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
                         }
                     }
                 }).show();
-            } break;
-            case R.id.btn_convert: {
-                Toast.makeText(getContext(), "not implement btn_convert", Toast.LENGTH_SHORT).show();
             } break;
         }
         toggleMenu();
