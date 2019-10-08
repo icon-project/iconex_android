@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,8 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.spongycastle.util.encoders.Hex;
+
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
+import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.widgets.MyEditText;
 import kotlin.jvm.functions.Function1;
 
@@ -41,9 +46,7 @@ public class EtherDataEnterFragment extends Fragment {
     private OnEnterDataLisnter mListener;
     public interface OnEnterDataLisnter {
         void onSetData(String data);
-
-        void onDataCancel(String data);
-
+        void onDataCancel();
         void onDataDelete();
     }
 
@@ -98,20 +101,7 @@ public class EtherDataEnterFragment extends Fragment {
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessageDialog messageDialog = new MessageDialog(getActivity());
-                messageDialog.setSingleButton(false);
-                messageDialog.setTitleText(getString(R.string.cancelEnterData));
-                messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
-                    @Override
-                    public Boolean invoke(View view) {
-                        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                        if (mListener != null)
-                            mListener.onDataCancel(editData.getText().toString());
-                        return true;
-                    }
-                });
-                messageDialog.show();
+                showCancel();
             }
         });
 
@@ -127,12 +117,17 @@ public class EtherDataEnterFragment extends Fragment {
                     editData.setFocusableInTouchMode(true);
                     editData.requestFocus();
 
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(editData, InputMethodManager.SHOW_IMPLICIT);
+
                     state = State.INPUT;
                 } else {
                     // btn_option.getText() == Delete
                     MessageDialog messageDialog = new MessageDialog(getActivity());
                     messageDialog.setTitleText(getString(R.string.msgDeleteData));
                     messageDialog.setSingleButton(false);
+                    messageDialog.setConfirmButtonText(getString(R.string.yes));
+                    messageDialog.setCancleButtonText(getString(R.string.no));
                     messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
                         public Boolean invoke(View view) {
@@ -149,8 +144,22 @@ public class EtherDataEnterFragment extends Fragment {
         btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null)
-                    mListener.onSetData(editData.getText().toString());
+                if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
+                    MessageDialog messageDialog = new MessageDialog(getActivity());
+                    messageDialog.setTitleText(getString(R.string.errInvalidData));
+                    messageDialog.show();
+                    return;
+                }
+                try {
+                    Hex.decode(Utils.remove0x(editData.getText().toString()));
+                    if (mListener != null)
+                        mListener.onSetData(Utils.checkPrefix(editData.getText().toString()));
+                } catch (Exception e) {
+                    MessageDialog messageDialog = new MessageDialog(getActivity());
+                    messageDialog.setTitleText(getString(R.string.errInvalidData));
+                    messageDialog.show();
+                }
+
             }
         });
 
@@ -166,6 +175,27 @@ public class EtherDataEnterFragment extends Fragment {
         editData.requestFocus();
 
         return v;
+    }
+
+    public void showCancel() {
+        String data = (String) getArguments().get("data");
+        if (data.length() <= 0 && editData.getText().length() > 0) {
+            MessageDialog messageDialog = new MessageDialog(getActivity());
+            messageDialog.setSingleButton(false);
+            messageDialog.setTitleText(getString(R.string.cancelEnterData));
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    if (mListener != null)
+                        mListener.onDataCancel();
+                    return true;
+                }
+            });
+            messageDialog.show();
+        } else {
+            if (mListener != null)
+                mListener.onDataCancel();
+        }
     }
 
     @Override

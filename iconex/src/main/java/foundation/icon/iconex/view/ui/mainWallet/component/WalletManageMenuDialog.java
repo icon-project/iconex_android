@@ -87,6 +87,28 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 EditText2Dialog editText2Dialog = new EditText2Dialog(getContext(), getString(R.string.modWalletAlias));
                 editText2Dialog.setHint(getString(R.string.hintWalletAlias));
                 editText2Dialog.setText(wallet.getAlias());
+                final String[] beforeStr = {""};
+                editText2Dialog.setOnTextChangedListener(new EditText2Dialog.OnTextChangedListener() {
+                    @Override
+                    public boolean onChangeText(String s) {
+                        if (s.isEmpty()) {
+                            return false;
+                        } if (s.trim().isEmpty()) {
+                            editText2Dialog.setText("");
+                        } else if (s.charAt(0) == ' ') {
+                            editText2Dialog.setText(beforeStr[0]);
+                            editText2Dialog.setSelection(beforeStr[0].length());
+                        } else {
+                            if (Utils.checkByteLength(s) > 16) {
+                                editText2Dialog.setText(beforeStr[0]);
+                                editText2Dialog.setSelection(editText2Dialog.getText().length());
+                            } else {
+                                beforeStr[0] = s;
+                            }
+                        }
+                        return true;
+                    }
+                });
                 editText2Dialog.setOnConfirm(new EditText2Dialog.OnConfirmListener() {
                     @Override
                     public boolean onConfirm(String text) {

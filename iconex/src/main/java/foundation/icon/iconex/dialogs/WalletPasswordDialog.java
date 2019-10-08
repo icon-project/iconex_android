@@ -1,6 +1,7 @@
 package foundation.icon.iconex.dialogs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.view.LoadWalletActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import io.reactivex.Completable;
@@ -59,8 +61,19 @@ public class WalletPasswordDialog extends MessageDialog {
         mLnkForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Need to implement move to Forgot Password
-                Toast.makeText(getContext(), "TODO: Need to implement move to Forgot Password", Toast.LENGTH_SHORT).show();
+                MessageDialog messageDialog = new MessageDialog(getContext());
+                messageDialog.setTitleText(getContext().getString(R.string.msgForgetPassword));
+                messageDialog.setSingleButton(false);
+                messageDialog.setConfirmButtonText(getContext().getString(R.string.LoadWallet));
+                messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                    @Override
+                    public Boolean invoke(View view) {
+                        getContext().startActivity(new Intent(getContext(), LoadWalletActivity.class));
+                        return true;
+                    }
+                });
+                messageDialog.show();
+                dismiss();
             }
         });
 

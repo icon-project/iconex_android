@@ -11,28 +11,24 @@ import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
+import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -41,7 +37,6 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
@@ -74,7 +69,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ICONTransferActivity extends AppCompatActivity implements EnterDataFragment.OnEnterDataLisnter{
+public class ICONTransferActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter{
 
     // appbar UI
     private CustomActionBar appbar;
@@ -281,31 +276,9 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                 } else {
                 }
             }
+        } else if (requestCode == RC_DATA) {
+            IconEnterDataActivity.activityResultHelper(resultCode, data, this);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0) {
-            Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-            dialog.setMessage(getString(R.string.cancelEnterData));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                @Override
-                public void onOk() {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                    fragmentManager.popBackStackImmediate();
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
-            dialog.show();
-        } else
-            super.onBackPressed();
     }
 
     private void loadView() {
@@ -479,7 +452,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                     DataTypeDialog typeDialog = new DataTypeDialog(ICONTransferActivity.this);
                     typeDialog.setOnTypeListener(new DataTypeDialog.OnTypeListener() {
                         @Override
-                        public void onSelect(EnterDataFragment.DataType type) {
+                        public void onSelect(IconEnterDataFragment.DataType type) {
                             data = new InputData();
                             data.setAddress(wallet.getAddress());
                             data.setBalance(balance);
@@ -490,11 +463,11 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                                 data.setAmount(ConvertUtil.valueToBigInteger(editSend.getText(), 18));
                             data.setDataType(type);
 
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            FragmentTransaction transaction = fragmentManager.beginTransaction();
-                            transaction.add(R.id.container, EnterDataFragment.newInstance(data));
-                            transaction.addToBackStack("DATA");
-                            transaction.commit();
+                            startActivityForResult(new Intent(
+                                    ICONTransferActivity.this, IconEnterDataActivity.class
+                                    ).putExtra(IconEnterDataActivity.DATA, data),
+                                    RC_DATA
+                            );
 
                             typeDialog.dismiss();
                         }
@@ -509,11 +482,11 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
             @Override
             public void onClick(View v) {
                  if(data != null) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(R.id.container, EnterDataFragment.newInstance(data));
-                    transaction.addToBackStack("DATA");
-                    transaction.commit();
+                     startActivityForResult(new Intent(
+                                     ICONTransferActivity.this, IconEnterDataActivity.class
+                             ).putExtra(IconEnterDataActivity.DATA, data),
+                             RC_DATA
+                     );
                 }
             }
         });
@@ -585,12 +558,12 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                                     * Double.parseDouble(strPrice);
                             String strTransUSD = String.format("%,.2f", transUSD);
 
-                            txtTransSend.setText(String.format("%s USD", strTransUSD));
+                            txtTransSend.setText(String.format("$ %s", strTransUSD));
                         }
                         setRemain(amount);
                     }
                 } else {
-                    txtTransSend.setText(String.format("%s USD", MyConstants.NO_BALANCE));
+                    txtTransSend.setText(String.format("$ %s", MyConstants.NO_BALANCE));
                     btnSend.setEnabled(false);
 
                     editSend.setError(false, null);
@@ -721,9 +694,9 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
 
             String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
             ((TextView) findViewById(R.id.txt_trans_balance))
-                    .setText(String.format(getString(R.string.exchange_usd), strBalanceUSD));
+                    .setText("$ " + strBalanceUSD);
 
-            setRemain(editSend.getText().toString());
+            setRemain(editSend.getText());
         }
     }
 
@@ -955,6 +928,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                         minStep = defaultLimit;
 
                     strLimit = minStep.toString();
+                    setRemain(editSend.getText());
                     setLimitPrice(strLimit, txtStepICX);
                 }
 
@@ -970,6 +944,7 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
                         minStep = defaultLimit;
 
                     strLimit = minStep.toString();
+                    setRemain(editSend.getText());
                     setLimitPrice(strLimit, txtStepICX);
                 }
             });
@@ -1222,15 +1197,16 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
     @Override
     public void onSetData(InputData data) {
         this.data = data;
-        editData.setText(data.getData());
+
+        if (data.getDataType() == IconEnterDataFragment.DataType.UTF)
+            editData.setText(new String(Hex.decode(Utils.remove0x(data.getData()))));
+        else
+            editData.setText(data.getData());
         btnViewData.setVisibility(View.VISIBLE);
         minStep = new BigInteger(Integer.toString(this.data.getStepCost()));
         strLimit = minStep.toString();
+        setRemain(editSend.getText());
         setLimitPrice(strLimit, txtStepICX);
-
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        getSupportFragmentManager().popBackStackImmediate();
 
         setSendEnable();
     }
@@ -1244,8 +1220,6 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
         } else {
             btnViewData.setVisibility(View.VISIBLE);
         }
-
-        getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override
@@ -1256,9 +1230,8 @@ public class ICONTransferActivity extends AppCompatActivity implements EnterData
 
         minStep = defaultLimit;
         strLimit = minStep.toString();
+        setRemain(editSend.getText());
         setLimitPrice(strLimit, txtStepICX);
-
-        getSupportFragmentManager().popBackStackImmediate();
     }
 
 

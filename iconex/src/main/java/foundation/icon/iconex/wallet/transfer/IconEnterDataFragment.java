@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -39,8 +40,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EnterDataFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = EnterDataFragment.class.getSimpleName();
+public class IconEnterDataFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = IconEnterDataFragment.class.getSimpleName();
 
     private TextView txtDataSize;
     private MyEditText editData;
@@ -60,12 +61,12 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
     private String beforeStr;
     private int maxSize;
 
-    public EnterDataFragment() {
+    public IconEnterDataFragment() {
         // Required empty public constructor
     }
 
-    public static EnterDataFragment newInstance(InputData data) {
-        EnterDataFragment fragment = new EnterDataFragment();
+    public static IconEnterDataFragment newInstance(InputData data) {
+        IconEnterDataFragment fragment = new IconEnterDataFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATA, data);
         fragment.setArguments(args);
@@ -229,12 +230,17 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
                     editData.setFocusableInTouchMode(true);
                     editData.requestFocus();
 
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(editData, InputMethodManager.SHOW_IMPLICIT);
+
                     state = State.INPUT;
                 } else {
                     // btn_option.getText() == Delete
                     MessageDialog messageDialog = new MessageDialog(getActivity());
                     messageDialog.setTitleText(getString(R.string.msgDeleteData));
                     messageDialog.setSingleButton(false);
+                    messageDialog.setConfirmButtonText(getString(R.string.yes));
+                    messageDialog.setCancleButtonText(getString(R.string.no));
                     messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
                         public Boolean invoke(View view) {
@@ -274,32 +280,23 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private void showCancel() {
-        MessageDialog messageDialog = new MessageDialog(getActivity());
-        messageDialog.setSingleButton(false);
-        messageDialog.setTitleText(getString(R.string.cancelEnterData));
-        messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
-            @Override
-            public Boolean invoke(View view) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                        | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                if (mListener != null)
-                    mListener.onDataCancel(data);
-                return true;
-            }
-        });
-        messageDialog.show();
-    }
-
-    private boolean isHexCharSet(char c) {
-        if (c >= 48 && c <= 57) {
-            return true;
-        } else if (c >= 65 && c <= 90) {
-            return true;
-        } else if (c >= 97 && c <= 122) {
-            return true;
+    public void showCancel() {
+        if (data.getData() == null && editData.getText().length() > 0) {
+            MessageDialog messageDialog = new MessageDialog(getActivity());
+            messageDialog.setSingleButton(false);
+            messageDialog.setTitleText(getString(R.string.cancelEnterData));
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    if (mListener != null)
+                        mListener.onDataCancel(data);
+                    return true;
+                }
+            });
+            messageDialog.show();
         } else {
-            return false;
+            if (mListener != null)
+                mListener.onDataCancel(data);
         }
     }
 
@@ -309,13 +306,9 @@ public class EnterDataFragment extends Fragment implements View.OnClickListener 
         else
             txtLength.setTextColor(getResources().getColor(R.color.colorWarning));
 
-        if (byteLength < 1024) {
-            txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength) + " B"));
-            return;
-        } else {
-            txtLength.setText(String.format(Locale.getDefault(), "%s", Long.toString(byteLength / 1024) + " KB"));
-            return;
-        }
+        txtLength.setText(String.format(Locale.getDefault(), "%.0f KB",
+                Math.floor(byteLength / 1024) + (byteLength % 1024 == 0 ? 0 : 1)));
+
     }
 
     private boolean checkBalance(int stepLimit) {

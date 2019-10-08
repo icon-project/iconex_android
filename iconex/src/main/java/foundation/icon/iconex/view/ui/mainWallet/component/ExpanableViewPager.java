@@ -7,6 +7,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +20,7 @@ public class ExpanableViewPager extends ViewPager {
     private String TAG = ExpanableViewPager.class.getSimpleName();
     public enum State { Expaned, Collapsed, Dragging, Expanding, Collapsing }
     public interface OnStateChangeListener { void onChangeState(State state); }
-    private static final int ANIMATION_DURATION = 300;
+    private static final int ANIMATION_DURATION = 200;
 
     // expand & collapse state value
     private int mExpandedHeight = 750;
@@ -226,6 +227,7 @@ public class ExpanableViewPager extends ViewPager {
                 }
             }
         });
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.setDuration(ANIMATION_DURATION);
         animator.start();
     }

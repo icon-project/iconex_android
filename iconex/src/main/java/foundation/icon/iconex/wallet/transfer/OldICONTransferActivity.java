@@ -72,7 +72,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OldICONTransferActivity extends AppCompatActivity implements View.OnClickListener, EnterDataFragment.OnEnterDataLisnter {
+public class OldICONTransferActivity extends AppCompatActivity implements View.OnClickListener, IconEnterDataFragment.OnEnterDataLisnter {
 
     private static final String TAG = OldICONTransferActivity.class.getSimpleName();
 
@@ -689,7 +689,7 @@ public class OldICONTransferActivity extends AppCompatActivity implements View.O
                     DataTypeDialog typeDialog = new DataTypeDialog(this);
                     typeDialog.setOnTypeListener(new DataTypeDialog.OnTypeListener() {
                         @Override
-                        public void onSelect(EnterDataFragment.DataType type) {
+                        public void onSelect(IconEnterDataFragment.DataType type) {
                             data = new InputData();
                             data.setAddress(mWallet.getAddress());
                             data.setBalance(balance);
@@ -702,7 +702,7 @@ public class OldICONTransferActivity extends AppCompatActivity implements View.O
 
                             fragmentManager = getSupportFragmentManager();
                             FragmentTransaction transaction = fragmentManager.beginTransaction();
-                            transaction.add(R.id.container, EnterDataFragment.newInstance(data));
+                            transaction.add(R.id.container, IconEnterDataFragment.newInstance(data));
                             transaction.addToBackStack("DATA");
                             transaction.commit();
 
@@ -713,7 +713,7 @@ public class OldICONTransferActivity extends AppCompatActivity implements View.O
                 } else {
                     fragmentManager = getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(R.id.container, EnterDataFragment.newInstance(data));
+                    transaction.add(R.id.container, IconEnterDataFragment.newInstance(data));
                     transaction.addToBackStack("DATA");
                     transaction.commit();
                 }

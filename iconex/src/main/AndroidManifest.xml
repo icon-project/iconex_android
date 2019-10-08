@@ -36,8 +36,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.AboutActivity"
+        <activity android:name=".wallet.transfer.IconEnterDataActivity"
+            android:configChanges="fontScale"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivity"/>
+
+        <activity android:name=".wallet.transfer.EtherEnterDataActivity"
+            android:configChanges="fontScale"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivity"/>
+
+        <activity android:name=".view.AboutActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"
