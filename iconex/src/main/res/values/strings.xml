@@ -592,4 +592,5 @@
     <string name="fail_deposit">입금실패</string>
 
     <string name="msgNewPasswordSame">현재 비밀번호와 동일합니다. 새 비밀번호를 입력해주세요.</string>
+    <string name="totalWalletCount">총 %d개 지갑</string>
 </resources>
