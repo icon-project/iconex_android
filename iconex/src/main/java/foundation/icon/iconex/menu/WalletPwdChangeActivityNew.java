@@ -89,6 +89,10 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
             }
         };
 
+        editOldPwd.setPastable(false);
+        editPwd.setPastable(false);
+        editCheck.setPastable(false);
+
         // ================= init current password
         editOldPwd.setOnKeyPreImeListener(onKeyPreIme);
         editOldPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {

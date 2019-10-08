@@ -56,6 +56,8 @@ public class WalletPasswordDialog extends MessageDialog {
         mLnkForgotPassword = content.findViewById(R.id.lnk_forgot_password);
 
         // set Button
+        mEditPassword.setPastable(false);
+
         setSingleButton(false);
 
         mLnkForgotPassword.setOnClickListener(new View.OnClickListener() {

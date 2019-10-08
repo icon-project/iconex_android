@@ -47,6 +47,9 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_bundle_pwd, container, false);
 
+        editPwd.setPastable(false);
+        editPwd.setPastable(false);
+
         editPwd = v.findViewById(R.id.edit_pwd);
         editPwd.setOnKeyPreImeListener(mKeyPreImeListener);
         editPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {

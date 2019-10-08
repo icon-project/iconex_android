@@ -310,6 +310,10 @@ class TTextInputLayout : LinearLayout {
         edit.inputType = type
     }
 
+    fun setPastable(pastable: Boolean) {
+        edit.isLongClickable = pastable;
+    }
+
     private var mOnFocusReleasedListener: OnFocusReleased? = null
     fun setOnFocusChangedListener(onFocusReleasedListener: OnFocusReleased) {
         mOnFocusReleasedListener = onFocusReleasedListener
