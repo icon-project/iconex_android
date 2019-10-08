@@ -143,7 +143,12 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
                         break;
 
                     default:
-                        editPwd.setError(false, null);
+                        // if new password == old password
+                        if (editOldPwd.getText().equals(editPwd.getText())) {
+                            editPwd.setError(true, getString(R.string.msgNewPasswordSame));
+                        } else {
+                            editPwd.setError(false, null);
+                        }
                         break;
                 }
 
@@ -296,7 +301,12 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
                 break;
 
             default:
-                editPwd.setError(false, null);
+                // if new password == old password
+                if (editOldPwd.getText().equals(editPwd.getText())) {
+                    editPwd.setError(true, getString(R.string.msgNewPasswordSame));
+                } else {
+                    editPwd.setError(false, null);
+                }
         }
 
         boolean checkResult = PasswordValidator.checkPasswordMatch(pwd, checkPwd);
@@ -306,7 +316,7 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
             editCheck.setError(false, null);
         }
 
-        if (curResult && checkResult && (pwdResult == PasswordValidator.OK))
+        if (curResult && checkResult && (pwdResult == PasswordValidator.OK) && !editOldPwd.getText().equals(editPwd.getText()))
             btnChange.setEnabled(true);
         else
             btnChange.setEnabled(false);

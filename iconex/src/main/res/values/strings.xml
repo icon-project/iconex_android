@@ -591,7 +591,5 @@
     <string name="complete_deposit">입금완료</string>
     <string name="fail_deposit">입금실패</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- ========= -->
+    <string name="msgNewPasswordSame">현재 비밀번호와 동일합니다. 새 비밀번호를 입력해주세요.</string>
 </resources>
