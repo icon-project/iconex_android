@@ -117,33 +117,6 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
                 .putExtra(DepositActivity.PARAM_WALLET, ((Serializable) wallet)));
             } break;
             case R.id.btn_send: { // Transfer
-                if (entry.getBalance().equals(MyConstants.NO_BALANCE)
-                        || new BigInteger(entry.getBalance()).compareTo(BigInteger.ZERO) == 0) {
-                    MessageDialog messageDialog = new MessageDialog(getContext());
-                    messageDialog.setTitleText(getContext().getString(R.string.errCantWithdraw));
-                    messageDialog.show();
-                    return;
-                }
-
-                if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-                    if (new BigInteger(entry.getBalance()).equals(BigInteger.ZERO)) {
-                        MessageDialog messageDialog = new MessageDialog(getContext());
-                        messageDialog.setTitleText(getContext().getString(R.string.errCantWithdraw));
-                        messageDialog.show();
-                        return;
-                    }
-                } else {
-                    if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).equals(BigInteger.ZERO)) {
-                        MessageDialog messageDialog = new MessageDialog(getContext());
-                        if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
-                            messageDialog.setTitleText(getContext().getString(R.string.errIcxOwnNotEnough));
-                        else
-                            messageDialog.setTitleText(getContext().getString(R.string.errEthOwnNotEnough));
-                        messageDialog.show();
-                        return;
-                    }
-                }
-
                 new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
                     @Override
                     public void onPass(byte[] bytePrivateKey) {
