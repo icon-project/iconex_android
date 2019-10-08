@@ -2,14 +2,18 @@ package foundation.icon.iconex.view.ui.prep.vote;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.MenuView;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.math.BigInteger;
@@ -18,7 +22,10 @@ import java.util.List;
 import java.util.Locale;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.ui.prep.Delegation;
+import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.widgets.CustomSeekbar;
 import foundation.icon.iconex.widgets.MyEditText;
 import foundation.icon.iconex.widgets.ToolTip;
@@ -28,7 +35,10 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private Activity root;
+    private VoteViewModel vm;
+
     private List<Delegation> delegations = new ArrayList<>();
+    private List<Delegation> votingList = new ArrayList<>();
 
     private int currentManage = -1;
 
@@ -39,6 +49,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             this.delegations = delegations;
 
         this.root = root;
+
+        vm = ViewModelProviders.of((FragmentActivity) root).get(VoteViewModel.class);
     }
 
     @NonNull
@@ -57,16 +69,35 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof MenuView.ItemView) {
+        if (holder instanceof ItemViewHolder) {
             ItemViewHolder h = (ItemViewHolder) holder;
             Delegation delegation = delegations.get(position);
+            PRep pRep = delegation.getPrep();
 
-            h.tvPrepName.setText(delegation.getPrepName());
+            h.tvPrepName.setText(pRep.getName());
             h.tvPrepGrade.setText(String.format(Locale.getDefault(),
-                    "(%s)", delegation.getGrade().getLabel()));
+                    "(%s)", pRep.getGrade().getLabel()));
 
+            h.tvTotalVotes.setText(String.format(Locale.getDefault(), "%s (%s%%)",
+                    Utils.formatFloating(ConvertUtil.getValue(pRep.getDelegated(), 18), 4),
+                    Utils.formatFloating(Double.toString(pRep.delegatedPercent()), 1)));
+
+            float votePercent;
+            if (delegation.getValue().equals(BigInteger.ZERO))
+                votePercent = 0.0f;
+            else {
+                votePercent = delegation.getValue().floatValue() / pRep.getDelegated().floatValue() * 100;
+            }
+            h.tvMyVotes.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                    Utils.formatFloating(ConvertUtil.getValue(delegation.getValue(), 18), 4),
+                    votePercent));
+
+            h.btnManage.setImageResource(R.drawable.bg_btn_prep_delete);
             if (!delegation.getValue().equals(BigInteger.ZERO))
-                h.btnManage.setEnabled(false);
+                h.btnManage.setSelected(true);
+
+            h.layoutGraph.setVisibility(View.GONE);
+            h.layoutMyVotes.setVisibility(View.VISIBLE);
         }
     }
 
@@ -86,6 +117,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
     class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private ViewGroup rootView;
         private TextView tvPrepName, tvPrepGrade;
         private ViewGroup layoutVotes, layoutTotalVotes, layoutMyVotes;
         private TextView tvTotalVotes, tvMyVotes;
@@ -97,6 +129,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
         public ItemViewHolder(@NonNull View v) {
             super(v);
+
+            rootView = v.findViewById(R.id.root);
 
             v.findViewById(R.id.layout_info).setOnClickListener(this);
 
@@ -110,27 +144,45 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             tvMyVotes = v.findViewById(R.id.txt_my_votes);
 
             btnManage = v.findViewById(R.id.btn_prep_manage);
-            btnManage.setBackgroundResource(R.drawable.bg_btn_prep_delete);
             btnManage.setOnClickListener(this);
 
             layoutGraph = v.findViewById(R.id.layout_graph);
             editDelegation = v.findViewById(R.id.edit_value);
+            editDelegation.addTextChangedListener(textWatcher);
             txtPercent = v.findViewById(R.id.txt_percentage);
             seekbar = v.findViewById(R.id.vote_seek_bar);
+            seekbar.setOnSeekBarChangeListener(seekBarChangeListener);
         }
 
         @Override
         public void onClick(View view) {
+            Delegation delegation = delegations.get(getAdapterPosition());
+
             switch (view.getId()) {
                 case R.id.layout_info:
                     if (layoutGraph.getVisibility() == View.GONE) {
+                        if (currentManage > -1)
+                            notifyItemChanged(currentManage);
+
                         layoutGraph.setVisibility(View.VISIBLE);
                         layoutMyVotes.setVisibility(View.GONE);
 
-                        if (currentManage > -1) {
-                            notifyItemChanged(currentManage);
-                            currentManage = getAdapterPosition();
+                        currentManage = getAdapterPosition();
+
+                        BigInteger votingPower = vm.getVotingPower().getValue();
+                        BigInteger available = votingPower.add(delegation.getValue());
+
+                        float votePercent;
+                        if (delegation.getValue().equals(BigInteger.ZERO)) {
+                            votePercent = 0.0f;
+                            editDelegation.setText("0.0000");
+                        } else {
+                            votePercent = delegation.getValue().floatValue() / available.floatValue() * 100;
+                            editDelegation.setText(Utils.formatFloating(ConvertUtil.getValue(delegation.getValue(), 18), 4));
                         }
+
+                        txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", votePercent));
+                        seekbar.setProgress(90);
                     } else {
                         layoutGraph.setVisibility(View.GONE);
                         layoutMyVotes.setVisibility(View.VISIBLE);
@@ -141,16 +193,51 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
                 case R.id.btn_prep_manage:
                     ToolTip toolTip = new ToolTip(context);
-                    Delegation delegation = delegations.get(getAdapterPosition());
                     if (delegation.getValue().compareTo(BigInteger.ZERO) > 0) {
                         toolTip.setText(context.getString(R.string.tipHasDelegation));
                         toolTip.setPosition(root, btnManage);
                     } else {
-
+                        delegations.remove(getAdapterPosition());
+                        vm.setDelegations(delegations);
+                        notifyDataSetChanged();
                     }
                     break;
             }
         }
+
+        private TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+
+        private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
     }
 
     public void setData(List<Delegation> delegations) {

@@ -233,10 +233,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/noto_sans_light"
-                        android:text="┗ Voted"
+                        android:text="@string/under_voted"
                         android:textColor="@color/primary" />
 
                     <TextView
+                        android:id="@+id/txt_voted_icx"
                         style="@style/TextView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

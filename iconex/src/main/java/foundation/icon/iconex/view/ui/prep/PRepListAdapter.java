@@ -2,6 +2,7 @@ package foundation.icon.iconex.view.ui.prep;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.ui.prep.vote.VoteViewModel;
 import foundation.icon.iconex.widgets.ToolTip;
@@ -64,6 +67,12 @@ public class PRepListAdapter extends RecyclerView.Adapter {
         ConstraintLayout.LayoutParams layoutParams =
                 (ConstraintLayout.LayoutParams) h.layoutVotes.getLayoutParams();
 
+        Log.d(TAG, "TotalDelegated=" + prep.getTotalDelegated() + " // " + ConvertUtil.getValue(prep.getTotalDelegated(), 18));
+        Log.d(TAG, "Delegated=" + prep.getDelegated() + " // " + ConvertUtil.getValue(prep.getDelegated(), 18));
+
+        BigDecimal totalDelegated = new BigDecimal(prep.getTotalDelegated());
+        BigDecimal delegated = new BigDecimal(prep.getDelegated());
+
         switch (mType) {
             case NORMAL:
                 h.btnManage.setVisibility(View.GONE);
@@ -78,14 +87,14 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         "(%s)", prep.getGrade().getLabel()));
                 h.tvTotalVotes.setText(String.format(Locale.getDefault(),
                         "%s(%s%%)",
-                        Utils.formatFloating(Double.toString(prep.getDelegated().doubleValue()), 4),
+                        Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
                         Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
                 break;
 
             case VOTE:
                 try {
                     for (Delegation d : delegations) {
-                        if (prep.getAddress().equals(d.getAddress()))
+                        if (prep.getAddress().equals(d.getPrep().getAddress()))
                             h.btnManage.setSelected(true);
                     }
                 } catch (NullPointerException e) {
@@ -103,7 +112,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         "(%s)", prep.getGrade().getLabel()));
                 h.tvTotalVotes.setText(String.format(Locale.getDefault(),
                         "%s(%s%%)",
-                        Utils.formatFloating(Double.toString(prep.getDelegated().doubleValue()), 4),
+                        Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
                         Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
                 break;
         }
@@ -154,17 +163,12 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         } else {
                             PRep prep = preps.get(getAdapterPosition());
                             Delegation delegation = new Delegation.Builder()
-                                    .address(prep.getAddress())
-                                    .grade(prep.getGrade())
-                                    .name(prep.getName())
+                                    .prep(prep)
                                     .build();
                             delegations.add(delegation);
                             vm.setDelegations(delegations);
 
                             notifyItemChanged(getAdapterPosition());
-
-                            if (mAddListener != null)
-                                mAddListener.onAdd(prep);
                         }
                     }
                     break;
@@ -178,16 +182,6 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
     public void setDelegations(List<Delegation> delegations) {
         this.delegations = delegations;
-    }
-
-    private OnPRepAddListener mAddListener = null;
-
-    public void setOnPRepAddListener(OnPRepAddListener listener) {
-        mAddListener = listener;
-    }
-
-    public interface OnPRepAddListener {
-        void onAdd(PRep prep);
     }
 
     public enum Type {

@@ -3,6 +3,7 @@ package foundation.icon.iconex.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +25,8 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.IconDisclaimerDialogFragment;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
-import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
+import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
@@ -197,7 +198,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         BigInteger totalVoted = BigInteger.ZERO;
         BigInteger totalStake = BigInteger.ZERO;
 
-        for(String address : pRepsData.keySet()) {
+        for (String address : pRepsData.keySet()) {
             MainWalletServiceHelper.PRepsRemoteData data = pRepsData.get(address);
 
             totalVoted = totalVoted.add(data.getTotalDelegated());
@@ -246,7 +247,7 @@ public class MainWalletActivity extends AppCompatActivity implements
             return exchanged;
         } catch (Exception e) {
             // if result == "-" then amount(balance), exchange set null
-            Log.d(TAG, "set balance "+ walletEntry.getName() + ": " +e.getMessage());
+            Log.d(TAG, "set balance " + walletEntry.getName() + ": " + e.getMessage());
             viewData.setAmount(null).setExchanged(null);
             return null;
         }
@@ -400,13 +401,17 @@ public class MainWalletActivity extends AppCompatActivity implements
                     }
                 });
 
-        BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
-        if (balance.compareTo(new BigInteger("5")) < 0) {
-            messageDialog = new MessageDialog(MainWalletActivity.this);
-            messageDialog.setTitleText(getString(R.string.notEnoughForStaking));
-            messageDialog.show();
-        } else {
-            passwordDialog.show();
+        try {
+            BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
+            if (balance.compareTo(new BigInteger("5")) < 0) {
+                messageDialog = new MessageDialog(MainWalletActivity.this);
+                messageDialog.setTitleText(getString(R.string.notEnoughForStaking));
+                messageDialog.show();
+            } else {
+                passwordDialog.show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Balance not set", Toast.LENGTH_SHORT).show();
         }
     }
 

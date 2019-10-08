@@ -13,32 +13,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InterruptedIOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.realm.RealmUtil;
-import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.ui.prep.Delegation;
-import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.VoteGraph;
-import foundation.icon.icx.transport.jsonrpc.RpcArray;
-import foundation.icon.icx.transport.jsonrpc.RpcItem;
-import foundation.icon.icx.transport.jsonrpc.RpcObject;
-import io.reactivex.Completable;
-import io.reactivex.CompletableEmitter;
-import io.reactivex.CompletableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableCompletableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 public class PRepVoteFragment extends Fragment {
     private static final String TAG = PRepVoteFragment.class.getSimpleName();
@@ -73,11 +60,11 @@ public class PRepVoteFragment extends Fragment {
 
         vm = ViewModelProviders.of(getActivity()).get(VoteViewModel.class);
         wallet = vm.getWallet().getValue();
-        delegations = vm.getDelegations().getValue();
         vm.getDelegations().observe(this, new Observer<List<Delegation>>() {
             @Override
             public void onChanged(List<Delegation> delegations) {
                 Log.d(TAG, "Delegate observer onChanged");
+                PRepVoteFragment.this.delegations = delegations;
                 if (adapter != null && delegations != null) {
                     adapter.setData(delegations);
                     list.setAdapter(adapter);
@@ -86,6 +73,8 @@ public class PRepVoteFragment extends Fragment {
                             delegations, getActivity());
                     list.setAdapter(adapter);
                 }
+
+                setDelegation();
             }
         });
     }
@@ -111,24 +100,11 @@ public class PRepVoteFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        getDelegations();
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
 
         if (mListener != null)
             mListener = null;
-
-        if (prepDisposable != null && !prepDisposable.isDisposed())
-            prepDisposable.dispose();
-
-        if (delegationsDisposable != null && !delegationsDisposable.isDisposed())
-            delegationsDisposable.dispose();
     }
 
     private void initView(View v) {
@@ -141,91 +117,24 @@ public class PRepVoteFragment extends Fragment {
         list = v.findViewById(R.id.my_votes);
     }
 
-    private void getDelegations() {
-        delegationsDisposable = Completable.create(new CompletableOnSubscribe() {
-            @Override
-            public void subscribe(CompletableEmitter emitter) throws Exception {
-                PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
-                try {
-                    RpcItem result = pRepService.getDelegation(wallet.getAddress());
-                    RpcObject object = result.asObject();
-                    totalDelegated = object.getItem("totalDelegated").asInteger();
-                    votingPower = object.getItem("votingPower").asInteger();
+    private void setDelegation() {
+        txtVotedCount.setText(String.format(Locale.getDefault(), "(%d/10)", delegations.size()));
+        if (vm.getVoted().getValue() != null) {
+            BigDecimal voted = new BigDecimal(vm.getVoted().getValue());
+            BigDecimal votingPower = new BigDecimal(vm.getVotingPower().getValue());
+            BigDecimal staked = voted.add(votingPower);
 
-                    if (object.getItem("delegations") != null) {
-                        RpcArray array = object.getItem("delegations").asArray();
-                        for (RpcItem i : array.asList()) {
-                            RpcObject o = i.asObject();
-                            Delegation delegation = new Delegation.Builder()
-                                    .address(o.getItem("address").asString())
-                                    .value(o.getItem("value").asInteger())
-                                    .build();
-                            delegations.add(delegation);
-                        }
-                    }
-
-                    emitter.onComplete();
-                } catch (InterruptedIOException e) {
-                    e.printStackTrace();
-                }
+            float votePercent;
+            if (voted.equals(BigDecimal.ZERO))
+                votePercent = 0.0f;
+            else {
+                votePercent = voted.floatValue() / staked.floatValue() * 100;
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableCompletableObserver() {
-                    @Override
-                    public void onComplete() {
-                        getPRep();
 
-                        txtVotedCount.setText(String.format(Locale.getDefault(), "(%d/10)",
-                                delegations.size()));
-                        txtVotedIcx.setText(Utils.formatFloating(
-                                ConvertUtil.getValue(totalDelegated, 18), 4));
-                        txtAvailableIcx.setText(Utils.formatFloating(
-                                ConvertUtil.getValue(votingPower, 18), 4));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
-    }
-
-    private void getPRep() {
-        prepDisposable = Completable.create(new CompletableOnSubscribe() {
-            @Override
-            public void subscribe(CompletableEmitter emitter) throws Exception {
-                PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
-                RpcItem result;
-                RpcObject o;
-
-                for (int i = 0; i < delegations.size(); i++) {
-                    Delegation d = delegations.get(i);
-                    result = pRepService.getPrep(d.getAddress());
-                    o = result.asObject();
-                    d = d.newBuilder()
-                            .name(o.getItem("name").asString())
-                            .grade(PRep.Grade.fromGrade(
-                                    o.getItem("grade").asInteger().intValue()))
-                            .build();
-                    delegations.set(i, d);
-                }
-
-                emitter.onComplete();
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableCompletableObserver() {
-                    @Override
-                    public void onComplete() {
-                        vm.setDelegations(delegations);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
+            voteGraph.setVoted(votePercent);
+            txtVotedIcx.setText(Utils.formatFloating(ConvertUtil.getValue(vm.getVoted().getValue(), 18), 4));
+            txtAvailableIcx.setText(Utils.formatFloating(ConvertUtil.getValue(vm.getVotingPower().getValue(), 18), 4));
+        }
     }
 
     public interface OnVoteListener {

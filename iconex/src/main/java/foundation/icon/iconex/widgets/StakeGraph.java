@@ -9,6 +9,9 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Locale;
 
 import foundation.icon.iconex.R;
@@ -16,7 +19,10 @@ import foundation.icon.iconex.R;
 public class StakeGraph extends ConstraintLayout {
     private static final String TAG = StakeGraph.class.getSimpleName();
 
-    private TextView stakePer, unstakePer, delegationPer;
+    private TextView txtStakePer, txtUnstakePer, txtDelegationPer;
+    private BigInteger totalBalance = BigInteger.ZERO;
+    private BigInteger stake = BigInteger.ZERO;
+    private BigInteger delegation = BigInteger.ZERO;
 
     public StakeGraph(Context context) {
         super(context);
@@ -40,14 +46,39 @@ public class StakeGraph extends ConstraintLayout {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.layout_stake_graph, this, false);
 
-        stakePer = v.findViewById(R.id.stake_percentage);
-        unstakePer = v.findViewById(R.id.unstake_percentage);
-        delegationPer = v.findViewById(R.id.delegation_percentage);
+        txtStakePer = v.findViewById(R.id.stake_percentage);
+        txtUnstakePer = v.findViewById(R.id.unstake_percentage);
+        txtDelegationPer = v.findViewById(R.id.delegation_percentage);
 
         addView(v);
     }
 
-    public void setStake(float stake) {
+    public void setTotalBalance(BigInteger totalBalance) {
+        this.totalBalance = totalBalance;
+    }
+
+    public void setStake(BigInteger stake) {
+        this.stake = stake;
+
+        setStakeGraph(calculatePercentage(totalBalance, stake));
+
+        if (!delegation.equals(BigInteger.ZERO))
+            setDelegationGraph(calculatePercentage(this.stake, delegation));
+    }
+
+    public void setStake(float stakePercent) {
+        setStakeGraph(stakePercent);
+
+        if (!delegation.equals(BigInteger.ZERO))
+            setDelegationGraph(calculatePercentage(calculateIcx(stakePercent), delegation));
+    }
+
+    public void setDelegation(BigInteger delegation) {
+        this.delegation = delegation;
+        setDelegationGraph(calculatePercentage(this.stake, delegation));
+    }
+
+    private void setStakeGraph(float stake) {
         float unstakePercentage = 100 - stake;
 
         ConstraintSet constraintSet = new ConstraintSet();
@@ -56,17 +87,41 @@ public class StakeGraph extends ConstraintLayout {
         constraintSet.setHorizontalWeight(R.id.unstake, unstakePercentage);
         constraintSet.applyTo(findViewById(R.id.constraint_stake));
 
-        stakePer.setText(String.format(Locale.getDefault(), " %.1f%%", stake));
-        unstakePer.setText(String.format(Locale.getDefault(), " %.1f%%", unstakePercentage));
+        txtStakePer.setText(String.format(Locale.getDefault(), " %.1f%%", stake));
+        txtUnstakePer.setText(String.format(Locale.getDefault(), " %.1f%%", unstakePercentage));
     }
 
-    public void setDelegation(float delegation) {
+    private void setDelegationGraph(float delegation) {
+        float delegationPercent = delegation;
+        if (delegationPercent >= 100)
+            delegationPercent = 100;
+
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone((ConstraintLayout) findViewById(R.id.stake));
-        constraintSet.setHorizontalWeight(R.id.delegation, delegation);
-        constraintSet.setHorizontalWeight(R.id.space, 100 - delegation);
+        constraintSet.setHorizontalWeight(R.id.delegation, delegationPercent);
+        constraintSet.setHorizontalWeight(R.id.space, 100 - delegationPercent);
         constraintSet.applyTo(findViewById(R.id.stake));
 
-        delegationPer.setText(String.format(Locale.getDefault(), " %.1f%%", delegation));
+        txtDelegationPer.setText(String.format(Locale.getDefault(), " %.1f%%", delegationPercent));
+    }
+
+    private BigInteger calculateIcx(float percentage) {
+        BigInteger percent = new BigInteger(Integer.toString((int) percentage));
+        BigInteger multiply = totalBalance.multiply(percent);
+        BigInteger icx = multiply.divide(new BigInteger("100"));
+
+        return icx;
+    }
+
+    private float calculatePercentage(BigInteger base, BigInteger value) {
+        if (value.equals(BigInteger.ZERO))
+            return 0.0f;
+
+        BigDecimal baseDec = new BigDecimal(base);
+        BigDecimal valueDec = new BigDecimal(value);
+        BigDecimal percentDec = valueDec.divide(baseDec, 18, RoundingMode.HALF_UP)
+                .multiply(new BigDecimal("100"));
+
+        return percentDec.floatValue();
     }
 }

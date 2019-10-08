@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +20,6 @@ import java.util.List;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.prep.Delegation;
@@ -69,6 +69,17 @@ public class VotePRepListFragment extends Fragment {
         wallet = vm.getWallet().getValue();
         delegations = vm.getDelegations().getValue();
         prepList = vm.getPreps().getValue();
+
+        vm.getDelegations().observe(this, new Observer<List<Delegation>>() {
+            @Override
+            public void onChanged(List<Delegation> delegations) {
+                VotePRepListFragment.this.delegations = delegations;
+                if (adapter != null) {
+                    adapter.setDelegations(delegations);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -100,20 +111,8 @@ public class VotePRepListFragment extends Fragment {
                     PRepListAdapter.Type.VOTE,
                     prepList, getActivity());
             adapter.setDelegations(delegations);
-            adapter.setOnPRepAddListener(mAddListener);
             list.setAdapter(adapter);
         }
-
-        getPRepList();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-
-        if (!disposable.isDisposed())
-            disposable.dispose();
     }
 
     private void initView(View v) {
@@ -124,65 +123,6 @@ public class VotePRepListFragment extends Fragment {
                         ContextCompat.getDrawable(getContext(), R.drawable.line_divider));
         list.addItemDecoration(itemDecoration);
     }
-
-    private void getPRepList() {
-        disposable = Observable.create(new ObservableOnSubscribe<List<PRep>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<PRep>> emitter) throws Exception {
-                PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
-                try {
-                    RpcItem result = pRepService.getPreps();
-                    BigInteger totalDelegated =
-                            ConvertUtil.hexStringToBigInt(
-                                    result.asObject().getItem("totalDelegated").asString(), 0);
-                    List<PRep> list = new ArrayList<>();
-                    for (RpcItem i : result.asObject().getItem("preps").asArray().asList()) {
-                        RpcObject object = i.asObject();
-                        PRep prep = PRep.valueOf(object);
-                        prep.setTotalDelegated(totalDelegated);
-                        list.add(prep);
-                    }
-
-                    emitter.onNext(list);
-                    emitter.onComplete();
-                } catch (InterruptedIOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<List<PRep>>() {
-
-                    @Override
-                    public void onNext(List<PRep> pReps) {
-                        prepList = pReps;
-                        vm.setPreps(prepList);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        adapter = new PRepListAdapter(
-                                getContext(),
-                                PRepListAdapter.Type.VOTE,
-                                prepList, getActivity());
-                        adapter.setOnPRepAddListener(mAddListener);
-
-                        list.setAdapter(adapter);
-                    }
-                });
-    }
-
-    private PRepListAdapter.OnPRepAddListener mAddListener = new PRepListAdapter.OnPRepAddListener() {
-        @Override
-        public void onAdd(PRep prep) {
-            RealmUtil.addMyVote(wallet.getAddress(), prep);
-        }
-    };
 
     public interface OnVotePRepListListener {
     }
