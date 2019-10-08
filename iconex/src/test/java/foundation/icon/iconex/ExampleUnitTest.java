@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.service.Urls;
@@ -31,15 +32,12 @@ public class ExampleUnitTest {
 
     @Test
     public void getPrep() {
-        IconService iconService = new IconService(Urls.Euljiro.Node.getUrl());
+        PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
 
         try {
-//            RpcItem result = iconService.getStepPrice();
-//            RpcValue value = result.asValue();
-//            System.out.println(value);
-//            System.out.println(iconService.estimateStep("hx8f21e5c54f006b6a5d5fe65486908592151a7c57"));
-
-            BigInteger step = iconService.estimateStep("hx8f21e5c54f006b6a5d5fe65486908592151a7c57");
+            RpcItem result = pRepService.getDelegation("hx19ab90c4d767d6f5e80080fdf842f63acf4b1acc");
+            RpcObject o = result.asObject();
+            System.out.println(o.getItem("votingPower").asInteger());
         } catch (IOException e) {
             e.printStackTrace();
         }

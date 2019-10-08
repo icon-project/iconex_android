@@ -65,6 +65,8 @@ public class PRepStakeActivity extends AppCompatActivity {
     private Wallet wallet;
     private String privateKey;
     private BigInteger stepLimit, stepPrice, fee;
+    private BigInteger voted;
+    private float delegatedPercent = 0;
 
     private StakeGraph stakeGraph;
     private CustomSeekbar stakeSeekBar;
@@ -104,6 +106,14 @@ public class PRepStakeActivity extends AppCompatActivity {
         getData();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (disposable != null && !disposable.isDisposed())
+            disposable.dispose();
+    }
+
     private int previousProgress;
 
     private void initView() {
@@ -122,18 +132,38 @@ public class PRepStakeActivity extends AppCompatActivity {
         stakeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                stakeGraph.setStake(i);
-
-                if (!editStaked.isFocused()) {
-                    editStaked.setText(calculateIcx(i));
-                    editStaked.setSelection(editStaked.getText().toString().length());
+                if (b) {
+                    if (i == 0) {
+                        stakeGraph.setStake(i + delegatedPercent);
+                        editStaked.setTag("seekbar");
+                        editStaked.setText(String.format(Locale.getDefault(), "%.4f",
+                                new BigDecimal(delegated).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).doubleValue()));
+                        editStaked.setSelection(editStaked.getText().toString().length());
+                        editStaked.setTag(null);
+                        txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", delegatedPercent));
+                    } else if (i == stakeSeekBar.getMax()) {
+                        stakeGraph.setStake(100);
+                        editStaked.setTag("seekbar");
+                        editStaked.setText(String.format(Locale.getDefault(), "%.4f",
+                                new BigDecimal(availableStake).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).doubleValue()));
+                        editStaked.setSelection(editStaked.getText().toString().length());
+                        editStaked.setTag(null);
+                        txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", 100.0f));
+                    } else {
+                        stakeGraph.setStake((int) (i + delegatedPercent));
+                        editStaked.setTag("seekbar");
+                        editStaked.setText(calculateIcx((int) (i + delegatedPercent)));
+                        editStaked.setSelection(editStaked.getText().toString().length());
+                        editStaked.setTag(null);
+                        txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", Math.floor((double) (i + delegatedPercent))));
+                    }
+                } else {
+                    stakeGraph.setStake(i + delegatedPercent);
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if (editStaked.isFocused())
-                    editStaked.clearFocus();
             }
 
             @Override
@@ -149,25 +179,23 @@ public class PRepStakeActivity extends AppCompatActivity {
         editStaked.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() > 0) {
-                    stakeCheck(charSequence.toString());
-                } else {
-                    txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", (float) 0));
-                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.w(TAG, "editable=" + editable.toString());
+                if (editStaked.getTag() == null) {
+                    stakeCheck(editable.toString());
+                }
             }
         });
 
         txtStakedPer = findViewById(R.id.txt_percentage);
-        txtDelegation = findViewById(R.id.delegation_percentage);
+        txtDelegation = findViewById(R.id.txt_voted_icx);
         txtTimeRequired = findViewById(R.id.txt_time_required);
         txtStepNPrice = findViewById(R.id.txt_limit_price);
         txtFee = findViewById(R.id.txt_fee);
@@ -185,41 +213,46 @@ public class PRepStakeActivity extends AppCompatActivity {
         disposable = Completable.create(new CompletableOnSubscribe() {
             @Override
             public void subscribe(CompletableEmitter emitter) throws Exception {
-                PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
-                RpcObject getDelegationResult = pRepService.getDelegation(wallet.getAddress()).asObject();
-                delegated = getDelegationResult.getItem("totalDelegated").asInteger();
-                votingPower = getDelegationResult.getItem("votingPower").asInteger();
-                staked = delegated.add(votingPower);
+                try {
+                    PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
+                    RpcObject getDelegationResult = pRepService.getDelegation(wallet.getAddress()).asObject();
+                    delegated = getDelegationResult.getItem("totalDelegated").asInteger();
+                    votingPower = getDelegationResult.getItem("votingPower").asInteger();
+                    staked = delegated.add(votingPower);
 
-                IconService iconService = new IconService(ICONexApp.NETWORK.getUrl());
-                if (wallet.getWalletEntries().get(0).getBalance().equals("-")) {
-                    BigInteger balance = iconService.getBalance(wallet.getAddress());
-                    wallet.getWalletEntries().get(0).setBalance(balance.toString());
+                    IconService iconService = new IconService(ICONexApp.NETWORK.getUrl());
+                    if (wallet.getWalletEntries().get(0).getBalance().equals("-")) {
+                        BigInteger balance = iconService.getBalance(wallet.getAddress());
+                        wallet.getWalletEntries().get(0).setBalance(balance.toString());
+                    }
+
+                    stepPrice = iconService.getStepPrice().asInteger();
+
+                    BigInteger remainer = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
+                    totalBalance = remainer.add(staked);
+                    availableStake = totalBalance.subtract(delegated);
+
+                    if (ICONexApp.EXCHANGE_TABLE.get("icxusd") == null) {
+                        LoopChainClient client = new LoopChainClient(ServiceConstants.DEV_TRACKER);
+                        Response<TRResponse> response = client.getExchangeRates("icxusd").execute();
+                        JsonElement data = response.body().getData();
+                        JsonArray list = data.getAsJsonArray();
+                        JsonObject item = list.get(0).getAsJsonObject();
+                        String tradeName = item.get("tradeName").getAsString();
+                        String price = item.get("price").getAsString();
+                        ICONexApp.EXCHANGE_TABLE.put(tradeName, price);
+                    }
+
+                    Log.d(TAG, "totalBalance=" + ConvertUtil.getValue(totalBalance, 18)
+                            + "\nStake=" + ConvertUtil.getValue(staked, 18)
+                            + "\nDelegation=" + ConvertUtil.getValue(delegated, 18)
+                            + "\nAvailable=" + ConvertUtil.getValue(availableStake, 18));
+
+                    emitter.onComplete();
+                } catch (InterruptedIOException e) {
+                    e.printStackTrace();
+                    emitter.onError(e);
                 }
-
-                stepPrice = iconService.getStepPrice().asInteger();
-
-                BigInteger remainer = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
-                totalBalance = remainer.add(staked);
-                availableStake = totalBalance.subtract(delegated);
-
-                if (ICONexApp.EXCHANGE_TABLE.get("icxusd") == null) {
-                    LoopChainClient client = new LoopChainClient(ServiceConstants.DEV_TRACKER);
-                    Response<TRResponse> response = client.getExchangeRates("icxusd").execute();
-                    JsonElement data = response.body().getData();
-                    JsonArray list = data.getAsJsonArray();
-                    JsonObject item = list.get(0).getAsJsonObject();
-                    String tradeName = item.get("tradeName").getAsString();
-                    String price = item.get("price").getAsString();
-                    ICONexApp.EXCHANGE_TABLE.put(tradeName, price);
-                }
-
-                Log.d(TAG, "totalBalance=" + ConvertUtil.getValue(totalBalance, 18)
-                        + "\nStake=" + ConvertUtil.getValue(staked, 18)
-                        + "\nDelegation=" + ConvertUtil.getValue(delegated, 18)
-                        + "\nAvailable=" + ConvertUtil.getValue(availableStake, 18));
-
-                emitter.onComplete();
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -232,43 +265,51 @@ public class PRepStakeActivity extends AppCompatActivity {
                                 ConvertUtil.getValue(totalBalance.subtract(staked), 18), 4));
 
                         float stakePercentage = calculatePercentage(totalBalance, staked);
-                        float delegatedPercentage = calculatePercentage(staked, delegated);
-                        stakeGraph.setStake(stakePercentage);
-                        stakeGraph.setDelegation(delegatedPercentage);
-
-                        editStaked.setText(String.format(Locale.getDefault(), "%.4f",
-                                Double.parseDouble(ConvertUtil.getValue(staked, 18))));
+                        Log.d(TAG, "stakePercent=" + stakePercentage);
+                        editStaked.setText(String.format(Locale.getDefault(), "%f",
+                                new BigDecimal(staked).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR)));
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)",
                                 stakePercentage));
+
+                        stakeGraph.setTotalBalance(totalBalance);
+                        stakeGraph.setStake(staked);
+
+                        if (!delegated.equals(BigInteger.ZERO)) {
+                            stakeGraph.setDelegation(delegated);
+                            delegatedPercent = calculatePercentage(totalBalance, delegated);
+                            txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                                    new BigDecimal(delegated).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR),
+                                    delegatedPercent));
+
+                            stakeSeekBar.setMax(100 - ((int) delegatedPercent));
+                        } else {
+                            txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                                    new BigDecimal("0").scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR), 0.0f));
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
                 });
     }
 
     private String calculateIcx(int percentage) {
         BigInteger percent = new BigInteger(Integer.toString(percentage));
-        Log.d(TAG, "percent=" + percent);
         BigInteger multiply = availableStake.multiply(percent);
         BigInteger icx = multiply.divide(ONE_HUNDRED);
 
-        Log.d(TAG, "icx=" + ConvertUtil.getValue(icx, 18));
-
-        return String.format(Locale.getDefault(), "%,.4f",
+        return String.format(Locale.getDefault(), "%.4f",
                 Double.parseDouble(ConvertUtil.getValue(icx, 18)));
     }
 
     private float calculatePercentage(BigInteger base, BigInteger value) {
-        Log.d(TAG, "value=" + value);
         if (value.equals(BigInteger.ZERO))
             return 0.0f;
 
         BigDecimal baseDec = new BigDecimal(base);
         BigDecimal valueDec = new BigDecimal(value);
-        Log.d(TAG, "base=" + baseDec + ", value=" + valueDec);
         BigDecimal percentDec = valueDec.divide(baseDec, 18, RoundingMode.HALF_UP)
                 .multiply(new BigDecimal(ONE_HUNDRED));
 
@@ -277,17 +318,19 @@ public class PRepStakeActivity extends AppCompatActivity {
 
     private void stakeCheck(String value) {
         BigInteger input = ConvertUtil.valueToBigInteger(value, 18);
-        if (input.compareTo(delegated) < 0) {
-            editStaked.setText(String.format(Locale.getDefault(), "%.4f",
-                    Double.parseDouble(ConvertUtil.getValue(staked, 18))));
-            txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)",
-                    calculatePercentage(totalBalance, staked)));
-            stakeSeekBar.setProgress((int) calculatePercentage(availableStake, staked));
-        } else if (input.compareTo(availableStake) > 0) {
+        Log.wtf(TAG, "input=" + input);
+        if (input.compareTo(availableStake) > 0) {
             editStaked.setText(String.format(Locale.getDefault(), "%.4f",
                     Double.parseDouble(ConvertUtil.getValue(availableStake, 18))));
             txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", 100.0f));
             stakeSeekBar.setProgress(100);
+        } else if (input.compareTo(delegated) < 0) {
+            editStaked.setTag("prg");
+            editStaked.setText(String.format(Locale.getDefault(), "%.4f",
+                    Double.parseDouble(ConvertUtil.getValue(delegated, 18))));
+            editStaked.setTag(null);
+            txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", delegatedPercent));
+            stakeSeekBar.setProgress((int) delegatedPercent);
         } else {
             double percent = calculatePercentage(availableStake, input);
             Log.d(TAG, "edittext campreMin percent=" + percent);
@@ -316,7 +359,14 @@ public class PRepStakeActivity extends AppCompatActivity {
                 BigInteger defaultValue
                         = IconAmount.of("0", IconAmount.Unit.ICX).toLoop();
 
-                String value = editStaked.getText().toString();
+                String value;
+                if (stakeSeekBar.getProgress() == 0)
+                    value = ConvertUtil.getValue(delegated, 18);
+                else if (stakeSeekBar.getProgress() == stakeSeekBar.getMax())
+                    value = ConvertUtil.getValue(availableStake, 18);
+                else
+                    value = editStaked.getText().toString();
+
                 RpcObject params = new RpcObject.Builder()
                         .put("value", new RpcValue(ConvertUtil.valueToHexString(value, 18)))
                         .build();

@@ -5,25 +5,11 @@ import java.math.BigInteger;
 
 public class Delegation implements Serializable {
 
-    private String prepName, address;
-    private PRep.Status status;
-    private PRep.Grade grade;
+    private PRep prep;
     private BigInteger value;
 
-    public String getPrepName() {
-        return prepName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public PRep.Status getStatus() {
-        return status;
-    }
-
-    public PRep.Grade getGrade() {
-        return grade;
+    public PRep getPrep() {
+        return prep;
     }
 
     public BigInteger getValue() {
@@ -31,43 +17,29 @@ public class Delegation implements Serializable {
     }
 
     Delegation(Builder builder) {
-        prepName = builder.prepName;
-        address = builder.address;
-        status = builder.status;
-        grade = builder.grade;
-        value = builder.value;
+        prep = builder.prep;
+
+        if (builder.value == null)
+            value = BigInteger.ZERO;
+        else
+            value = builder.value;
     }
 
     public Builder newBuilder() {
         return new Builder()
-                .name(prepName)
-                .address(address)
-                .status(status)
-                .grade(grade)
+                .prep(prep)
                 .value(value);
     }
 
     public static class Builder {
-        private String prepName, address;
-        private PRep.Status status;
-        private PRep.Grade grade;
+        private PRep prep;
         private BigInteger value;
 
         public Builder() {
         }
 
-        public Builder name(String prepName) {
-            this.prepName = prepName;
-            return this;
-        }
-
-        public Builder address(String address) {
-            this.address = address;
-            return this;
-        }
-
-        public Builder grade(PRep.Grade grade) {
-            this.grade = grade;
+        public Builder prep(PRep prep) {
+            this.prep = prep;
             return this;
         }
 
@@ -76,13 +48,18 @@ public class Delegation implements Serializable {
             return this;
         }
 
-        public Builder status(PRep.Status status) {
-            this.status = status;
-            return this;
-        }
-
         public Delegation build() {
             return new Delegation(this);
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Delegation) {
+            Delegation d = (Delegation) obj;
+            return d.getPrep().getAddress().equals(getPrep().getAddress());
+        } else {
+            return false;
         }
     }
 }

@@ -1,6 +1,8 @@
 package foundation.icon.iconex.view.ui.prep;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,14 +10,20 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.view.ui.prep.vote.VoteViewModel;
+import foundation.icon.iconex.widgets.ToolTip;
 
 public class PRepListAdapter extends RecyclerView.Adapter {
     private static final String TAG = PRepListAdapter.class.getSimpleName();
@@ -25,10 +33,23 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     private List<PRep> preps;
     private List<Delegation> delegations;
 
+    private Activity root;
+    private VoteViewModel vm;
+
     public PRepListAdapter(Context context, Type type, List<PRep> preps) {
         mContext = context;
         mType = type;
         this.preps = preps;
+    }
+
+    public PRepListAdapter(Context context, Type type, List<PRep> preps, Activity root) {
+        mContext = context;
+        mType = type;
+        this.preps = preps;
+        this.root = root;
+
+        vm = ViewModelProviders.of((AppCompatActivity) root).get(VoteViewModel.class);
+        delegations = vm.getDelegations().getValue();
     }
 
     @NonNull
@@ -46,6 +67,12 @@ public class PRepListAdapter extends RecyclerView.Adapter {
         ConstraintLayout.LayoutParams layoutParams =
                 (ConstraintLayout.LayoutParams) h.layoutVotes.getLayoutParams();
 
+        Log.d(TAG, "TotalDelegated=" + prep.getTotalDelegated() + " // " + ConvertUtil.getValue(prep.getTotalDelegated(), 18));
+        Log.d(TAG, "Delegated=" + prep.getDelegated() + " // " + ConvertUtil.getValue(prep.getDelegated(), 18));
+
+        BigDecimal totalDelegated = new BigDecimal(prep.getTotalDelegated());
+        BigDecimal delegated = new BigDecimal(prep.getDelegated());
+
         switch (mType) {
             case NORMAL:
                 h.btnManage.setVisibility(View.GONE);
@@ -60,16 +87,15 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         "(%s)", prep.getGrade().getLabel()));
                 h.tvTotalVotes.setText(String.format(Locale.getDefault(),
                         "%s(%s%%)",
-                        Utils.formatFloating(Double.toString(prep.getDelegated().doubleValue()), 4),
+                        Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
                         Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
                 break;
 
             case VOTE:
-                h.btnManage.setImageResource(R.drawable.ic_add_list_enabled);
                 try {
                     for (Delegation d : delegations) {
-                        if (prep.getAddress().equals(d.getAddress()))
-                            h.btnManage.setImageResource(R.drawable.ic_add_list_disabled);
+                        if (prep.getAddress().equals(d.getPrep().getAddress()))
+                            h.btnManage.setSelected(true);
                     }
                 } catch (NullPointerException e) {
                     // Do nothing.
@@ -86,7 +112,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         "(%s)", prep.getGrade().getLabel()));
                 h.tvTotalVotes.setText(String.format(Locale.getDefault(),
                         "%s(%s%%)",
-                        Utils.formatFloating(Double.toString(prep.getDelegated().doubleValue()), 4),
+                        Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
                         Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
                 break;
         }
@@ -124,7 +150,29 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btn_prep_manage:
+                    ToolTip toolTip = new ToolTip(mContext);
+                    if (btnManage.isSelected()) {
+                        toolTip.setText(mContext.getString(R.string.tipAddedPRep));
+                        toolTip.setPosition(root, btnManage);
+                    } else {
+                        if (delegations.size() == 10) {
+                            toolTip.setText(mContext.getString(R.string.tipPRepMax));
+                            toolTip.setPosition(root, btnManage);
+                        } else {
+                            PRep prep = preps.get(getAdapterPosition());
+                            Delegation delegation = new Delegation.Builder()
+                                    .prep(prep)
+                                    .build();
+                            delegations.add(delegation);
+                            vm.setDelegations(delegations);
 
+                            notifyItemChanged(getAdapterPosition());
+                        }
+                    }
+                    break;
+            }
         }
     }
 

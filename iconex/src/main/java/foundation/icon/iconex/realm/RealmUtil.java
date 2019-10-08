@@ -463,9 +463,6 @@ public class RealmUtil {
                 .equalTo("owner", owner).findAll();
         for (MyVotes v : myVotes) {
             Delegation d = new Delegation.Builder()
-                    .address(v.getPrepAddress())
-                    .name(v.getPrepName())
-                    .grade(PRep.Grade.fromGrade(v.getPrepGrade()))
                     .build();
 
             delegations.add(d);

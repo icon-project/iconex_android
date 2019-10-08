@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -32,15 +33,17 @@ import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
 import foundation.icon.iconex.dialogs.IconDisclaimerDialogFragment;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
+import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
+import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
+import foundation.icon.iconex.menu.lock.SettingLockActivity;
+import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
+import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
-import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
-import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
-import foundation.icon.iconex.menu.lock.SettingLockActivity;
-import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.MainActivity;
@@ -221,7 +224,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         BigInteger totalVoted = BigInteger.ZERO;
         BigInteger totalStake = BigInteger.ZERO;
 
-        for(String address : pRepsData.keySet()) {
+        for (String address : pRepsData.keySet()) {
             MainWalletServiceHelper.PRepsRemoteData data = pRepsData.get(address);
 
             totalVoted = totalVoted.add(data.getTotalDelegated());
@@ -270,7 +273,7 @@ public class MainWalletActivity extends AppCompatActivity implements
             return exchanged;
         } catch (Exception e) {
             // if result == "-" then amount(balance), exchange set null
-            Log.d(TAG, "set balance "+ walletEntry.getName() + ": " +e.getMessage());
+            Log.d(TAG, "set balance " + walletEntry.getName() + ": " + e.getMessage());
             viewData.setAmount(null).setExchanged(null);
             return null;
         }
@@ -424,13 +427,17 @@ public class MainWalletActivity extends AppCompatActivity implements
                     }
                 });
 
-        BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
-        if (balance.compareTo(new BigInteger("5")) < 0) {
-            messageDialog = new MessageDialog(MainWalletActivity.this);
-            messageDialog.setTitleText(getString(R.string.notEnoughForStaking));
-            messageDialog.show();
-        } else {
-            passwordDialog.show();
+        try {
+            BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
+            if (balance.compareTo(new BigInteger("5")) < 0) {
+                messageDialog = new MessageDialog(MainWalletActivity.this);
+                messageDialog.setTitleText(getString(R.string.notEnoughForStaking));
+                messageDialog.show();
+            } else {
+                passwordDialog.show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Balance not set", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -449,20 +456,37 @@ public class MainWalletActivity extends AppCompatActivity implements
                 });
 
         BigInteger votingPower = wallet.getVotingPower();
-        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
-            messageDialog = new MessageDialog(MainWalletActivity.this);
-            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
-            messageDialog.show();
-        } else {
-            passwordDialog.show();
-        }
+//        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
+//            messageDialog = new MessageDialog(MainWalletActivity.this);
+//            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
+//            messageDialog.show();
+//        } else {
+        passwordDialog.show();
+//        }
     }
 
     @Override
     public void iScore(WalletCardViewData viewData) {
         Wallet wallet = findWalletByViewData(viewData);
-        startActivity(new Intent(this, PRepIScoreActivity.class)
-                .putExtra("wallet", (Serializable) wallet));
+
+        passwordDialog = new WalletPasswordDialog(this, wallet,
+                new WalletPasswordDialog.OnPassListener() {
+                    @Override
+                    public void onPass(byte[] bytePrivateKey) {
+                        startActivity(new Intent(MainWalletActivity.this, PRepIScoreActivity.class)
+                                .putExtra("wallet", (Serializable) wallet)
+                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
+                    }
+                });
+
+        BigInteger votingPower = wallet.getVotingPower();
+//        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
+//            messageDialog = new MessageDialog(MainWalletActivity.this);
+//            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
+//            messageDialog.show();
+//        } else {
+        passwordDialog.show();
+//        }
     }
 
     @Override

@@ -1,14 +1,12 @@
 package foundation.icon.iconex.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -41,14 +39,13 @@ import io.reactivex.schedulers.Schedulers;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.response.TRResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
-import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
-import loopchain.icon.wallet.service.crypto.PKIUtils;
 import retrofit2.Response;
 
 public class PRepIScoreActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = PRepIScoreActivity.class.getSimpleName();
 
     private Wallet wallet;
+    private String privateKey;
     private Disposable disposable;
 
     private TextView txtCurrentIScore, txtEstimatedIcx, txtLimitPrice, txtFee, txtFeeUsd;
@@ -61,8 +58,10 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prep_iscore);
 
-        if (getIntent() != null)
+        if (getIntent() != null) {
             wallet = (Wallet) getIntent().getSerializableExtra("wallet");
+            privateKey = getIntent().getStringExtra("privateKey");
+        }
 
         initView();
         initData();
