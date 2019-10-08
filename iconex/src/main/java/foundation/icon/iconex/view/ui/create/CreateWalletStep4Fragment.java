@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 
 public class CreateWalletStep4Fragment extends Fragment implements View.OnClickListener {
@@ -103,7 +104,7 @@ public class CreateWalletStep4Fragment extends Fragment implements View.OnClickL
                 break;
 
             case R.id.btn_view_info:
-                mListener.showWalletInfo();
+                mListener.showWalletInfo(vm.getWallet().getValue(), privateKey);
                 break;
 
             case R.id.btn_complete:
@@ -131,6 +132,6 @@ public class CreateWalletStep4Fragment extends Fragment implements View.OnClickL
     public interface OnStep4Listener {
         void onStep4Back();
 
-        void showWalletInfo();
+        void showWalletInfo(Wallet wallet, String privateKey);
     }
 }
