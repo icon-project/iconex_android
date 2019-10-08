@@ -52,8 +52,6 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
                         alFragment.refresh();
                     }
                 } else {
-                    startActivity(new Intent(SettingLockActivity.this, MainWalletActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                     finish();
                 }
             }
@@ -138,8 +136,6 @@ public class SettingLockActivity extends AppCompatActivity implements AppLockMan
                 alFragment.refresh();
             }
         } else {
-            startActivity(new Intent(SettingLockActivity.this, MainWalletActivity.class)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         }
     }

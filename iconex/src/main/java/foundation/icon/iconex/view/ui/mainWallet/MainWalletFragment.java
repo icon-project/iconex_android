@@ -832,14 +832,17 @@ public class MainWalletFragment extends Fragment {
             switch (v.getId()) {
                 case R.id.menu_createWallet: {
                     ((SideMenu) getActivity()).createWallet();
+                    drawer.closeDrawer(Gravity.LEFT);
                 }
                 break;
                 case R.id.menu_loadWallet: {
                     ((SideMenu) getActivity()).loadWallet();
+                    drawer.closeDrawer(Gravity.LEFT);
                 }
                 break;
                 case R.id.menu_exportWalletBundle: {
                     ((SideMenu) getActivity()).exportWalletBundle();
+                    drawer.closeDrawer(Gravity.LEFT);
                 }
                 break;
                 case R.id.menu_screenLock: {
@@ -855,7 +858,6 @@ public class MainWalletFragment extends Fragment {
                 }
                 break;
             }
-            drawer.closeDrawer(Gravity.LEFT);
         }
     };
 
