@@ -14,6 +14,7 @@ import foundation.icon.iconex.view.ui.detailWallet.component.SelectType;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import loopchain.icon.wallet.core.Constants;
 
 public class WalletDetailViewModel extends ViewModel {
 
@@ -62,9 +63,15 @@ public class WalletDetailViewModel extends ViewModel {
         this.name.setValue(wallet.getAlias());
 
         lstUnit.setValue(new ArrayList<String>() {{
-            add(MyConstants.EXCHANGE_USD);
-            add(MyConstants.EXCHANGE_BTC);
-            add(MyConstants.EXCHANGE_ETH);
+            if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                add("USD");
+                add("BTC");
+                add("ETH");
+            } else {
+                add("USD");
+                add("BTC");
+                add("ICX");
+            }
         }});
 
         amount.setValue(BigDecimal.ZERO);
