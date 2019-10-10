@@ -1,11 +1,13 @@
 package foundation.icon.iconex.service;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.view.SplashActivity;
 
 public class NetworkErrorActivity extends AppCompatActivity {
 
@@ -31,6 +33,7 @@ public class NetworkErrorActivity extends AppCompatActivity {
 
                             @Override
                             public void onPass() {
+                                startActivity(new Intent(NetworkErrorActivity.this, SplashActivity.class));
                                 finish();
                             }
                         });

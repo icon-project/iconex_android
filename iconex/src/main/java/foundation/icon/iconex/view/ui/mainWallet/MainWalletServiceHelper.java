@@ -239,7 +239,8 @@ public class MainWalletServiceHelper {
             sb.append(symbol + MyConstants.EXCHANGE_BTC.toLowerCase());
             sb.append(",");
             sb.append(symbol + MyConstants.EXCHANGE_ETH.toLowerCase());
-
+            sb.append(",");
+            sb.append(symbol + "ICX".toLowerCase());
             if (i < ICONexApp.EXCHANGES.size() - 1) {
                 sb.append(",");
             }

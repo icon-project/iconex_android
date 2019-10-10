@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -54,6 +55,7 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_pwd_change_new);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
 
         if (getIntent() != null) {
             mWallet = (Wallet) getIntent().getExtras().get("walletInfo");

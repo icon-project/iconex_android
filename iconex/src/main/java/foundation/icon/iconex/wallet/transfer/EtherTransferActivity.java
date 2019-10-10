@@ -520,6 +520,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         View.OnClickListener onClickPlusButtons = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean check = true;
                 switch (v.getId()) {
                     case R.id.btn_plus_10: addPlus(10); break;
                     case R.id.btn_plus_100: addPlus(100); break;
@@ -532,6 +533,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                             if (balance.compareTo(bigFee) == -1) {
                                 editSend.setText("");
                                 editSend.setError(true, getString(R.string.errETHFee));
+                                check = false;
                             } else {
                                 editSend.setText(ConvertUtil.getValue(balance.subtract(bigFee), mWalletEntry.getDefaultDec()));
                             }
@@ -541,7 +543,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                         }
                         break;
                 }
-                setSendEnable();
+                if(check) setSendEnable();
                 editSend.setSelection(editSend.getText().length());
             }
         };

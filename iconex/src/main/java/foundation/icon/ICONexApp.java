@@ -50,8 +50,6 @@ public class ICONexApp extends Application {
     public static boolean useFingerprint = false;
 //    public static String language = "";
 
-    private Handler lockTimeLimiter = new Handler();
-
     // ========== Preference ================
     public static int network = 0;
     public static Urls.Network NETWORK = Urls.Network.Euljiro;
@@ -82,9 +80,6 @@ public class ICONexApp extends Application {
     }
 
     private void init() {
-        PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
-        preferenceUtil.saveBeingLock(false);
-
         loadPreferences();
 
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
@@ -150,8 +145,7 @@ public class ICONexApp extends Application {
                 // app must be returned from background just now (or first launch)
                 mAppStatus = AppStatus.RETURNED_TO_FOREGROUND;
 
-                PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
-                boolean beingLock = preferenceUtil.getBeingLock();
+                boolean beingLock = locktime != null && locktime + MyConstants.LOCK_TIME_LIMIT  <= System.currentTimeMillis();
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
                     if (activity.getLocalClassName().equals("wallet.transfer.ICONTransferActivity")
@@ -161,18 +155,18 @@ public class ICONexApp extends Application {
                     }
 
                     if (isLocked && beingLock) {
-                        if (!activity.getLocalClassName().equals("intro.auth.AuthActivity")) {
+                        if (!(activity instanceof AuthActivity)) {
                             startActivity(new Intent(getApplicationContext(), AuthActivity.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     .putExtra(AuthActivity.ARG_APP_STATUS, AppStatus.RETURNED_TO_FOREGROUND));
                         } else {
-                            lockTimeLimiter.removeCallbacks(mLockTimeLimitTask);
+                            locktime = null;
                         }
                     } else {
-                        lockTimeLimiter.removeCallbacks(mLockTimeLimitTask);
+                        locktime = null;
                     }
 
-                    preferenceUtil.saveBeingLock(false);
+                    locktime = null;
                 }
             } else if (running > 1) {
                 // 2 or more running activities,
@@ -195,13 +189,7 @@ public class ICONexApp extends Application {
                 // no active activity
                 // app goes to background
                 mAppStatus = AppStatus.BACKGROUND;
-
-                PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
-                boolean beingLock = preferenceUtil.getBeingLock();
-                if (beingLock)
-                    preferenceUtil.saveBeingLock(false);
-
-                lockTimeLimiter.postDelayed(mLockTimeLimitTask, MyConstants.LOCK_TIME_LIMIT);
+                locktime = System.currentTimeMillis();
             }
         }
 
@@ -214,11 +202,5 @@ public class ICONexApp extends Application {
         }
     }
 
-    private Runnable mLockTimeLimitTask = new Runnable() {
-        @Override
-        public void run() {
-            PreferenceUtil preferenceUtil = new PreferenceUtil(getApplicationContext());
-            preferenceUtil.saveBeingLock(true);
-        }
-    };
+    private Long locktime = null;
 }

@@ -401,6 +401,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         View.OnClickListener onClickPlusButtons = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean check = true;
                 switch (v.getId()) {
                     case R.id.btn_plus_10: addPlus(10); break;
                     case R.id.btn_plus_100: addPlus(100); break;
@@ -410,6 +411,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                             if (balance.compareTo(ConvertUtil.valueToBigInteger(fee, 18)) < 0) {
                                 editSend.setText("");
                                 editSend.setError(true, getString(R.string.errICXFee));
+                                check = false;
                             } else {
                                 BigInteger allIcx = balance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
                                 editSend.setText(ConvertUtil.getValue(allIcx, entry.getDefaultDec()));
@@ -420,7 +422,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                         break;
                 }
 
-                setSendEnable();
+                if(check) setSendEnable();
                 editSend.setSelection(editSend.getText().length());
             }
         };

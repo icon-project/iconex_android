@@ -561,6 +561,7 @@
 
     <!-- New side Menu -->
     <string name="appVer">앱 버전</string>
+    <string name="errPasscodeSame">현재 잠금번호와 동일합니다. 새 잠금 번호를 입력해주세요.</string>
 
     <!-- New - Transfer -->
     <string name="availableBalance">사용 가능 잔액</string>
