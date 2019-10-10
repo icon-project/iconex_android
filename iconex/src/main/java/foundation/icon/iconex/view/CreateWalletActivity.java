@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep1Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep2Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep3Fragment;
@@ -25,7 +26,20 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
         findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Basic2ButtonDialog dialog = new Basic2ButtonDialog(CreateWalletActivity.this);
+                dialog.setMessage(getString(R.string.cancelCreateWallet));
+                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                    @Override
+                    public void onOk() {
+                        finish();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -76,5 +90,23 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
     @Override
     public void showWalletInfo() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Basic2ButtonDialog dialog = new Basic2ButtonDialog(CreateWalletActivity.this);
+        dialog.setMessage(getString(R.string.cancelCreateWallet));
+        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            @Override
+            public void onOk() {
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+        dialog.show();
     }
 }

@@ -104,7 +104,8 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
     @Override
     public void onDetach() {
         super.onDetach();
-        if (!disposable.isDisposed())
+        if (disposable != null
+            && !disposable.isDisposed())
             disposable.dispose();
 
         mListener = null;

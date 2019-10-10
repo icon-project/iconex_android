@@ -68,9 +68,7 @@ public class StakeGraph extends ConstraintLayout {
 
     public void setStake(float stakePercent) {
         setStakeGraph(stakePercent);
-
-        if (!delegation.equals(BigInteger.ZERO))
-            setDelegationGraph(calculatePercentage(calculateIcx(stakePercent), delegation));
+        setDelegationGraph(calculatePercentage(calculateIcx(stakePercent), delegation));
     }
 
     public void setDelegation(BigInteger delegation) {

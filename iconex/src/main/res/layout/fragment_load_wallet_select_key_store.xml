@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_btn_rounded_01_light"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:fontFamily="@font/noto_sans_regular"
                     android:gravity="center"
                     android:text="@string/next"
