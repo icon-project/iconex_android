@@ -493,6 +493,7 @@
 
     <string name="rankAscending">Rank ↑</string>
     <string name="rankDecending">Rank ↓</string>
+    <string name="prepDetail"><u>상세 정보</u></string>
 
     <string name="stake">Stake</string>
     <string name="unstake">Unstake</string>
