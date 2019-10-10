@@ -1,5 +1,9 @@
 package foundation.icon.iconex.view.ui.mainWallet;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -35,6 +39,7 @@ import org.spongycastle.util.encoders.Hex;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,10 +49,12 @@ import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.view.ui.mainWallet.component.TotalAssetInfoView;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletAddressCardView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletFloatingMenu;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletIndicator;
@@ -80,6 +87,7 @@ public class MainWalletFragment extends Fragment {
     private WalletIndicator walletIndicator;
 
     private WalletFloatingMenu floatingMenu;
+    private WalletAddressCardView walletAddressCard;
 
     // side menu
     private ImageView imgLogo01;
@@ -207,6 +215,7 @@ public class MainWalletFragment extends Fragment {
         walletIndicator = v.findViewById(R.id.wallet_indicator);
 
         floatingMenu = v.findViewById(R.id.floating_menu);
+        walletAddressCard = v.findViewById(R.id.wallet_address_card);
 
         imgLogo01 = v.findViewById(R.id.img_logo_01);
         imgLogo02 = v.findViewById(R.id.img_logo_02);
@@ -377,6 +386,20 @@ public class MainWalletFragment extends Fragment {
                 }
             }
         });
+
+        walletAddressCard.setOnDismissListener(new WalletAddressCardView.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                boolean isICX = getCurrentWalletCardData()
+                        .getWalletType() == WalletCardViewData.WalletType.ICXwallet;
+                floatingMenu.setEnableFloatingButton(isICX);
+
+                Animator aniShow = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_show);
+                aniShow.setTarget(walletViewPager);
+                walletViewPager.setVisibility(View.VISIBLE);
+                aniShow.start();
+            }
+        });
     }
 
     private void initWalletViewPager(View content) {
@@ -451,6 +474,8 @@ public class MainWalletFragment extends Fragment {
             }
         };
         walletViewPager.setAdapter(pagerAdapter);
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        walletViewPager.setCameraDistance(scale * 8000);
 
         content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -513,7 +538,21 @@ public class MainWalletFragment extends Fragment {
         walletCardView.setOnClickQrCodeListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "not implement qr code", Toast.LENGTH_SHORT).show();
+                WalletCardViewData viewData = getCurrentWalletCardData();
+                Wallet wallet = findWalletByViewData(viewData);
+                floatingMenu.setEnableFloatingButton(false);
+                walletAddressCard.show(wallet);
+
+                Animator aniDisappear = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_disappear);
+                aniDisappear.setTarget(walletViewPager);
+                aniDisappear.start();
+                aniDisappear.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        walletViewPager.setVisibility(View.GONE);
+                    }
+                });
             }
         });
 
@@ -525,7 +564,9 @@ public class MainWalletFragment extends Fragment {
                 new WalletManageMenuDialog(getActivity(), wallet, new WalletManageMenuDialog.OnNotifyWalletDataChangeListener() {
                     @Override
                     public void onNotifyWalletDataChange(WalletManageMenuDialog.UpdateDataType updateDataType) {
+                        walletViewPager.setCurrentItem(0);
                         ((AsyncRequester) getActivity()).notifyWalletDatachage();
+                        ((AsyncRequester) getActivity()).asyncRequestRefreshData();
                     }
                 }).show();
             }
@@ -569,8 +610,8 @@ public class MainWalletFragment extends Fragment {
 
     private void updateTotalAssetsView(TotalAssetsViewData viewData) {
         int exchangeRound = currentExchangeUnit == MainWalletFragment.ExchangeUnit.USD ? 2 : 4;
-        String txtTotalAsset = viewData.getTotalAsset() == null ? "-" :
-                viewData.getTotalAsset().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
+        String txtTotalAsset = DecimalFomatter.format(viewData.getTotalAsset(), exchangeRound);
+
         String txtVotingPower = (viewData.getVotedPower() == null ? "-" :
                 viewData.getVotedPower().setScale(1, BigDecimal.ROUND_HALF_UP)) + " %";
         viewData.setTxtExchangeUnit(currentExchangeUnit.name())
@@ -613,6 +654,7 @@ public class MainWalletFragment extends Fragment {
             }
             break;
         }
+        walletViewPager.setCurrentItem(0);
         updateWalletView();
     }
 
@@ -625,11 +667,8 @@ public class MainWalletFragment extends Fragment {
         for (WalletCardViewData walletCard : mWalletDataList) { // wallet
             for (WalletItemViewData entryViewData : walletCard.getLstWallet()) { // entry
                 // update balance, exchange (double -> string)
-                String txtAmount = entryViewData.getAmount() == null ? "-" : // decimal rounding 4
-                        entryViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
-
-                String txtExchanged = entryViewData.getExchanged() == null ? "-" :
-                        entryViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR) + "";
+                String txtAmount = DecimalFomatter.format(entryViewData.getAmount());
+                String txtExchanged = DecimalFomatter.format(entryViewData.getExchanged(), exchangeRound);
                 txtExchanged += " " + currentExchangeUnit.name();
 
                 entryViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
@@ -641,16 +680,16 @@ public class MainWalletFragment extends Fragment {
 
                         BigDecimal percent = balance.compareTo(BigDecimal.ZERO) == 0 ? null :
                                 staked.multiply(new BigDecimal(100))
-                                        .divide(balance, 1, BigDecimal.ROUND_UP);
+                                        .divide(balance, 1, BigDecimal.ROUND_HALF_UP);
 
-                        entryViewData.setTxtStacked(staked.setScale(4, BigDecimal.ROUND_HALF_UP) + " (" + (percent == null ? " - " : percent) + "%)");
+                        entryViewData.setTxtStacked(DecimalFomatter.format(staked) + " (" + (percent == null ? " - " : percent) + "%)");
                     } else {
                         entryViewData.setTxtStacked("- ( - %)");
                     }
 
                     if (entryViewData.getiScore() != null) {
                         BigDecimal iscore = new BigDecimal(ConvertUtil.getValue(entryViewData.getiScore(), 18));
-                        entryViewData.setTxtIScore(iscore.setScale(4, BigDecimal.ROUND_HALF_UP) + "");
+                        entryViewData.setTxtIScore(DecimalFomatter.format(iscore));
                     } else {
                         entryViewData.setTxtIScore("-");
                     }
@@ -744,12 +783,8 @@ public class MainWalletFragment extends Fragment {
         for (WalletCardViewData cardViewData : mTokenDataList) {
             WalletItemViewData entryViewData = cardViewData.getLstWallet().get(0);
             // update balance, exchange (double -> string)
-            String txtAmount = entryViewData.getAmount() == null ? "-" : // decimal rounding 4
-                    entryViewData.getAmount().setScale(4, BigDecimal.ROUND_FLOOR) + "";
-
-            String txtExchanged = entryViewData.getExchanged() == null ? "-" :
-                    entryViewData.getExchanged().setScale(exchangeRound, BigDecimal.ROUND_FLOOR)
-                            + " " + currentExchangeUnit.name();
+            String txtAmount = DecimalFomatter.format(entryViewData.getAmount());
+            String txtExchanged = DecimalFomatter.format(entryViewData.getExchanged(), exchangeRound);
 
             entryViewData.setTxtAmount(txtAmount).setTxtExchanged(txtExchanged);
 
@@ -797,14 +832,17 @@ public class MainWalletFragment extends Fragment {
             switch (v.getId()) {
                 case R.id.menu_createWallet: {
                     ((SideMenu) getActivity()).createWallet();
+                    drawer.closeDrawer(Gravity.LEFT);
                 }
                 break;
                 case R.id.menu_loadWallet: {
                     ((SideMenu) getActivity()).loadWallet();
+                    drawer.closeDrawer(Gravity.LEFT);
                 }
                 break;
                 case R.id.menu_exportWalletBundle: {
                     ((SideMenu) getActivity()).exportWalletBundle();
+                    drawer.closeDrawer(Gravity.LEFT);
                 }
                 break;
                 case R.id.menu_screenLock: {
@@ -820,7 +858,6 @@ public class MainWalletFragment extends Fragment {
                 }
                 break;
             }
-            drawer.closeDrawer(Gravity.LEFT);
         }
     };
 

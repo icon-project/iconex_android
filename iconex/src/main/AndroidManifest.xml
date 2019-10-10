@@ -36,6 +36,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.DepositActivity"
+            android:configChanges="fontScale"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivity"/>
+
         <activity android:name=".wallet.transfer.IconEnterDataActivity"
             android:configChanges="fontScale"
             android:exported="false"
@@ -162,7 +169,8 @@
             android:name=".view.ui.wallet.ViewWalletInfoActivity"
             android:configChanges="fontScale"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivity"/>
         <activity
             android:name=".menu.WalletPwdChangeActivity"
             android:configChanges="fontScale"

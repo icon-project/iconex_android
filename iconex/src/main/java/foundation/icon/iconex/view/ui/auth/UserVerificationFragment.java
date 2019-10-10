@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
@@ -20,6 +22,8 @@ import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 public class UserVerificationFragment extends Fragment implements WalletListAdapter.OnWalletClickListener {
 
     private static final String TAG = UserVerificationFragment.class.getSimpleName();
+
+    private TextView txtWalletCount;
 
     public UserVerificationFragment() {
         // Required empty public constructor
@@ -41,8 +45,11 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user_verification, container, false);
 
-        ((TextView) v.findViewById(R.id.txt_title)).setText(getString(R.string.titleResetLockNum));
-        v.findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
+        txtWalletCount = v.findViewById(R.id.wallet_count);
+
+        txtWalletCount.setText(String.format(getString(R.string.totalWalletCount), ICONexApp.wallets.size()));
+
+        v.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onVerificationBack();
@@ -54,13 +61,12 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
         adapter.setOnWalletClickListener(new WalletListAdapter.OnWalletClickListener() {
             @Override
             public void onWalletClick(Wallet wallet) {
-                mWallet = wallet;
-                dialog = new EditTextDialog(getActivity(), getString(R.string.enterWalletPassword));
-                dialog.setInputType(EditTextDialog.TYPE_INPUT.PASSWORD);
-                dialog.setPasswordType(EditTextDialog.RESULT_PWD.TRANSFER);
-                dialog.setOnPasswordCallback(onPasswordCallback);
-                dialog.setHint(getString(R.string.hintWalletPassword));
-                dialog.show();
+                new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
+                    @Override
+                    public void onPass(byte[] bytePrivateKey) {
+                        mListener.onVerification();
+                    }
+                }).show();
             }
         });
         recyclerView.setAdapter(adapter);
@@ -84,35 +90,6 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
         super.onDetach();
         mListener = null;
     }
-
-    private Wallet mWallet;
-    private EditTextDialog dialog;
-
-    private EditTextDialog.OnPasswordCallback onPasswordCallback = new EditTextDialog.OnPasswordCallback() {
-        @Override
-        public void onConfirm(EditTextDialog.RESULT_PWD result, String text) {
-            JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
-            byte[] bytePrivKey;
-            try {
-                JsonObject crypto;
-                if (keyStore.has("crypto"))
-                    crypto = keyStore.get("crypto").getAsJsonObject();
-                else
-                    crypto = keyStore.get("Crypto").getAsJsonObject();
-
-                bytePrivKey = KeyStoreUtils.decryptPrivateKey(text, mWallet.getAddress(), crypto, mWallet.getCoinType());
-                if (bytePrivKey != null) {
-                    mListener.onVerification();
-
-                    dialog.dismiss();
-                } else {
-                    dialog.setError(getString(R.string.errPassword));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
     @Override
     public void onWalletClick(Wallet wallet) {

@@ -25,9 +25,12 @@ import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongycastle.util.encoders.Hex;
+import org.web3j.abi.datatypes.Int;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,9 +43,11 @@ import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
+import foundation.icon.iconex.dialogs.TransactionSendDialog;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.AboutActivity;
@@ -673,7 +678,13 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void setLimitPrice(String limit, String price) {
-        txtStepLimit.setText(limit + " / " + price);
+        try {
+            String fLimit = new DecimalFormat("#,##0").format(Integer.parseInt(limit));
+            txtStepLimit.setText(fLimit + " / " + price);
+        } catch (Exception e) {
+            txtStepLimit.setText("- / -");
+        }
+
     }
 
     private void setBalance(BigInteger balance) {
@@ -683,7 +694,8 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             txtBalance.setText(MyConstants.NO_BALANCE);
             entry.setBalance(MyConstants.NO_BALANCE);
         } else {
-            txtBalance.setText(ConvertUtil.getValue(balance, entry.getDefaultDec()));
+            BigDecimal decimalBalance = new BigDecimal(ConvertUtil.getValue(balance, entry.getDefaultDec()));
+            txtBalance.setText(DecimalFomatter.format(decimalBalance, entry.getDefaultDec()));
             entry.setBalance(balance.toString());
         }
 
@@ -779,7 +791,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
             if (stepPriceICX != null) {
                 if (feePrice != null) {
-                    strTransFee = String.format(Locale.getDefault(), "%,.2f USD",
+                    strTransFee = String.format(Locale.getDefault(), "%,.2f",
                             Double.parseDouble(strFee) * Double.parseDouble(feePrice));
 
                     txtTransFee.setText("$ " + strTransFee);
@@ -988,8 +1000,10 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), ConvertUtil.getValue(value, entry.getDefaultDec()),
                 strFee, Integer.toHexString(Integer.parseInt(strLimit)), entry.getSymbol());
 
-        SendConfirmDialog dialog = new SendConfirmDialog(this, txInfo);
-        dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
+        txInfo.setLimitPrice(txtStepLimit.getText().toString());
+        txInfo.setTransFee(txtTransFee.getText().toString());
+        TransactionSendDialog dialog = new TransactionSendDialog(this, txInfo);
+        dialog.setOnDialogListener(new TransactionSendDialog.OnDialogListener() {
             @Override
             public void onOk() {
                 String timestamp = getTimeStamp();

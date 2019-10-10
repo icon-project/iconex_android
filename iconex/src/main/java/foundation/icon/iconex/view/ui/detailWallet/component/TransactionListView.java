@@ -17,12 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.TxHashDialog;
 
 public class TransactionListView extends FrameLayout implements View.OnClickListener {
 
     private RecyclerView lstTransaction;
     private TextView txtNoTransaction;
     private TextView lnkEtehrscan;
+    private ViewGroup loading;
 
     private boolean mIsEtherscanVisible = false;
     private RecyclerView.Adapter adapter = null;
@@ -60,6 +62,7 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.layout_wallet_detail_transaction_list, this, true);
 
+        loading = findViewById(R.id.loading);
         lstTransaction = findViewById(R.id.lstTransaction);
         txtNoTransaction = findViewById(R.id.txt_no_transaction);
         lnkEtehrscan = findViewById(R.id.link_etherscan);
@@ -72,9 +75,8 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
         lstTransaction.setLayoutManager(new LinearLayoutManager(getContext()));
         lstTransaction.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
                 if(!recyclerView.canScrollVertically(1)) {
                     if (mOnScrollBottomListener != null)
                         mOnScrollBottomListener.onScrollBottom();
@@ -93,6 +95,14 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
                 ));
 
                 RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) { };
+                v.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = holder.getAdapterPosition();
+                        TransactionItemViewData viewData = lstViewData.get(position);
+                        new TxHashDialog(getContext(), viewData.getTxHash()).show();
+                    }
+                });
 
                 return holder;
             }
@@ -138,5 +148,9 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
         boolean isSize0 = lstViewData.size() == 0;
         txtNoTransaction.setVisibility(isSize0 ? VISIBLE : GONE);
         lnkEtehrscan.setVisibility(isSize0 && mIsEtherscanVisible ? VISIBLE : GONE);
+    }
+
+    public void setLoading(boolean loading) {
+        this.loading.setVisibility(loading ? VISIBLE : GONE);
     }
 }

@@ -1,10 +1,15 @@
 package foundation.icon.iconex.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
+import java.io.Serializable;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
@@ -12,6 +17,8 @@ import foundation.icon.iconex.view.ui.create.CreateWalletStep1Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep2Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep3Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep4Fragment;
+import foundation.icon.iconex.view.ui.wallet.ViewWalletInfoActivity;
+import foundation.icon.iconex.wallet.Wallet;
 
 public class CreateWalletActivity extends FragmentActivity implements CreateWalletStep1Fragment.OnStep1Listener,
         CreateWalletStep2Fragment.OnStep2Listener, CreateWalletStep3Fragment.OnStep3Listener,
@@ -88,8 +95,10 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
     }
 
     @Override
-    public void showWalletInfo() {
-
+    public void showWalletInfo(Wallet wallet, String privateKey) {
+        startActivity(new Intent(this, ViewWalletInfoActivity.class)
+                .putExtra("wallet", (Serializable) wallet)
+                .putExtra("privateKey", privateKey));
     }
 
     @Override

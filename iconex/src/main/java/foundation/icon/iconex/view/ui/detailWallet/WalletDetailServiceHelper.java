@@ -10,12 +10,17 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
+import foundation.icon.iconex.control.RecentSendInfo;
+import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.wallet.Wallet;
@@ -50,6 +55,7 @@ public class WalletDetailServiceHelper {
     public WalletDetailServiceHelper(Context context, WalletDetailViewModel viewModel) {
         mContext = context;
         mViewModle = viewModel;
+        viewModel.isNoLoadMore.setValue(true);
     }
 
     public void onStart() {
@@ -68,7 +74,7 @@ public class WalletDetailServiceHelper {
         mOnServiceReadyListener = listener;
     }
 
-    public void loadIcxTxList() {
+    public void loadTxList() {
         Log.d(TAG, "Load ICX Tx List");
         mCacheTxData = new ArrayList<>();
         Wallet wallet = mViewModle.wallet.getValue();
@@ -84,11 +90,28 @@ public class WalletDetailServiceHelper {
                 mService.requestIrcTxList(wallet.getAddress(),
                         walletEntry.getContractAddress(), 1);
             }
+        } else { // ether
+            RealmUtil.loadRecents();
+            List<TransactionItemViewData> viewDataList = new ArrayList<>();
+            for(RecentSendInfo tx: ICONexApp.ETHSendInfo) {
+                TransactionItemViewData viewData = new TransactionItemViewData();
+                viewData.setFrom(wallet.getAddress());
+                viewData.setTo(tx.getAddress());
+                viewData.setState(1);
+                viewData.setTxHash(tx.getTxHash());
+                viewData.setDate(tx.getDate());
+                viewData.setAmount(DecimalFomatter.format(new BigDecimal(tx.getAmount())));
+                viewDataList.add(viewData);
+            }
+
+            mViewModle.lstTxData.setValue(viewDataList);
+            mViewModle.isNoLoadMore.setValue(false);
+            mViewModle.isRefreshing.setValue(false);
         }
     }
 
     public void loadMoreIcxTxList() {
-        Log.d(TAG, "check Load more");
+        mViewModle.isNoLoadMore.setValue(mCacheTxData.size() >= mCountTxData);
         if (mCacheTxData.size() < mCountTxData) {
             Log.d(TAG, "load more");
             Wallet wallet = mViewModle.wallet.getValue();
@@ -165,6 +188,7 @@ public class WalletDetailServiceHelper {
                 }
             }
 
+            mViewModle.isNoLoadMore.setValue(mCacheTxData.size() >= mCountTxData);
             mViewModle.lstTxData.postValue(mCacheTxData);
         }
 

@@ -5,13 +5,13 @@
     android:background="@color/colorWhite"
     android:orientation="vertical">
 
-    <!--  TODO: font DemiLight  -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="@string/msgNoToken"
         android:textColor="@color/dark80"
+        android:fontFamily="@font/noto_sans_light"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:textSize="10dp" />

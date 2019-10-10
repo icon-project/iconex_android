@@ -294,7 +294,7 @@
     <string name="contactsTitle">주소 선택</string>
     <string name="contacts">주소록</string>
     <string name="contactsRecent">최근 거래</string>
-    <string name="contactsWallet">내 지갑</string>
+    <string name="contactsWallet">내지갑</string>
     <string name="addContacts">주소록 추가</string>
     <string name="modContacts">주소록 수정</string>
     <string name="hintContactsName">주소록 이름 입력 (8자)</string>

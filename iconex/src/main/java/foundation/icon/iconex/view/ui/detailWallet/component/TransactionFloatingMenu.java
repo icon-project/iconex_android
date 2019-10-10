@@ -3,9 +3,11 @@ package foundation.icon.iconex.view.ui.detailWallet.component;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
+import foundation.icon.iconex.view.DepositActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
@@ -87,6 +90,7 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
     }
 
     private void toggleMenu() {
+        btnFloating.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.floating_button_click));
         boolean isShow = menu.getVisibility() == VISIBLE;
         if (isShow) {
             menuModal.setVisibility(GONE);
@@ -106,38 +110,13 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
             case R.id.btn_deposit: {
-                Toast.makeText(getContext(), "not implement btn_deposit", Toast.LENGTH_SHORT).show();
+                getContext().startActivity(new Intent(getContext(), DepositActivity.class)
+                .putExtra(DepositActivity.PARAM_WALLET, ((Serializable) wallet)));
             } break;
             case R.id.btn_send: { // Transfer
-                if (entry.getBalance().equals(MyConstants.NO_BALANCE)
-                        || new BigInteger(entry.getBalance()).compareTo(BigInteger.ZERO) == 0) {
-                    MessageDialog messageDialog = new MessageDialog(getContext());
-                    messageDialog.setTitleText(getContext().getString(R.string.errCantWithdraw));
-                    messageDialog.show();
-                    return;
-                }
-
-                if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-                    if (new BigInteger(entry.getBalance()).equals(BigInteger.ZERO)) {
-                        MessageDialog messageDialog = new MessageDialog(getContext());
-                        messageDialog.setTitleText(getContext().getString(R.string.errCantWithdraw));
-                        messageDialog.show();
-                        return;
-                    }
-                } else {
-                    if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).equals(BigInteger.ZERO)) {
-                        MessageDialog messageDialog = new MessageDialog(getContext());
-                        if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
-                            messageDialog.setTitleText(getContext().getString(R.string.errIcxOwnNotEnough));
-                        else
-                            messageDialog.setTitleText(getContext().getString(R.string.errEthOwnNotEnough));
-                        messageDialog.show();
-                        return;
-                    }
-                }
-
                 new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
                     @Override
                     public void onPass(byte[] bytePrivateKey) {
@@ -156,9 +135,6 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
                         }
                     }
                 }).show();
-            } break;
-            case R.id.btn_convert: {
-                Toast.makeText(getContext(), "not implement btn_convert", Toast.LENGTH_SHORT).show();
             } break;
         }
         toggleMenu();

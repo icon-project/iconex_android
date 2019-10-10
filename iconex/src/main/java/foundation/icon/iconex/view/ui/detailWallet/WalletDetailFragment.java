@@ -3,6 +3,7 @@ package foundation.icon.iconex.view.ui.detailWallet;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectTokenDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectType;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionFloatingMenu;
@@ -37,11 +39,13 @@ import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
+import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.ICONexApp.network;
 
 
 public class WalletDetailFragment extends Fragment {
+    private static final String TAG = WalletDetailFragment.class.getSimpleName();
 
     private CustomActionBar actionbar;
     private RefreshLayout refresh;
@@ -51,6 +55,7 @@ public class WalletDetailFragment extends Fragment {
     private TransactionListViewHeader listHeaderView;
     private TransactionListViewHeader fixedListHeaderView;
     private TransactionFloatingMenu floatingMenu;
+    private boolean moreLoadable = false;
 
     private WalletDetailViewModel viewModel;
 
@@ -119,7 +124,25 @@ public class WalletDetailFragment extends Fragment {
             }
         });
         // init RefreshLayout
-        refresh.addHeader(new RefreshLoadingView(getContext()));
+        refresh.addHeader(new RefreshLoadingView(getContext()) {
+            @Override
+            public void onRefreshBefore(int scrollY, int headerHeight) {
+                super.onRefreshBefore(scrollY, headerHeight);
+                moreLoadable = false;
+            }
+
+            @Override
+            public void onRefreshComplete(int scrollY, int headerHeight, boolean isRefreshSuccess) {
+                super.onRefreshComplete(scrollY, headerHeight, isRefreshSuccess);
+                moreLoadable = true;
+            }
+
+            @Override
+            public void onRefreshCancel(int scrollY, int headerHeight) {
+                super.onRefreshCancel(scrollY, headerHeight);
+                moreLoadable = true;
+            }
+        });
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() { viewModel.isRefreshing.setValue(true); }
@@ -143,6 +166,15 @@ public class WalletDetailFragment extends Fragment {
                     @Override
                     public void onSelect(SelectType selectType) {
                         viewModel.selectType.postValue(selectType);
+                        String s;
+                        switch (selectType) {
+                            default:
+                            case All: s = getString(R.string.all); break;
+                            case Send: s = getString(R.string.transfer); break;
+                            case Deposit: s = getString(R.string.deposit); break;
+                        }
+                        fixedListHeaderView.setTextViewOption(s);
+                        listHeaderView.setTextViewOption(s);
                     }
                 }).show();
             }
@@ -150,10 +182,30 @@ public class WalletDetailFragment extends Fragment {
         fixedListHeaderView.setOnClickViewOption(onClickViewOption);
         listHeaderView.setOnClickViewOption(onClickViewOption);
 
+        View.OnClickListener onClickInfo = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessageDialog messageDialog = new MessageDialog(getContext());
+                messageDialog.setTitleText(getString(R.string.infoTx));
+                messageDialog.show();
+            }
+        };
+        fixedListHeaderView.setOnClickInfoButton(onClickInfo);
+        listHeaderView.setOnClickInfoButton(onClickInfo);
+
+        boolean isICX = viewModel.wallet.getValue().getCoinType().equals(Constants.KS_COINTYPE_ICX);
+        fixedListHeaderView.setInfoButtonVisible(isICX);
+        listHeaderView.setInfoButtonVisible(isICX);
+
         listView.setOnScrollBottomListener(new TransactionListView.OnScrollBottomListener() {
             @Override
             public void onScrollBottom() {
-                viewModel.isLoadMore.setValue(true);
+                Boolean refresh = viewModel.isRefreshing.getValue();
+                Boolean loadMore = viewModel.isLoadMore.getValue();
+                Boolean isNoLoadMore= viewModel.isNoLoadMore.getValue();
+
+                if (!refresh && !loadMore && !isNoLoadMore && moreLoadable)
+                    viewModel.isLoadMore.setValue(true);
             }
         });
 
@@ -200,7 +252,7 @@ public class WalletDetailFragment extends Fragment {
                 actionbar.setTitle(name);
             }
         });
-        infoView.setTextSymbol(viewModel.walletEntry.getValue().getSymbol());
+        infoView.setTextSymbol(viewModel.walletEntry.getValue().getName());
         infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
         infoView.setUnitList(viewModel.lstUnit.getValue());
         boolean isICX = "ICX".equals(viewModel.wallet.getValue().getCoinType());
@@ -211,13 +263,14 @@ public class WalletDetailFragment extends Fragment {
         viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
             @Override
             public void onChanged(WalletEntry walletEntry) {
-                infoView.setTextSymbol(walletEntry.getSymbol());
+                infoView.setTextSymbol(walletEntry.getName());
             }
         });
 
         viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
+                Log.d(TAG, "onChanged() called with: aBoolean = [" + aBoolean + "]");
                 if(!aBoolean) refresh.stopRefresh(true);
             }
         });
@@ -255,7 +308,38 @@ public class WalletDetailFragment extends Fragment {
         });
         // floating menu
         floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
+        viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
+            @Override
+            public void onChanged(WalletEntry entry) {
+                floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
+            }
+        });
+        viewModel.wallet.observe(this, new Observer<Wallet>() {
+            @Override
+            public void onChanged(Wallet wallet) {
+                floatingMenu.setWallet(viewModel.wallet.getValue(), viewModel.walletEntry.getValue());
+            }
+        });
 
+        // loading set visible
+        viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Boolean refreash = viewModel.isRefreshing.getValue();
+                Boolean loadMore = viewModel.isLoadMore.getValue();
+
+                listView.setLoading(refreash || loadMore);
+            }
+        });
+        viewModel.isLoadMore.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Boolean refreash = viewModel.isRefreshing.getValue();
+                Boolean loadMore = viewModel.isLoadMore.getValue();
+
+                listView.setLoading(refreash || loadMore);
+            }
+        });
     }
 
     private void updateListView(List<TransactionItemViewData> transactionItemViewData, SelectType selectType) {
@@ -276,10 +360,6 @@ public class WalletDetailFragment extends Fragment {
             case All:
                 viewDataList.addAll(transactionItemViewData);
                 break;
-        }
-
-        for (TransactionItemViewData itemViewData: transactionItemViewData) {
-            itemViewData.setTxtAmount(itemViewData.getTxtAmount() + " " + viewModel.walletEntry.getValue().getSymbol());
         }
 
         listView.setViewDataList(viewDataList);

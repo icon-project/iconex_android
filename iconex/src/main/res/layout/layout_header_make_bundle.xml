@@ -95,14 +95,14 @@
             android:textColor="@color/primary"
             android:textSize="10dp" />
 
-        <!-- todo: font demilight -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/txt_count"
             android:layout_marginLeft="10dp"
             android:layout_alignBaseline="@id/txt_count"
-            
+
+            android:fontFamily="@font/noto_sans_light"
             android:textColor="@color/dark80"
             android:textSize="10dp"
             android:text="@string/countSelectedWallet"/>

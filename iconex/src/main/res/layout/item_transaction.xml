@@ -4,8 +4,7 @@
     android:layout_height="80dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingStart="20dp"
-    android:paddingEnd="20dp"
-    android:clickable="true">
+    android:paddingEnd="20dp">
 
     <TextView
         android:id="@+id/txt_name"
@@ -36,7 +35,6 @@
 
         android:text="18-02-05 08:53:59"/>
 
-    <!-- TODO: DemiLight -->
     <TextView
         android:id="@+id/txt_address"
         android:layout_width="110dp"
@@ -45,6 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_name"
 
+        android:fontFamily="@font/noto_sans_light"
         android:textSize="10dp"
         android:textColor="@color/dark80"
 

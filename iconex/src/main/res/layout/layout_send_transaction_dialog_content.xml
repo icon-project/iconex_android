@@ -13,6 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="@string/sendBalance"
+        android:textColor="@color/dark4D"
+        android:fontFamily="@font/noto_sans_medium"
+        android:textSize="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,6 +24,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        android:fontFamily="@font/noto_sans_medium"
+        android:textColor="@color/dark4D"
+        android:textSize="10dp"
         android:text="(ICX)"
         app:layout_constraintBaseline_toBaselineOf="@+id/lb_send_balance"
         app:layout_constraintStart_toEndOf="@+id/lb_send_balance" />
@@ -41,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginTop="30dp"
+        android:background="@color/darkE6"
         app:layout_constraintTop_toBottomOf="@+id/txt_send_balance"
         tools:layout_editor_absoluteX="8dp" />
 
@@ -81,6 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
+        app:layout_goneMarginTop="30dp"
         android:text="@string/estimateFee"
         android:textColor="@color/dark80"
         android:textSize="10dp"
@@ -143,4 +151,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lb_receive" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_limit_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="lb_limit_price,symbol_limit_price,txt_limit_price"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

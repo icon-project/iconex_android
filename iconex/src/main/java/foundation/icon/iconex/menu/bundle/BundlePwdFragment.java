@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,10 @@ import android.widget.Button;
 import org.jetbrains.annotations.NotNull;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.widgets.TTextInputLayout;
+import kotlin.jvm.functions.Function1;
 
 public class BundlePwdFragment extends Fragment implements View.OnClickListener {
 
@@ -142,6 +144,9 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
             }
         });
 
+        editPwd.setPastable(false);
+        editPwd.setPastable(false);
+
         btnExport = v.findViewById(R.id.btn_export);
         btnExport.setOnClickListener(this);
 
@@ -252,22 +257,19 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
     }
 
     private void checkPermission() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            dialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            MessageDialog messageDialog = new MessageDialog(getContext());
+            messageDialog.setTitleText(getString(R.string.backupKeyStoreFileConfirm));
+            messageDialog.setSingleButton(false);
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
-                public void onOk() {
-                    mListener.onExport(editPwd.getText().toString());
-                }
-
-                @Override
-                public void onCancel() {
-
+                public Boolean invoke(View view) {
+                    mListener.onExport(editPwd.getText());
+                    return true;
                 }
             });
-            dialog.show();
+            messageDialog.show();
         } else {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},

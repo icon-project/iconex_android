@@ -133,11 +133,10 @@
             android:layout_marginTop="6dp"
             android:background="@drawable/dot_gray" />
 
-        <!-- TODO: DemiLight -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans_regular"
+            android:fontFamily="@font/noto_sans_light"
             android:layout_marginStart="4dp"
             android:gravity="start|center_vertical"
             android:text="@string/appLockDetailed"

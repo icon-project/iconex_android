@@ -16,13 +16,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- TODO: font DemiLight   -->
         <TextView
             android:id="@+id/lb_total_assets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14dp"
             android:textColor="#99FFFFFF"
+            android:fontFamily="@font/noto_sans_light"
             android:text="Total Assets"/>
 
         <TextView
@@ -48,13 +48,15 @@
 
     <TextView
         android:id="@+id/txt_total_asset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
         android:fontFamily="@font/nanum_square_light"
-        android:text="900,000.0004"
+        android:text="12345678990123123412341"
         android:textColor="@android:color/white"
-        android:textSize="40dp"
-
+        android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

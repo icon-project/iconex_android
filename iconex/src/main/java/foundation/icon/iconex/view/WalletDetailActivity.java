@@ -12,9 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +21,15 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import foundation.icon.ICONexApp;
+import foundation.icon.iconex.R;
+import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
+import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailFragment;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailServiceHelper;
 import foundation.icon.iconex.view.ui.detailWallet.WalletDetailViewModel;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.WalletFragment;
@@ -66,10 +68,8 @@ public class WalletDetailActivity extends AppCompatActivity {
         serviceHelper.setOnServiceReadyListener(new WalletDetailServiceHelper.OnServiceReadyListener() {
             @Override
             public void onReady() {
-                if ("ICX".equals(viewModel.wallet.getValue().getCoinType())) {
-                    serviceHelper.loadIcxTxList();
-                    serviceHelper.requestBalance();
-                }
+                serviceHelper.loadTxList();
+                serviceHelper.requestBalance();
             }
         });
 
@@ -89,7 +89,7 @@ public class WalletDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(WalletEntry walletEntry) {
                 if (serviceHelper.isBind()) {
-                    serviceHelper.loadIcxTxList();
+                    serviceHelper.loadTxList();
                     serviceHelper.requestBalance();
                 }
             }
@@ -99,7 +99,7 @@ public class WalletDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    serviceHelper.loadIcxTxList();
+                    serviceHelper.loadTxList();
                     serviceHelper.requestBalance();
                 }
             }
@@ -122,24 +122,23 @@ public class WalletDetailActivity extends AppCompatActivity {
                 viewModel.isRefreshing.postValue(false);
                 viewModel.isLoadMore.postValue(false);
 
+                String symbol = viewModel.walletEntry.getValue().getSymbol();
+
                 for (TransactionItemViewData viewData: viewDataes) {
-                    viewData.setTxtName("state: " +viewData.getState());
                     viewData.setTxtAddress(viewData.getTxHash());
 
                     Log.d(TAG, viewData.getDate());
-                    String date = viewData.getDate().substring(0, viewData.getDate().indexOf("T"));
-                    String time = viewData.getDate().substring(date.length() + 1, viewData.getDate().indexOf("."));
-
-                    Timestamp timestamp = Timestamp.valueOf(date + " " + time + ".0000");
-
-                    Calendar calendar = Calendar.getInstance(Locale.KOREA);
-                    calendar.setTimeInMillis(timestamp.getTime());
-
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                     try {
-                        Date tmpDate = sdf.parse(date
-                                + " " + time);
+                        Date tmpDate;
+                        try {
+                            String date = viewData.getDate().substring(0, viewData.getDate().indexOf("T"));
+                            String time  = viewData.getDate().substring(date.length() + 1, viewData.getDate().indexOf("."));
+                            tmpDate = sdf.parse(date + " " + time);
+                        } catch (Exception e) {
+                            tmpDate = new Date(Long.parseLong(viewData.getDate()) / 1000);
+                        }
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                         viewData.setTxtDate(format.format(tmpDate));
                     } catch (Exception e) {
@@ -147,7 +146,20 @@ public class WalletDetailActivity extends AppCompatActivity {
                     }
 
                     boolean isRemittance = entry.getAddress().equals(viewData.getFrom());
-                    viewData.setTxtAmount((isRemittance ? "- " : "+ ") + viewData.getAmount());
+                    if (isRemittance) {
+                        if (viewData.getState() == 0) {
+                            viewData.setTxtName(getString(R.string.fail_transfer));
+                        } else {
+                            viewData.setTxtName(getString(R.string.complete_transfer));
+                        }
+                    } else {
+                        if (viewData.getState() == 0) {
+                            viewData.setTxtName(getString(R.string.fail_deposit));
+                        } else {
+                            viewData.setTxtName(getString(R.string.complete_deposit));
+                        }
+                    }
+                    viewData.setTxtAmount((isRemittance ? "- " : "+ ") + viewData.getAmount() + " " + symbol);
                     viewData.setDark(isRemittance);
                 }
 
@@ -171,6 +183,9 @@ public class WalletDetailActivity extends AppCompatActivity {
                     WalletEntry entry = indexed.get(id);
                     if (entry == null) continue;
                     entry.setBalance(strBigIntBalane);
+                    if (entry.getId() == viewModel.walletEntry.getValue().getId()) {
+                        viewModel.walletEntry.getValue().setBalance(strBigIntBalane);
+                    }
                     try {
                         String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
                         BigDecimal balance = new BigDecimal(strDecimal);
@@ -216,6 +231,14 @@ public class WalletDetailActivity extends AppCompatActivity {
                 if (exchage != null) {
                     viewModel.exchange.setValue(exchage);
                 }
+            }
+        });
+
+
+        viewModel.isNoLoadMore.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isNoLoadMore) {
+                Log.d(TAG, "onChanged() called with: isNoLoadMore = [" + isNoLoadMore + "]");
             }
         });
     }
@@ -267,5 +290,25 @@ public class WalletDetailActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         serviceHelper.onStop();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
+                WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {
+                    @Override
+                    public void onResult(Wallet wallet) {
+                        try { RealmUtil.loadWallet(); }
+                        catch (Exception e) { e.printStackTrace(); }
+                        viewModel.wallet.setValue(wallet);
+                    }
+                });
+            } break;
+            default: {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 }

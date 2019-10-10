@@ -44,9 +44,11 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
+import foundation.icon.iconex.dialogs.TransactionSendDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
@@ -355,6 +357,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         });
 
         // edit limit
+        editLimit.setInputType(InputType.TYPE_CLASS_NUMBER);
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN))
             editLimit.setText(String.valueOf(DEFAULT_GAS_LIMIT));
         else
@@ -453,6 +456,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                     editLimit.setText(String.valueOf(DEFAULT_GAS_LIMIT));
                     setRemain(editSend.getText());
                 }
+                editLimit.setError(false, null);
             }
         });
         editData.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
@@ -569,8 +573,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendConfirmDialog dialog = new SendConfirmDialog(EtherTransferActivity.this, makeTxInfo());
-                dialog.setOnDialogListener(new SendConfirmDialog.OnDialogListener() {
+                TransactionSendDialog dialog = new TransactionSendDialog(EtherTransferActivity.this, makeTxInfo());
+                dialog.setOnDialogListener(new TransactionSendDialog.OnDialogListener() {
                     @Override
                     public void onOk() {
                         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
@@ -583,12 +587,9 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                                     editAddress.getText(), editSend.getText(),
                                     Integer.toString(mWalletEntry.getDefaultDec()), privKey);
                         }
-
                         timestamp = getTimeStamp();
                         saveRecentSent();
-
                         Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
-
                         finish();
                     }
                 });
@@ -627,8 +628,9 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         super.onResume();
 
         balance = new BigInteger(mWalletEntry.getBalance());
+        BigDecimal decimalBalance = new BigDecimal(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
 
-        ((TextView) findViewById(R.id.txt_balance)).setText(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
+        ((TextView) findViewById(R.id.txt_balance)).setText(DecimalFomatter.format(decimalBalance, mWalletEntry.getDefaultDec()));
         TextViewCompat.setAutoSizeTextTypeWithDefaults(findViewById(R.id.txt_balance), TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         ((TextView) findViewById(R.id.txt_fee)).setText(calculateFee());
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
@@ -657,8 +659,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         BigInteger bigSend;
 
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
-
-//        ((TextView) findViewById(R.id.txt_fee)).setText(ConvertUtil.getValue(bigFee, 18));
 
         boolean isNegative = false;
 
@@ -744,8 +744,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 ((TextView) findViewById(R.id.txt_trans_fee))
                         .setText(String.format(getString(R.string.exchange_usd), strFeeUSD));
             }
-
-
         } else {
             if (isNegative)
                 txtRemain = String.format(Locale.getDefault(), "- %s", remainValue);
@@ -864,6 +862,9 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         if (editLimit.getText().isEmpty()) {
             editLimit.setError(true, getString(R.string.errGasLimitEmpty));
             return false;
+        } if (Integer.parseInt(editLimit.getText()) < 21000) {
+            editLimit.setError(true, getString(R.string.errEtherGasLimit));
+            return false;
         } else {
             editLimit.setError(false, null);
             return true;
@@ -928,6 +929,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             txInfo.setPrice(txtPrice.getText().toString());
             txInfo.setLimit(editLimit.getText().toString());
             txInfo.setData(editData.getText().toString());
+            txInfo.setTransFee(txtTransFee.getText().toString());
 
             return txInfo;
         } else {
@@ -943,6 +945,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             txInfo.setContract(mWalletEntry.getContractAddress());
             txInfo.setDecimals(mWalletEntry.getDefaultDec());
             txInfo.setSymbol(mWalletEntry.getUserSymbol());
+            txInfo.setTransFee(txtTransFee.getText().toString());
 
             return txInfo;
         }
@@ -981,7 +984,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             contactName = "";
 
         RealmUtil.addRecentSend(MyConstants.Coin.ETH, "", contactName,
-                editAddress.getText().toString(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
+                mWalletEntry.getAddress(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }
 

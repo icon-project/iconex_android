@@ -30,7 +30,6 @@
 
             android:layout_marginTop="22dp">
 
-            <!-- TODO: DemiLight -->
             <TextView
                 android:id="@+id/lb_staked"
                 android:layout_width="wrap_content"
@@ -38,6 +37,7 @@
 
                 android:layout_alignParentLeft="true"
 
+                android:fontFamily="@font/noto_sans_light"
                 android:textSize="10dp"
                 android:textColor="@color/dark"
 
@@ -134,7 +134,6 @@
 
             android:text="ICX"/>
 
-        <!-- TODO: DemiLight font-->
         <TextView
             android:id="@+id/txt_name"
             android:layout_width="wrap_content"
@@ -145,6 +144,7 @@
 
             android:layout_marginTop="2dp"
 
+            android:fontFamily="@font/noto_sans_light"
             android:textSize="10dp"
             android:textColor="@color/darkB3"
 

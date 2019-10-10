@@ -96,7 +96,7 @@
             android:layout_height="30dp"
 
             android:fontFamily="@font/noto_sans_light"
-            android:textColor="@color/dark80"
+            android:textColor="@color/txt_btn_outline_01"
             android:textSize="10dp"
             android:textAllCaps="false"
 

@@ -26,6 +26,8 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
+import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
 import foundation.icon.iconex.dialogs.IconDisclaimerDialogFragment;
@@ -38,6 +40,7 @@ import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
@@ -510,6 +513,25 @@ public class MainWalletActivity extends AppCompatActivity implements
                 }
             });
             messageDialog.show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
+                WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {
+                    @Override
+                    public void onResult(Wallet wallet) {
+                        try { RealmUtil.loadWallet(); }
+                        catch (Exception e) { e.printStackTrace(); }
+                        setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
+                    }
+                });
+            } break;
+            default: {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 }

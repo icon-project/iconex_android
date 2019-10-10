@@ -33,7 +33,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/alias" />
 
-    <!--TODO: DemiLight-->
     <TextView
         android:id="@+id/address"
         android:layout_width="0dp"
@@ -41,6 +40,7 @@
         android:layout_marginTop="3dp"
         android:textColor="@color/darkB3"
         android:textSize="10dp"
+        android:fontFamily="@font/noto_sans_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/alias" />

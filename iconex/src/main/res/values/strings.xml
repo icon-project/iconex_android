@@ -547,6 +547,11 @@
     <string name="staked">Staked</string>
     <string name="iscore">I-Score</string>
     <string name="icon_voting">ICON Voting</string>
+    <string name="requestSend">전송 요청</string>
+    <string name="msgRequestSend">전송 요청 수량 입력 시, 입력한 수량 정보가 포함된 QR 코드로 변경됩니다.</string>
+    <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
+    <string name="messageRequestSend">ICX를 ICONex 지갑으로 보내주세요.</string>
+    <string name="chooseMsgRequestSend">전송 요청 메세지 보내기</string>
 
     <!-- New - wallet menu -->
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>
@@ -564,6 +569,7 @@
     <string name="estimateFee">예상 최대 수수료</string>
     <string name="maxBalance">전액</string>
     <string name="transfer">전송</string>
+    <string name="errEtherGasLimit">21,000 이상으로 입력해주세요.</string>
 
 
     <!--  New Main wallet info  -->
@@ -587,7 +593,11 @@
     <string name="mainWalletInfo40">I-Score</string>
     <string name="mainWalletInfo41">P-Rep 투표에 대한 기여도 점수이며, 1,000 I-Score를 1 ICX로 환급 받을 수 있습니다.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- ========= -->
+    <string name="complete_transfer">전송완료</string>
+    <string name="fail_transfer">전송실패</string>
+    <string name="complete_deposit">입금완료</string>
+    <string name="fail_deposit">입금실패</string>
+
+    <string name="msgNewPasswordSame">현재 비밀번호와 동일합니다. 새 비밀번호를 입력해주세요.</string>
+    <string name="totalWalletCount">총 %d개 지갑</string>
 </resources>

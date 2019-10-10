@@ -108,7 +108,7 @@
             android:layout_marginRight="1dp"
             android:textAllCaps="false"
 
-            android:text="@string/send"/>
+            android:text="@string/transfer"/>
 
         <Button
             android:id="@+id/btn_deposit"
