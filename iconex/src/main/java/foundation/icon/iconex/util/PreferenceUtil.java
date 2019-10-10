@@ -72,16 +72,6 @@ public class PreferenceUtil {
         editor.apply();
     }
 
-    public boolean getBeingLock() {
-        return mPreference.getBoolean(PREF_BEING_LOCK, false);
-    }
-
-    public void saveBeingLock(boolean beingLock) {
-        SharedPreferences.Editor editor = mPreference.edit();
-        editor.putBoolean(PREF_BEING_LOCK, beingLock);
-        editor.apply();
-    }
-
     public boolean getLocked() {
         return mPreference.getBoolean(PREF_LOCKED, false);
     }

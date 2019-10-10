@@ -63,9 +63,6 @@ public class AuthActivity extends AppCompatActivity implements AuthFingerprintFr
         if (mAppStatus == ICONexApp.AppStatus.RETURNED_TO_FOREGROUND) {
             finish();
         } else {
-            PreferenceUtil preferenceUtil = new PreferenceUtil(this);
-            preferenceUtil.saveBeingLock(false);
-
             startActivity(new Intent(this, MainWalletActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
@@ -81,8 +78,6 @@ public class AuthActivity extends AppCompatActivity implements AuthFingerprintFr
         if (mAppStatus == ICONexApp.AppStatus.RETURNED_TO_FOREGROUND) {
             finish();
         } else {
-            preferenceUtil.saveBeingLock(false);
-
             startActivity(new Intent(this, MainWalletActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                     .putExtra(EXTRA_INVALIDATED, true));
@@ -100,9 +95,6 @@ public class AuthActivity extends AppCompatActivity implements AuthFingerprintFr
         if (mAppStatus == ICONexApp.AppStatus.RETURNED_TO_FOREGROUND) {
             finish();
         } else {
-            PreferenceUtil preferenceUtil = new PreferenceUtil(this);
-            preferenceUtil.saveBeingLock(false);
-
             startActivity(new Intent(this, MainWalletActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
