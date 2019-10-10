@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,16 +17,22 @@ import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
+import foundation.icon.connect.IconexConnect;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.ClaimIScoreDialog;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.widgets.CustomToast;
+import foundation.icon.icx.KeyWallet;
+import foundation.icon.icx.SignedTransaction;
 import foundation.icon.icx.Transaction;
 import foundation.icon.icx.TransactionBuilder;
 import foundation.icon.icx.data.Address;
+import foundation.icon.icx.data.Bytes;
 import foundation.icon.icx.data.IconAmount;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
@@ -34,8 +41,10 @@ import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 import loopchain.icon.wallet.core.response.TRResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
@@ -101,6 +110,7 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_claim:
+                showConfirmDialog();
                 break;
 
             case R.id.btn_start_icon:
@@ -176,12 +186,69 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                         txtFeeUsd.setText(String.format(Locale.getDefault(), "$ %,.2f",
                                 Double.parseDouble(fee) * Double.parseDouble(exPrice)));
 
-                        btnClaim.setEnabled(true);
+                        if (!currentIScore.equals(BigInteger.ZERO))
+                            btnClaim.setEnabled(true);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
+                    }
+                });
+    }
+
+    private void showConfirmDialog() {
+        ClaimIScoreDialog claimIScoreDialog = new ClaimIScoreDialog(this);
+        claimIScoreDialog.setCurrent(txtCurrentIScore.getText().toString());
+        claimIScoreDialog.setReceived(txtEstimatedIcx.getText().toString());
+        claimIScoreDialog.setStep(txtLimitPrice.getText().toString());
+        claimIScoreDialog.setFee(txtFee.getText().toString());
+        claimIScoreDialog.setFeeUsd(txtFeeUsd.getText().toString());
+        claimIScoreDialog.setData();
+
+        claimIScoreDialog.setSingleButton(false);
+        claimIScoreDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+            @Override
+            public Boolean invoke(View view) {
+                claimIScore();
+                return true;
+            }
+        });
+
+        claimIScoreDialog.show();
+    }
+
+    private void claimIScore() {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                KeyWallet keyWallet = KeyWallet.load(new Bytes(privateKey));
+                Transaction transaction = TransactionBuilder.newBuilder()
+                        .from(new Address(wallet.getAddress()))
+                        .to(new Address(Constants.ADDRESS_ZERO))
+                        .value(IconAmount.of("0", IconAmount.Unit.ICX).toLoop())
+                        .stepLimit(stepLimit)
+                        .nid(ICONexApp.NETWORK.getNid())
+                        .call("claimIScore")
+                        .build();
+
+                PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
+                pRepService.claimIScore(new SignedTransaction(transaction, keyWallet));
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        CustomToast toast = new CustomToast();
+                        toast.makeText(PRepIScoreActivity.this, getString(R.string.claimDone), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        CustomToast toast = new CustomToast();
+                        toast.makeText(PRepIScoreActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

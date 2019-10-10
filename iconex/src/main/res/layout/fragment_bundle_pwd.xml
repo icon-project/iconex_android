@@ -1,26 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingEnd="20dp"
         android:paddingStart="20dp"
-        android:paddingTop="40dp">
+        android:paddingTop="40dp"
+        android:paddingEnd="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center_horizontal"
+            android:lineHeight="24dp"
             android:text="@string/bundlePwdHeader"
             android:textColor="@color/dark4D"
-            android:textSize="14dp"
-            android:lineHeight="24dp"/>
+            android:textSize="14dp" />
 
 
         <foundation.icon.iconex.widgets.TTextInputLayout
@@ -28,34 +28,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            app:inputType="password"
-            app:hint="@string/hintWalletPassword"/>
+            app:hint="@string/hintWalletPassword"
+            app:inputType="password" />
 
         <foundation.icon.iconex.widgets.TTextInputLayout
             android:id="@+id/edit_check"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:inputType="password"
-            app:hint="@string/hintWalletPasswordConfirm"/>
+            app:hint="@string/hintWalletPasswordConfirm"
+            app:inputType="password" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:padding="20dp"
+            android:background="@drawable/bg_outline_box_cyan"
             android:fontFamily="@font/noto_sans_regular"
+            android:lineHeight="18dp"
+            android:padding="20dp"
             android:text="@string/bundlePwdDetailed1"
             android:textColor="@color/primary"
-            android:background="@drawable/bg_outline_box_cyan"
-            android:lineHeight="18dp"
             android:textSize="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <View
                 android:layout_width="3dp"
@@ -68,9 +68,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/noto_sans_light"
+                android:lineHeight="18dp"
                 android:text="@string/bundlePwdDetailed2"
                 android:textColor="@color/primary"
-                android:lineHeight="18dp"
                 android:textSize="10dp" />
         </LinearLayout>
     </LinearLayout>
@@ -79,41 +79,42 @@
         android:id="@+id/layout_change"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:padding="10dp"
         android:layout_alignParentBottom="true"
         android:background="@color/darkFC"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <Button
             android:id="@+id/btn_back"
+            style="@style/TextButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
 
             android:background="@drawable/bg_btn_rounded_02"
-            android:fontFamily="@font/noto_sans_regular"
-            android:textColor="@color/txt_btn_rounded_02"
-            android:textSize="14dp"
-            android:textAllCaps="false"
             android:elevation="0dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:text="@string/back"
+            android:textColor="@color/txt_btn_rounded_02"
 
-            android:text="@string/back"/>
+            android:textSize="14dp" />
 
         <Button
             android:id="@+id/btn_export"
+            style="@style/TextButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
             android:layout_marginLeft="10dp"
+            android:layout_weight="2"
 
             android:background="@drawable/bg_btn_rounded_01_light"
-            android:fontFamily="@font/noto_sans_regular"
-            android:textColor="@color/txt_btn_rounded_01_light"
-            android:textSize="14dp"
-            android:textAllCaps="false"
-            android:enabled="false"
             android:elevation="0dp"
+            android:enabled="false"
+            android:fontFamily="@font/noto_sans_regular"
+            android:text="@string/bundleDownload"
+            android:textAllCaps="false"
+            android:textColor="@color/txt_btn_rounded_01_light"
 
-            android:text="@string/bundleDownload"/>
+            android:textSize="14dp" />
     </LinearLayout>
 </RelativeLayout>

@@ -3,6 +3,7 @@ package foundation.icon.iconex.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -61,6 +62,8 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
                 .add(R.id.container, CreateWalletStep2Fragment.newInstance())
                 .addToBackStack("step2")
                 .commit();
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
@@ -69,6 +72,8 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
                 .add(R.id.container, CreateWalletStep3Fragment.newInstance())
                 .addToBackStack("step3")
                 .commit();
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override

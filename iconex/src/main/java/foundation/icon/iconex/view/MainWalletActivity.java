@@ -2,10 +2,9 @@ package foundation.icon.iconex.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,18 +23,14 @@ import java.util.Map;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
-import foundation.icon.iconex.dialogs.BasicDialog;
-import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
-import foundation.icon.iconex.realm.RealmUtil;
-import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
-import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
 import foundation.icon.iconex.dialogs.IconDisclaimerDialogFragment;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
+import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
 import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
+import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
@@ -46,7 +41,6 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.main.MainActivity;
 import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
@@ -437,7 +431,7 @@ public class MainWalletActivity extends AppCompatActivity implements
                 passwordDialog.show();
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Balance not set", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Balance loading", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -455,14 +449,18 @@ public class MainWalletActivity extends AppCompatActivity implements
                     }
                 });
 
-        BigInteger votingPower = wallet.getVotingPower();
-//        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
-//            messageDialog = new MessageDialog(MainWalletActivity.this);
-//            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
-//            messageDialog.show();
-//        } else {
-        passwordDialog.show();
-//        }
+        try {
+            BigInteger votingPower = wallet.getVotingPower();
+            if (votingPower.compareTo(BigInteger.ZERO) == 0) {
+                messageDialog = new MessageDialog(MainWalletActivity.this);
+                messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
+                messageDialog.show();
+            } else {
+                passwordDialog.show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Voting power loading", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -479,14 +477,7 @@ public class MainWalletActivity extends AppCompatActivity implements
                     }
                 });
 
-        BigInteger votingPower = wallet.getVotingPower();
-//        if (votingPower.compareTo(BigInteger.ZERO) == 0) {
-//            messageDialog = new MessageDialog(MainWalletActivity.this);
-//            messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
-//            messageDialog.show();
-//        } else {
         passwordDialog.show();
-//        }
     }
 
     @Override
@@ -523,12 +514,16 @@ public class MainWalletActivity extends AppCompatActivity implements
                 WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {
                     @Override
                     public void onResult(Wallet wallet) {
-                        try { RealmUtil.loadWallet(); }
-                        catch (Exception e) { e.printStackTrace(); }
+                        try {
+                            RealmUtil.loadWallet();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
                     }
                 });
-            } break;
+            }
+            break;
             default: {
                 super.onActivityResult(requestCode, resultCode, data);
             }

@@ -95,4 +95,8 @@ public class PRepService {
 
         return iconService.call(call).execute();
     }
+
+    public String claimIScore(SignedTransaction signedTransaction) throws IOException {
+        return iconService.sendTransaction(signedTransaction).execute().toHexString(true);
+    }
 }
