@@ -173,6 +173,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                 Intent intent = new Intent(ICONTransferActivity.this, BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+                intent.putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE, BarcodeCaptureActivity.ScanType.ICX_Address.name());
 
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
             }
@@ -447,6 +448,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                 Intent intent = new Intent(ICONTransferActivity.this, BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+                intent.putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE, BarcodeCaptureActivity.ScanType.ICX_Address.name());
 
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
             }

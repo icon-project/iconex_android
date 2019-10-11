@@ -48,6 +48,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -56,10 +57,13 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import org.spongycastle.util.encoders.Hex;
+
 import java.io.IOException;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.widgets.CustomToast;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
@@ -89,6 +93,14 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private GestureDetector gestureDetector;
 
     private Handler localHandler = new Handler();
+
+    public static final String PARAM_SCANTYPE = "scanType";
+    public enum ScanType{
+        ETH_Address,
+        ICX_Address,
+        PrivateKey
+    }
+    private ScanType scanType;
 
     /**
      * Initializes the UI and creates the detector pipeline.
@@ -126,6 +138,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         // read parameters from the intent used to launch the activity.
         boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
         boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
+        scanType = ScanType.valueOf(getIntent().getStringExtra(PARAM_SCANTYPE));
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -391,10 +404,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         }
 
         if (best != null) {
-            Intent data = new Intent();
-            data.putExtra(BarcodeObject, best);
-            setResult(CommonStatusCodes.SUCCESS, data);
-            finish();
+            validate(best);
             return true;
         }
         return false;
@@ -476,11 +486,51 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         rect.right = translateX(rect.right);
         rect.bottom = translateY(rect.bottom);
         if (viewRect.contains(rect)) {
-            Intent data = new Intent();
-            data.putExtra(BarcodeObject, barcode);
-            setResult(CommonStatusCodes.SUCCESS, data);
-            finish();
+            validate(barcode);
         }
+    }
+
+    private void validate(Barcode barcode) {
+        String value = barcode.displayValue;
+
+        if (scanType != null)
+            switch (scanType) {
+                case PrivateKey: {
+                    try {
+                        Hex.decode(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        CustomToast.makeText(this, getString(R.string.errScanPrivateKey), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } break;
+                case ICX_Address: {
+                    if (!(value.startsWith("hx") || value.startsWith("cx"))) {
+                        CustomToast.makeText(this, getString(R.string.errIncorrectICXAddr), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } break;
+                case ETH_Address: {
+                    if (value.startsWith("0x")) {
+                        value = value.substring(2);
+                        if (value.length() != 40) {
+                            CustomToast.makeText(this, getString(R.string.errIncorrectETHAddr), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else if (value.contains(" ")) {
+                        CustomToast.makeText(this, getString(R.string.errIncorrectETHAddr), Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        CustomToast.makeText(this, getString(R.string.errIncorrectETHAddr), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } break;
+            }
+
+        Intent data = new Intent();
+        data.putExtra(BarcodeObject, barcode);
+        setResult(CommonStatusCodes.SUCCESS, data);
+        finish();
     }
 
     public float scaleX(float horizontal) {

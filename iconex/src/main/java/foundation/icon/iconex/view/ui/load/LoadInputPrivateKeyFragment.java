@@ -173,7 +173,8 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
             case R.id.btn_qr_scan:
                 startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
                         .putExtra(BarcodeCaptureActivity.UseFlash, false)
-                        .putExtra(BarcodeCaptureActivity.AutoFocus, true), RC_CAPTURE);
+                        .putExtra(BarcodeCaptureActivity.AutoFocus, true)
+                        .putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE, BarcodeCaptureActivity.ScanType.PrivateKey.name()), RC_CAPTURE);
                 break;
 
             case R.id.btn_next:
