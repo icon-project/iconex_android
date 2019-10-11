@@ -114,6 +114,12 @@ public class TokenWalletItem extends WalletItem{
         mImgSymbol.setImageResource(resId);
     }
 
+    public void setBorderVisible(boolean visible) {
+        layoutWalletItem.setBackgroundResource(visible ?
+                R.drawable.bg_wallet_card : R.drawable.bg_wallet_card_borderless
+        );
+    }
+
     @Override
     public void bind(WalletItemViewData data) {
         mTxtSymbol.setText(data.getSymbol());

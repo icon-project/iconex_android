@@ -134,6 +134,9 @@ public class WalletCardView extends FrameLayout {
                 WalletItemViewData data = walletItems.get(position);
                 WalletItem walletItem = (WalletItem) holder.itemView;
                 walletItem.bind(data);
+                if (holder.getItemViewType() == 2 && position == 0) {
+                    ((TokenWalletItem) holder.itemView).setBorderVisible(true);
+                }
             }
 
             @Override
