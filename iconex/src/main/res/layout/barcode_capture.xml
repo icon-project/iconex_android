@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,29 +22,85 @@
         android:id="@+id/btn_close"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="23dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="42dp"
+        android:layout_marginLeft="24dp"
         android:background="@drawable/ic_close_qr" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="124dp"
-        android:fontFamily="@font/noto_sans_bold"
-        android:gravity="center_horizontal"
-        android:text="@string/scanTheQRCode"
-        android:textColor="@color/colorWhite"
-        android:textSize="24dp"
-        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/img_target"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="210dp"
-        android:background="@drawable/target_qr_code" />
-</RelativeLayout>
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_marginTop="178dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <ImageView
+        android:id="@+id/aim_lt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        app:layout_constraintTop_toTopOf="@id/img_target"
+        app:layout_constraintLeft_toLeftOf="@id/img_target"
+        android:src="@drawable/qrcode_aim_corner"/>
+
+    <ImageView
+        android:id="@+id/aim_rt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        app:layout_constraintTop_toTopOf="@id/img_target"
+        app:layout_constraintRight_toRightOf="@id/img_target"
+        android:rotation="90"
+        android:src="@drawable/qrcode_aim_corner"/>
+
+    <ImageView
+        android:id="@+id/aim_rb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        app:layout_constraintBottom_toBottomOf="@id/img_target"
+        app:layout_constraintRight_toRightOf="@id/img_target"
+        android:rotation="180"
+        android:src="@drawable/qrcode_aim_corner"/>
+
+    <ImageView
+        android:id="@+id/aim_lb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        app:layout_constraintBottom_toBottomOf="@id/img_target"
+        app:layout_constraintLeft_toLeftOf="@id/img_target"
+        android:rotation="270"
+        android:src="@drawable/qrcode_aim_corner"/>
+
+
+    <ImageView
+        android:id="@+id/img_qrcode"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_qrcode_w"
+        app:layout_constraintBottom_toBottomOf="@id/img_target"
+        app:layout_constraintLeft_toLeftOf="@id/img_target"
+        app:layout_constraintRight_toRightOf="@id/img_target"
+        app:layout_constraintTop_toTopOf="@id/img_target" />
+
+    <TextView
+        android:id="@+id/txt_guide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
+        android:fontFamily="@font/noto_sans_medium"
+        android:gravity="center"
+
+        android:text="@string/qrcodeScanGuide"
+        android:textColor="@android:color/white"
+        android:textSize="12dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_target" />
+</androidx.constraintlayout.widget.ConstraintLayout>
