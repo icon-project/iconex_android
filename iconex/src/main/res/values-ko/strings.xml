@@ -330,7 +330,7 @@
     <string name="titleChangeWalletPwd">비밀번호 변경</string>
     <string name="changeWalletPwdHeader">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
     <string name="changeWalletPwdDetailed">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
-    <string name="changeWalletPwdGuide">현재 비밀번호와 변경할 비밀번호 입력</string>
+    <string name="changeWalletPwdGuide">현재 비밀번호 &amp; 변경할 비밀번호를 입력해주세요.</string>
     <string name="hintOldWalletPwd">현재 비밀번호 입력</string>
     <string name="hintNewWalletPwd">새 비밀번호 입력</string>
     <string name="hintNewWalletPwdConfirm">새 비밀번호 확인</string>
