@@ -90,7 +90,8 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     @Override
     public void onDetach() {
         super.onDetach();
-        if (!disposable.isDisposed())
+        if (disposable != null
+                && !disposable.isDisposed())
             disposable.dispose();
 
         mListener = null;

@@ -104,6 +104,13 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private void initView() {
         ((TextView) findViewById(R.id.txt_title)).setText(wallet.getAlias());
 
+        findViewById(R.id.btn_start_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         scroll = findViewById(R.id.scroll);
 
         btnSearch = findViewById(R.id.btn_search);
@@ -136,7 +143,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                         btnSearch.setVisibility(View.GONE);
                         layoutButton.setVisibility(View.VISIBLE);
 
-                        scroll.fullScroll(ScrollView.FOCUS_UP);
+                        scroll.fullScroll(ScrollView.FOCUS_DOWN);
                         break;
 
                     case 1:
@@ -151,7 +158,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                         btnSearch.setVisibility(View.VISIBLE);
                         layoutButton.setVisibility(View.GONE);
 
-                        scroll.fullScroll(ScrollView.FOCUS_UP);
+                        scroll.fullScroll(ScrollView.FOCUS_DOWN);
                         break;
                 }
 

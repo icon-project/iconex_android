@@ -181,7 +181,7 @@
             android:name=".menu.bundle.ExportWalletBundleActivity"
             android:configChanges="fontScale"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="unspecified"
             android:theme="@style/DialogActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity

@@ -19,11 +19,22 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.LoadingDialog;
+import foundation.icon.iconex.dialogs.PRepDetailDialog;
+import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.ui.prep.vote.VoteViewModel;
 import foundation.icon.iconex.widgets.ToolTip;
+import foundation.icon.icx.transport.jsonrpc.RpcItem;
+import foundation.icon.icx.transport.jsonrpc.RpcObject;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class PRepListAdapter extends RecyclerView.Adapter {
     private static final String TAG = PRepListAdapter.class.getSimpleName();
@@ -36,10 +47,14 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     private Activity root;
     private VoteViewModel vm;
 
+    private LoadingDialog loading;
+
     public PRepListAdapter(Context context, Type type, List<PRep> preps) {
         mContext = context;
         mType = type;
         this.preps = preps;
+
+        loading = new LoadingDialog(mContext, R.style.DialogActivity);
     }
 
     public PRepListAdapter(Context context, Type type, List<PRep> preps, Activity root) {
@@ -50,6 +65,8 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
         vm = ViewModelProviders.of((AppCompatActivity) root).get(VoteViewModel.class);
         delegations = vm.getDelegations().getValue();
+
+        loading = new LoadingDialog(mContext, R.style.DialogActivity);
     }
 
     @NonNull
@@ -126,7 +143,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     class ItemVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvPrepName, tvPrepGrade;
-        private ViewGroup layoutVotes, layoutTotalVotes, layoutMyVotes;
+        private ViewGroup layoutInfo, layoutVotes, layoutTotalVotes, layoutMyVotes;
         private TextView tvTotalVotes, tvMyVotes;
         private ImageButton btnManage;
 
@@ -135,7 +152,8 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
             tvPrepName = v.findViewById(R.id.prep_name);
             tvPrepGrade = v.findViewById(R.id.prep_grade);
-
+            layoutInfo = v.findViewById(R.id.layout_info);
+            layoutInfo.setOnClickListener(this);
             layoutVotes = v.findViewById(R.id.layout_votes);
             layoutTotalVotes = v.findViewById(R.id.layout_total_votes);
             tvTotalVotes = v.findViewById(R.id.txt_total_votes);
@@ -150,7 +168,43 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View view) {
+            PRep prep = preps.get(getAdapterPosition());
+
             switch (view.getId()) {
+                case R.id.layout_info:
+                    if (prep.getWebsite() == null) {
+                        loading.show();
+                        Completable.fromAction(new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
+                                RpcItem result = pRepService.getPrep(prep.getAddress());
+                                RpcObject o = result.asObject();
+
+                                PRep detail = prep.setDetails(o);
+                                preps.set(getAdapterPosition(), detail);
+                            }
+                        }).subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new DisposableCompletableObserver() {
+                                    @Override
+                                    public void onComplete() {
+                                        loading.dismiss();
+                                        Log.d(TAG, "run website=" + preps.get(getAdapterPosition()).getWebsite() + ", " + getAdapterPosition());
+                                        showDetailDialog(preps.get(getAdapterPosition()));
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        loading.dismiss();
+                                        e.printStackTrace();
+                                    }
+                                });
+                    } else {
+                        showDetailDialog(prep);
+                    }
+                    break;
+
                 case R.id.btn_prep_manage:
                     ToolTip toolTip = new ToolTip(mContext);
                     if (btnManage.isSelected()) {
@@ -161,7 +215,6 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                             toolTip.setText(mContext.getString(R.string.tipPRepMax));
                             toolTip.setPosition(root, btnManage);
                         } else {
-                            PRep prep = preps.get(getAdapterPosition());
                             Delegation delegation = new Delegation.Builder()
                                     .prep(prep)
                                     .build();
@@ -174,6 +227,18 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                     break;
             }
         }
+    }
+
+    private void showDetailDialog(PRep prep) {
+        PRepDetailDialog dialog = new PRepDetailDialog(mContext);
+        dialog.setPrepName(prep.getName());
+        dialog.setLocation(String.format(Locale.getDefault(), "Server: %s / %s",
+                prep.getCity(), prep.getCountry()));
+        dialog.setWebsite(prep.getWebsite());
+        dialog.setData();
+        dialog.setSingleButton(true);
+        dialog.setSingleButtonText(mContext.getString(R.string.close));
+        dialog.show();
     }
 
     public void setData(List<PRep> preps) {

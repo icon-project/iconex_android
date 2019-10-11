@@ -1,5 +1,7 @@
 package foundation.icon.iconex.view.ui.prep;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
@@ -263,12 +265,13 @@ public class PRep implements Serializable {
     }
 
     public PRep setDetails(RpcObject object) {
-        return newBuilder()
-                .penalty(object.getItem("penalty").asString())
+        PRep pRep = newBuilder()
                 .email(object.getItem("email").asString())
                 .website(object.getItem("website").asString())
-                .p2pEndPoint(object.getItem("p2pEndPoint").asString())
+                .p2pEndPoint(object.getItem("p2pEndpoint").asString())
                 .build();
+        Log.d(TAG, "PRep=" + pRep);
+        return pRep;
     }
 
     public Builder newBuilder() {
@@ -286,7 +289,6 @@ public class PRep implements Serializable {
                 .delegated(delegated)
                 .totalBlocks(totalBlocks)
                 .validatedBlocks(validatedBlocks);
-
     }
 
     public double delegatedPercent() {
@@ -373,6 +375,7 @@ public class PRep implements Serializable {
                 "\"delegated\": \"" + delegated + "\",\n" +
                 "\"totalBlocks\": \"" + totalBlocks + "\",\n" +
                 "\"validatedBlocks\": \"" + validatedBlocks + "\"\n" +
+                "\"website\": \"" + website + "\"\n" +
                 "}";
     }
 }

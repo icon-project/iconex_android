@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -45,7 +46,6 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_export_wallet_bundle);
-        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         btnBack = findViewById(R.id.btn_close);
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +67,15 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
         mPrivSet = privSet;
         stepView.setStep(1);
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+    }
+
+    @Override
+    public void onBack() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override

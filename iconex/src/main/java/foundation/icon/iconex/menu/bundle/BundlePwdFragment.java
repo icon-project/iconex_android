@@ -150,6 +150,8 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
         btnExport = v.findViewById(R.id.btn_export);
         btnExport.setOnClickListener(this);
 
+        v.findViewById(R.id.btn_back).setOnClickListener(this);
+
         return v;
     }
 
@@ -193,6 +195,10 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                 } else {
                     btnExport.setEnabled(false);
                 }
+                break;
+
+            case R.id.btn_back:
+                mListener.onBack();
                 break;
         }
     }
@@ -279,5 +285,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
     public interface OnBundlePwdListener {
         void onExport(String pwd);
+
+        void onBack();
     }
 }

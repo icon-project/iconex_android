@@ -3,6 +3,7 @@ package foundation.icon.iconex.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import java.io.Serializable;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep1Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep2Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep3Fragment;
@@ -32,7 +34,20 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
         findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Basic2ButtonDialog dialog = new Basic2ButtonDialog(CreateWalletActivity.this);
+                dialog.setMessage(getString(R.string.cancelCreateWallet));
+                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                    @Override
+                    public void onOk() {
+                        finish();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -47,6 +62,8 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
                 .add(R.id.container, CreateWalletStep2Fragment.newInstance())
                 .addToBackStack("step2")
                 .commit();
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
@@ -55,6 +72,8 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
                 .add(R.id.container, CreateWalletStep3Fragment.newInstance())
                 .addToBackStack("step3")
                 .commit();
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
@@ -85,5 +104,23 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
         startActivity(new Intent(this, ViewWalletInfoActivity.class)
                 .putExtra("wallet", (Serializable) wallet)
                 .putExtra("privateKey", privateKey));
+    }
+
+    @Override
+    public void onBackPressed() {
+        Basic2ButtonDialog dialog = new Basic2ButtonDialog(CreateWalletActivity.this);
+        dialog.setMessage(getString(R.string.cancelCreateWallet));
+        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            @Override
+            public void onOk() {
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+        dialog.show();
     }
 }

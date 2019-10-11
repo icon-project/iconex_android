@@ -2,6 +2,7 @@ package foundation.icon.iconex.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -60,21 +61,24 @@ public class StakeGraph extends ConstraintLayout {
     public void setStake(BigInteger stake) {
         this.stake = stake;
 
+        Log.d(TAG, "setStake(BigInteger)=" + stake);
         setStakeGraph(calculatePercentage(totalBalance, stake));
 
         if (!delegation.equals(BigInteger.ZERO))
             setDelegationGraph(calculatePercentage(this.stake, delegation));
+        else
+            setDelegationGraph(0.0f);
     }
 
     public void setStake(float stakePercent) {
         setStakeGraph(stakePercent);
-
-        if (!delegation.equals(BigInteger.ZERO))
-            setDelegationGraph(calculatePercentage(calculateIcx(stakePercent), delegation));
+        Log.d(TAG, "setDelegation(float)=" + delegation);
+        setDelegationGraph(calculatePercentage(calculateIcx(stakePercent), delegation));
     }
 
     public void setDelegation(BigInteger delegation) {
         this.delegation = delegation;
+        Log.d(TAG, "setDelegation(BigInteger)=" + delegation);
         setDelegationGraph(calculatePercentage(this.stake, delegation));
     }
 
@@ -121,6 +125,8 @@ public class StakeGraph extends ConstraintLayout {
         BigDecimal valueDec = new BigDecimal(value);
         BigDecimal percentDec = valueDec.divide(baseDec, 18, RoundingMode.HALF_UP)
                 .multiply(new BigDecimal("100"));
+
+        Log.d(TAG, "calculatePercent=" + percentDec.floatValue());
 
         return percentDec.floatValue();
     }

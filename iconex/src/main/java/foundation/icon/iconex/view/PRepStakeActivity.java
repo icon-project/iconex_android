@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.StakeDialog;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
@@ -228,9 +229,9 @@ public class PRepStakeActivity extends AppCompatActivity {
 
                     stepPrice = iconService.getStepPrice().asInteger();
 
-                    BigInteger remainer = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
-                    totalBalance = remainer.add(staked);
-                    availableStake = totalBalance.subtract(delegated);
+                    BigInteger remained = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
+                    totalBalance = remained.add(staked);
+                    availableStake = totalBalance.subtract(delegated).subtract(new BigInteger("3"));
 
                     if (ICONexApp.EXCHANGE_TABLE.get("icxusd") == null) {
                         LoopChainClient client = new LoopChainClient(ServiceConstants.DEV_TRACKER);
@@ -330,11 +331,11 @@ public class PRepStakeActivity extends AppCompatActivity {
                     Double.parseDouble(ConvertUtil.getValue(delegated, 18))));
             editStaked.setTag(null);
             txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", delegatedPercent));
-            stakeSeekBar.setProgress((int) delegatedPercent);
+            stakeSeekBar.setProgress(0);
         } else {
             double percent = calculatePercentage(availableStake, input);
             Log.d(TAG, "edittext campreMin percent=" + percent);
-            stakeSeekBar.setProgress((int) percent);
+            stakeSeekBar.setProgress((int) (percent - delegatedPercent));
             txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
         }
 
@@ -498,7 +499,17 @@ public class PRepStakeActivity extends AppCompatActivity {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        finish();
+                        MessageDialog messageDialog = new MessageDialog(PRepStakeActivity.this);
+                        messageDialog.setTitleText(getString(R.string.stakeDone));
+                        messageDialog.setSingleButton(true);
+                        messageDialog.setOnSingleClick(new Function1<View, Boolean>() {
+                            @Override
+                            public Boolean invoke(View view) {
+                                finish();
+                                return true;
+                            }
+                        });
+                        messageDialog.show();
                     }
 
                     @Override

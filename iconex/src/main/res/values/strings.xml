@@ -482,16 +482,18 @@
     <string name="createWalletStep3Detailed2">· You can download your Keystore file from the \`Backup wallet\` menu later.</string>
 
     <string name="claim">Claim</string>
-    <string name="currentIScore">Current I-Score</string>
-    <string name="receiveIScroe">You can receive</string>
+    <string name="currentIScore">현재 I-Score (ISC)</string>
+    <string name="receiveIScroe">받을 수 있는 수량 (ICX)</string>
     <string name="IScoreClaim">I-Score Claim</string>
-    <string name="stepLimitNPrice">Step Limit / Price (ICX)</string>
-    <string name="estimatedMaximumFee">Estimated Maximum Fee (ICX)</string>
+    <string name="stepLimitNPrice">적정 Step 한도 / 가격 (ICX)</string>
+    <string name="estimatedMaximumFee">예상 최대 수수료 (ICX)</string>
+    <string name="claimDone">Claim 실행이 완료되었습니다.</string>
 
     <string name="submit">Submit</string>
 
     <string name="rankAscending">Rank ↑</string>
     <string name="rankDecending">Rank ↓</string>
+    <string name="prepDetail"><u>상세 정보</u></string>
 
     <string name="stake">Stake</string>
     <string name="unstake">Unstake</string>
@@ -533,6 +535,7 @@
 
     <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 5 ICX 이상 잔액이\n있어야 합니다.</string>
     <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
+    <string name="stakeDone">Stake 실행이\n완료되었습니다.</string>
 
     <!-- Tool Tip -->
     <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>
@@ -560,7 +563,6 @@
     <!-- New side Menu -->
     <string name="appVer">앱 버전</string>
     <string name="errPasscodeSame">현재 잠금번호와 동일합니다. 새 잠금 번호를 입력해주세요.</string>
-
 
     <!-- New - Transfer -->
     <string name="availableBalance">사용 가능 잔액</string>
