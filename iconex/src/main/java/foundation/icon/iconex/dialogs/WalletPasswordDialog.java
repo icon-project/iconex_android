@@ -79,10 +79,14 @@ public class WalletPasswordDialog extends MessageDialog {
             }
         });
 
+        setConfirmEnable(false);
         mEditPassword.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {
-                if (s.length() == 0) mEditPassword.setError(false, null);
+                if (s.length() == 0) {
+                    mEditPassword.setError(false, null);
+                }
+                setConfirmEnable(s.length() != 0);
             }
         });
 
