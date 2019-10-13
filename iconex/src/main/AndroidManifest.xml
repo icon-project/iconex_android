@@ -58,7 +58,7 @@
         <activity android:name=".view.AboutActivity"
             android:configChanges="fontScale"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="unspecified"
             android:theme="@style/DialogActivity" />
         <activity
             android:name=".menu.appInfo.AppInfoActivity"

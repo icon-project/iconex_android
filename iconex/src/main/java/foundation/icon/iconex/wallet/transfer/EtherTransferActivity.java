@@ -567,6 +567,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 Intent intent = new Intent(EtherTransferActivity.this, BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+                intent.putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE, BarcodeCaptureActivity.ScanType.ETH_Address.name());
 
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
             }

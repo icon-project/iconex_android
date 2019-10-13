@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:background="@drawable/bg_gradient_primary2primaryb6"
+    android:clickable="true"
     android:orientation="vertical">
 
     <FrameLayout

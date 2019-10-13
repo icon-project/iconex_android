@@ -170,7 +170,12 @@ public class MyContactsFragment extends Fragment {
         public void scanQRCode() {
             startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
                     .putExtra(BarcodeCaptureActivity.AutoFocus, true)
-                    .putExtra(BarcodeCaptureActivity.UseFlash, false), RC_SCAN);
+                    .putExtra(BarcodeCaptureActivity.UseFlash, false)
+                    .putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE,
+                            mType.equals(Constants.KS_COINTYPE_ICX) ?
+                                    BarcodeCaptureActivity.ScanType.ICX_Address.name() :
+                                    BarcodeCaptureActivity.ScanType.ETH_Address.name()
+                    ), RC_SCAN);
         }
     };
 
