@@ -451,9 +451,7 @@
     <string name="dialogTxHashTrackerLink"><u>ICON Tracker로 이동</u></string>
     <string name="dialogTxHashCopyTxHash">Copy TxHash</string>
 
-    <string name="dialogHeadTextWalletPassword">Enter Wallet Password</string>
-    <string name="dialogWalletPasswordHint"><u>Password</u></string>
-    <string name="dialogWalletPasswordForgotPassworld">Forgot password</string>
+    <string name="forgot_passwword"><u>비밀번호를 잊으셨나요?</u></string>
 
     <string name="dialogHeadTextMinExchangeRate">허용가능 최소 환전비율</string>
     <string name="dialogTitleTextMinExchangeRate">암호화폐의 환율은 변동이 심하므로,\n최소환전비율 설정을 통해 자산을 보호하세요.</string>
@@ -477,16 +475,18 @@
     <string name="createWalletStep3Detailed2">· You can download your Keystore file from the \`Backup wallet\` menu later.</string>
 
     <string name="claim">Claim</string>
-    <string name="currentIScore">Current I-Score</string>
-    <string name="receiveIScroe">You can receive</string>
+    <string name="currentIScore">현재 I-Score (ISC)</string>
+    <string name="receiveIScroe">받을 수 있는 수량 (ICX)</string>
     <string name="IScoreClaim">I-Score Claim</string>
-    <string name="stepLimitNPrice">Step Limit / Price (ICX)</string>
-    <string name="estimatedMaximumFee">Estimated Maximum Fee (ICX)</string>
+    <string name="stepLimitNPrice">적정 Step 한도 / 가격 (ICX)</string>
+    <string name="estimatedMaximumFee">예상 최대 수수료 (ICX)</string>
+    <string name="claimDone">Claim 실행이 완료되었습니다.</string>
 
     <string name="submit">Submit</string>
 
     <string name="rankAscending">Rank ↑</string>
     <string name="rankDecending">Rank ↓</string>
+    <string name="prepDetail"><u>상세 정보</u></string>
 
     <string name="stake">Stake</string>
     <string name="unstake">Unstake</string>
@@ -524,13 +524,30 @@
     <string name="myVotesEmptyNotice">Voting Power를 사용한 ICX는 언제든지 돌려받을 수 있으며,\nNetworkd 발전 기여에 대한 보상으로 I-Scaore를 지급해 드립니다.</string>
 
     <!-- Dialog -->
+    <string name="showDetail">상세 정보 보기</string>
+
     <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 5 ICX 이상 잔액이\n있어야 합니다.</string>
     <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
+    <string name="stakeDone">Stake 실행이\n완료되었습니다.</string>
 
     <!-- Tool Tip -->
     <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>
     <string name="tipPRepMax">Vote 가능한 리스트는 최대 10개 입니다.</string>
+    <string name="tipHasDelegation">이미 투표가 반영된 P-Rep은 삭제가 불가능합니다.\nVoting Power를 0으로 설정 후, Vote 버튼을 누르세요.</string>
 
+    <!-- New - Password dialog   -->
+    <string name="msgForgetPassword">개인 키를 알고 있다면 지갑을 새로 가져와서 비밀번호를 재설정 할 수 있습니다. 아래 단계를 따라 진행해주세요. “지갑 가져오기” 선택 > “개인 키” 선택 > 개인 키 입력 후 가져오기 > 새 비밀번호 입력</string>
+
+    <!--  New - main wallet  -->
+    <string name="about">About</string>
+    <string name="staked">Staked</string>
+    <string name="iscore">I-Score</string>
+    <string name="icon_voting">ICON Voting</string>
+    <string name="requestSend">전송 요청</string>
+    <string name="msgRequestSend">전송 요청 수량 입력 시, 입력한 수량 정보가 포함된 QR 코드로 변경됩니다.</string>
+    <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
+    <string name="messageRequestSend">ICX를 ICONex 지갑으로 보내주세요.</string>
+    <string name="chooseMsgRequestSend">전송 요청 메세지 보내기</string>
 
     <!-- New - wallet menu -->
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>
@@ -538,19 +555,45 @@
 
     <!-- New side Menu -->
     <string name="appVer">앱 버전</string>
+    <string name="errPasscodeSame">현재 잠금번호와 동일합니다. 새 잠금 번호를 입력해주세요.</string>
 
-    <!-- New - Transaction send  -->
-    <string name="sendBalanceAmount">전송 수량 (%s)</string>
-    <string name="stepLimit_price">적정 Step 한도 / 가격 (%s)</string>
-    <string name="maxFee">예상 최대 수수료 (%s)</string>
-    <string name="receiveAddress">받는 주소</string>
+    <!-- New - Transfer -->
+    <string name="availableBalance">사용 가능 잔액</string>
+    <string name="sendBalance">전송 수량</string>
+    <string name="viewData">데이터 보기</string>
+    <string name="stepLimit_Price">적정 Step 한도 / 가격</string>
+    <string name="estimateFee">예상 최대 수수료</string>
+    <string name="maxBalance">전액</string>
+    <string name="transfer">전송</string>
+    <string name="errEtherGasLimit">21,000 이상으로 입력해주세요.</string>
 
 
-    <string name="type">Type</string>
+    <!--  New Main wallet info  -->
+    <string name="guidance">안내</string>
 
+    <string name="mainWalletInfo00">전체 자산 가치</string>
+    <string name="mainWalletInfo01">USD 환산금액이 표시되지 않은 토큰은 전체 자산 평가금액에서 제외됩니다.</string>
+    <string name="mainWalletInfo02">평가금액은 참고용으로만 활용해주세요.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- ========= -->
+    <string name="mainWalletInfo10">P-Rep</string>
+    <string name="mainWalletInfo11">P-Rep 이란...</string>
 
+    <string name="mainWalletInfo20">Stake</string>
+    <string name="mainWalletInfo21">원하는 수량 만큼 ICX를 잠금 상태로 전환하는 기능입니다.</string>
+    <string name="mainWalletInfo22">Stake를 실행하면, Voting Power가 1:1 비율로 생성됩니다.</string>
+
+    <string name="mainWalletInfo30">Voting Power</string>
+    <string name="mainWalletInfo31">Voting Power를 이용하여 P-Rep 후보자에게 투표할 수 있습니다.</string>
+    <string name="mainWalletInfo32">후보자가 P-Rep으로 선출되면 위임한 지분의 X.XX %에 대한 보상을 I-Score로 받을 수 있습니다.</string>
+
+    <string name="mainWalletInfo40">I-Score</string>
+    <string name="mainWalletInfo41">P-Rep 투표에 대한 기여도 점수이며, 1,000 I-Score를 1 ICX로 환급 받을 수 있습니다.</string>
+
+    <string name="complete_transfer">전송완료</string>
+    <string name="fail_transfer">전송실패</string>
+    <string name="complete_deposit">입금완료</string>
+    <string name="fail_deposit">입금실패</string>
+
+    <string name="msgNewPasswordSame">현재 비밀번호와 동일합니다. 새 비밀번호를 입력해주세요.</string>
+    <string name="totalWalletCount">총 %d개 지갑</string>
 </resources>

@@ -49,13 +49,13 @@ public class PRepListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_prep_list);
 
         initView();
+
+        getPRepList();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        getPRepList();
     }
 
     @Override
