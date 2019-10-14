@@ -82,7 +82,7 @@ public class AppInfoFragment extends Fragment implements View.OnClickListener {
         txtLatest.setText(getString(R.string.latestVersion) + " -");
         txtCurrentHighlight.setText(getString(R.string.latestVersion) + " -");
 
-        btnUpdate.setEnabled(false);
+        btnUpdate.setVisibility(View.GONE);
 
         bindData();
 
@@ -123,7 +123,7 @@ public class AppInfoFragment extends Fragment implements View.OnClickListener {
 
                 Utils.RES_VERSION resVersion = Utils.versionCheck(getActivity(), null);
                 if (resVersion == Utils.RES_VERSION.NEW) {
-                    btnUpdate.setEnabled(true);
+                    btnUpdate.setVisibility(View.VISIBLE);
 
                     txtCurrent.setVisibility(View.VISIBLE);
                     txtCurrentHighlight.setVisibility(View.GONE);
@@ -131,7 +131,7 @@ public class AppInfoFragment extends Fragment implements View.OnClickListener {
                     txtLatestHightlight.setVisibility(View.VISIBLE);
 
                 } else {
-                    btnUpdate.setEnabled(false);
+                    btnUpdate.setVisibility(View.GONE);
 
                     txtCurrent.setVisibility(View.GONE);
                     txtCurrentHighlight.setVisibility(View.VISIBLE);
