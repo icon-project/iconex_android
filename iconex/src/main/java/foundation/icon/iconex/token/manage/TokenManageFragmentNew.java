@@ -253,6 +253,11 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
         switch (v.getId()) {
             case R.id.btn_qr_scan: {
                 startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
+                        .putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE,
+                                tokenType == TokenManageActivity.TOKEN_TYPE.IRC ?
+                                    BarcodeCaptureActivity.ScanType.ICX_Address :
+                                    BarcodeCaptureActivity.ScanType.ETH_Address
+                                )
                         .putExtra(BarcodeCaptureActivity.AutoFocus, true)
                         .putExtra(BarcodeCaptureActivity.UseFlash, false), RC_SCAN);
             } break;

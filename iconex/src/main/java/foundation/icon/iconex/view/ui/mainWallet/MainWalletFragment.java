@@ -65,6 +65,7 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
@@ -696,20 +697,21 @@ public class MainWalletFragment extends Fragment {
                     }
                 }
 
-                String tokenName = entryViewData.getName();
+                WalletEntry entry = entryViewData.getEntry();
+                String tokenKey = walletCard.getWalletType().name() + entry.getContractAddress();
                 WalletItemViewData topToken = null;
 
-                if (!mapTokenViewData.containsKey(tokenName)) {
+                if (!mapTokenViewData.containsKey(tokenKey)) {
                     topToken = new WalletItemViewData(entryViewData);
                     final WalletItemViewData _topToken = topToken;
                     // create wallet card
                     WalletCardViewData cardviewData = new WalletCardViewData()
                             .setWalletType(WalletCardViewData.WalletType.TokenList)
-                            .setTitle(tokenName)
+                            .setTitle(entryViewData.getName())
                             .setLstWallet(new ArrayList<WalletItemViewData>() {{
                                 add(_topToken); // add top token
                             }});
-                    mapTokenViewData.put(tokenName, cardviewData);
+                    mapTokenViewData.put(tokenKey, cardviewData);
                     switch (entryViewData.getWalletItemType()) {
                         case ICXcoin: mTokenDataList.add(0, cardviewData); break;
                         case ETHcoin: mTokenDataList.add(mTokenDataList.size() > 0 ? 1 : 0, cardviewData); break;
@@ -718,7 +720,7 @@ public class MainWalletFragment extends Fragment {
                 }
 
                 // wallet item view
-                WalletCardViewData lstTokenViewData = mapTokenViewData.get(tokenName);
+                WalletCardViewData lstTokenViewData = mapTokenViewData.get(tokenKey);
                 lstTokenViewData.getLstWallet().add(
                         new WalletItemViewData()
                                 .setWalletItemType(WalletItemViewData.WalletItemType.Wallet)

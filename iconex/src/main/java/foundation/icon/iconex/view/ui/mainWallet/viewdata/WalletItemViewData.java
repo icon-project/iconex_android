@@ -37,6 +37,17 @@ public class WalletItemViewData {
     private int bgSymbolColor;
     private char symbolLetter;
 
+
+    private WalletEntry entry;
+
+    public WalletEntry getEntry() {
+        return entry;
+    }
+
+    public void setEntry(WalletEntry entry) {
+        this.entry = entry;
+    }
+
     public WalletItemViewData () {}
     public WalletItemViewData (WalletItemViewData data) {
         entryID = data.entryID;
@@ -55,6 +66,7 @@ public class WalletItemViewData {
     }
     public static WalletItemViewData convertWalletEntry2ViewItem(WalletEntry walletEntry) {
         WalletItemViewData itemViewData = new WalletItemViewData();
+        itemViewData.setEntry(walletEntry);
 
         // Wallet Item(Entry) Type check
         WalletItemViewData.WalletItemType walletItemType = null;
