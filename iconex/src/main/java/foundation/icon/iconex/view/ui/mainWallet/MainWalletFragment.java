@@ -394,7 +394,8 @@ public class MainWalletFragment extends Fragment {
             @Override
             public void onDismiss() {
                 boolean isICX = getCurrentWalletCardData()
-                        .getWalletType() == WalletCardViewData.WalletType.ICXwallet;
+                        .getWalletType() == WalletCardViewData.WalletType.ICXwallet
+                        && !walletAddressCard.isShow();
                 floatingMenu.setEnableFloatingButton(isICX);
 
                 Animator aniShow = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_show);
@@ -418,12 +419,8 @@ public class MainWalletFragment extends Fragment {
                 walletIndicator.setIndex(position);
 
                 WalletCardViewData cardViewData = mShownWalletDataList.get(position);
-                if (cardViewData.getWalletType() == WalletCardViewData.WalletType.ICXwallet) {
-                    floatingMenu.setEnableFloatingButton(true);
-
-                } else {
-                    floatingMenu.setEnableFloatingButton(false);
-                }
+                boolean isICX = cardViewData.getWalletType() == WalletCardViewData.WalletType.ICXwallet && !walletAddressCard.isShow();
+                floatingMenu.setEnableFloatingButton(isICX);
             }
         });
         walletViewPager.setOnStateChangeListener(new ExpanableViewPager.OnStateChangeListener() {
@@ -596,7 +593,8 @@ public class MainWalletFragment extends Fragment {
             case loadedWalletData: {
                 mShownWalletDataList.addAll(mWalletDataList);
                 actionBar.setTitle(getString(R.string.appbarSelectorWallets));
-                boolean isICX = getCurrentWalletCardData().getWalletType() == WalletCardViewData.WalletType.ICXwallet;
+                boolean isICX = getCurrentWalletCardData().getWalletType() == WalletCardViewData.WalletType.ICXwallet
+                        && !walletAddressCard.isShow();
                 floatingMenu.setEnableFloatingButton(isICX);
             }
             break;
@@ -836,7 +834,7 @@ public class MainWalletFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        ((AsyncRequester) getActivity()).onStopFragment();
+        ((AsyncRequester) getActivity()).notifyWalletDatachage();
     }
 
     // =========================== side menu listenenr

@@ -90,6 +90,10 @@ public class WalletAddressCardView extends FrameLayout {
         initView();
     }
 
+    public boolean isShow() {
+        return getVisibility() == VISIBLE;
+    }
+
     private void initView() {
         // inflate ui
         LayoutInflater.from(getContext()).inflate(R.layout.layout_wallet_address_card_view, this, true);
