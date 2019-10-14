@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import java.math.BigInteger;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -18,6 +19,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.service.PRepService;
+import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
@@ -37,6 +39,7 @@ public class MainWalletServiceHelper {
     public interface OnLoadRemoteDataListener {
         void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance);
         void onLoadPRepsData(HashMap<String, PRepsRemoteData> pRepsData);
+        void onNetworkError();
     }
 
     private Context mContext;
@@ -276,13 +279,17 @@ public class MainWalletServiceHelper {
                 // ========== get i-score
                 add(Completable.fromAction(new Action() {
                     @Override
-                    public void run() {
+                    public void run() throws UnknownHostException {
                         try {
                             Log.d("GetPRepsData", address + " request i-score");
                             RpcObject rpcObject = pRepService.getIScore(address).asObject();
                             RpcItem iscore = rpcObject.getItem("iscore");
                             pRepsResults.put(address+"-iscore", iscore.asInteger());
-                        } catch (Exception e) {
+                        }
+                        catch (UnknownHostException e) {
+                            throw e;
+                        }
+                        catch (Exception e) {
                             String msg = String.format(err, "i-score", e.getMessage(), address);
                             Log.d("GetPRepsData", msg);
                         }
@@ -291,7 +298,7 @@ public class MainWalletServiceHelper {
                 // ========== get delegation
                 add(Completable.fromAction(new Action() {
                     @Override
-                    public void run() {
+                    public void run() throws UnknownHostException {
                         try {
                             Log.d("GetPRepsData", address + " request delegation");
                             RpcObject rpcObject = pRepService.getDelegation(address).asObject();
@@ -299,7 +306,11 @@ public class MainWalletServiceHelper {
                             RpcItem votingPower = rpcObject.getItem("votingPower");
                             pRepsResults.put(address+"-totalDelegated",totalDelegated.asInteger());
                             pRepsResults.put(address+"-votingPower", votingPower.asInteger());
-                        } catch (Exception e) {
+                        }
+                        catch (UnknownHostException e) {
+                            throw e;
+                        }
+                        catch (Exception e) {
                             String msg = String.format(err, "delegation", e.getMessage(), address);
                             Log.d("GetPRepsData", msg);
                         }
@@ -318,19 +329,23 @@ public class MainWalletServiceHelper {
                     public void onComplete() {
                         HashMap<String, PRepsRemoteData> pRepsData = new HashMap<>();
                         for(String address: icxAddresses) {
-                            PRepsRemoteData pRepsRemoteData = new PRepsRemoteData()
-                                    // .setStake(pRepsResults.get(address + "-stake"))
-                                    .setiScore(pRepsResults.get(address + "-iscore"))
-                                    .setTotalDelegated(pRepsResults.get(address + "-totalDelegated"))
-                                    .setVotingPower(pRepsResults.get(address + "-votingPower"));
+                            try {
+                                PRepsRemoteData pRepsRemoteData = new PRepsRemoteData()
+                                        // .setStake(pRepsResults.get(address + "-stake"))
+                                        .setiScore(pRepsResults.get(address + "-iscore"))
+                                        .setTotalDelegated(pRepsResults.get(address + "-totalDelegated"))
+                                        .setVotingPower(pRepsResults.get(address + "-votingPower"));
 
-                            // get stake
-                            BigInteger stake = pRepsRemoteData.getTotalDelegated()
-                                    .add(pRepsRemoteData.getVotingPower());
-                            pRepsRemoteData.setStake(stake);
+                                // get stake
+                                BigInteger stake = pRepsRemoteData.getTotalDelegated()
+                                        .add(pRepsRemoteData.getVotingPower());
+                                pRepsRemoteData.setStake(stake);
 
-                            Log.d("GetPRepsData", pRepsRemoteData.toString());
-                            pRepsData.put(address, pRepsRemoteData);
+                                Log.d("GetPRepsData", pRepsRemoteData.toString());
+                                pRepsData.put(address, pRepsRemoteData);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         mListener.onLoadPRepsData(pRepsData);
                     }
@@ -338,6 +353,7 @@ public class MainWalletServiceHelper {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
+                        mListener.onNetworkError();
                     }
                 });
     }

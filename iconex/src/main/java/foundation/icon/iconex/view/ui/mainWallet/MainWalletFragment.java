@@ -129,6 +129,9 @@ public class MainWalletFragment extends Fragment {
         void asyncRequestChangeExchangeUnit(ExchangeUnit exchangeUnit);
 
         void notifyWalletDatachage();
+
+        void onResumeFragment();
+        void onStopFragment();
     }
 
     // prep menu
@@ -822,6 +825,18 @@ public class MainWalletFragment extends Fragment {
     public void onStart() {
         super.onStart();
         ((AsyncRequester) getActivity()).notifyWalletDatachage();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AsyncRequester) getActivity()).onResumeFragment();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AsyncRequester) getActivity()).onStopFragment();
     }
 
     // =========================== side menu listenenr

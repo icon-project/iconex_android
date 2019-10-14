@@ -31,6 +31,7 @@ import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
 import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
 import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.service.NetworkErrorActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
@@ -100,15 +101,7 @@ public class MainWalletActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mainWalletServiceHelper.resume();
-
         showRecoverFingerprintAuth();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mainWalletServiceHelper.stop();
     }
 
     // ===================== ViewData listener (MainWalletFragment.AsyncRequester)
@@ -147,6 +140,16 @@ public class MainWalletActivity extends AppCompatActivity implements
         setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
     }
 
+    @Override
+    public void onResumeFragment() {
+        mainWalletServiceHelper.resume();
+    }
+
+    @Override
+    public void onStopFragment() {
+        mainWalletServiceHelper.stop();
+    }
+
     // =================== Service listener (MainWalletServiceHelper.OnLoadRemoteDataListener)
     @Override
     public void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance) {
@@ -162,6 +165,11 @@ public class MainWalletActivity extends AppCompatActivity implements
     public void onLoadPRepsData(HashMap<String, MainWalletServiceHelper.PRepsRemoteData> pRepsData) {
         cachedpRepsData = pRepsData;
         setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
+    }
+
+    @Override
+    public void onNetworkError() {
+        startActivity(new Intent(this, NetworkErrorActivity.class));
     }
 
     // =================== private methods

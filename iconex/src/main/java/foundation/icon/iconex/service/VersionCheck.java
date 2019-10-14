@@ -110,6 +110,7 @@ public class VersionCheck extends AsyncTask {
 //                    t.printStackTrace();
 //                    return;
                     mActivity.startActivity(new Intent(mActivity, NetworkErrorActivity.class)
+                            .putExtra(NetworkErrorActivity.PARAM_TARGET_SPLASH, true)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 }
             });
