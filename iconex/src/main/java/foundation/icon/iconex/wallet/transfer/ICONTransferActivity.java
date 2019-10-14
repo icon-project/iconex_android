@@ -186,9 +186,9 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         appbar.setTitle(wallet.getAlias());
 
         // set Symbol
-        String symbol = "(" + entry.getSymbol() + ")";
+        editSend.setAppendText(entry.getSymbol());
+        String symbol = "(" + MyConstants.SYMBOL_ICON + ")";
         labelSymbol.setText(symbol);
-        editSend.setAppendText(symbol.substring(1, symbol.length() -1));
         symbolStepLimit.setText(symbol);
         symbolEstimatedMaxFee.setText(symbol);
 
@@ -258,7 +258,11 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         } else
             layoutNetwork.setVisibility(View.GONE);
 
-        balance = new BigInteger(entry.getBalance());
+        try {
+            balance = new BigInteger(entry.getBalance());
+        } catch (Exception e) {
+            balance = BigInteger.ZERO;
+        }
 
         setBalance(balance);
     }
@@ -705,7 +709,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(entry.getSymbol().toLowerCase() + "usd");
         if (strPrice != null) {
-            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, entry.getDefaultDec()))
+            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, entry.getUserDec()))
                     * Double.parseDouble(strPrice);
 
             String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
