@@ -519,6 +519,13 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             }
         };
 
+        TTextInputLayout.OnEditorAction onEditorAction = new TTextInputLayout.OnEditorAction() {
+            @Override
+            public void onDone() {
+                setSendEnable();
+            }
+        };
+
         // init editSend
         editSend.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editSend.setOnKeyPreImeListener(onKeyPreIme);
@@ -584,7 +591,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                 }
             }
         });
-        // editSend.setOnEditorActionListener(); nothing
+        editSend.setOnEditorActionListener(onEditorAction);
 
         // init editAddress
         editAddress.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -616,7 +623,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                 }
             }
         });
-        // editAddress.setOnEditorActionListener(); nothing
+        editAddress.setOnEditorActionListener(onEditorAction);
     }
 
     private void addPlus(int plus) {
