@@ -33,5 +33,5 @@
         android:textColor="@color/primary"
         android:fontFamily="@font/noto_sans_regular"
         android:textAlignment="center"
-        android:text="@string/viewTxInfo"/>
+        android:text="@string/dialogTxHashTrackerLink"/>
 </LinearLayout>
