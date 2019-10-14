@@ -683,7 +683,7 @@ public class MainWalletFragment extends Fragment {
                                 staked.multiply(new BigDecimal(100))
                                         .divide(balance, 1, BigDecimal.ROUND_HALF_UP);
 
-                        entryViewData.setTxtStacked(DecimalFomatter.format(staked) + " (" + (percent == null ? " - " : percent) + "%)");
+                        entryViewData.setTxtStacked(DecimalFomatter.format(staked) + " (" + (percent == null ? "0.0" : percent) + "%)");
                     } else {
                         entryViewData.setTxtStacked("- ( - %)");
                     }
@@ -798,7 +798,7 @@ public class MainWalletFragment extends Fragment {
                             staked.multiply(new BigDecimal(100))
                                     .divide(balance, 1, BigDecimal.ROUND_UP);
 
-                    entryViewData.setTxtStacked(staked.setScale(4, BigDecimal.ROUND_HALF_UP) + " (" + (percent == null ? " - " : percent) + "%)");
+                    entryViewData.setTxtStacked(staked.setScale(4, BigDecimal.ROUND_HALF_UP) + " (" + (percent == null ? "0.0" : percent) + "%)");
                 } else {
                     entryViewData.setTxtStacked("- ( - %)");
                 }
