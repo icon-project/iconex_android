@@ -1008,9 +1008,9 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     editAddress.setText(checkAddress(barcode.displayValue));
-                    boolean result = validateSendAmount(editSend.getText().toString())
-                            && validateAddress(editAddress.getText().toString());
-                    btnSend.setEnabled(result);
+                    boolean validSend = validateSendAmount(editSend.getText());
+                    boolean validAddress = validateAddress(editAddress.getText());
+                    btnSend.setEnabled(validSend && validAddress);
                 } else {
                 }
             }
