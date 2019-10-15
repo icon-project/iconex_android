@@ -98,7 +98,6 @@ public class TransactionSendDialog extends MessageDialog {
         txtAddress = findViewById(R.id.txt_receive);
         // set button
         setSingleButton(false);
-        setConfirmButtonText(getContext().getString(R.string.withdraw));
     }
 
     private void initView() {

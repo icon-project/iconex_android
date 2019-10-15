@@ -740,7 +740,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         else
             fee = BigInteger.ZERO;
         strFee = ConvertUtil.getValue(fee, 18);
-        txtEstimatedMaxFee.setText(strFee);
+        txtEstimatedMaxFee.setText(DecimalFomatter.format(new BigDecimal(strFee)));
 
         this.fee = ConvertUtil.getValue(fee, 18);
 
@@ -1007,13 +1007,8 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void onClickSend() {
-        BigInteger value;
-        if (editSend.getText().isEmpty())
-            value = BigInteger.ZERO;
-        else
-            value = ConvertUtil.valueToBigInteger(editSend.getText(), entry.getDefaultDec());
-        final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), ConvertUtil.getValue(value, entry.getDefaultDec()),
-                strFee, Integer.toHexString(Integer.parseInt(strLimit)), entry.getSymbol());
+        final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), editSend.getText(),
+                txtEstimatedMaxFee.getText().toString(), Integer.toHexString(Integer.parseInt(strLimit)), entry.getSymbol());
 
         txInfo.setLimitPrice(txtStepLimit.getText().toString());
         txInfo.setTransFee(txtTransFee.getText().toString());
