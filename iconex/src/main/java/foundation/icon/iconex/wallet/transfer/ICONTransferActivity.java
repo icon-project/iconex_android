@@ -563,8 +563,8 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                                     decimal = decimal.substring(0, 10);
                                     editSend.setText(decimal + "." + below);
                                     editSend.setSelection(editSend.getText().toString().length());
-                                } else if (below.length() > entry.getDefaultDec()) {
-                                    below = below.substring(0, entry.getDefaultDec());
+                                } else if (below.length() > 8) {
+                                    below = below.substring(0, 8);
                                     editSend.setText(decimal + "." + below);
                                     editSend.setSelection(editSend.getText().toString().length());
                                 }
