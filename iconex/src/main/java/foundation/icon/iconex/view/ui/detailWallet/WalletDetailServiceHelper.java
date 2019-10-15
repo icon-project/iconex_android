@@ -283,6 +283,7 @@ public class WalletDetailServiceHelper {
     public void requestBalance() {
         cancleRequest();
 
+        mViewModle.loadingBalance.setValue(true);
         Log.d(TAG, "request remote data");
         Object[] balanceList = makeGetBalanceList();
         HashMap<String, String> icxList = (HashMap<String, String>) balanceList[0];

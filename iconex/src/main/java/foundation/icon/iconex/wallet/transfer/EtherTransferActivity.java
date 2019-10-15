@@ -630,7 +630,11 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     public void onResume() {
         super.onResume();
 
-        balance = new BigInteger(mWalletEntry.getBalance());
+        try {
+            balance = new BigInteger(mWalletEntry.getBalance());
+        } catch (Exception e) {
+            balance = BigInteger.ZERO;
+        }
         BigDecimal decimalBalance = new BigDecimal(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()));
 
         ((TextView) findViewById(R.id.txt_balance)).setText(DecimalFomatter.format(decimalBalance, mWalletEntry.getDefaultDec()));

@@ -2,10 +2,13 @@ package foundation.icon.iconex.view.ui.detailWallet.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +29,7 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
     private TextView txtExchange;
     private TextView txtUnit;
     private ImageButton btnUnit;
+    private ProgressBar loading;
 
     private List<String> mLstUnit = new ArrayList<>();
 
@@ -63,6 +67,7 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
         txtExchange = v.findViewById(R.id.txt_exchange);
         txtUnit = v.findViewById(R.id.txt_unit);
         btnUnit = v.findViewById(R.id.btn_unit);
+        loading = v.findViewById(R.id.loading);
 
         txtSymbol.setOnClickListener(this);
         btnSymbol.setOnClickListener(this);
@@ -118,5 +123,12 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
             } break;
             default: break;
         }
+    }
+
+    public void setLoading(boolean loading) {
+        this.loading.setVisibility(loading ? VISIBLE : GONE);
+        txtAmount.setVisibility(loading ? INVISIBLE : VISIBLE);
+        txtExchange.setVisibility(loading ? INVISIBLE : VISIBLE);
+        Log.d("set loading", "loading : " + loading);
     }
 }

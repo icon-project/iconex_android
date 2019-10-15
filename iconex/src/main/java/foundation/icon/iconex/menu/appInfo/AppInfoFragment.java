@@ -118,25 +118,29 @@ public class AppInfoFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onPass() {
-                txtLatest.setText(getString(R.string.latestVersion) + " " + ICONexApp.version);
-                txtLatestHightlight.setText(getString(R.string.latestVersion) + " " + ICONexApp.version);
+                try {
+                    txtLatest.setText(getString(R.string.latestVersion) + " " + ICONexApp.version);
+                    txtLatestHightlight.setText(getString(R.string.latestVersion) + " " + ICONexApp.version);
 
-                Utils.RES_VERSION resVersion = Utils.versionCheck(getActivity(), null);
-                if (resVersion == Utils.RES_VERSION.NEW) {
-                    btnUpdate.setVisibility(View.VISIBLE);
+                    Utils.RES_VERSION resVersion = Utils.versionCheck(getActivity(), null);
+                    if (resVersion == Utils.RES_VERSION.NEW) {
+                        btnUpdate.setVisibility(View.VISIBLE);
 
-                    txtCurrent.setVisibility(View.VISIBLE);
-                    txtCurrentHighlight.setVisibility(View.GONE);
-                    txtLatest.setVisibility(View.GONE);
-                    txtLatestHightlight.setVisibility(View.VISIBLE);
+                        txtCurrent.setVisibility(View.VISIBLE);
+                        txtCurrentHighlight.setVisibility(View.GONE);
+                        txtLatest.setVisibility(View.GONE);
+                        txtLatestHightlight.setVisibility(View.VISIBLE);
 
-                } else {
-                    btnUpdate.setVisibility(View.GONE);
+                    } else {
+                        btnUpdate.setVisibility(View.GONE);
 
-                    txtCurrent.setVisibility(View.GONE);
-                    txtCurrentHighlight.setVisibility(View.VISIBLE);
-                    txtLatest.setVisibility(View.VISIBLE);
-                    txtLatestHightlight.setVisibility(View.GONE);
+                        txtCurrent.setVisibility(View.GONE);
+                        txtCurrentHighlight.setVisibility(View.VISIBLE);
+                        txtLatest.setVisibility(View.VISIBLE);
+                        txtLatestHightlight.setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

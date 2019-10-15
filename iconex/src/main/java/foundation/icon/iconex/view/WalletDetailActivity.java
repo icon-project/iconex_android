@@ -33,6 +33,7 @@ import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialo
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.WalletFragment;
+import loopchain.icon.wallet.core.Constants;
 
 
 public class WalletDetailActivity extends AppCompatActivity {
@@ -109,7 +110,11 @@ public class WalletDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    serviceHelper.loadMoreIcxTxList();
+                    if (viewModel.wallet.getValue().getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                        serviceHelper.loadMoreIcxTxList();
+                    } else {
+                        viewModel.isLoadMore.setValue(false);
+                    }
                 }
             }
         });
@@ -119,8 +124,8 @@ public class WalletDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<TransactionItemViewData> viewDataes) {
                 WalletEntry entry = viewModel.walletEntry.getValue();
-                viewModel.isRefreshing.postValue(false);
-                viewModel.isLoadMore.postValue(false);
+                viewModel.isRefreshing.setValue(false);
+                viewModel.isLoadMore.setValue(false);
 
                 String symbol = viewModel.walletEntry.getValue().getSymbol();
 

@@ -280,6 +280,7 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onChanged(BigDecimal bigDecimal) {
                 infoView.setAmount(bigDecimal);
+                viewModel.loadingBalance.setValue(false);
             }
         });
         // info view exchange
@@ -338,6 +339,13 @@ public class WalletDetailFragment extends Fragment {
                 Boolean loadMore = viewModel.isLoadMore.getValue();
 
                 listView.setLoading(refreash || loadMore);
+            }
+        });
+
+        viewModel.loadingBalance.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                infoView.setLoading(aBoolean);
             }
         });
     }
