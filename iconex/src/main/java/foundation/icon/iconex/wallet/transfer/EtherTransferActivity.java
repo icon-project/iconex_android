@@ -731,7 +731,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 else
                     txtRemain = remainValue;
 
-                txtTransRemain= String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE) ;
+                txtTransRemain= String.format("$ %s", MyConstants.NO_BALANCE) ;
 
             } else {
                 String strRemainUSD = String.format(Locale.getDefault(), "%,.2f", remainUSD);
@@ -742,14 +742,14 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                             getString(R.string.exchange_usd, strRemainUSD));
                 } else {
                     txtRemain = remainValue;
-                    txtTransRemain = String.format(getString(R.string.exchange_usd), strRemainUSD);
+                    txtTransRemain = String.format("$ %s", strRemainUSD);
                 }
 
                 Double feeUSD = Double.parseDouble(calculateFee())
                         * Double.parseDouble(strPrice);
                 String strFeeUSD = String.format(Locale.getDefault(), "%,.2f", feeUSD);
                 ((TextView) findViewById(R.id.txt_trans_fee))
-                        .setText(String.format(getString(R.string.exchange_usd), strFeeUSD));
+                        .setText(String.format("$ %s", strFeeUSD));
             }
         } else {
             if (isNegative)
@@ -757,7 +757,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             else
                 txtRemain = remainValue;
 
-            txtTransRemain = String.format(getString(R.string.exchange_usd), MyConstants.NO_BALANCE);
+            txtTransRemain = String.format("$ %s", MyConstants.NO_BALANCE);
         }
     }
 
