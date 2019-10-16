@@ -381,12 +381,12 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                     if (s.toString().startsWith(".")) {
                         editSend.setText("");
                     } else {
-                        ((TextView) findViewById(R.id.txt_fee)).setText(calculateFee());
+                        ((TextView) findViewById(R.id.txt_fee)).setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
                         setRemain(calculateFee());
                     }
                 } else {
                     editLimit.setError(false, null);
-                    txtFee.setText(calculateFee());
+                    txtFee.setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
                     setRemain(calculateFee());
                 }
             }
@@ -500,7 +500,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 seekPrice.setProgress(progress);
                 txtPrice.setText(String.valueOf(progress));
 
-                txtFee.setText(calculateFee());
+                txtFee.setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
                 setRemain(calculateFee());
             }
 
@@ -639,7 +639,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
         ((TextView) findViewById(R.id.txt_balance)).setText(DecimalFomatter.format(decimalBalance, mWalletEntry.getDefaultDec()));
         TextViewCompat.setAutoSizeTextTypeWithDefaults(findViewById(R.id.txt_balance), TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-        ((TextView) findViewById(R.id.txt_fee)).setText(calculateFee());
+        ((TextView) findViewById(R.id.txt_fee)).setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
         if (strPrice != null) {
             if (strPrice.equals(MyConstants.NO_EXCHANGE)) {
