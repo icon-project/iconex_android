@@ -260,6 +260,13 @@ public class WalletDetailFragment extends Fragment {
         viewModel.selectType.setValue(SelectType.All);
         viewModel.unit.setValue(viewModel.lstUnit.getValue().get(0));
 
+        viewModel.wallet.observe(this, new Observer<Wallet>() {
+            @Override
+            public void onChanged(Wallet wallet) {
+                infoView.setBtnSymbolVisible(wallet.getWalletEntries().size() > 1);
+            }
+        });
+
         viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
             @Override
             public void onChanged(WalletEntry walletEntry) {

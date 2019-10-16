@@ -21,7 +21,6 @@ public class WalletDetailViewModel extends ViewModel {
     // activity
     public final MutableLiveData<Wallet> wallet = new MutableLiveData<>();
     public final MutableLiveData<WalletEntry> walletEntry = new MutableLiveData<>();
-    public final MutableLiveData<Integer> entryId = new MutableLiveData<>();
 
     public final MutableLiveData<Map<String, WalletEntry>> indexedWalletEntry = new MutableLiveData<>();
 
@@ -52,7 +51,6 @@ public class WalletDetailViewModel extends ViewModel {
     public void initialize(Wallet wallet, WalletEntry walletEntry, int entryID) {
         this.wallet.setValue(wallet);
         this.walletEntry.setValue(walletEntry);
-        this.entryId.setValue(entryID);
 
         indexedWalletEntry.setValue(new HashMap<>());
         lstTxData.setValue(new ArrayList<>());

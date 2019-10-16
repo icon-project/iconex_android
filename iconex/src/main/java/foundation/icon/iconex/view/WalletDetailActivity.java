@@ -311,6 +311,23 @@ public class WalletDetailActivity extends AppCompatActivity {
                     }
                 });
             } break;
+            case WalletManageMenuDialog.REQ_UPDATE_TOKEN: {
+                String address = viewModel.wallet.getValue().getAddress();
+                WalletEntry oldEntry = viewModel.walletEntry.getValue();
+
+                for (Wallet wallet : ICONexApp.wallets) {
+                    if (wallet.getAddress().equals(address)) {
+                        for (WalletEntry newEntry : wallet.getWalletEntries()) {
+                            if(oldEntry.getContractAddress().equals(newEntry.getContractAddress())) {
+                                viewModel.walletEntry.setValue(newEntry);
+                                break;
+                            }
+                        }
+                        viewModel.wallet.setValue(wallet);
+                        break;
+                    }
+                }
+            } break;
             default: {
                 super.onActivityResult(requestCode, resultCode, data);
             }
