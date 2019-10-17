@@ -1,7 +1,9 @@
 package foundation.icon.iconex.service;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.icx.Call;
 import foundation.icon.icx.IconService;
 import foundation.icon.icx.SignedTransaction;
@@ -80,6 +82,24 @@ public class PRepService {
                 .build();
 
         return iconService.call(call).execute();
+    }
+
+    public BigInteger estimateUnstakeLockPeriod() throws IOException {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+        IconService iconService = new foundation.icon.icx.IconService(new HttpProvider(httpClient, Urls.Network.Zicon.getUrlNoEndPoint(), 3));
+        Call<RpcItem> call = new Call.Builder()
+                .to(new Address(Constants.ADDRESS_ZERO))
+                .method("estimateUnstakeLockPeriod")
+                .build();
+
+        BigInteger unstakeLockPeriod = iconService.call(call).execute().asObject().getItem("unstakeLockPeriod").asInteger();
+        BigInteger currentBlockHeight = iconService.getLastBlock().execute().getHeight();
+
+        return unstakeLockPeriod.subtract(currentBlockHeight);
     }
 
     public RpcItem getDelegation(String address) throws IOException {

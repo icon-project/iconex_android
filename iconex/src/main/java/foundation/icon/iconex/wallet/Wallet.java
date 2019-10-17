@@ -20,6 +20,7 @@ public class Wallet implements Serializable, Parcelable {
     private String keyStore = "";
     private List<WalletEntry> walletEntries = null;
     private BigInteger staked = BigInteger.ZERO;
+    private BigInteger unstake = BigInteger.ZERO;
     private BigInteger iScore = BigInteger.ZERO;
     private BigInteger votingPower = BigInteger.ZERO;
     private String createdAt = "";
@@ -70,6 +71,14 @@ public class Wallet implements Serializable, Parcelable {
 
     public void setStaked(BigInteger staked) {
         this.staked = staked;
+    }
+
+    public BigInteger getUnstake() {
+        return unstake;
+    }
+
+    public void setUnstake(BigInteger unstake) {
+        this.unstake = unstake;
     }
 
     public BigInteger getiScore() {

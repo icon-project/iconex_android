@@ -35,9 +35,8 @@ public class ExampleUnitTest {
         PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
 
         try {
-            RpcItem result = pRepService.getDelegation("hx19ab90c4d767d6f5e80080fdf842f63acf4b1acc");
-            RpcObject o = result.asObject();
-            System.out.println(o.getItem("votingPower").asInteger());
+            BigInteger remainingBlocks = pRepService.estimateUnstakeLockPeriod();
+            System.out.print("RemainingBlocks=" + remainingBlocks);
         } catch (IOException e) {
             e.printStackTrace();
         }

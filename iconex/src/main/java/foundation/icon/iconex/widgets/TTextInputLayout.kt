@@ -6,21 +6,27 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
+import android.util.TypedValue
+import android.view.*
 import android.view.View.OnFocusChangeListener
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import foundation.icon.iconex.R
+import java.lang.reflect.AccessibleObject.setAccessible
+import java.lang.reflect.AccessibleObject.setAccessible
+
+
+
+
+
 
 class TTextInputLayout : LinearLayout {
     private val TAG = this@TTextInputLayout::class.simpleName
 
+    private lateinit var root: ViewGroup
     private lateinit var layout: ViewGroup
 
     private lateinit var layoutInput: ViewGroup
@@ -71,6 +77,7 @@ class TTextInputLayout : LinearLayout {
         val v = inflater.inflate(R.layout.t_text_input_layout, this, false)
         addView(v)
 
+        root = v.findViewById(R.id.root)
         layout = v.findViewById(R.id.layout)
 
         layoutInput = v.findViewById(R.id.layout_input)
@@ -221,6 +228,7 @@ class TTextInputLayout : LinearLayout {
 
     fun setError(err: Boolean, msg: String?) {
         isError = err
+        val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
 
         when (err) {
             true -> {
@@ -230,6 +238,9 @@ class TTextInputLayout : LinearLayout {
 
                 tvError.text = msg
                 tvError.visibility = View.VISIBLE
+
+                layoutParams.setMargins(0, 0, 0, 0)
+                root.layoutParams = layoutParams
             }
 
             false -> {
@@ -243,7 +254,10 @@ class TTextInputLayout : LinearLayout {
                     tvHint.setBackgroundResource(BG_FLOATING_LABEL_N)
                 }
 
-                tvError.visibility = View.INVISIBLE
+                tvError.visibility = View.GONE
+
+                layoutParams.setMargins(0, 0, 0, (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20.0f, context.resources.displayMetrics).toInt()))
+                root.layoutParams = layoutParams
             }
         }
     }
@@ -314,6 +328,12 @@ class TTextInputLayout : LinearLayout {
         edit.isLongClickable = pastable;
     }
 
+    fun disableCopyPaste() {
+        edit.isLongClickable = false
+        edit.customSelectionActionModeCallback = ActionModeCallbackInterceptor()
+        edit.setTextIsSelectable(false)
+    }
+
     private var mOnFocusReleasedListener: OnFocusReleased? = null
     fun setOnFocusChangedListener(onFocusReleasedListener: OnFocusReleased) {
         mOnFocusReleasedListener = onFocusReleasedListener
@@ -348,5 +368,22 @@ class TTextInputLayout : LinearLayout {
 
     interface OnTextChanged {
         fun onChanged(s: CharSequence)
+    }
+
+    class ActionModeCallbackInterceptor : ActionMode.Callback {
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            return false
+        }
+
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+        }
     }
 }

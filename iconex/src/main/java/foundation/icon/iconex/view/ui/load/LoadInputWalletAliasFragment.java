@@ -21,9 +21,9 @@ import java.util.List;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.TTextInputLayout;
@@ -190,6 +190,11 @@ public class LoadInputWalletAliasFragment extends Fragment implements View.OnCli
         wallet.setCreatedAt(Long.toString(System.currentTimeMillis()));
 
         try {
+            for (Wallet w : ICONexApp.wallets) {
+                if (w.getAddress().equals(wallet.getAddress()))
+                    RealmUtil.removeWallet(w.getAddress());
+            }
+
             RealmUtil.addWallet(wallet);
             RealmUtil.loadWallet();
         } catch (Exception e) {

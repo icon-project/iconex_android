@@ -95,7 +95,6 @@ public class LoadBundleFragment extends Fragment implements View.OnClickListener
     public void onStart() {
         super.onStart();
 
-
     }
 
     private void initView(View v) {

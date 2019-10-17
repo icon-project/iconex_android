@@ -497,13 +497,24 @@
 
     <string name="stake">Stake</string>
     <string name="unstake">Unstake</string>
+    <string name="unstaked">Unstaked</string>
     <string name="under_voted">┗ Voted</string>
+    <string name="under_unstake">┗ Unstake 요청</string>
     <string name="voted">Voted</string>
     <string name="available">Available</string>
 
     <string name="balanceIcx">Balance (ICX)</string>
     <string name="unstakedIcx">Unstaked (ICX)</string>
     <string name="stakedIcx">Staked (ICX)</string>
+
+    <string name="request_unstake">Unstake 요청 (ICX)</string>
+    <string name="done_block">완료 BLOCK</string>
+    <string name="estimate_done_time">완료 예상 시간</string>
+
+    <string name="adjust_stake">요청 수량 수정</string>
+
+    <string name="minLimit">최소 값은 %s 입니다.</string>
+    <string name="maxLimit">최대 값은 %s 입니다.</string>
 
     <string name="votedIcx">Voted ICX</string>
     <string name="availableIcx">Available ICX</string>
@@ -513,6 +524,8 @@
 
     <string name="stakeNotice01">Stake되어 있는 수량 중, 이미 투표에 사용된 수량은 Unstake 할 수 없습니다.</string>
     <string name="stakeNotice02">Unstaked 최소 수량은 3 ICX 입니다. 최소 수량이 확보되어야 추후 Voting 등의 수수료를 지불할 수 있습니다.</string>
+
+    <string name="unstakeNotice01">요청 수량 수정 시 완료 예정 시간이 초기화되며,\nTransaction 수수료를 지불해야 합니다.</string>
 
     <string name="timeRequired">Time Required</string>
     <string name="immediately">Immediately</string>
@@ -536,6 +549,7 @@
     <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 5 ICX 이상 잔액이\n있어야 합니다.</string>
     <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
     <string name="stakeDone">Stake 실행이\n완료되었습니다.</string>
+    <string name="unstakeDone">Unstake 실행이\n완료되었습니다.</string>
 
     <!-- Tool Tip -->
     <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>
@@ -605,4 +619,7 @@
 
     <string name="msgNewPasswordSame">현재 비밀번호와 동일합니다. 새 비밀번호를 입력해주세요.</string>
     <string name="totalWalletCount">총 %d개 지갑</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

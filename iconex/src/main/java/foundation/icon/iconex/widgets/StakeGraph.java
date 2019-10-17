@@ -21,9 +21,9 @@ public class StakeGraph extends ConstraintLayout {
     private static final String TAG = StakeGraph.class.getSimpleName();
 
     private TextView txtStakePer, txtUnstakePer, txtDelegationPer;
-    private BigInteger totalBalance = BigInteger.ZERO;
-    private BigInteger stake = BigInteger.ZERO;
-    private BigInteger delegation = BigInteger.ZERO;
+    private BigDecimal total, stake, delegation;
+
+    private BigDecimal THE_HUNDRED = new BigDecimal("100");
 
     public StakeGraph(Context context) {
         super(context);
@@ -54,80 +54,55 @@ public class StakeGraph extends ConstraintLayout {
         addView(v);
     }
 
-    public void setTotalBalance(BigInteger totalBalance) {
-        this.totalBalance = totalBalance;
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
-    public void setStake(BigInteger stake) {
+    public void setStake(BigDecimal stake) {
         this.stake = stake;
-
-        Log.d(TAG, "setStake(BigInteger)=" + stake);
-        setStakeGraph(calculatePercentage(totalBalance, stake));
-
-        if (!delegation.equals(BigInteger.ZERO))
-            setDelegationGraph(calculatePercentage(this.stake, delegation));
-        else
-            setDelegationGraph(0.0f);
     }
 
-    public void setStake(float stakePercent) {
-        setStakeGraph(stakePercent);
-        Log.d(TAG, "setDelegation(float)=" + delegation);
-        setDelegationGraph(calculatePercentage(calculateIcx(stakePercent), delegation));
-    }
-
-    public void setDelegation(BigInteger delegation) {
+    public void setDelegation(BigDecimal delegation) {
         this.delegation = delegation;
-        Log.d(TAG, "setDelegation(BigInteger)=" + delegation);
-        setDelegationGraph(calculatePercentage(this.stake, delegation));
     }
 
-    private void setStakeGraph(float stake) {
-        float unstakePercentage = 100 - stake;
+    public void updateGraph() {
+        float stakePer, delegationPer;
+
+        try {
+            stakePer = stake.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).setScale(1, RoundingMode.HALF_UP).floatValue();
+        } catch (Exception e) {
+            stakePer = 0.0f;
+        }
+
+        try {
+            delegationPer = delegation.divide(stake, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).setScale(1, RoundingMode.HALF_UP).floatValue();
+        } catch (Exception e) {
+            delegationPer = 0.0f;
+        }
+
+        Log.wtf(TAG, "stake=" + stake.toString());
+        Log.wtf(TAG, "delegation=" + delegation.toString());
 
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone((ConstraintLayout) findViewById(R.id.constraint_stake));
-        constraintSet.setHorizontalWeight(R.id.stake, stake);
-        constraintSet.setHorizontalWeight(R.id.unstake, unstakePercentage);
+        constraintSet.setHorizontalWeight(R.id.stake, stakePer);
+        constraintSet.setHorizontalWeight(R.id.unstake, 100 - stakePer);
         constraintSet.applyTo(findViewById(R.id.constraint_stake));
 
-        txtStakePer.setText(String.format(Locale.getDefault(), " %.1f%%", stake));
-        txtUnstakePer.setText(String.format(Locale.getDefault(), " %.1f%%", unstakePercentage));
-    }
+        txtStakePer.setText(String.format(Locale.getDefault(), " %.1f%%", stakePer));
+        txtUnstakePer.setText(String.format(Locale.getDefault(), " %.1f%%", 100 - stakePer));
 
-    private void setDelegationGraph(float delegation) {
-        float delegationPercent = delegation;
-        if (delegationPercent >= 100)
-            delegationPercent = 100;
-
-        ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone((ConstraintLayout) findViewById(R.id.stake));
-        constraintSet.setHorizontalWeight(R.id.delegation, delegationPercent);
-        constraintSet.setHorizontalWeight(R.id.space, 100 - delegationPercent);
+        constraintSet.setHorizontalWeight(R.id.delegation, delegationPer);
+        constraintSet.setHorizontalWeight(R.id.space, 100 - delegationPer);
         constraintSet.applyTo(findViewById(R.id.stake));
 
-        txtDelegationPer.setText(String.format(Locale.getDefault(), " %.1f%%", delegationPercent));
+        txtDelegationPer.setText(String.format(Locale.getDefault(), " %.1f%%", delegationPer));
     }
 
-    private BigInteger calculateIcx(float percentage) {
-        BigInteger percent = new BigInteger(Integer.toString((int) percentage));
-        BigInteger multiply = totalBalance.multiply(percent);
-        BigInteger icx = multiply.divide(new BigInteger("100"));
-
-        return icx;
-    }
-
-    private float calculatePercentage(BigInteger base, BigInteger value) {
-        if (value.equals(BigInteger.ZERO))
-            return 0.0f;
-
-        BigDecimal baseDec = new BigDecimal(base);
-        BigDecimal valueDec = new BigDecimal(value);
-        BigDecimal percentDec = valueDec.divide(baseDec, 18, RoundingMode.HALF_UP)
-                .multiply(new BigDecimal("100"));
-
-        Log.d(TAG, "calculatePercent=" + percentDec.floatValue());
-
-        return percentDec.floatValue();
+    public void updateGraph(BigDecimal stake) {
+        setStake(stake);
+        updateGraph();
     }
 }

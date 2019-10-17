@@ -413,6 +413,12 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
     }
 
     private void saveWallet(final Wallet wallet) throws Exception {
+        for (Wallet w : ICONexApp.wallets) {
+            if (w.getAddress().equals(wallet.getAddress())) {
+                RealmUtil.removeWallet(w.getAddress());
+            }
+        }
+
         RealmUtil.addWallet(wallet);
         RealmUtil.loadWallet();
     }

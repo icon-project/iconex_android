@@ -105,7 +105,7 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
     public void onDetach() {
         super.onDetach();
         if (disposable != null
-            && !disposable.isDisposed())
+                && !disposable.isDisposed())
             disposable.dispose();
 
         mListener = null;
@@ -308,12 +308,16 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
                         result = validateKeyStore(keyStore.getAsJsonObject());
                         if (result) {
                             if (checkAddress(keyStore.getAsJsonObject().get("address").getAsString())) {
+//                                inputFileName.setFile(fileName);
+//                                mKeyStore = keyStore.getAsJsonObject();
+//                                isSelect = true;
+//                            } else {
+//                                inputFileName.setFileError(fileName, getString(R.string.duplicateWalletAddress));
+//                                isSelect = false;
+//                            }
                                 inputFileName.setFile(fileName);
                                 mKeyStore = keyStore.getAsJsonObject();
                                 isSelect = true;
-                            } else {
-                                inputFileName.setFileError(fileName, getString(R.string.duplicateWalletAddress));
-                                isSelect = false;
                             }
                         } else {
                             inputFileName.setFileError(fileName, getString(R.string.invalidKeyStoreFile));

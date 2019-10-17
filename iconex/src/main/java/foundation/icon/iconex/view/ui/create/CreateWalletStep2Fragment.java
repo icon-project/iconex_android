@@ -99,6 +99,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
     private void initView(View v) {
         inputAlias = v.findViewById(R.id.input_alias);
+        inputAlias.disableCopyPaste();
         inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
             public void onReleased() {
@@ -132,6 +133,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputAlias.setOnKeyPreImeListener(onKeyPreIme);
 
         inputPwd = v.findViewById(R.id.input_pwd);
+        inputPwd.disableCopyPaste();
         inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
             public void onReleased() {
@@ -179,6 +181,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputPwd.setOnKeyPreImeListener(onKeyPreIme);
 
         inputCheck = v.findViewById(R.id.input_pwd_check);
+        inputCheck.disableCopyPaste();
         inputCheck.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
             @Override
             public void onReleased() {

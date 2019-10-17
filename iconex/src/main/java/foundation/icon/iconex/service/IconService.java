@@ -3,13 +3,12 @@ package foundation.icon.iconex.service;
 import java.io.IOException;
 import java.math.BigInteger;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.icx.Call;
 import foundation.icon.icx.SignedTransaction;
 import foundation.icon.icx.Transaction;
-import foundation.icon.icx.TransactionBuilder;
 import foundation.icon.icx.data.Address;
 import foundation.icon.icx.data.Bytes;
-import foundation.icon.icx.data.IconAmount;
 import foundation.icon.icx.transport.http.HttpProvider;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import loopchain.icon.wallet.core.Constants;
@@ -49,7 +48,7 @@ public class IconService {
 
     public static BigInteger estimateStep(Transaction transaction) throws IOException {
         foundation.icon.icx.IconService estimated =
-                new foundation.icon.icx.IconService(new HttpProvider("https://test-ctz.solidwallet.io", 3));
+                new foundation.icon.icx.IconService(new HttpProvider(ICONexApp.NETWORK.getUrlNoEndPoint(), 3));
 
         return estimated.estimateStep(transaction).execute();
     }

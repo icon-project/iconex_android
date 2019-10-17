@@ -209,16 +209,20 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
         }
 
         if (result) {
-            if (checkAddress(decode, mCoin.getSymbol())) {
-                mPrivateKey = input;
-                inputPrivateKey.setError(false, null);
+//            if (checkAddress(decode, mCoin.getSymbol())) {
+//                mPrivateKey = input;
+//                inputPrivateKey.setError(false, null);
+//
+//                btnNext.setEnabled(true);
+//            } else {
+//                inputPrivateKey.setError(true, getString(R.string.duplicateWalletAddress));
+//
+//                btnNext.setEnabled(false);
+//            }
+            mPrivateKey = input;
+            inputPrivateKey.setError(false, null);
 
-                btnNext.setEnabled(true);
-            } else {
-                inputPrivateKey.setError(true, getString(R.string.duplicateWalletAddress));
-
-                btnNext.setEnabled(false);
-            }
+            btnNext.setEnabled(true);
         } else {
             inputPrivateKey.setError(true, getString(R.string.errPrivateKey));
 
