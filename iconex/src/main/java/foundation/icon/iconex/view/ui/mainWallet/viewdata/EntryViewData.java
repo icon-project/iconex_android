@@ -17,6 +17,7 @@ public class EntryViewData {
     private Wallet wallet;
     private WalletEntry entry;
     private BigDecimal exchanged;
+    public BigInteger unstake;
 
     public int pos0;
     public int pos1;

@@ -7,6 +7,8 @@ import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -194,6 +196,12 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     }
 
     @Override
+    public void onLoadNextStake(Wallet wallet, int walletPosition, BigInteger unstake) {
+        EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
+        entryVD.unstake = unstake;
+    }
+
+    @Override
     public void onLoadNextDelegation(Wallet wallet, int walletPosition) {
         WalletEntry entry = wallet.getWalletEntries().get(0);
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
@@ -218,6 +226,31 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
 
     @Override
     public void onLoadCompletePReps() {
+        // update preps data
+        for (WalletViewData walletVD : walletVDs) {
+            Wallet wallet = walletVD.getWallet();
+            if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                WalletEntry entry = wallet.getWalletEntries().get(0);
+                EntryViewData entryVD = walletVD.getEntryVDs().get(0);
+
+                try {
+                    BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entry.getBalance()), 18));
+                    BigDecimal staked = new BigDecimal(ConvertUtil.getValue(wallet.getStaked(), 18));
+                    BigDecimal unstake = new BigDecimal(ConvertUtil.getValue(entryVD.unstake == null ? BigInteger.ZERO : entryVD.unstake, 18));
+
+                    BigDecimal totalBalance = balance.add(staked).add(unstake);
+                    BigDecimal percent = totalBalance.compareTo(BigDecimal.ZERO) == 0 ? new BigDecimal("0.0") :
+                            staked.multiply(new BigDecimal(100)).divide(totalBalance, 1, BigDecimal.ROUND_HALF_UP);
+                    entryVD.setTxtStacked(DecimalFomatter.format(staked) + " (" + percent + "%)");
+                } catch (Exception e) {
+                    entryVD.setTxtStacked("- ( - %)");
+                }
+                entryVD.prepsLoading = false;
+            }
+        }
+        if (!patchingData) findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+
+        // update total assets
         BigInteger totalVoting = BigInteger.ZERO;
         BigInteger totalStaked = BigInteger.ZERO;
 

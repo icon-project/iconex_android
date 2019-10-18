@@ -28,6 +28,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -67,6 +68,7 @@ public class MainWalletServiceHelper {
         void onLoadCompleteExchangeTable();
 
         void onLoadNextiScore(Wallet wallet, int walletPosition);
+        void onLoadNextStake(Wallet wallet, int walletPosition, BigInteger unstake);
         void onLoadNextDelegation(Wallet wallet, int walletPosition);
         void onLoadCompletePReps();
 
@@ -359,6 +361,7 @@ public class MainWalletServiceHelper {
                 Wallet wallet = ICONexApp.wallets.get(i);
                 if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                     add(getIScore(wallet, i));
+                    add(getStake(wallet, i));
                     add(getDelegation(wallet, i));
                 }
             }
@@ -405,12 +408,46 @@ public class MainWalletServiceHelper {
             }
         });
     }
+
+    private Completable getStake(Wallet wallet, int walletPosition) {
+        Log.d(TAG, "getStake() called with: wallet = [" + LogWallet(wallet, false) + "], walletPosition = [" + walletPosition + "]");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        String address = wallet.getAddress();
+        String url = ICONexApp.NETWORK.getUrl();
+        final BigInteger[] stake = new BigInteger[1];
+        final BigInteger[] unstake = new BigInteger[1];
+
+        return action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                PRepService service = new PRepService(url);
+                RpcObject rpcObject = service.getStake(address).asObject();
+                stake[0] = rpcObject.getItem("stake").asInteger();
+                RpcItem item = rpcObject.getItem("unstake");
+                if (item != null)
+                    unstake[0] = item.asInteger();
+            }
+
+            @Override
+            public void onOtherError(Throwable e) {
+                Log.d(TAG, "onOtherError() int getStake called with: e = [" + e.getMessage() + "], " + LogWallet(wallet, true));
+            }
+        }, new SimpleObserver() {
+            @Override
+            void onDone() {
+                Log.d(TAG, "onDone() called");
+                wallet.setStaked(stake[0]);
+                if (listener != null)
+                    listener.onLoadNextStake(wallet, walletPosition, unstake[0]);
+            }
+        });
+    }
+
     private Completable getDelegation(Wallet wallet, int walletPosition) {
         Log.d(TAG, "getDelegation() called with: wallet = [" + LogWallet(wallet,false) + "], walletPosition = [" + walletPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
         String address = wallet.getAddress();
         String url = ICONexApp.NETWORK.getUrl();
-        final BigInteger[] stake = new BigInteger[1];
         final BigInteger[] votingPower = new BigInteger[1];
 
         return action(new NetworkErrorAction() {
@@ -419,9 +456,6 @@ public class MainWalletServiceHelper {
                 PRepService service = new PRepService(url);
                 RpcObject rpcObject = service.getDelegation(address).asObject();
                 votingPower[0] = rpcObject.getItem("votingPower").asInteger();
-                stake[0] = rpcObject.getItem("totalDelegated")
-                        .asInteger()
-                        .add(votingPower[0]);
             }
 
             @Override
@@ -431,8 +465,7 @@ public class MainWalletServiceHelper {
         }, new SimpleObserver() {
             @Override
             public void onDone() {
-                Log.d(TAG, "onDone() called in getDelegation with = [" + LogWallet(wallet,false) + "], stake,votingpower=("+ stake[0] + ", " + votingPower[0] + ")");
-                wallet.setStaked(stake[0]);
+                Log.d(TAG, "onDone() called in getDelegation with = [" + LogWallet(wallet,false) + "], votingpower=("+ votingPower[0] + ")");
                 wallet.setVotingPower(votingPower[0]);
                 if (listener != null) {
                     listener.onLoadNextDelegation(wallet, walletPosition);
