@@ -58,6 +58,10 @@ public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListen
         viewInit();
     }
 
+    public void bindWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
     private void viewInit() {
         setClickable(false);
         LayoutInflater.from(getContext()).inflate(R.layout.layout_wallet_floating_menu, this, true);

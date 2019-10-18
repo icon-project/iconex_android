@@ -49,8 +49,6 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     private boolean patchingData = false;
 
 
-    private Handler handler = new Handler();
-
     private void loadViewData() {
         walletVDs.clear();
         tokenListVDs.clear();
@@ -206,7 +204,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
             BigDecimal percent = BigDecimal.ZERO.setScale(1);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 percent = staked.multiply(new BigDecimal(100))
-                        .divide(balance, 1, BigDecimal.ROUND_HALF_UP);
+                        .divide(balance.add(staked), 1, BigDecimal.ROUND_HALF_UP);
             }
 
             entryVD.setTxtStacked(DecimalFomatter.format(staked) + " (" + percent + "%)");
@@ -248,6 +246,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     @Override
     public void onLoadCompleteAll() {
         combineTopToken();
+        findFragment().notifyCompleteDataLoad();
     }
 
     @Override

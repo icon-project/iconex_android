@@ -88,7 +88,12 @@ public class TotalAssetInfoView extends FrameLayout {
             @Override
             public int getCount() { return 2; }
         });
-
+        totalAssetInfoLooper = new Runnable() {
+            @Override
+            public void run() {
+                setIndex(1 - getIndex());
+            }
+        };
         postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override

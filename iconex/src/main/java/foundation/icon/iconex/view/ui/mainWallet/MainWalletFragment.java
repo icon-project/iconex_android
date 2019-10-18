@@ -123,7 +123,6 @@ public class MainWalletFragment extends Fragment {
 
     public void notifyCompleteDataLoad() {
         refresh.stopRefresh(true);
-        pagerAdapter.notifyDataSetChanged();
     }
 
     public static MainWalletFragment newInstance() {
@@ -446,6 +445,9 @@ public class MainWalletFragment extends Fragment {
                 walletVD.getWallet().getCoinType().equals(Constants.KS_COINTYPE_ICX);
 
         prepsMenu.setEnableFloatingButton(isICX);
+        if (isICX) {
+            prepsMenu.bind(walletVD.getWallet());
+        }
     }
 
     private void updateWalletView() {
