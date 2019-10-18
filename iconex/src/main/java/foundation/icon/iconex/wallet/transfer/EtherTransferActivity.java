@@ -990,7 +990,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         if (contactName == null)
             contactName = "";
 
-        RealmUtil.addRecentSend(MyConstants.Coin.ETH, "", contactName,
+        RealmUtil.addRecentSend(MyConstants.Coin.ETH, mWalletEntry.getContractAddress(), contactName,
                 mWalletEntry.getAddress(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }
