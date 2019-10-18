@@ -557,6 +557,8 @@
     <string name="chooseMsgRequestSend">전송 요청 메세지 보내기</string>
 
     <!-- New - wallet menu -->
+    <string name="totalAssets">전체 자산 가치</string>
+    <string name="totalVotedPower">전체 Voted Power</string>
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>
     <string name="password">Password</string>
 

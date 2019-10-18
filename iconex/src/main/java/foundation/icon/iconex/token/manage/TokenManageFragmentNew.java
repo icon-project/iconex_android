@@ -255,8 +255,8 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
                 startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
                         .putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE,
                                 tokenType == TokenManageActivity.TOKEN_TYPE.IRC ?
-                                    BarcodeCaptureActivity.ScanType.ICX_Address :
-                                    BarcodeCaptureActivity.ScanType.ETH_Address
+                                    BarcodeCaptureActivity.ScanType.ICX_Address.name() :
+                                    BarcodeCaptureActivity.ScanType.ETH_Address.name()
                                 )
                         .putExtra(BarcodeCaptureActivity.AutoFocus, true)
                         .putExtra(BarcodeCaptureActivity.UseFlash, false), RC_SCAN);

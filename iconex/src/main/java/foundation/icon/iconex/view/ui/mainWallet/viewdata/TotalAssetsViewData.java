@@ -24,6 +24,7 @@ public class TotalAssetsViewData {
 
     public TotalAssetsViewData setVotedPower(BigDecimal votedPower) {
         txtVotedPower = votedPower != null ? votedPower.toString() : MyConstants.NO_BALANCE;
+        txtVotedPower += " %";
         return this;
     }
 

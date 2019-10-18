@@ -50,10 +50,11 @@ public class TotalAssetInfoView extends FrameLayout {
 
         // inflate Total Asset view ==================
         mTotalAsset = new TotalAssetsLayout(getContext());
+        mTotalAsset.txtLabel.setText(getContext().getString(R.string.totalAssets));
 
         // inflate Voted Power view ==================
         mVotedPower = new TotalAssetsLayout(getContext());
-        mVotedPower.txtLabel.setText("Voting Power");
+        mVotedPower.txtLabel.setText(getContext().getString(R.string.totalVotedPower));
         mVotedPower.txtUint.setVisibility(GONE);
         mVotedPower.btnToggle.setVisibility(GONE);
 
