@@ -10,25 +10,24 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import foundation.icon.iconex.R;
 
-public class IconDisclaimerDialogFragment extends Fragment {
+public class IconDisclaimerDialogActivity extends AppCompatActivity {
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.dialog_icon_disclaimer, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_icon_disclaimer);
 
-        v.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                getFragmentManager().popBackStackImmediate();
+            public void onClick(View view) {
+                finish();
             }
         });
-
-        return v;
     }
 }

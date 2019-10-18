@@ -9,12 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 import foundation.icon.iconex.util.ScreenUnit;
 
 public class TokenWalletItem extends WalletItem{
@@ -73,6 +74,9 @@ public class TokenWalletItem extends WalletItem{
     public TextView mTxtAmount;
     public TextView mTxtExchanged;
 
+    public ProgressBar loading0;
+    public ProgressBar loading1;
+
     public TokenWalletItem(@NonNull Context context)  {
         super(context);
         initView();
@@ -88,6 +92,9 @@ public class TokenWalletItem extends WalletItem{
         mTxtName = v.findViewById(R.id.txt_name);
         mTxtAmount = v.findViewById(R.id.txt_amount);
         mTxtExchanged = v.findViewById(R.id.txt_exchanged);
+
+        loading0 = v.findViewById(R.id.loading0);
+        loading1 = v.findViewById(R.id.loading1);
 
         addView(v);
     }
@@ -121,13 +128,22 @@ public class TokenWalletItem extends WalletItem{
     }
 
     @Override
-    public void bind(WalletItemViewData data) {
+    public void bind(EntryViewData data) {
         mTxtSymbol.setText(data.getSymbol());
         mTxtName.setText(data.getName());
         mTxtAmount.setText(data.getTxtAmount());
         mTxtExchanged.setText(data.getTxtExchanged());
 
-        setLetterSymbol(data.getSymbolLetter(), data.getBgSymbolColor());
+        if (data.getDrawableSymbolresId() != -1) {
+            setSymbolImage(data.getDrawableSymbolresId());
+        } else {
+            setLetterSymbol(data.getSymbol().charAt(0), data.getBgSymbolColor());
+        }
+
+        mTxtAmount.setVisibility(data.amountLoading ? INVISIBLE : VISIBLE);
+        loading0.setVisibility(data.amountLoading ? VISIBLE : GONE);
+        mTxtExchanged.setVisibility(data.exchageLoading ? INVISIBLE : VISIBLE);
+        loading1.setVisibility(data.exchageLoading ? VISIBLE : GONE);
     }
 
     @Override

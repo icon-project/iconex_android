@@ -1,6 +1,5 @@
 package foundation.icon.iconex.menu.lock;
 
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -10,7 +9,6 @@ import android.view.View;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.widgets.CustomActionBar;
 
 public class SettingLockActivity extends AppCompatActivity implements AppLockManageFragment.OnAppLockManageListener,

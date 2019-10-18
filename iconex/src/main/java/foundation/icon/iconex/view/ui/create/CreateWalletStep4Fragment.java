@@ -17,8 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.view.MainWalletActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 

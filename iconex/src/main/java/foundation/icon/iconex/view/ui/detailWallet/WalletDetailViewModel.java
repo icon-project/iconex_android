@@ -50,7 +50,7 @@ public class WalletDetailViewModel extends ViewModel {
     // listview
     public final MutableLiveData<List<TransactionItemViewData>> lstItemData =  new MutableLiveData<>();
 
-    public void initialize(Wallet wallet, WalletEntry walletEntry, int entryID) {
+    public void initialize(Wallet wallet, WalletEntry walletEntry) {
         this.wallet.setValue(wallet);
         this.walletEntry.setValue(walletEntry);
 

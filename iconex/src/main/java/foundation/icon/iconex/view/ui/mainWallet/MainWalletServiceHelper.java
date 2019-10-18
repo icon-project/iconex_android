@@ -1,28 +1,33 @@
 package foundation.icon.iconex.view.ui.mainWallet;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
+import android.os.Handler;
 import android.util.Log;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.Web3jFactory;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGetBalance;
+import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.Contract;
 
 import java.math.BigInteger;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Vector;
 
+import ethereum.contract.MyContract;
+import ethereum.contract.MyTransactionManager;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
-import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.service.PRepService;
-import foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager;
+import foundation.icon.iconex.service.ServiceConstants;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -31,383 +36,506 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 import loopchain.icon.wallet.core.Constants;
+import loopchain.icon.wallet.core.response.LCResponse;
+import loopchain.icon.wallet.core.response.TRResponse;
+import loopchain.icon.wallet.service.LoopChainClient;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainWalletServiceHelper {
-    private static final String TAG = MainWalletServiceHelper.class.getSimpleName();
-    private void Log(String log) { Log.d(TAG, log); }
 
-    public interface OnLoadRemoteDataListener {
-        void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance);
-        void onLoadPRepsData(HashMap<String, PRepsRemoteData> pRepsData);
+    public static String TAG = MainWalletServiceHelper.class.getSimpleName();
+    private String LogWallet(Wallet wallet, boolean wrapping) {
+        if (wrapping) {
+            return " wallet = [" + wallet.getAlias() + ", " + wallet.getAddress() + "]";
+        } else {
+            return wallet.getAlias() + ", " + wallet.getAddress();
+        }
+    }
+    private String LogEntry(WalletEntry entry, boolean wrapping) {
+        if (wrapping) {
+            return " entry = [" + entry.getSymbol() + ", " + entry.getAddress() + "]";
+        } else {
+            return entry.getSymbol() + ", " + entry.getAddress();
+        }
+    }
+
+    public interface OnLoadListener {
+        void onLoadNextBalance(WalletEntry entry, int walletPosition, int entryPosition);
+        void onLoadCompleteBalance();
+
+        void onLoadCompleteExchangeTable();
+
+        void onLoadNextiScore(Wallet wallet, int walletPosition);
+        void onLoadNextDelegation(Wallet wallet, int walletPosition);
+        void onLoadCompletePReps();
+
+        void onLoadCompleteAll();
         void onNetworkError();
     }
 
-    private Context mContext;
-    private NetworkService mService;
-    private OnLoadRemoteDataListener mListener = null;
-    private boolean mIsBound = false;
-
-    private Vector<String[]> mIcxBalance = new Vector<>();
-    private Vector<String[]> mEthBalance = new Vector<>();
-    private Vector<String[]> mErrBalance = new Vector<>();
-
-    private int requestCount;
-    private boolean isReceiveExchange = false;
-
-    public MainWalletServiceHelper(Context context, OnLoadRemoteDataListener listener) {
-        mContext = context;
-        mListener = listener;
+    public OnLoadListener listener[] = null;
+    public void setListener(OnLoadListener listener) {
+        this.listener = new OnLoadListener[] {listener};
+    }
+    public void clearListener() {
+        if (listener != null) {
+            listener[0] = null;
+        }
+        listener = null;
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
-            mService = binder.getService();
-            mService.registerBalanceCallback(mBalanceCallback);
-            mService.registerExchangeCallback(mExchangeCallback);
-            mIsBound = true;
-            Log("service connected");
+    public void requestAllData() {
+        Log.d(TAG, "requestAllData() called");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
 
-            requestRemoteData();
-        }
+        action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                merge(new ArrayList<Completable>() {{
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-            mIsBound = false;
-            Log("service disconnected");
-        }
-    };
+                    add(requestBalance());
+                    add(requestExchangeTable());
+                    add(requestRReps());
 
-    private NetworkService.BalanceCallback mBalanceCallback = new NetworkService.BalanceCallback() {
-        @Override
-        public void onReceiveICXBalance(String id, String address, String result) {
-            Log("Receive icx balance: " + result);
-            mIcxBalance.add(new String[] { id, address, result});
-            if(isDoneRequest(true, false)) completeRequest();
-        }
-
-        @Override
-        public void onReceiveETHBalance(String id, String address, String result) {
-            Log("Receive eth balance: " + result);
-            address = address.substring(2);
-            mEthBalance.add(new String[] { id, address, result });
-
-            if(isDoneRequest(true, false)) completeRequest();
-        }
-
-        @Override
-        public void onReceiveError(String id, String address, int code) {
-            Log("Receive balance err code:" + code);
-            if (address.startsWith(MyConstants.PREFIX_HEX)) {
-                address = address.substring(2);
-            }
-
-            mErrBalance.add(new String[] { id, address, MyConstants.NO_BALANCE });
-
-            if(isDoneRequest(true, false)) completeRequest();
-        }
-
-        @Override
-        public void onReceiveException(String id, String address, String msg) {
-            Log("Receive balance exception " + msg);
-            if (address.startsWith(MyConstants.PREFIX_HEX)) {
-                address = address.substring(2);
-            }
-
-            mErrBalance.add(new String[] { id, address, MyConstants.NO_BALANCE });
-
-            if(isDoneRequest(true,false)) completeRequest();
-        }
-    };
-
-    private NetworkService.ExchangeCallback mExchangeCallback = new NetworkService.ExchangeCallback() {
-        @Override
-        public void onReceiveExchangeList() {
-            Log("Receive Exchange list");
-            if(isDoneRequest(false,true)) completeRequest();
-        }
-
-        @Override
-        public void onReceiveError(String resCode) {
-            Log("Receive Exchange error: " + resCode);
-            if(isDoneRequest(false,true)) completeRequest();
-        }
-
-        @Override
-        public void onReceiveException(Throwable t) {
-            t.printStackTrace();
-            if(isDoneRequest(false,true)) completeRequest();
-        }
-    };
-
-    private void completeRequest () {
-        Log.d(TAG, "complete Request!");
-        if (mListener != null) {
-            mListener.onLoadRemoteData(
-                    new ArrayList<String[]>() {{ addAll(mIcxBalance); }},
-                    new ArrayList<String[]>() {{ addAll(mEthBalance); }},
-                    new ArrayList<String[]>() {{ addAll(mErrBalance); }}
-            );
-
-            mIcxBalance.clear();
-            mEthBalance.clear();
-            mErrBalance.clear();
-        }
-    }
-
-    private synchronized boolean isDoneRequest(boolean countingRequest, boolean markingExchange) {
-        if (requestCount > 0 && countingRequest) {
-            requestCount--;
-        }
-
-        if (markingExchange) {
-            isReceiveExchange = true;
-        }
-
-        Log.d(TAG, "remain count: " + requestCount + ", isReceiveExchange: " + isReceiveExchange);
-        return requestCount == 0 && isReceiveExchange;
-    }
-
-    private void cancleRequest() {
-        if (!isDoneRequest(false,false)) {
-            Log.d(TAG, "cancle request");
-            mService.stopGetBalance();
-            mIcxBalance.clear();
-            mIcxBalance.clear();
-            isReceiveExchange = false;
-        }
-    }
-
-    public void requestRemoteData() {
-        cancleRequest();
-
-        Log.d(TAG, "request remote data");
-        Object[] balanceList = makeGetBalanceList();
-        HashMap<String, String> icxList = (HashMap<String, String>) balanceList[0];
-        HashMap<String, String[]> ircList = (HashMap<String, String[]>) balanceList[1];
-        HashMap<String, String> ethList = (HashMap<String, String>) balanceList[2];
-        HashMap<String, String[]> ercList = (HashMap<String, String[]>) balanceList[3];
-
-        requestCount = icxList.size() + ircList.size() + ethList.size() + ercList.size();
-        isReceiveExchange = false;
-
-        mService.getBalance(icxList, Constants.KS_COINTYPE_ICX);
-        mService.getTokenBalance(ircList, Constants.KS_COINTYPE_ICX);
-        mService.getBalance(ethList, Constants.KS_COINTYPE_ETH);
-        mService.getTokenBalance(ercList, Constants.KS_COINTYPE_ETH);
-
-        String exchangeList = makeExchangeList();
-        mService.requestExchangeList(exchangeList);
-    }
-
-    private Object[] makeGetBalanceList() {
-        HashMap<String, String> icxList = new HashMap<>();
-        HashMap<String, String> ethList = new HashMap<>();
-        HashMap<String, String[]> ercList = new HashMap<>();
-        HashMap<String, String[]> ircList = new HashMap<>();
-
-        for (Wallet info : ICONexApp.wallets) {
-            if (info.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                List<WalletEntry> entries = info.getWalletEntries();
-                for (WalletEntry entry : entries) {
-                    if (entry.getType().equals(MyConstants.TYPE_COIN))
-                        icxList.put(Integer.toString(entry.getId()), entry.getAddress());
-                    else
-                        ircList.put(Integer.toString(entry.getId()), new String[]{entry.getAddress(), entry.getContractAddress()});
-                }
-            } else {
-                List<WalletEntry> entries = info.getWalletEntries();
-                for (WalletEntry entry : entries) {
-                    if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-                        ethList.put(Integer.toString(entry.getId()), MyConstants.PREFIX_HEX + entry.getAddress());
-                    } else {
-                        ercList.put(Integer.toString(entry.getId()), new String[]{MyConstants.PREFIX_HEX + entry.getAddress(), entry.getContractAddress()});
-                    }
-                }
-            }
-        }
-
-        return new Object[]{icxList, ircList, ethList, ercList};
-    }
-
-    private String makeExchangeList() {
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < ICONexApp.EXCHANGES.size(); i++) {
-            String symbol = ICONexApp.EXCHANGES.get(i);
-            sb.append(symbol + MyConstants.EXCHANGE_USD.toLowerCase());
-            sb.append(",");
-            sb.append(symbol + MyConstants.EXCHANGE_BTC.toLowerCase());
-            sb.append(",");
-            sb.append(symbol + MyConstants.EXCHANGE_ETH.toLowerCase());
-            sb.append(",");
-            sb.append(symbol + "ICX".toLowerCase());
-            if (i < ICONexApp.EXCHANGES.size() - 1) {
-                sb.append(",");
-            }
-        }
-
-        return sb.toString();
-    }
-
-    public void resume() {
-        Log("resume");
-        Intent intent = new Intent(mContext, NetworkService.class);
-        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        if (mIsBound) requestRemoteData();
-    }
-
-    public void stop () {
-        Log("stop");
-        cancleRequest();
-        if (mIsBound) {
-            mContext.unbindService(mConnection);
-            mIsBound = false;
-        }
-    }
-
-    public void getPRepsRemoteData(List<String> icxAddresses) {
-        PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
-        Hashtable<String, BigInteger> pRepsResults = new Hashtable<>();
-        Log.d("GetPRepsData", "size=" +icxAddresses.size());
-        String err = "Get %s error: %s, address: %s";
-
-        Completable.merge(new ArrayList<Completable>() {{
-            for (String address : icxAddresses) {
-                // ========== get i-score
-                add(Completable.fromAction(new Action() {
+                }}, new SimpleObserver() {
                     @Override
-                    public void run() throws UnknownHostException {
-                        try {
-                            Log.d("GetPRepsData", address + " request i-score");
-                            RpcObject rpcObject = pRepService.getIScore(address).asObject();
-                            RpcItem iscore = rpcObject.getItem("iscore");
-                            pRepsResults.put(address+"-iscore", iscore.asInteger());
-                        }
-                        catch (UnknownHostException e) {
-                            throw e;
-                        }
-                        catch (Exception e) {
-                            String msg = String.format(err, "i-score", e.getMessage(), address);
-                            Log.d("GetPRepsData", msg);
-                        }
-                    }
-                }));
-                // ========== get delegation
-                add(Completable.fromAction(new Action() {
-                    @Override
-                    public void run() throws UnknownHostException {
-                        try {
-                            Log.d("GetPRepsData", address + " request delegation");
-                            RpcObject rpcObject = pRepService.getDelegation(address).asObject();
-                            RpcItem totalDelegated = rpcObject.getItem("totalDelegated");
-                            RpcItem votingPower = rpcObject.getItem("votingPower");
-                            pRepsResults.put(address+"-totalDelegated",totalDelegated.asInteger());
-                            pRepsResults.put(address+"-votingPower", votingPower.asInteger());
-                        }
-                        catch (UnknownHostException e) {
-                            throw e;
-                        }
-                        catch (Exception e) {
-                            String msg = String.format(err, "delegation", e.getMessage(), address);
-                            Log.d("GetPRepsData", msg);
-                        }
-                    }
-                }));
-            }
-        }}).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                    public void onDone() {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "onDone() called in requestAllData!");
 
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        HashMap<String, PRepsRemoteData> pRepsData = new HashMap<>();
-                        for(String address: icxAddresses) {
-                            try {
-                                PRepsRemoteData pRepsRemoteData = new PRepsRemoteData()
-                                        // .setStake(pRepsResults.get(address + "-stake"))
-                                        .setiScore(pRepsResults.get(address + "-iscore"))
-                                        .setTotalDelegated(pRepsResults.get(address + "-totalDelegated"))
-                                        .setVotingPower(pRepsResults.get(address + "-votingPower"));
-
-                                // get stake
-                                BigInteger stake = pRepsRemoteData.getTotalDelegated()
-                                        .add(pRepsRemoteData.getVotingPower());
-                                pRepsRemoteData.setStake(stake);
-
-                                Log.d("GetPRepsData", pRepsRemoteData.toString());
-                                pRepsData.put(address, pRepsRemoteData);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                if (listener != null) {
+                                    listener.onLoadCompleteAll();
+                                }
                             }
-                        }
-                        mListener.onLoadPRepsData(pRepsData);
+                        }, 100);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onNetworkError(UnknownHostException e) {
+                        Log.d(TAG, "onNetworkError() called in requestAllData");
                         e.printStackTrace();
-                        mListener.onNetworkError();
+                        if (listener != null) {
+                            listener.onNetworkError();
+                        }
                     }
                 });
+            }
+
+            @Override
+            public void onOtherError(Throwable e) {
+
+            }
+        }, new SimpleObserver() {
+            @Override
+            void onDone() {
+                Log.d(TAG, "onDone() called request complete!");
+            }
+        });
     }
 
-    public static class PRepsRemoteData {
-        public BigInteger stake;
-        public BigInteger iScore;
-        public BigInteger totalDelegated;
-        public BigInteger votingPower;
+    private Completable requestBalance() {
+        Log.d(TAG, "requestBalance() called");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
 
-        public BigInteger getStake() {
-            return stake;
-        }
+        return merge(new ArrayList<Completable>() {{
+            int szWallets = ICONexApp.wallets.size();
+            for (int i = 0; szWallets > i; i++) {
+                Wallet wallet = ICONexApp.wallets.get(i);
+                int szEntries = wallet.getWalletEntries().size();
+                for (int j = 0; szEntries > j; j++){
+                    WalletEntry entry = wallet.getWalletEntries().get(j);
 
-        public PRepsRemoteData setStake(BigInteger stake) {
-            this.stake = stake;
-            return this;
-        }
+                    if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                            add(getIcxCoinBalance(entry, i, j));
+                        } else {
+                            add(getIcxTokenBalance(entry, i, j));
+                        }
+                    } else {
+                        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                            add(getEthCoinBalance(entry, i, j));
+                        } else {
+                            add(getEthTokenBalance(entry, i, j));
+                        }
+                    }
+                }
+            }
+        }}, new SimpleObserver() {
+            @Override
+            public void onDone() {
+                if (listener != null) {
+                    listener.onLoadCompleteBalance();
+                }
+            }
+        });
+    }
 
-        public BigInteger getiScore() {
-            return iScore;
-        }
+    private Completable getIcxCoinBalance(WalletEntry entry, int walletPosition, int entryPosition) {
+        Log.d(TAG, "getIcxCoinBalance() called with: entry = [" + LogEntry(entry,false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        int entryId = entry.getId();
+        String address = entry.getAddress();
+        final String[] balance = {null};
 
-        public PRepsRemoteData setiScore(BigInteger iScore) {
-            this.iScore = iScore;
-            return this;
-        }
+        return action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                LoopChainClient client = new LoopChainClient(getIcxHost());
+                Response<LCResponse> response = client.getBalance(entryId, address).execute();
+                if (response.errorBody() != null) throw new Exception(response.message());
+                String hexBalance = response.body().getResult().getAsString();
+                balance[0] = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
+            }
 
-        public BigInteger getTotalDelegated() {
-            return totalDelegated;
-        }
+            @Override
+            public void onOtherError(Throwable e) {
+                Log.d(TAG, "onOtherError() called with: e = [" + e.getMessage() + "]," + LogEntry(entry, true));
+            }
+        }, new SimpleObserver() {
+            @Override
+            void onDone() {
+                entry.setBalance(balance[0] == null ? MyConstants.NO_BALANCE : balance[0]);
+                Log.d(TAG, "onDone() called in getIcxCoinBalance with: balance = [" + balance[0] + "], " + LogEntry(entry, true));
+                if (listener != null) {
+                    listener.onLoadNextBalance(entry, walletPosition, entryPosition);
+                }
+            }
+        });
+    }
 
-        public PRepsRemoteData setTotalDelegated(BigInteger totalDelegated) {
-            this.totalDelegated = totalDelegated;
-            return this;
-        }
+    private Completable getIcxTokenBalance(WalletEntry entry, int walletPosition, int entryPosition) {
+        Log.d(TAG, "getIcxTokenBalance() called with: entry = [" + LogEntry(entry,false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        int entryId = entry.getId();
+        String address = entry.getAddress();
+        String contractAddress = entry.getContractAddress();
+        final String[] balance = {null};
 
-        public BigInteger getVotingPower() {
-            return votingPower;
-        }
+        return action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                LoopChainClient client = new LoopChainClient(getIcxHost());
+                Response<LCResponse> response = client.getTokenBalance(entryId, address, contractAddress).execute();
+                if (response.errorBody() != null) throw new Exception(response.message());
+                String hexBalance = response.body().getResult().getAsString();
+                balance[0] = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
+            }
 
-        public PRepsRemoteData setVotingPower(BigInteger votingPower) {
-            this.votingPower = votingPower;
-            return this;
-        }
+            @Override
+            public void onOtherError(Throwable e) {
+                Log.d(TAG, "onOtherError() called in getIcxTokenBalance with: e = [" + e.getMessage() + "], " + LogEntry(entry, true));
+            }
+        }, new SimpleObserver() {
+            @Override
+            void onDone() {
+                entry.setBalance(balance[0] == null ? MyConstants.NO_BALANCE : balance[0]);
+                Log.d(TAG, "onDone() called in getIcxTokenBalance() with: balance = [" + balance[0] + "], " + LogEntry(entry, true));
+                if (listener != null) {
+                    listener.onLoadNextBalance(entry, walletPosition, entryPosition);
+                }
+            }
+        });
+    }
 
-        @Override
-        public String toString() {
-            return "PRepsRemoteData{" +
-                    "stake=" + stake +
-                    ", iScore=" + iScore +
-                    ", totalDelegated=" + totalDelegated +
-                    ", votingPower=" + votingPower +
-                    '}';
+    private Completable getEthCoinBalance(WalletEntry entry, int walletPosition, int entryPosition) {
+        Log.d(TAG, "getEthCoinBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        String address = entry.getAddress();
+        final String[] balance = {null};
+
+        return action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                Web3j web3j = Web3jFactory.build(new HttpService(getEthHost()));
+                EthGetBalance getBalance = web3j.ethGetBalance("0x" + address, DefaultBlockParameterName.LATEST).send();
+                if (getBalance.getError() != null)
+                    throw new Exception(getBalance.getError().getMessage());
+                balance[0] = getBalance.getBalance().toString();
+            }
+
+            @Override
+            public void onOtherError(Throwable e) {
+                Log.d(TAG, "onOtherError() called int getEthCoinBalance with: e = [" + e.getMessage() + "], " + LogEntry(entry, true));
+            }
+        }, new SimpleObserver() {
+            @Override
+            void onDone() {
+                entry.setBalance(balance[0] == null ? MyConstants.NO_BALANCE : balance[0]);
+                Log.d(TAG, "onDone() called in getEthCoinBalance with: balance = [" + balance[0] + "], " + LogEntry(entry, true));
+                if (listener != null) {
+                    listener.onLoadNextBalance(entry, walletPosition, entryPosition);
+                }
+            }
+        });
+    }
+
+    private Completable getEthTokenBalance(WalletEntry entry, int walletPosition, int entryPosition) {
+        Log.d(TAG, "getEthTokenBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        String address = entry.getAddress();
+        String contractAddress = entry.getContractAddress();
+        final String[] balance = {null};
+
+        return action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                Web3j web3j = Web3jFactory.build(new HttpService(getEthHost()));
+                MyTransactionManager txManager = new MyTransactionManager(web3j, contractAddress, Collections.EMPTY_LIST);
+                MyContract myContract = MyContract.load(contractAddress, web3j, txManager, Contract.GAS_PRICE, Contract.GAS_LIMIT);
+                balance[0] = myContract.balanceOf(address).send().toString();
+            }
+
+            @Override
+            public void onOtherError(Throwable e) {
+                Log.d(TAG, "onOtherError() called with: e = [" + e.getMessage() + "], " + LogEntry(entry, true));
+            }
+        }, new SimpleObserver() {
+            @Override
+            void onDone() {
+                entry.setBalance(balance[0] == null ? MyConstants.NO_BALANCE : balance[0]);
+                Log.d(TAG, "onDone() called in getEthTokenBalance with: balance =[" + balance[0] + "], " + LogEntry(entry, true));
+                if (listener != null) {
+                    listener.onLoadNextBalance(entry, walletPosition, entryPosition);
+                }
+            }
+        });
+    }
+
+    private Completable requestExchangeTable() {
+        Log.d(TAG, "requestExchangeTable() called");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        HashMap<String, String> exchangeTable = new HashMap<>();
+
+        return action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                StringBuilder lstExchange = new StringBuilder();
+                for (int i = 0; ICONexApp.EXCHANGES.size() > i; i++) {
+                    String sym = ICONexApp.EXCHANGES.get(i);
+                    lstExchange.append(sym+"usd,"+sym+"btc,"+sym+"eth,"+sym+"icx");
+                    if (i < ICONexApp.EXCHANGES.size() - 1) lstExchange.append(",");
+                }
+
+                LoopChainClient client = new LoopChainClient(getVersionHost());
+                Call<TRResponse> responseCall = client.getExchangeRates(lstExchange.toString());
+                Response<TRResponse> response = responseCall.execute();
+                JsonArray list = response.body().getData().getAsJsonArray();
+                for (int i = 0; list.size() > i; i++) {
+                    JsonObject item = list.get(i).getAsJsonObject();
+                    String tradeName = item.get("tradeName").getAsString();
+                    String price = item.get("price").getAsString();
+                    exchangeTable.put(tradeName, price);
+                }
+            }
+
+            @Override
+            public void onOtherError(Throwable e) {
+                Log.d(TAG, "onOtherError() called in requestExchangeTable  with: e = [" + e.getMessage() + "]");
+            }
+        }, new SimpleObserver() {
+            @Override
+            public void onDone() {
+                Log.d(TAG, "onDone() called in requestExchangeTable with: exchageTable = [" + exchangeTable +"]");
+                ICONexApp.EXCHANGE_TABLE = exchangeTable;
+
+                if (listener != null) {
+                    listener.onLoadCompleteExchangeTable();
+                }
+            }
+        });
+    }
+    private Completable requestRReps() {
+        Log.d(TAG, "requestRReps() called");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+
+        return merge(new ArrayList<Completable>() {{
+
+            int size = ICONexApp.wallets.size();
+            for (int i = 0;  size > i; i++) {
+                Wallet wallet = ICONexApp.wallets.get(i);
+                if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                    add(getIScore(wallet, i));
+                    add(getDelegation(wallet, i));
+                }
+            }
+
+        }}, new SimpleObserver() {
+            @Override
+            public void onDone() {
+                Log.d(TAG, "onDone() called in requestPReps");
+
+                if (listener != null) {
+                    listener.onLoadCompletePReps();
+                }
+            }
+        });
+    }
+
+    private Completable getIScore(Wallet wallet, int walletPosition) {
+        Log.d(TAG, "getIScore() called with: wallet = [" + LogWallet(wallet,false) + "], walletPosition = [" + walletPosition + "]");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        String address = wallet.getAddress();
+        String url = ICONexApp.NETWORK.getUrl();
+        final BigInteger[] iscore = {null};
+
+        return action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                PRepService service = new PRepService(url);
+                RpcObject rpcObject = service.getIScore(address).asObject();
+                iscore[0] = rpcObject.getItem("iscore").asInteger();
+            }
+
+            @Override
+            public void onOtherError(Throwable e) {
+                Log.d(TAG, "onOtherError() in getIScore called with: e = [" + e.getMessage() + "]," + LogWallet(wallet, true));
+            }
+        }, new SimpleObserver() {
+            @Override
+            public void onDone() {
+                Log.d(TAG, "onDone() called in getIScore with: wallet: = [" + LogWallet(wallet, false) + "], iscore = [" + iscore[0] + "]");
+                wallet.setiScore(iscore[0]);
+                if (listener != null) {
+                    listener.onLoadNextiScore(wallet, walletPosition);
+                }
+            }
+        });
+    }
+    private Completable getDelegation(Wallet wallet, int walletPosition) {
+        Log.d(TAG, "getDelegation() called with: wallet = [" + LogWallet(wallet,false) + "], walletPosition = [" + walletPosition + "]");
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        String address = wallet.getAddress();
+        String url = ICONexApp.NETWORK.getUrl();
+        final BigInteger[] stake = new BigInteger[1];
+        final BigInteger[] votingPower = new BigInteger[1];
+
+        return action(new NetworkErrorAction() {
+            @Override
+            public void action() throws Throwable {
+                PRepService service = new PRepService(url);
+                RpcObject rpcObject = service.getDelegation(address).asObject();
+                votingPower[0] = rpcObject.getItem("votingPower").asInteger();
+                stake[0] = rpcObject.getItem("totalDelegated")
+                        .asInteger()
+                        .add(votingPower[0]);
+            }
+
+            @Override
+            public void onOtherError(Throwable e) {
+                Log.d(TAG, "onOtherError() in getDelegation called with: e = [" + e.getMessage() + "]," + LogWallet(wallet, true));
+            }
+        }, new SimpleObserver() {
+            @Override
+            public void onDone() {
+                Log.d(TAG, "onDone() called in getDelegation with = [" + LogWallet(wallet,false) + "], stake,votingpower=("+ stake[0] + ", " + votingPower[0] + ")");
+                wallet.setStaked(stake[0]);
+                wallet.setVotingPower(votingPower[0]);
+                if (listener != null) {
+                    listener.onLoadNextDelegation(wallet, walletPosition);
+                }
+            }
+        });
+    }
+
+    private String getVersionHost() {
+        switch (ICONexApp.network) {
+            default:
+            case MyConstants.NETWORK_MAIN: return ServiceConstants.URL_VERSION_MAIN;
+            case MyConstants.NETWORK_TEST: return ServiceConstants.URL_VERSION_TEST;
+            case MyConstants.NETWORK_DEV: return ServiceConstants.DEV_TRACKER;
         }
+    }
+
+    private String getIcxHost() {
+        switch (ICONexApp.network) {
+            default:
+            case MyConstants.NETWORK_MAIN: return ServiceConstants.TRUSTED_HOST_MAIN;
+            case MyConstants.NETWORK_TEST: return ServiceConstants.TRUSTED_HOST_TEST;
+            case MyConstants.NETWORK_DEV: return ServiceConstants.DEV_HOST;
+        }
+    }
+
+    public String getEthHost() {
+        switch (ICONexApp.network) {
+            case MyConstants.NETWORK_MAIN:
+                return ServiceConstants.ETH_HOST;
+            default:
+                return ServiceConstants.ETH_ROP_HOST;
+        }
+    }
+
+    abstract class SimpleObserver {
+        abstract void onDone();
+        void onNetworkError(UnknownHostException e) { }
+    }
+
+    abstract class NetworkErrorAction implements Action{
+        public void run() throws UnknownHostException {
+            try {
+                 action();
+            } catch (UnknownHostException e) {
+                throw e;
+            } catch (Throwable e) {
+                onOtherError(e);
+            }
+        }
+        abstract public void action() throws Throwable;
+        abstract public void onOtherError(Throwable e);
+    }
+
+    private Completable action(NetworkErrorAction act, SimpleObserver ob) {
+        Completable completable = Completable.fromAction(act)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        completable.subscribe(new CompletableObserver() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                ob.onDone();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ob.onDone();
+                ob.onNetworkError(((UnknownHostException) e));
+            }
+        });
+
+        return completable;
+    }
+
+    private Completable merge(ArrayList<Completable> lst, SimpleObserver ob) {
+        Completable completable = Completable.merge(lst)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        completable.subscribe(new CompletableObserver() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                ob.onDone();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ob.onDone();
+                ob.onNetworkError(((UnknownHostException) e));
+            }
+        });
+
+        return completable;
     }
 }

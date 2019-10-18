@@ -60,6 +60,12 @@
             android:exported="false"
             android:screenOrientation="unspecified"
             android:theme="@style/DialogActivity" />
+
+        <activity android:name=".dialogs.IconDisclaimerDialogActivity"
+            android:configChanges="fontScale"
+            android:exported="false"
+            android:screenOrientation="unspecified"
+            android:theme="@style/DialogActivity" />
         <activity
             android:name=".menu.appInfo.AppInfoActivity"
             android:configChanges="fontScale"
@@ -86,13 +92,6 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".view.MainWalletActivity"
-            android:configChanges="fontScale"
-            android:exported="false"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".view.WalletDetailActivity"
             android:configChanges="fontScale"
@@ -127,6 +126,10 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
+        <activity android:name=".view.MainWalletActivity"
+            android:configChanges="fontScale"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".wallet.main.MainActivity"
             android:configChanges="fontScale"

@@ -2,30 +2,28 @@ package foundation.icon.iconex.view.ui.mainWallet.viewdata;
 
 import java.math.BigDecimal;
 
+import foundation.icon.MyConstants;
+import foundation.icon.iconex.util.DecimalFomatter;
+
 public class TotalAssetsViewData {
 
-    private BigDecimal totalAsset = null;
-    private BigDecimal votedPower = null;
+    public boolean loadingTotalAssets = true;
+    public boolean loadingVotedpower = true;
 
-    private String txtTotalAsset = null;
-    private String txtVotedPower = null;
-    private String txtExchangeUnit = null;
+    private String txtTotalAsset = MyConstants.NO_BALANCE;
+    private String txtVotedPower = MyConstants.NO_BALANCE;
+    private String txtExchangeUnit = "USD";
 
-    public BigDecimal getTotalAsset() {
-        return totalAsset;
-    }
-
-    public TotalAssetsViewData setTotalAsset(BigDecimal totalAsset) {
-        this.totalAsset = totalAsset;
+    public TotalAssetsViewData setTotalAsset(BigDecimal totalAsset, String unit) {
+        txtExchangeUnit = unit;
+        int deci = "USD".equals(unit) ? 2 : 4;
+        String strExchanged = totalAsset != null ? DecimalFomatter.format(totalAsset,deci) : MyConstants.NO_BALANCE;
+        txtTotalAsset = strExchanged;
         return this;
     }
 
-    public BigDecimal getVotedPower() {
-        return votedPower;
-    }
-
     public TotalAssetsViewData setVotedPower(BigDecimal votedPower) {
-        this.votedPower = votedPower;
+        txtVotedPower = votedPower != null ? votedPower.toString() : MyConstants.NO_BALANCE;
         return this;
     }
 
@@ -33,19 +31,10 @@ public class TotalAssetsViewData {
         return txtTotalAsset;
     }
 
-    public TotalAssetsViewData setTxtTotalAsset(String txtTotalAsset) {
-        this.txtTotalAsset = txtTotalAsset;
-        return this;
-    }
-
     public String getTxtVotedPower() {
         return txtVotedPower;
     }
 
-    public TotalAssetsViewData setTxtVotedPower(String txtVotedPower) {
-        this.txtVotedPower = txtVotedPower;
-        return this;
-    }
 
     public String getTxtExchangeUnit() {
         return txtExchangeUnit;

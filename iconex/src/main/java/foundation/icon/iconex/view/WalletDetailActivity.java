@@ -41,7 +41,6 @@ public class WalletDetailActivity extends AppCompatActivity {
 
     public static final String PARAM_WALLET = "wallet";
     public static final String PARAM_WALLET_ENTRY = "wallet entry";
-    public static final String PARAM_ENTRY_ID = "entry id";
 
     private WalletDetailViewModel viewModel = null;
     private WalletDetailServiceHelper serviceHelper = null;
@@ -56,8 +55,7 @@ public class WalletDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         viewModel.initialize(
                 ((Wallet) intent.getSerializableExtra(PARAM_WALLET)),
-                ((WalletEntry) intent.getSerializableExtra(PARAM_WALLET_ENTRY)),
-                intent.getIntExtra(PARAM_ENTRY_ID, -1)
+                ((WalletEntry) intent.getSerializableExtra(PARAM_WALLET_ENTRY))
         );
 
         getSupportFragmentManager()

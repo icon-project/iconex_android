@@ -2,16 +2,11 @@ package foundation.icon.iconex.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
+import android.os.Handler;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.spongycastle.util.encoders.Hex;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -19,500 +14,377 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
-import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.IconDisclaimerDialogFragment;
-import foundation.icon.iconex.dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
-import foundation.icon.iconex.menu.appInfo.AppInfoActivity;
-import foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity;
-import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
-import foundation.icon.iconex.service.NetworkErrorActivity;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
-import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
+import foundation.icon.iconex.view.ui.mainWallet.items.TokenWalletItem;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletCardViewData;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
-public class MainWalletActivity extends AppCompatActivity implements
-        MainWalletFragment.AsyncRequester,
-        WalletCardView.OnClickWalletItemListner,
-        MainWalletFragment.SideMenu,
-        MainWalletFragment.PRepsMenu,
-        MainWalletServiceHelper.OnLoadRemoteDataListener {
+public class MainWalletActivity extends AppCompatActivity implements MainWalletServiceHelper.OnLoadListener, MainWalletFragment.RequestActivity {
 
-    public static String TAG = MainWalletActivity.class.getSimpleName();
+    private MainWalletServiceHelper serviceHelper = new MainWalletServiceHelper();
 
-    // findFragmentByTag
     private static String MAIN_WALLET_FRAGMENT_TAG = "main wallet fragment";
 
-    // service connect
-    private MainWalletServiceHelper mainWalletServiceHelper = null;
+    private TotalAssetsViewData totalAssetsVD = new TotalAssetsViewData();
+    private List<WalletViewData> walletVDs = new Vector<>();
+    private List<WalletViewData> tokenListVDs = new Vector<>();
 
-    private boolean isFingerprintInvalidated = false;
+    private String currentUnit = "USD";
+    private boolean balanceLoading = true;
+    private boolean exchangeLoading = true;
+    private boolean patchingData = false;
 
-    // cache data
-    private List<WalletCardViewData> cachedlstWalletData = new ArrayList<>();
-    private List<String[]> cachedIcxBalance = new ArrayList<>();
-    private List<String[]> cachedEthBalance = new ArrayList<>();
-    private List<String[]> cachedErrBalance = new ArrayList<>();
-    private HashMap<String, MainWalletServiceHelper.PRepsRemoteData> cachedpRepsData = new HashMap<>();
 
-    private Map<String, WalletEntry> indexedWalletEntry = new HashMap<>();
-    private Map<String, WalletItemViewData> indexedWalletItemData = new HashMap<>();
-    private Map<Integer, WalletEntry> indexedByIdWalletEntry = new HashMap<>();
-    private Map<Integer, Wallet> indexedByIdWallet = new HashMap<>();
+    private Handler handler = new Handler();
 
-    // ================== activity life cycle
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void loadViewData() {
+        walletVDs.clear();
+        tokenListVDs.clear();
+        totalAssetsVD = new TotalAssetsViewData();
+        balanceLoading = true;
+        exchangeLoading = true;
 
-        if (getIntent().getExtras() != null) {
-            MyConstants.MainPopUp popUp = (MyConstants.MainPopUp) getIntent().getExtras().get("popup");
-            if (popUp == MyConstants.MainPopUp.BUNDLE) {
-                MessageDialog messageDialog = new MessageDialog(this);
-                messageDialog.setTitleText(getString(R.string.msgLoadBundle));
-                messageDialog.show();
+        Map<String, List<EntryViewData>> mapTokenListEntries = new HashMap<>();
+        TokenWalletItem.TokenColor tokenColor = new TokenWalletItem.TokenColor(); // token background color
+        for(Wallet wallet : ICONexApp.wallets) {
+            List<EntryViewData> walletListEntries = new ArrayList<>();
+            for (WalletEntry entry : wallet.getWalletEntries()) {
+                EntryViewData entryVD = new EntryViewData(wallet, entry);
+                if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
+                    entryVD.setBgSymbolColor(tokenColor.getColor());
+                    tokenColor.nextColor();
+                }
+                walletListEntries.add(entryVD);
+
+                String key = wallet.getCoinType() + entry.getContractAddress();
+                if (!mapTokenListEntries.containsKey(key)) {
+                    mapTokenListEntries.put(key, new ArrayList<>());
+                }
+
+                List<EntryViewData> tokenListEntries = mapTokenListEntries.get(key);
+                entryVD.pos1 = tokenListEntries.size() + 1;
+                tokenListEntries.add(entryVD);
+            }
+            walletVDs.add(new WalletViewData(wallet, walletListEntries));
+        }
+
+        WalletViewData icxWallet = null;
+        WalletViewData ethWallet = null;
+        for (String key : mapTokenListEntries.keySet()) {
+            List<EntryViewData> tokenListEntries = mapTokenListEntries.get(key);
+            WalletViewData tokenListVD = new WalletViewData(null, tokenListEntries);
+            if (key.equals(Constants.KS_COINTYPE_ICX)) {
+                icxWallet = tokenListVD;
+            } else if(key.equals(Constants.KS_COINTYPE_ETH)) {
+                ethWallet = tokenListVD;
+            } else {
+                tokenListVDs.add(tokenListVD);
+            }
+        }
+        tokenListVDs.add(0, icxWallet);
+        tokenListVDs.add(1, ethWallet);
+
+        for (int i = 0; tokenListVDs.size() > i; i++) {
+            WalletViewData walletVD = tokenListVDs.get(i);
+            for (EntryViewData entrVD : walletVD.getEntryVDs()) {
+                entrVD.pos0 = i;
             }
         }
 
-        isFingerprintInvalidated = getIntent().getBooleanExtra(AuthActivity.EXTRA_INVALIDATED, false);
+        findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+        findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
+    }
+
+    @Override
+    public void patchViewData() {
+        loadViewData();
+        balanceLoading = false;
+        exchangeLoading = false;
+        patchingData = true;
+
+        for (int i = 0; ICONexApp.wallets.size() > i; i++) {
+            Wallet wallet = ICONexApp.wallets.get(i);
+            for (int j = 0; wallet.getWalletEntries().size() > j; j++) {
+                WalletEntry entry = wallet.getWalletEntries().get(j);
+                onLoadNextBalance(entry, i, j);
+            }
+
+            if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                onLoadNextiScore(wallet, i);
+                onLoadNextDelegation(wallet, i);
+            }
+        }
+
+        combineExchanges(-1, -1);
+        combineTotalAssets();
+        onLoadCompletePReps();
+        patchingData = false;
+
+        findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(android.R.id.content, MainWalletFragment.newInstance(), MAIN_WALLET_FRAGMENT_TAG)
                 .commit();
-
-        mainWalletServiceHelper = new MainWalletServiceHelper(this, this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        showRecoverFingerprintAuth();
-    }
-
-    // ===================== ViewData listener (MainWalletFragment.AsyncRequester)
-    @Override
-    public void asyncRequestInitData() {
-        cachingWalletItemData();
-        getMainWalletFragment().asyncResponseInit(cachedlstWalletData);
-        mainWalletServiceHelper.getPRepsRemoteData(new ArrayList<String>() {{
-            for (Wallet wallet : ICONexApp.wallets) {
-                if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                    add(wallet.getAddress());
-                }
-            }
-        }});
-    }
-
-    @Override
-    public void asyncRequestRefreshData() {
-        mainWalletServiceHelper.requestRemoteData();
-        mainWalletServiceHelper.getPRepsRemoteData(new ArrayList<String>() {{
-            for (Wallet wallet : ICONexApp.wallets) {
-                if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                    add(wallet.getAddress());
-                }
-            }
-        }});
-    }
-
-    @Override
-    public void asyncRequestChangeExchangeUnit(MainWalletFragment.ExchangeUnit exchangeUnit) {
-        setExchange(exchangeUnit);
-    }
-
-    @Override
-    public void notifyWalletDatachage() {
-        setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
-    }
-
-    @Override
-    public void onResumeFragment() {
-        mainWalletServiceHelper.resume();
-    }
-
-    @Override
-    public void onStopFragment() {
-        mainWalletServiceHelper.stop();
-    }
-
-    // =================== Service listener (MainWalletServiceHelper.OnLoadRemoteDataListener)
-    @Override
-    public void onLoadRemoteData(List<String[]> icxBalance, List<String[]> ethBalance, List<String[]> errBalance) {
-        Log.d(TAG, "load remote data, icx: " + icxBalance.size() + ", eth: " + ethBalance.size() + ", err: " + errBalance.size());
-        cachedIcxBalance = icxBalance;
-        cachedEthBalance = ethBalance;
-        cachedErrBalance = errBalance;
-
-        setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
-    }
-
-    @Override
-    public void onLoadPRepsData(HashMap<String, MainWalletServiceHelper.PRepsRemoteData> pRepsData) {
-        cachedpRepsData = pRepsData;
-        setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
-    }
-
-    @Override
-    public void onNetworkError() {
-        startActivity(new Intent(this, NetworkErrorActivity.class));
-    }
-
-    // =================== private methods
-    private void cachingWalletItemData() {
-        // load Item
-        cachedlstWalletData = new ArrayList<>();
-        for (Wallet wallet : ICONexApp.wallets) {
-            cachedlstWalletData.add(WalletCardViewData.convertWallet2ViewData(wallet));
-        }
-
-        // indexing wallet entry
-        indexedWalletEntry = new HashMap<>();
-        indexedByIdWalletEntry = new HashMap<>();
-        indexedByIdWallet = new HashMap<>();
-        for (Wallet wallet : ICONexApp.wallets) {
-            for (WalletEntry entry : wallet.getWalletEntries()) {
-                String key = wallet.getAddress() + "," + entry.getId();
-                indexedWalletEntry.put(key, entry);
-                indexedByIdWallet.put(entry.getId(), wallet);
-                indexedByIdWalletEntry.put(entry.getId(), entry);
-            }
-        }
-
-        // indexing view data
-        indexedWalletItemData = new HashMap<>();
-        for (WalletCardViewData walletViewData : cachedlstWalletData) {
-            for (WalletItemViewData itemViewData : walletViewData.getLstWallet()) {
-                String key = walletViewData.getAddress() + "," + itemViewData.getEntryID();
-                indexedWalletItemData.put(key, itemViewData);
-            }
-        }
-    }
-
-    private void setPRepsData(List<String[]> icxBalance,
-                              List<String[]> ethBalance,
-                              List<String[]> errBalance,
-                              HashMap<String, MainWalletServiceHelper.PRepsRemoteData> pRepsData) {
-
-        BigDecimal totalAsset = setBalances(icxBalance, ethBalance, errBalance);
-
-        for (WalletCardViewData cardViewData : cachedlstWalletData) {
-            MainWalletServiceHelper.PRepsRemoteData data = pRepsData.get(cardViewData.getAddress());
-            if (data != null) {
-                cardViewData.setStaked(data.getStake());
-                cardViewData.setiScore(data.getiScore());
-
-                WalletItemViewData walletItemViewData = cardViewData.getLstWallet().get(0);
-                walletItemViewData.setStacked(data.getStake());
-                walletItemViewData.setiScore(data.getiScore());
-            }
-        }
-
-
-        BigInteger totalVoted = BigInteger.ZERO;
-        BigInteger totalStake = BigInteger.ZERO;
-
-        for (String address : pRepsData.keySet()) {
-            MainWalletServiceHelper.PRepsRemoteData data = pRepsData.get(address);
-
-            totalVoted = totalVoted.add(data.getTotalDelegated());
-            totalStake = totalStake.add(data.getStake());
-        }
-
-        for (Wallet wallet : ICONexApp.wallets) {
-            MainWalletServiceHelper.PRepsRemoteData data = pRepsData.get(wallet.getAddress());
-            if (data != null) {
-                wallet.setStaked(data.getStake());
-                wallet.setiScore(data.getiScore());
-                wallet.setVotingPower(data.getVotingPower());
-            }
-        }
-
-        BigDecimal dTotalVoted = new BigDecimal(ConvertUtil.getValue(totalVoted, 18));
-        BigDecimal dTotalStake = new BigDecimal(ConvertUtil.getValue(totalStake, 18));
-        BigDecimal votedPower = dTotalStake.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO :
-                dTotalVoted.divide(dTotalStake, 1, RoundingMode.HALF_UP);
-
-        getMainWalletFragment().asyncResponseRefreash(
-                cachedlstWalletData,
-                new TotalAssetsViewData()
-                        .setTotalAsset(totalAsset)
-                        .setVotedPower(votedPower)
-        );
-    }
-
-    private BigDecimal setBalance(String id, String address, String result, String unit) {
-        String key = address + "," + id;
-        WalletEntry walletEntry = indexedWalletEntry.get(key);
-        WalletItemViewData viewData = indexedWalletItemData.get(key);
-        if (walletEntry == null || viewData == null) return null;
-
-        try {
-            walletEntry.setBalance(result);
-            // if result == "-" then throw exception
-            String strDecimal = ConvertUtil.getValue(new BigInteger(walletEntry.getBalance()), walletEntry.getDefaultDec());
-            BigDecimal balance = new BigDecimal(strDecimal);
-
-            String exchangeKey = viewData.getSymbol().toLowerCase() + unit;
-            BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
-            BigDecimal exchanged = balance.multiply(exchanger);
-
-            viewData.setAmount(balance).setExchanged(exchanged);
-            return exchanged;
-        } catch (Exception e) {
-            // if result == "-" then amount(balance), exchange set null
-            Log.d(TAG, "set balance " + walletEntry.getName() + ": " + e.getMessage());
-            viewData.setAmount(null).setExchanged(null);
-            return null;
-        }
-    }
-
-    private BigDecimal setBalances(
-            List<String[]> icxBalance,
-            List<String[]> ethBalance,
-            List<String[]> errBalance) {
-
-        BigDecimal totalAsset = icxBalance.size() == 0 && ethBalance.size() == 0 ? null : BigDecimal.ZERO;
-        MainWalletFragment.ExchangeUnit exchageUnit = getMainWalletFragment().getCurrentExchangeUnit();
-        String strUnit = exchageUnit.name().toLowerCase();
-
-        cachingWalletItemData();
-
-        for (String[] param : icxBalance) {
-            BigDecimal exchanged = setBalance(param[0], param[1], param[2], strUnit);
-            if (exchanged != null) {
-                totalAsset = totalAsset.add(exchanged);
-            } // else
-        }
-
-        for (String[] param : ethBalance) {
-            BigDecimal exchanged = setBalance(param[0], param[1], param[2], strUnit);
-            if (exchanged != null) {
-                totalAsset = totalAsset.add(exchanged);
-            } // else
-        }
-
-        for (String[] param : errBalance) {
-            setBalance(param[0], param[1], param[2], strUnit);
-        }
-
-        return totalAsset;
-    }
-
-    private void setExchange(MainWalletFragment.ExchangeUnit exchangeUnit) {
-        String unit = exchangeUnit.name();
-
-        BigDecimal totalAsset = null;
-        for (WalletItemViewData viewData : indexedWalletItemData.values()) {
-            try {
-                BigDecimal balance = viewData.getAmount();
-
-                String exchangeKey = viewData.getSymbol().toLowerCase() + unit.toLowerCase();
-                BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
-                BigDecimal exchanged = balance.multiply(exchanger);
-
-                viewData.setExchanged(exchanged);
-                if (totalAsset == null) totalAsset = BigDecimal.ZERO;
-                totalAsset = totalAsset.add(exchanged);
-            } catch (Exception e) {
-                viewData.setExchanged(null);
-            }
-
-        }
-        getMainWalletFragment().asyncResponseChangeExchangeUnit(
-                exchangeUnit,
-                new TotalAssetsViewData().setTotalAsset(totalAsset)
-        );
-    }
-
-    private MainWalletFragment getMainWalletFragment() {
+    private MainWalletFragment findFragment() {
         return ((MainWalletFragment) getSupportFragmentManager()
                 .findFragmentByTag(MAIN_WALLET_FRAGMENT_TAG));
     }
 
-    private Wallet findWalletByViewData(WalletCardViewData viewData) {
-        String address = viewData.getAddress();
+    @Override
+    public void onLoadNextBalance(WalletEntry entry, int walletPosition, int entryPosition) {
+        EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(entryPosition);
+        try {
+            BigInteger intBalance = new BigInteger(entry.getBalance());
+            String strBalance = ConvertUtil.getValue(intBalance, entry.getDefaultDec());
+            String deciBalance = DecimalFomatter.format(new BigDecimal(strBalance));
+            entryVD.setTxtAmount(deciBalance);
+        } catch (Exception e) {
+            entryVD.setTxtAmount(MyConstants.NO_BALANCE);
+        }
+        entryVD.amountLoading = false;
+        combineExchanges(walletPosition, entryPosition);
+    }
+
+    @Override
+    public void onLoadCompleteBalance() {
+        balanceLoading = false;
+        combineTotalAssets();
+    }
+
+    @Override
+    public void onLoadCompleteExchangeTable() {
+        exchangeLoading = false;
+        combineExchanges(-1, -1);
+        combineTotalAssets();
+    }
+
+    @Override
+    public void onLoadNextiScore(Wallet wallet, int walletPosition) {
+        EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
+        try {
+            BigInteger intIScore = wallet.getiScore();
+            String strIScore = ConvertUtil.getValue(intIScore, 18);
+            String deciIScore = DecimalFomatter.format(new BigDecimal(strIScore));
+            entryVD.setTxtIScore(deciIScore);
+        } catch (Exception e) {
+            entryVD.setTxtIScore(MyConstants.NO_BALANCE);
+        }
+        entryVD.iscoreLoading = false;
+        if (!patchingData) findFragment().notifyItemChange(walletPosition, 0);
+    }
+
+    @Override
+    public void onLoadNextDelegation(Wallet wallet, int walletPosition) {
+        WalletEntry entry = wallet.getWalletEntries().get(0);
+        EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
+        try {
+            BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec()));
+            BigDecimal staked = new BigDecimal(ConvertUtil.getValue(wallet.getStaked(), 18));
+
+            BigDecimal percent = BigDecimal.ZERO.setScale(1);
+            if (balance.compareTo(BigDecimal.ZERO) != 0) {
+                percent = staked.multiply(new BigDecimal(100))
+                        .divide(balance, 1, BigDecimal.ROUND_HALF_UP);
+            }
+
+            entryVD.setTxtStacked(DecimalFomatter.format(staked) + " (" + percent + "%)");
+
+        } catch (Exception e) {
+            entryVD.setTxtStacked("- ( - %)");
+        }
+        entryVD.prepsLoading = false;
+        if (!patchingData) findFragment().notifyItemChange(walletPosition, 0);
+    }
+
+    @Override
+    public void onLoadCompletePReps() {
+        BigInteger totalVoting = BigInteger.ZERO;
+        BigInteger totalStaked = BigInteger.ZERO;
+
         for (Wallet wallet : ICONexApp.wallets) {
-            if (wallet.getAddress().equals(address)) {
-                return wallet;
+            if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                try {
+                    BigInteger votingSum = wallet.getVotingPower().add(totalVoting);
+                    BigInteger stakedSum = wallet.getStaked().add(totalStaked);
+                    totalVoting = votingSum;
+                    totalStaked = stakedSum;
+                } catch (Exception e) { }
             }
         }
 
-        return null;
-    }
-
-    // ======================= on click item listenr
-    @Override
-    public void onClickWalletItem(WalletItemViewData itemViewData) {
-        Integer entryID = itemViewData.getEntryID();
-        Wallet wallet = indexedByIdWallet.get(entryID);
-        WalletEntry walletEntry = indexedByIdWalletEntry.get(entryID);
-
-        startActivity(
-                new Intent(this, WalletDetailActivity.class)
-                        .putExtra(WalletDetailActivity.PARAM_ENTRY_ID, entryID)
-                        .putExtra(WalletDetailActivity.PARAM_WALLET, ((Serializable) wallet))
-                        .putExtra(WalletDetailActivity.PARAM_WALLET_ENTRY, ((Serializable) walletEntry))
-        );
-    }
-
-    // ==================================== side menu item
-    @Override
-    public void createWallet() {
-        startActivity(new Intent(this, CreateWalletActivity.class));
-    }
-
-    @Override
-    public void loadWallet() {
-        startActivity(new Intent(this, LoadWalletActivity.class));
-    }
-
-    @Override
-    public void exportWalletBundle() {
-        startActivity(new Intent(this, ExportWalletBundleActivity.class));
-    }
-
-    @Override
-    public void screenLock() {
-        startActivity(new Intent(this, SettingLockActivity.class)
-                .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.DEFAULT));
-    }
-
-    @Override
-    public void appVer() {
-        startActivity(new Intent(this, AppInfoActivity.class));
-    }
-
-    @Override
-    public void iconexDisclamers() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(android.R.id.content, new IconDisclaimerDialogFragment())
-                .addToBackStack(null)
-                .commit();
-    }
-
-    // ========================= P-Peps Menu
-    private MessageDialog messageDialog;
-    private WalletPasswordDialog passwordDialog;
-
-    @Override
-    public void pReps(WalletCardViewData viewData) {
-        startActivity(new Intent(this, PRepListActivity.class));
-    }
-
-    @Override
-    public void stake(WalletCardViewData viewData) {
-        Wallet wallet = findWalletByViewData(viewData);
-
-        passwordDialog = new WalletPasswordDialog(this, wallet,
-                new WalletPasswordDialog.OnPassListener() {
-                    @Override
-                    public void onPass(byte[] bytePrivateKey) {
-                        startActivity(new Intent(MainWalletActivity.this, PRepStakeActivity.class)
-                                .putExtra("wallet", (Serializable) wallet)
-                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
-                    }
-                });
-
-        try {
-            BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
-            if (balance.compareTo(new BigInteger("5")) < 0) {
-                messageDialog = new MessageDialog(MainWalletActivity.this);
-                messageDialog.setTitleText(getString(R.string.notEnoughForStaking));
-                messageDialog.show();
-            } else {
-                passwordDialog.show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Balance loading", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void vote(WalletCardViewData viewData) {
-        Wallet wallet = findWalletByViewData(viewData);
-
-        passwordDialog = new WalletPasswordDialog(this, wallet,
-                new WalletPasswordDialog.OnPassListener() {
-                    @Override
-                    public void onPass(byte[] bytePrivateKey) {
-                        startActivity(new Intent(MainWalletActivity.this, PRepVoteActivity.class)
-                                .putExtra("wallet", (Serializable) wallet)
-                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
-                    }
-                });
-
-        try {
-            BigInteger votingPower = wallet.getVotingPower();
-            if (votingPower.compareTo(BigInteger.ZERO) == 0) {
-                messageDialog = new MessageDialog(MainWalletActivity.this);
-                messageDialog.setTitleText(getString(R.string.hasNoVotingPower));
-                messageDialog.show();
-            } else {
-                passwordDialog.show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Voting power loading", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void iScore(WalletCardViewData viewData) {
-        Wallet wallet = findWalletByViewData(viewData);
-
-        passwordDialog = new WalletPasswordDialog(this, wallet,
-                new WalletPasswordDialog.OnPassListener() {
-                    @Override
-                    public void onPass(byte[] bytePrivateKey) {
-                        startActivity(new Intent(MainWalletActivity.this, PRepIScoreActivity.class)
-                                .putExtra("wallet", (Serializable) wallet)
-                                .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
-                    }
-                });
-
-        passwordDialog.show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
+        if (totalStaked.compareTo(BigInteger.ZERO) != 0) {
+            BigDecimal percent = new BigDecimal(totalStaked.subtract(totalVoting))
+                    .divide(new BigDecimal(totalStaked).multiply(new BigDecimal(100)), 1, RoundingMode.HALF_UP);
+            totalAssetsVD.setVotedPower(percent);
         } else {
-            super.onBackPressed();
+            totalAssetsVD.setVotedPower(new BigDecimal("0.0"));
+        }
+        totalAssetsVD.loadingVotedpower = false;
+        if (!patchingData) findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
+    }
+
+    @Override
+    public void onLoadCompleteAll() {
+        combineTopToken();
+    }
+
+    @Override
+    public void onNetworkError() {
+
+    }
+
+    private void combineTotalAssets() {
+        if (exchangeLoading || balanceLoading) return;
+
+        BigDecimal totalBalance = BigDecimal.ZERO;
+        for (WalletViewData walletVD : walletVDs) {
+            for (EntryViewData entryVD : walletVD.getEntryVDs()) {
+                BigDecimal exchanged = entryVD.getExchanged();
+                if (exchanged != null) {
+                    totalBalance = totalBalance.add(exchanged);
+                }
+            }
+        }
+        totalAssetsVD.setTotalAsset(totalBalance, currentUnit);
+        totalAssetsVD.loadingTotalAssets = false;
+        findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
+    }
+
+    private void combineTopToken() {
+        for (WalletViewData walletVD : tokenListVDs) {
+
+            List<EntryViewData> entryVDs = walletVD.getEntryVDs();
+            EntryViewData topTokenVD = entryVDs.get(0);
+
+            BigDecimal totalBalance = null;
+            for (int i = 1; entryVDs.size() > i; i++) {
+                try {
+                    EntryViewData entryVD = entryVDs.get(i);
+                    BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entryVD.getEntry().getBalance()), entryVD.getEntry().getDefaultDec()));
+                    totalBalance = balance.add(totalBalance == null ? BigDecimal.ZERO : totalBalance);
+                } catch (Exception e) { }
+            }
+
+            topTokenVD.setTxtAmount(totalBalance == null ? MyConstants.NO_BALANCE : DecimalFomatter.format(totalBalance));
+            topTokenVD.amountLoading = false;
+
+            BigDecimal exchanged = null;
+            try {
+                String exchangeKey = entryVDs.get(1).getEntry().getSymbol().toLowerCase() + currentUnit.toLowerCase();
+                String strExchanger = ICONexApp.EXCHANGE_TABLE.get(exchangeKey);
+                BigDecimal deciExchanger = new BigDecimal(strExchanger);
+                exchanged = totalBalance.multiply(deciExchanger);
+            } catch (Exception e) { }
+            topTokenVD.setExchanged(exchanged, currentUnit);
+            topTokenVD.exchageLoading = false;
+        }
+        if (!patchingData) findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+    }
+
+    // -1, -1 -> totally refresh
+    private void combineExchanges(int walletPosition, int entryPosition) {
+        boolean isTotally = walletPosition == -1 || entryPosition == -1;
+
+        if (!exchangeLoading) {
+            if (isTotally) {
+                for (int i = 0; walletVDs.size() > i; i++) {
+                    WalletViewData walletVD = walletVDs.get(i);
+                    for (int j = 0; walletVD.getEntryVDs().size() > j; j++) {
+                        EntryViewData entryVD = walletVD.getEntryVDs().get(j);
+                        if (!entryVD.amountLoading) {
+                            WalletEntry entry = ICONexApp.wallets.get(i).getWalletEntries().get(j);
+                            entryVD.setExchanged(calcExchange(entry), currentUnit);
+                            entryVD.exchageLoading = false;
+                        }
+                    }
+                }
+            } else {
+                WalletEntry entry = ICONexApp.wallets.get(walletPosition).getWalletEntries().get(entryPosition);
+                EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(entryPosition);
+                entryVD.setExchanged(calcExchange(entry), currentUnit);
+                entryVD.exchageLoading = false;
+            }
+        }
+
+        if (!patchingData)
+            if (isTotally) {
+                findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+            } else {
+                findFragment().notifyItemChange(walletPosition, entryPosition);
+            }
+    }
+
+    private BigDecimal calcExchange(WalletEntry entry) {
+        try {
+            BigInteger intBalance = new BigInteger(entry.getBalance());
+            String strBalance = ConvertUtil.getValue(intBalance, entry.getDefaultDec());
+            BigDecimal deciBalance = new BigDecimal(strBalance);
+
+            String exchangeKey = entry.getSymbol().toLowerCase() + currentUnit.toLowerCase();
+            String strExchanger = ICONexApp.EXCHANGE_TABLE.get(exchangeKey);
+            BigDecimal deciExchanger = new BigDecimal(strExchanger);
+
+            BigDecimal exchanged = deciBalance.multiply(deciExchanger);
+            return exchanged;
+        } catch (Exception e) {
+            return null;
         }
     }
 
-    private void showRecoverFingerprintAuth() {
-        if (isFingerprintInvalidated) {
-            isFingerprintInvalidated = false;
-            MessageDialog messageDialog = new MessageDialog(this);
-            messageDialog.setTitleText(getString(R.string.authMsgRecoverFingerprintAuth));
-            messageDialog.setSingleButton(false);
-            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
-                @Override
-                public Boolean invoke(View view) {
-                    startActivity(new Intent(MainWalletActivity.this, SettingLockActivity.class)
-                            .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.RECOVER));
-                    return true;
-                }
-            });
-            messageDialog.show();
-        }
+    @Override
+    public void refreashViewData() {
+        loadViewData();
+        serviceHelper.setListener(this);
+        serviceHelper.requestAllData();
+    }
+
+    @Override
+    public void chagneExchageUnit(String unit) {
+        currentUnit = unit;
+        combineExchanges(-1, -1);
+        combineTopToken();
+        combineTotalAssets();
+    }
+
+    @Override
+    public void fragmentStart() {
+        loadViewData();
+        serviceHelper.setListener(this);
+        serviceHelper.requestAllData();
+    }
+
+
+    @Override
+    public void fragmenetResume() {
+        serviceHelper.setListener(this);
+        patchViewData();
+    }
+
+    @Override
+    public void fragmentStop() {
+        serviceHelper.clearListener();
     }
 
     @Override
@@ -527,7 +399,8 @@ public class MainWalletActivity extends AppCompatActivity implements
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        setPRepsData(cachedIcxBalance, cachedEthBalance, cachedErrBalance, cachedpRepsData);
+                        loadViewData();
+                        serviceHelper.requestAllData();
                     }
                 });
             }
