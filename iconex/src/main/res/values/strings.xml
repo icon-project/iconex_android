@@ -555,6 +555,7 @@
     <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
     <string name="messageRequestSend">ICX를 ICONex 지갑으로 보내주세요.</string>
     <string name="chooseMsgRequestSend">전송 요청 메세지 보내기</string>
+    <string name="generateQRcode">QR 코드 생성</string>
 
     <!-- New - wallet menu -->
     <string name="totalAssets">전체 자산 가치</string>

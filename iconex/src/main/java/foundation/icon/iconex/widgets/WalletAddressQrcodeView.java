@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.InputType;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,19 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletAddressCardView;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -52,6 +63,8 @@ public class WalletAddressQrcodeView extends FrameLayout {
     private Button btnRequestSend;
     private TextView txtTransSendAmount;
 
+    private String symbol;
+
     public interface OnDismissListener {
         void onDismiss();
     }
@@ -66,6 +79,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
         txtName.setText(title);
         txtAddress.setText(wallet.getAddress());
         setQrCode(wallet.getAddress(), imgQrCode);
+        symbol = wallet.getWalletEntries().get(0).getSymbol();
 
         // set only icx
         boolean isICX = wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX);
@@ -111,16 +125,71 @@ public class WalletAddressQrcodeView extends FrameLayout {
         btnRequestSend.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = getContext().getString(R.string.messageRequestSend);
-                if (!editSendAmount.getText().equals("")) {
-                    message = editSendAmount.getText() + " " + message;
+                String address = txtAddress.getText().toString();
+                String amount = editSendAmount.getText();
+                if (amount.equals("")) {
+                    setQrCode(address, imgQrCode);
+                } else {
+                    JSONObject requestData = new JSONObject();
+                    try {
+                        requestData.put("address", address);
+                        String balanceHexString = ConvertUtil.valueToHexString(amount,18);
+                        requestData.put("amount",balanceHexString);
+                        String jsonData = requestData.toString();
+                        String base64Encoded = Base64.encodeToString(jsonData.getBytes(), Base64.NO_WRAP);
+                        String connectString = "iconex://pay?data=" + base64Encoded;
+                        setQrCode(connectString, imgQrCode);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        setQrCode(address, imgQrCode);
+                    }
                 }
+            }
+        });
+        editSendAmount.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
+            @Override
+            public void onChanged(@NotNull CharSequence s) {
+                if (s.length() > 0) {
+                    if (s.toString().startsWith(".")) {
+                        editSendAmount.setText("");
+                    } else {
+                        if (s.toString().indexOf(".") < 0) {
+                            if (s.length() > 10) {
+                                editSendAmount.setText(s.subSequence(0, 10).toString());
+                                editSendAmount.setSelection(10);
+                            }
+                        } else {
+                            String[] values = s.toString().split("\\.");
 
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, message);
-                Intent chooser = Intent.createChooser(intent, getContext().getString(R.string.chooseMsgRequestSend));
-                getContext().startActivity(chooser);
+                            if (values.length == 2) {
+                                String decimal = values[0];
+                                String below = values[1];
+
+                                if (decimal.length() > 10) {
+                                    decimal = decimal.substring(0, 10);
+                                    editSendAmount.setText(decimal + "." + below);
+                                    editSendAmount.setSelection(editSendAmount.getText().toString().length());
+                                } else if (below.length() > 8) {
+                                    below = below.substring(0, 8);
+                                    editSendAmount.setText(decimal + "." + below);
+                                    editSendAmount.setSelection(editSendAmount.getText().toString().length());
+                                }
+                            }
+                        }
+
+                        String amount = editSendAmount.getText();
+                        String strPrice = ICONexApp.EXCHANGE_TABLE.get(symbol.toLowerCase() + "usd");
+                        if (strPrice != null) {
+                            Double transUSD = Double.parseDouble(amount)
+                                    * Double.parseDouble(strPrice);
+                            String strTransUSD = String.format("%,.2f", transUSD);
+
+                            txtTransSendAmount.setText(String.format("$ %s", strTransUSD));
+                        }
+                    }
+                } else {
+                    txtTransSendAmount.setText("$ 0.00");
+                }
             }
         });
 
@@ -136,7 +205,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
         });
     }
 
-    private void setQrCode(String address, ImageView target){
+    private void setQrCode(String string, ImageView target){
         final Bitmap[] qrCode = {null};
         target.setImageBitmap(null);
         Completable.fromAction(new Action() {
@@ -144,7 +213,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
             public void run() throws Exception {
                 QRCodeWriter qrCodeWriter = new QRCodeWriter();
                 int size = (int) getResources().getDimension(R.dimen.QRCodeSize);
-                BitMatrix matrix = qrCodeWriter.encode(address, BarcodeFormat.QR_CODE, size, size);
+                BitMatrix matrix = qrCodeWriter.encode(string, BarcodeFormat.QR_CODE, size, size);
                 int height = matrix.getHeight();
                 int width = matrix.getWidth();
                 qrCode[0] = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
