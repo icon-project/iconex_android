@@ -23,6 +23,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.service.NetworkErrorActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
@@ -98,8 +99,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                 tokenListVDs.add(tokenListVD);
             }
         }
-        tokenListVDs.add(0, icxWallet);
-        tokenListVDs.add(1, ethWallet);
+        if (icxWallet != null) tokenListVDs.add(0, icxWallet);
+        if (ethWallet != null) tokenListVDs.add(tokenListVDs.size() > 0 && icxWallet != null ? 1 : 0, ethWallet);
 
         for (int i = 0; tokenListVDs.size() > i; i++) {
             WalletViewData walletVD = tokenListVDs.get(i);
@@ -289,7 +290,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
 
     @Override
     public void onNetworkError() {
-
+        startActivity(new Intent(this, NetworkErrorActivity.class));
     }
 
     private void combineTotalAssets() {

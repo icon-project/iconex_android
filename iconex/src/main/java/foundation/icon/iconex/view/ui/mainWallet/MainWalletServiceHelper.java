@@ -76,6 +76,79 @@ public class MainWalletServiceHelper {
         void onNetworkError();
     }
 
+    private int cntBalance = 0;
+    private int cntExchange = 0;
+    private int cntIScore = 0;
+    private int cntStake = 0;
+    private int cntDelegation = 0;
+    private boolean isRequesting = false;
+    private boolean isNotifyCompleteLoadBalance = false;
+    private boolean isNotifyCompleteLoadExchange = false;
+    private boolean isNotifyCompleteLoadPReps = false;
+    private boolean isNotifyCompleteLoadAll = false;
+    private boolean isNotifyNetworkError = false;
+
+    synchronized private void checking(
+            OnLoadListener listener,
+            Boolean balance,
+            Boolean exchange,
+
+            Boolean iscore,
+            Boolean stake,
+            Boolean delegation,
+
+            Boolean requesting) {
+
+        if (balance != null) cntBalance += balance ? +1 : -1;
+        if (exchange != null) cntExchange += exchange ? +1 : -1;
+
+        if (iscore != null) cntIScore += iscore ? +1 : -1;
+        if (stake != null) cntStake += stake ? +1 : -1;
+        if (delegation != null) cntDelegation += delegation ? +1 : -1;
+
+        if (requesting != null) {
+            isRequesting = requesting;
+            if (requesting) {
+                cntBalance = 0;
+                cntExchange = 0;
+                cntIScore = 0;
+                cntStake = 0;
+                cntDelegation = 0;
+                isNotifyCompleteLoadBalance = false;
+                isNotifyCompleteLoadExchange = false;
+                isNotifyCompleteLoadPReps = false;
+                isNotifyCompleteLoadAll = false;
+                isNotifyNetworkError = false;
+            }
+        }
+
+        if (!isRequesting && listener != null) {
+            if (cntBalance == 0 && !isNotifyCompleteLoadBalance) {
+                listener.onLoadCompleteBalance();
+                Log.d(TAG, "checking: load complete balance!");
+                isNotifyCompleteLoadBalance = true;
+            }
+
+            if (cntExchange == 0 && !isNotifyCompleteLoadExchange) {
+                listener.onLoadCompleteExchangeTable();
+                Log.d(TAG, "checking: load complete exchange Table!");
+                isNotifyCompleteLoadExchange = true;
+            }
+
+            if (cntIScore == 0 && cntStake == 0 && cntDelegation == 0 && !isNotifyCompleteLoadPReps) {
+                listener.onLoadCompletePReps();
+                Log.d(TAG, "checking: load complete preps data!");
+                isNotifyCompleteLoadPReps = true;
+            }
+
+            if (cntBalance == 0 && cntExchange == 0 && cntIScore == 0 && cntStake == 0 && cntDelegation == 0 && !isNotifyCompleteLoadAll) {
+                listener.onLoadCompleteAll();
+                Log.d(TAG, "checking: load complete all data!");
+                isNotifyCompleteLoadAll = true;
+            }
+        }
+    }
+
     public OnLoadListener listener[] = null;
     public void setListener(OnLoadListener listener) {
         this.listener = new OnLoadListener[] {listener};
@@ -91,94 +164,46 @@ public class MainWalletServiceHelper {
         Log.d(TAG, "requestAllData() called");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
 
-        action(new NetworkErrorAction() {
-            @Override
-            public void action() throws Throwable {
-                merge(new ArrayList<Completable>() {{
+        checking(listener, null, null, null, null, null, true);
 
-                    add(requestBalance());
-                    add(requestExchangeTable());
-                    add(requestRReps());
+        requestBalance();
+        requestExchangeTable();
+        requestRReps();
 
-                }}, new SimpleObserver() {
-                    @Override
-                    public void onDone() {
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.d(TAG, "onDone() called in requestAllData!");
-
-                                if (listener != null) {
-                                    listener.onLoadCompleteAll();
-                                }
-                            }
-                        }, 100);
-                    }
-
-                    @Override
-                    public void onNetworkError(UnknownHostException e) {
-                        Log.d(TAG, "onNetworkError() called in requestAllData");
-                        e.printStackTrace();
-                        if (listener != null) {
-                            listener.onNetworkError();
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onOtherError(Throwable e) {
-
-            }
-        }, new SimpleObserver() {
-            @Override
-            void onDone() {
-                Log.d(TAG, "onDone() called request complete!");
-            }
-        });
+        checking(listener, null, null, null, null, null, false);
     }
 
-    private Completable requestBalance() {
+    private void requestBalance() {
         Log.d(TAG, "requestBalance() called");
-        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
 
-        return merge(new ArrayList<Completable>() {{
-            int szWallets = ICONexApp.wallets.size();
-            for (int i = 0; szWallets > i; i++) {
-                Wallet wallet = ICONexApp.wallets.get(i);
-                int szEntries = wallet.getWalletEntries().size();
-                for (int j = 0; szEntries > j; j++){
-                    WalletEntry entry = wallet.getWalletEntries().get(j);
+        int szWallets = ICONexApp.wallets.size();
+        for (int i = 0; szWallets > i; i++) {
+            Wallet wallet = ICONexApp.wallets.get(i);
+            int szEntries = wallet.getWalletEntries().size();
+            for (int j = 0; szEntries > j; j++){
+                WalletEntry entry = wallet.getWalletEntries().get(j);
 
-                    if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-                            add(getIcxCoinBalance(entry, i, j));
-                        } else {
-                            add(getIcxTokenBalance(entry, i, j));
-                        }
+                if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                    if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                        getIcxCoinBalance(entry, i, j);
                     } else {
-                        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-                            add(getEthCoinBalance(entry, i, j));
-                        } else {
-                            add(getEthTokenBalance(entry, i, j));
-                        }
+                        getIcxTokenBalance(entry, i, j);
+                    }
+                } else {
+                    if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                        getEthCoinBalance(entry, i, j);
+                    } else {
+                        getEthTokenBalance(entry, i, j);
                     }
                 }
             }
-        }}, new SimpleObserver() {
-            @Override
-            public void onDone() {
-                if (listener != null) {
-                    listener.onLoadCompleteBalance();
-                }
-            }
-        });
+        }
     }
 
     private Completable getIcxCoinBalance(WalletEntry entry, int walletPosition, int entryPosition) {
         Log.d(TAG, "getIcxCoinBalance() called with: entry = [" + LogEntry(entry,false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        checking(listener, true, null, null, null, null, null);
         int entryId = entry.getId();
         String address = entry.getAddress();
         final String[] balance = {null};
@@ -205,6 +230,7 @@ public class MainWalletServiceHelper {
                 if (listener != null) {
                     listener.onLoadNextBalance(entry, walletPosition, entryPosition);
                 }
+                checking(listener, false, null, null, null, null, null);
             }
         });
     }
@@ -212,6 +238,7 @@ public class MainWalletServiceHelper {
     private Completable getIcxTokenBalance(WalletEntry entry, int walletPosition, int entryPosition) {
         Log.d(TAG, "getIcxTokenBalance() called with: entry = [" + LogEntry(entry,false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        checking(listener, true, null, null, null, null, null);
         int entryId = entry.getId();
         String address = entry.getAddress();
         String contractAddress = entry.getContractAddress();
@@ -222,7 +249,7 @@ public class MainWalletServiceHelper {
             public void action() throws Throwable {
                 LoopChainClient client = new LoopChainClient(getIcxHost());
                 Response<LCResponse> response = client.getTokenBalance(entryId, address, contractAddress).execute();
-                if (response.errorBody() != null) throw new Exception(response.errorBody().string());
+                if (response.errorBody() != null) throw new Exception(response.message());
                 String hexBalance = response.body().getResult().getAsString();
                 balance[0] = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
             }
@@ -239,6 +266,7 @@ public class MainWalletServiceHelper {
                 if (listener != null) {
                     listener.onLoadNextBalance(entry, walletPosition, entryPosition);
                 }
+                checking(listener, false, null, null, null, null, null);
             }
         });
     }
@@ -246,6 +274,7 @@ public class MainWalletServiceHelper {
     private Completable getEthCoinBalance(WalletEntry entry, int walletPosition, int entryPosition) {
         Log.d(TAG, "getEthCoinBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        checking(listener, true, null, null, null, null, null);
         String address = entry.getAddress();
         final String[] balance = {null};
 
@@ -271,6 +300,7 @@ public class MainWalletServiceHelper {
                 if (listener != null) {
                     listener.onLoadNextBalance(entry, walletPosition, entryPosition);
                 }
+                checking(listener, false, null, null, null, null, null);
             }
         });
     }
@@ -278,6 +308,7 @@ public class MainWalletServiceHelper {
     private Completable getEthTokenBalance(WalletEntry entry, int walletPosition, int entryPosition) {
         Log.d(TAG, "getEthTokenBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        checking(listener, true, null, null, null, null, null);
         String address = entry.getAddress();
         String contractAddress = entry.getContractAddress();
         final String[] balance = {null};
@@ -303,16 +334,18 @@ public class MainWalletServiceHelper {
                 if (listener != null) {
                     listener.onLoadNextBalance(entry, walletPosition, entryPosition);
                 }
+                checking(listener, false, null, null, null, null, null);
             }
         });
     }
 
-    private Completable requestExchangeTable() {
+    private void requestExchangeTable() {
         Log.d(TAG, "requestExchangeTable() called");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
         HashMap<String, String> exchangeTable = new HashMap<>();
 
-        return action(new NetworkErrorAction() {
+        checking(listener, null, true, null, null, null, null);
+        action(new NetworkErrorAction() {
             @Override
             public void action() throws Throwable {
                 StringBuilder lstExchange = new StringBuilder();
@@ -347,40 +380,28 @@ public class MainWalletServiceHelper {
                 if (listener != null) {
                     listener.onLoadCompleteExchangeTable();
                 }
+                checking(listener, null, false, null, null, null, null);
             }
         });
     }
-    private Completable requestRReps() {
+
+    private void  requestRReps() {
         Log.d(TAG, "requestRReps() called");
-        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
-
-        return merge(new ArrayList<Completable>() {{
-
-            int size = ICONexApp.wallets.size();
-            for (int i = 0;  size > i; i++) {
-                Wallet wallet = ICONexApp.wallets.get(i);
-                if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                    add(getIScore(wallet, i));
-                    add(getStake(wallet, i));
-                    add(getDelegation(wallet, i));
-                }
+        int size = ICONexApp.wallets.size();
+        for (int i = 0;  size > i; i++) {
+            Wallet wallet = ICONexApp.wallets.get(i);
+            if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                getIScore(wallet, i);
+                getStake(wallet, i);
+                getDelegation(wallet, i);
             }
-
-        }}, new SimpleObserver() {
-            @Override
-            public void onDone() {
-                Log.d(TAG, "onDone() called in requestPReps");
-
-                if (listener != null) {
-                    listener.onLoadCompletePReps();
-                }
-            }
-        });
+        }
     }
 
     private Completable getIScore(Wallet wallet, int walletPosition) {
         Log.d(TAG, "getIScore() called with: wallet = [" + LogWallet(wallet,false) + "], walletPosition = [" + walletPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        checking(listener, null, null, true, null, null, null);
         String address = wallet.getAddress();
         String url = ICONexApp.NETWORK.getUrl();
         final BigInteger[] iscore = {null};
@@ -405,6 +426,7 @@ public class MainWalletServiceHelper {
                 if (listener != null) {
                     listener.onLoadNextiScore(wallet, walletPosition);
                 }
+                checking(listener, null, null, false, null, null, null);
             }
         });
     }
@@ -412,6 +434,7 @@ public class MainWalletServiceHelper {
     private Completable getStake(Wallet wallet, int walletPosition) {
         Log.d(TAG, "getStake() called with: wallet = [" + LogWallet(wallet, false) + "], walletPosition = [" + walletPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        checking(listener, null, null, null, true, null, null);
         String address = wallet.getAddress();
         String url = ICONexApp.NETWORK.getUrl();
         final BigInteger[] stake = new BigInteger[1];
@@ -439,6 +462,7 @@ public class MainWalletServiceHelper {
                 wallet.setStaked(stake[0]);
                 if (listener != null)
                     listener.onLoadNextStake(wallet, walletPosition, unstake[0]);
+                checking(listener, null, null, null, false, null, null);
             }
         });
     }
@@ -446,6 +470,7 @@ public class MainWalletServiceHelper {
     private Completable getDelegation(Wallet wallet, int walletPosition) {
         Log.d(TAG, "getDelegation() called with: wallet = [" + LogWallet(wallet,false) + "], walletPosition = [" + walletPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+        checking(listener, null, null, null, null, true, null);
         String address = wallet.getAddress();
         String url = ICONexApp.NETWORK.getUrl();
         final BigInteger[] votingPower = new BigInteger[1];
@@ -470,6 +495,7 @@ public class MainWalletServiceHelper {
                 if (listener != null) {
                     listener.onLoadNextDelegation(wallet, walletPosition);
                 }
+                checking(listener, null, null, null, null, false, null);
             }
         });
     }
@@ -521,6 +547,8 @@ public class MainWalletServiceHelper {
     }
 
     private Completable action(NetworkErrorAction act, SimpleObserver ob) {
+        final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
+
         Completable completable = Completable.fromAction(act)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -540,32 +568,11 @@ public class MainWalletServiceHelper {
             public void onError(Throwable e) {
                 ob.onDone();
                 ob.onNetworkError(((UnknownHostException) e));
-            }
-        });
-
-        return completable;
-    }
-
-    private Completable merge(ArrayList<Completable> lst, SimpleObserver ob) {
-        Completable completable = Completable.merge(lst)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        completable.subscribe(new CompletableObserver() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onComplete() {
-                ob.onDone();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                ob.onDone();
-                ob.onNetworkError(((UnknownHostException) e));
+                if (!isNotifyNetworkError && listener != null) {
+                    Log.d(TAG, "onError() called with: e = [" + e + "]");
+                    listener.onNetworkError();
+                    isNotifyNetworkError = true;
+                }
             }
         });
 
