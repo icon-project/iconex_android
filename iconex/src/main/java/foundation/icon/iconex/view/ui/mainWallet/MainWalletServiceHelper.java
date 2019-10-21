@@ -222,7 +222,7 @@ public class MainWalletServiceHelper {
             public void action() throws Throwable {
                 LoopChainClient client = new LoopChainClient(getIcxHost());
                 Response<LCResponse> response = client.getTokenBalance(entryId, address, contractAddress).execute();
-                if (response.errorBody() != null) throw new Exception(response.message());
+                if (response.errorBody() != null) throw new Exception(response.errorBody().string());
                 String hexBalance = response.body().getResult().getAsString();
                 balance[0] = ConvertUtil.hexStringToBigInt(hexBalance, 18).toString();
             }

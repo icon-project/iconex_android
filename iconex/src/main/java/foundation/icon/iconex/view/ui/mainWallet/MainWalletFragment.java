@@ -46,7 +46,6 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
 import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
@@ -67,11 +66,10 @@ public class MainWalletFragment extends Fragment {
 
 
     public interface RequestActivity {
-        void refreashViewData();
+        void refreshViewData();
         void patchViewData();
-        void chagneExchageUnit(String unit);
-        void fragmentStart();
-        void fragmenetResume();
+        void changeExchangeUnit(String unit);
+        void fragmentResume();
         void fragmentStop();
     }
 
@@ -152,15 +150,9 @@ public class MainWalletFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        ((RequestActivity) getActivity()).fragmentStart();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        ((RequestActivity) getActivity()).fragmenetResume();
+        ((RequestActivity) getActivity()).fragmentResume();
     }
 
     @Override
@@ -395,7 +387,7 @@ public class MainWalletFragment extends Fragment {
                         switch (updateDataType) {
                             case Delete: {
                                 walletViewPager.setCurrentItem(0);
-                                ((RequestActivity) getActivity()).refreashViewData();
+                                ((RequestActivity) getActivity()).refreshViewData();
                             }
                             case Rename: {
                                 ((RequestActivity) getActivity()).patchViewData();
@@ -410,7 +402,7 @@ public class MainWalletFragment extends Fragment {
     }
 
     private void refreshViewData() {
-        ((RequestActivity) getActivity()).refreashViewData();
+        ((RequestActivity) getActivity()).refreshViewData();
     }
 
     private void changeExchnageUnit() {
@@ -426,7 +418,7 @@ public class MainWalletFragment extends Fragment {
                 break;
         }
 
-        ((RequestActivity) getActivity()).chagneExchageUnit(exchangeUnit.name());
+        ((RequestActivity) getActivity()).changeExchangeUnit(exchangeUnit.name());
     }
 
     private void updateCollapsable() {

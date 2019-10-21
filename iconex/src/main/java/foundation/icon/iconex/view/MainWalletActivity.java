@@ -3,6 +3,7 @@ package foundation.icon.iconex.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
 
 public class MainWalletActivity extends AppCompatActivity implements MainWalletServiceHelper.OnLoadListener, MainWalletFragment.RequestActivity {
+    private static String TAG = MainWalletActivity.class.getSimpleName();
 
     private MainWalletServiceHelper serviceHelper = new MainWalletServiceHelper();
 
@@ -50,6 +52,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     private boolean exchangeLoading = true;
     private boolean patchingData = false;
 
+    private boolean onceLoading = true;
 
     private void loadViewData() {
         walletVDs.clear();
@@ -132,9 +135,11 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         combineExchanges(-1, -1);
         combineTotalAssets();
         onLoadCompletePReps();
+        combineTopToken();
         patchingData = false;
 
         findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+        findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
     }
 
     @Override
@@ -386,14 +391,14 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     }
 
     @Override
-    public void refreashViewData() {
+    public void refreshViewData() {
         loadViewData();
         serviceHelper.setListener(this);
         serviceHelper.requestAllData();
     }
 
     @Override
-    public void chagneExchageUnit(String unit) {
+    public void changeExchangeUnit(String unit) {
         currentUnit = unit;
         combineExchanges(-1, -1);
         combineTopToken();
@@ -401,21 +406,22 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     }
 
     @Override
-    public void fragmentStart() {
-        loadViewData();
-        serviceHelper.setListener(this);
-        serviceHelper.requestAllData();
-    }
+    public void fragmentResume() {
+        Log.d(TAG, "fragmentResume() called");
 
-
-    @Override
-    public void fragmenetResume() {
-        serviceHelper.setListener(this);
-        patchViewData();
+        if (onceLoading) {
+            loadViewData();
+            serviceHelper.setListener(this);
+            serviceHelper.requestAllData();
+            onceLoading = false;
+        } else {
+            patchViewData();
+        }
     }
 
     @Override
     public void fragmentStop() {
+        Log.d(TAG, "fragmentStop() called");
         serviceHelper.clearListener();
     }
 
