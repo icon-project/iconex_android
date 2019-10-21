@@ -42,6 +42,7 @@ import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
 import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.ICONexApp.network;
+import static foundation.icon.iconex.view.WalletDetailActivity.RESULT_WALLET_REFRESH;
 
 
 public class WalletDetailFragment extends Fragment {
@@ -114,6 +115,7 @@ public class WalletDetailFragment extends Fragment {
                                             viewModel.name.setValue(viewModel.wallet.getValue().getAlias());
                                         } break;
                                         case Delete: {
+                                            getActivity().setResult(RESULT_WALLET_REFRESH);
                                             getActivity().finish();
                                         }
                                     }

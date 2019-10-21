@@ -394,8 +394,13 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     @Override
     public void refreshViewData() {
         loadViewData();
-        serviceHelper.setListener(this);
-        serviceHelper.requestAllData();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                serviceHelper.setListener(MainWalletActivity.this);
+                serviceHelper.requestAllData();
+            }
+        });
     }
 
     @Override
@@ -411,10 +416,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         Log.d(TAG, "fragmentResume() called");
 
         if (onceLoading) {
-            loadViewData();
-            serviceHelper.setListener(this);
-            serviceHelper.requestAllData();
             onceLoading = false;
+            refreshViewData();
         } else {
             patchViewData();
         }
@@ -428,6 +431,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         switch (requestCode) {
             case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
                 WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {
@@ -438,12 +442,18 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        loadViewData();
-                        serviceHelper.requestAllData();
+                        onceLoading = true;
                     }
                 });
-            }
-            break;
+            }break;
+            case WalletManageMenuDialog.REQ_UPDATE_TOKEN: {
+                onceLoading = true;
+            } break;
+            case MainWalletFragment.REQ_DETAIL: {
+                if (resultCode == WalletDetailActivity.RESULT_WALLET_REFRESH) {
+                    onceLoading = true;
+                }
+            } break;
             default: {
                 super.onActivityResult(requestCode, resultCode, data);
             }

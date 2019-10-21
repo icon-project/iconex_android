@@ -45,6 +45,9 @@ public class WalletDetailActivity extends AppCompatActivity {
     private WalletDetailViewModel viewModel = null;
     private WalletDetailServiceHelper serviceHelper = null;
 
+    public static final int RESULT_WALLET_PATCH = 13941;
+    public static final int RESULT_WALLET_REFRESH = 140108;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -298,6 +301,7 @@ public class WalletDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         switch (requestCode) {
             case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
                 WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {
@@ -306,6 +310,7 @@ public class WalletDetailActivity extends AppCompatActivity {
                         try { RealmUtil.loadWallet(); }
                         catch (Exception e) { e.printStackTrace(); }
                         viewModel.wallet.setValue(wallet);
+                        setResult(RESULT_WALLET_REFRESH);
                     }
                 });
             } break;
@@ -322,6 +327,7 @@ public class WalletDetailActivity extends AppCompatActivity {
                             }
                         }
                         viewModel.wallet.setValue(wallet);
+                        setResult(RESULT_WALLET_REFRESH);
                         break;
                     }
                 }

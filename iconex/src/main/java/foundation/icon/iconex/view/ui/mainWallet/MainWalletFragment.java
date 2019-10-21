@@ -54,6 +54,8 @@ import loopchain.icon.wallet.core.Constants;
 
 public class MainWalletFragment extends Fragment {
 
+    public static final int REQ_DETAIL = 10405;
+
     public enum ViewMode {
         walletView, tokenView
     }
@@ -330,10 +332,11 @@ public class MainWalletFragment extends Fragment {
             public void onClickWalletItem(EntryViewData entryVD) {
                 if (entryVD.getWallet() == null || entryVD.getEntry() == null) return;
 
-                startActivity(
+                getActivity().startActivityForResult(
                         new Intent(getContext(), WalletDetailActivity.class)
                                 .putExtra(WalletDetailActivity.PARAM_WALLET, ((Serializable) entryVD.getWallet()))
-                                .putExtra(WalletDetailActivity.PARAM_WALLET_ENTRY, ((Serializable) entryVD.getEntry()))
+                                .putExtra(WalletDetailActivity.PARAM_WALLET_ENTRY, ((Serializable) entryVD.getEntry())),
+                        REQ_DETAIL
                 );
             }
         });
