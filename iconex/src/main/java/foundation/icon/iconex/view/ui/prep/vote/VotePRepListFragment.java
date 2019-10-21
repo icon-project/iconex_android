@@ -117,6 +117,7 @@ public class VotePRepListFragment extends Fragment {
 
     private void initView(View v) {
         list = v.findViewById(R.id.list);
+        list.setFocusable(false);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecorator(
                         getContext(),

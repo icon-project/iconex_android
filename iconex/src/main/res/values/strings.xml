@@ -543,6 +543,10 @@
     <string name="myVotesEmptyGuide">P-Reps 탭에서 투표할 리스트 선택후,\nVoting Power를 분배해 주세요.</string>
     <string name="myVotesEmptyNotice">Voting Power를 사용한 ICX는 언제든지 돌려받을 수 있으며,\nNetworkd 발전 기여에 대한 보상으로 I-Scaore를 지급해 드립니다.</string>
 
+    <!-- Toast -->
+    <string name="addMyVote">%d/10 My Votes에 추가</string>
+    <string name="completeVoting">Voting이 완료되었습니다.</string>
+
     <!-- Dialog -->
     <string name="showDetail">상세 정보 보기</string>
 
@@ -550,6 +554,8 @@
     <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
     <string name="stakeDone">Stake 실행이\n완료되었습니다.</string>
     <string name="unstakeDone">Unstake 실행이\n완료되었습니다.</string>
+    <string name="voteNotExecute">Vote 버튼을 눌러야 설정한 수량이 실제 반영됩니다.\nVote 실행을 하지 않고 나가시겠습니까?</string>
+    <string name="voteReset">투표에 사용한 Voting Power를 모두 0으로 되돌리겠습니까?</string>
 
     <!-- Tool Tip -->
     <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>

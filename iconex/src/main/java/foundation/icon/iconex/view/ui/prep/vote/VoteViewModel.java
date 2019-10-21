@@ -16,11 +16,14 @@ public class VoteViewModel extends ViewModel {
     private MutableLiveData<Wallet> wallet;
 
     private MutableLiveData<List<Delegation>> delegations;
+    private MutableLiveData<BigInteger> total;
     private MutableLiveData<BigInteger> voted;
     private MutableLiveData<BigInteger> votingPower;
 
     private MutableLiveData<List<PRep>> preps;
     private MutableLiveData<BigInteger> prepTotalDelegated;
+
+    private MutableLiveData<BigInteger> stepPrice;
 
     public MutableLiveData<Wallet> getWallet() {
         if (wallet == null)
@@ -31,6 +34,19 @@ public class VoteViewModel extends ViewModel {
 
     public void setWallet(Wallet wallet) {
         getWallet().setValue(wallet);
+    }
+
+    public MutableLiveData<BigInteger> getTotal() {
+        if (total == null) {
+            total = new MutableLiveData<>();
+            total.setValue(BigInteger.ZERO);
+        }
+
+        return total;
+    }
+
+    public void setTotal(BigInteger total) {
+        getTotal().setValue(total);
     }
 
     public MutableLiveData<List<Delegation>> getDelegations() {
@@ -90,5 +106,18 @@ public class VoteViewModel extends ViewModel {
 
     public void setPrepTotalDelegated(BigInteger totalDelegated) {
         getPrepTotalDelegated().setValue(totalDelegated);
+    }
+
+    public MutableLiveData<BigInteger> getStepPrice() {
+        if (stepPrice == null) {
+            stepPrice = new MutableLiveData<>();
+            stepPrice.setValue(BigInteger.ZERO);
+        }
+
+        return stepPrice;
+    }
+
+    public void setStepPrice(BigInteger stepPrice) {
+        getStepPrice().setValue(stepPrice);
     }
 }

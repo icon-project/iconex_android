@@ -5,7 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
@@ -292,10 +294,12 @@ public class PRep implements Serializable {
     }
 
     public double delegatedPercent() {
-        double total = totalDelegated.doubleValue();
-        double del = delegated.doubleValue();
+        BigDecimal total = new BigDecimal(totalDelegated).scaleByPowerOfTen(-18);
+        BigDecimal delegation = new BigDecimal(delegated).scaleByPowerOfTen(-18);
+//        double total = totalDelegated.doubleValue();
+//        double del = delegated.doubleValue();
 
-        return del / total * 100;
+        return delegation.divide(total, RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
     }
 
     public enum Grade {

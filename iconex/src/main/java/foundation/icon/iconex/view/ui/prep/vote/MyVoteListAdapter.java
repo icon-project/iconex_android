@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -16,7 +18,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +42,6 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     private VoteViewModel vm;
 
     private List<Delegation> delegations = new ArrayList<>();
-    private List<Delegation> votingList = new ArrayList<>();
 
     private int currentManage = -1;
 
@@ -72,11 +75,18 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
         if (holder instanceof ItemViewHolder) {
             ItemViewHolder h = (ItemViewHolder) holder;
             Delegation delegation = delegations.get(position);
+            Log.d(TAG, "onBindViewHolder value=" + delegation.getValue());
             PRep pRep = delegation.getPrep();
 
-            h.tvPrepName.setText(pRep.getName());
-            h.tvPrepGrade.setText(String.format(Locale.getDefault(),
-                    "(%s)", pRep.getGrade().getLabel()));
+            if (delegation.isEdited()) {
+                h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                        String.format(Locale.getDefault(), "%s", pRep.getName()),
+                        String.format(Locale.getDefault(), "(%s / Edited)", pRep.getGrade().getLabel())));
+            } else {
+                h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                        String.format(Locale.getDefault(), "%s", pRep.getName()),
+                        String.format(Locale.getDefault(), "(%s)", pRep.getGrade().getLabel())));
+            }
 
             h.tvTotalVotes.setText(String.format(Locale.getDefault(), "%s (%s%%)",
                     Utils.formatFloating(ConvertUtil.getValue(pRep.getDelegated(), 18), 4),
@@ -86,15 +96,17 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             if (delegation.getValue().equals(BigInteger.ZERO))
                 votePercent = 0.0f;
             else {
-                votePercent = delegation.getValue().floatValue() / pRep.getDelegated().floatValue() * 100;
+                votePercent = delegation.getValue().floatValue() / vm.getVotingPower().getValue().add(vm.getVoted().getValue()).floatValue() * 100;
             }
             h.tvMyVotes.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
                     Utils.formatFloating(ConvertUtil.getValue(delegation.getValue(), 18), 4),
                     votePercent));
 
             h.btnManage.setImageResource(R.drawable.bg_btn_prep_delete);
-            if (!delegation.getValue().equals(BigInteger.ZERO))
+            if (!delegation.getValue().equals(BigInteger.ZERO)) {
                 h.btnManage.setSelected(true);
+                h.btnManage.setImageResource(R.drawable.ic_delete_list_disabled);
+            }
 
             h.layoutGraph.setVisibility(View.GONE);
             h.layoutMyVotes.setVisibility(View.VISIBLE);
@@ -124,8 +136,10 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
         private ImageButton btnManage;
         private ViewGroup layoutGraph;
         private MyEditText editDelegation;
-        private TextView txtPercent;
+        private TextView txtPercent, txtMax;
         private CustomSeekbar seekbar;
+
+        private BigDecimal voted, votingPower, available;
 
         public ItemViewHolder(@NonNull View v) {
             super(v);
@@ -135,7 +149,6 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             v.findViewById(R.id.layout_info).setOnClickListener(this);
 
             tvPrepName = v.findViewById(R.id.prep_name);
-            tvPrepGrade = v.findViewById(R.id.prep_grade);
 
             layoutVotes = v.findViewById(R.id.layout_votes);
             layoutTotalVotes = v.findViewById(R.id.layout_total_votes);
@@ -147,9 +160,11 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             btnManage.setOnClickListener(this);
 
             layoutGraph = v.findViewById(R.id.layout_graph);
+            layoutGraph.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
             editDelegation = v.findViewById(R.id.edit_value);
             editDelegation.addTextChangedListener(textWatcher);
             txtPercent = v.findViewById(R.id.txt_percentage);
+            txtMax = v.findViewById(R.id.txt_max);
             seekbar = v.findViewById(R.id.vote_seek_bar);
             seekbar.setOnSeekBarChangeListener(seekBarChangeListener);
         }
@@ -157,6 +172,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
         @Override
         public void onClick(View view) {
             Delegation delegation = delegations.get(getAdapterPosition());
+            PRep prep = delegation.getPrep();
 
             switch (view.getId()) {
                 case R.id.layout_info:
@@ -169,23 +185,25 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
                         currentManage = getAdapterPosition();
 
-                        BigInteger votingPower = vm.getVotingPower().getValue();
-                        BigInteger available = votingPower.add(delegation.getValue());
+                        votingPower = new BigDecimal(vm.getVotingPower().getValue()).scaleByPowerOfTen(-18);
+                        voted = new BigDecimal(delegation.getValue()).scaleByPowerOfTen(-18);
+                        available = votingPower.add(voted);
 
                         float votePercent;
-                        if (delegation.getValue().equals(BigInteger.ZERO)) {
+                        if (voted.equals(BigDecimal.ZERO)) {
                             votePercent = 0.0f;
-                            editDelegation.setText("0.0000");
+                            editDelegation.setText(voted.setScale(4, RoundingMode.FLOOR).toString());
                         } else {
-                            votePercent = delegation.getValue().floatValue() / available.floatValue() * 100;
-                            editDelegation.setText(Utils.formatFloating(ConvertUtil.getValue(delegation.getValue(), 18), 4));
+                            votePercent = voted.divide(available, RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
+                            editDelegation.setText(voted.setScale(4, RoundingMode.FLOOR).toString());
                         }
 
                         txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", votePercent));
-                        seekbar.setProgress(90);
                     } else {
                         layoutGraph.setVisibility(View.GONE);
                         layoutMyVotes.setVisibility(View.VISIBLE);
+
+                        notifyItemChanged(currentManage);
 
                         currentManage = -1;
                     }
@@ -196,6 +214,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     if (delegation.getValue().compareTo(BigInteger.ZERO) > 0) {
                         toolTip.setText(context.getString(R.string.tipHasDelegation));
                         toolTip.setPosition(root, btnManage);
+                        toolTip.show();
                     } else {
                         delegations.remove(getAdapterPosition());
                         vm.setDelegations(delegations);
@@ -207,25 +226,52 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
         private TextWatcher textWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(Editable s) {
+                BigDecimal input;
+                try {
+                    input = new BigDecimal(editDelegation.getText().toString());
+                } catch (Exception e) {
+                    return;
+                }
 
+                if (editDelegation.getTag() == null) {
+                    if (input.compareTo(available) > 0) {
+                        editDelegation.setText(available.setScale(4, RoundingMode.FLOOR).toString());
+                        seekbar.setProgress(100);
+                    } else {
+                        int percent = input.divide(available, RoundingMode.FLOOR).multiply(new BigDecimal("100")).intValue();
+                        Log.i(TAG, "Voting percent=" + percent);
+                        seekbar.setProgress(percent);
+                    }
+                }
+
+                if (!input.equals(voted.setScale(4, RoundingMode.FLOOR))) {
+                    Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(input.scaleByPowerOfTen(18).toBigInteger()).build();
+                    d.isEdited(true);
+                    delegations.set(getAdapterPosition(), d);
+                    mListener.onVoted(delegations);
+                }
             }
         };
 
         private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    editDelegation.setTag("seekbar");
+                    editDelegation.setText(calculateIcx(progress).setScale(4, RoundingMode.FLOOR).toString());
+                    editDelegation.setTag(null);
+                }
             }
 
             @Override
@@ -238,6 +284,25 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
             }
         };
+
+        private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                seekbar.setProgress(seekbar.getProgress());
+            }
+        };
+
+        private BigDecimal calculateIcx(int percentage) {
+            if (percentage == 0) {
+                return BigDecimal.ZERO.setScale(4, RoundingMode.FLOOR);
+            } else if (percentage == 100) {
+                return available;
+            } else {
+                BigDecimal percent = new BigDecimal(Integer.toString(percentage));
+                BigDecimal multiply = available.multiply(percent);
+                return multiply.divide(new BigDecimal("100"), 4, RoundingMode.FLOOR);
+            }
+        }
     }
 
     public void setData(List<Delegation> delegations) {
@@ -248,17 +313,13 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
     }
 
-    private OnClickListener mListener = null;
+    private OnVoteChangedListener mListener = null;
 
-    public void setOnClickListener(OnClickListener listener) {
+    public void setOnVoteChangedListener(OnVoteChangedListener listener) {
         mListener = listener;
     }
 
-    public interface OnClickListener {
-        void onRemove();
-
-        void onManage();
-
-        void onDetail();
+    public interface OnVoteChangedListener {
+        void onVoted(List<Delegation> delegations);
     }
 }

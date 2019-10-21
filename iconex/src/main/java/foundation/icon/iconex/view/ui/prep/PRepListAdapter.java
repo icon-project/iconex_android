@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.ui.prep.vote.VoteViewModel;
+import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.iconex.widgets.ToolTip;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
@@ -99,9 +101,9 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         layoutParams.getMarginEnd(),
                         (int) mContext.getResources().getDimension(R.dimen.dp25));
                 h.layoutVotes.setLayoutParams(layoutParams);
-                h.tvPrepName.setText(prep.getName());
-                h.tvPrepGrade.setText(String.format(Locale.getDefault(),
-                        "(%s)", prep.getGrade().getLabel()));
+                h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                        String.format(Locale.getDefault(), "%d. %s", position + 1, prep.getName()),
+                        String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
                 h.tvTotalVotes.setText(String.format(Locale.getDefault(),
                         "%s(%s%%)",
                         Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
@@ -111,8 +113,10 @@ public class PRepListAdapter extends RecyclerView.Adapter {
             case VOTE:
                 try {
                     for (Delegation d : delegations) {
-                        if (prep.getAddress().equals(d.getPrep().getAddress()))
+                        if (prep.getAddress().equals(d.getPrep().getAddress())) {
                             h.btnManage.setSelected(true);
+                            h.btnManage.setImageResource(R.drawable.ic_add_list_disabled);
+                        }
                     }
                 } catch (NullPointerException e) {
                     // Do nothing.
@@ -124,10 +128,18 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         layoutParams.getMarginEnd(),
                         (int) mContext.getResources().getDimension(R.dimen.dp25));
                 h.layoutVotes.setLayoutParams(layoutParams);
-                h.tvPrepName.setText(prep.getName());
-                h.tvPrepGrade.setText(String.format(Locale.getDefault(),
-                        "(%s)", prep.getGrade().getLabel()));
+
+                if (h.btnManage.isSelected())
+                    h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                            String.format(Locale.getDefault(), "%d. %s", position + 1, prep.getName()),
+                            String.format(Locale.getDefault(), "(%s / Voted)", prep.getGrade().getLabel())));
+                else
+                    h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                            String.format(Locale.getDefault(), "%d. %s", position + 1, prep.getName()),
+                            String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
+
                 h.tvTotalVotes.setText(String.format(Locale.getDefault(),
+
                         "%s(%s%%)",
                         Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
                         Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
@@ -142,7 +154,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
     class ItemVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvPrepName, tvPrepGrade;
+        private TextView tvPrepName;
         private ViewGroup layoutInfo, layoutVotes, layoutTotalVotes, layoutMyVotes;
         private TextView tvTotalVotes, tvMyVotes;
         private ImageButton btnManage;
@@ -151,7 +163,6 @@ public class PRepListAdapter extends RecyclerView.Adapter {
             super(v);
 
             tvPrepName = v.findViewById(R.id.prep_name);
-            tvPrepGrade = v.findViewById(R.id.prep_grade);
             layoutInfo = v.findViewById(R.id.layout_info);
             layoutInfo.setOnClickListener(this);
             layoutVotes = v.findViewById(R.id.layout_votes);
@@ -206,20 +217,25 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                     break;
 
                 case R.id.btn_prep_manage:
+                    CustomToast toast = new CustomToast();
                     ToolTip toolTip = new ToolTip(mContext);
                     if (btnManage.isSelected()) {
                         toolTip.setText(mContext.getString(R.string.tipAddedPRep));
                         toolTip.setPosition(root, btnManage);
+                        toolTip.show();
                     } else {
                         if (delegations.size() == 10) {
                             toolTip.setText(mContext.getString(R.string.tipPRepMax));
                             toolTip.setPosition(root, btnManage);
+                            toolTip.show();
                         } else {
                             Delegation delegation = new Delegation.Builder()
                                     .prep(prep)
                                     .build();
                             delegations.add(delegation);
                             vm.setDelegations(delegations);
+
+                            toast.makeText(mContext, String.format(Locale.getDefault(), mContext.getString(R.string.addMyVote), delegations.size()), Toast.LENGTH_SHORT).show();
 
                             notifyItemChanged(getAdapterPosition());
                         }

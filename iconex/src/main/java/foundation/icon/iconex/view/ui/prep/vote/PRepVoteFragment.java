@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,13 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.util.ConvertUtil;
-import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.VoteGraph;
@@ -31,7 +31,6 @@ public class PRepVoteFragment extends Fragment {
     private static final String TAG = PRepVoteFragment.class.getSimpleName();
 
     private VoteViewModel vm;
-    private OnVoteListener mListener;
     private Wallet wallet;
 
     private TextView txtVotedCount, txtVotedIcx, txtAvailableIcx;
@@ -71,10 +70,19 @@ public class PRepVoteFragment extends Fragment {
                 } else {
                     adapter = new MyVoteListAdapter(PRepVoteFragment.this.getContext(),
                             delegations, getActivity());
+                    adapter.setOnVoteChangedListener(new MyVoteListAdapter.OnVoteChangedListener() {
+                        @Override
+                        public void onVoted(List<Delegation> delegations) {
+                            Log.i(TAG, "onVoted");
+                            PRepVoteFragment.this.delegations = delegations;
+                            setData();
+                            mListener.onVoted(delegations);
+                        }
+                    });
                     list.setAdapter(adapter);
                 }
 
-                setDelegation();
+                setData();
             }
         });
     }
@@ -89,13 +97,13 @@ public class PRepVoteFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof OnVoteListener) {
-            mListener = (OnVoteListener) context;
+
+        if (context instanceof OnVoteFragmentListener) {
+            mListener = (OnVoteFragmentListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnVoteListener");
+            throw new RuntimeException("must implement OnVoteFragmentListener");
         }
     }
 
@@ -115,28 +123,32 @@ public class PRepVoteFragment extends Fragment {
         sort = v.findViewById(R.id.sort);
         resetVotes = v.findViewById(R.id.reset_votes);
         list = v.findViewById(R.id.my_votes);
+        list.setFocusable(false);
     }
 
-    private void setDelegation() {
+    private void setData() {
         txtVotedCount.setText(String.format(Locale.getDefault(), "(%d/10)", delegations.size()));
-        if (vm.getVoted().getValue() != null) {
-            BigDecimal voted = new BigDecimal(vm.getVoted().getValue());
-            BigDecimal votingPower = new BigDecimal(vm.getVotingPower().getValue());
-            BigDecimal staked = voted.add(votingPower);
 
-            float votePercent;
-            if (voted.equals(BigDecimal.ZERO))
-                votePercent = 0.0f;
-            else {
-                votePercent = voted.floatValue() / staked.floatValue() * 100;
-            }
-
-            voteGraph.setVoted(votePercent);
-            txtVotedIcx.setText(Utils.formatFloating(ConvertUtil.getValue(vm.getVoted().getValue(), 18), 4));
-            txtAvailableIcx.setText(Utils.formatFloating(ConvertUtil.getValue(vm.getVotingPower().getValue(), 18), 4));
+        BigDecimal total = new BigDecimal(vm.getTotal().getValue());
+        BigDecimal voted = BigDecimal.ZERO;
+        for (Delegation d : delegations) {
+            voted = voted.add(new BigDecimal(d.getValue()));
         }
+
+        vm.setVoted(voted.toBigInteger());
+        vm.setVotingPower(total.subtract(voted).toBigInteger());
+
+        voteGraph.setTotal(total);
+        voteGraph.setDelegation(voted);
+        voteGraph.updateGraph();
+
+        txtVotedIcx.setText(String.format(Locale.getDefault(), "%s", voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
+        txtAvailableIcx.setText(String.format(Locale.getDefault(), "%s", total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
     }
 
-    public interface OnVoteListener {
+    private OnVoteFragmentListener mListener;
+
+    public interface OnVoteFragmentListener {
+        void onVoted(List<Delegation> delegations);
     }
 }

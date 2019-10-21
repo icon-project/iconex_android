@@ -2,13 +2,21 @@ package foundation.icon.iconex.service;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.List;
 
 import foundation.icon.ICONexApp;
+import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.icx.Call;
 import foundation.icon.icx.IconService;
+import foundation.icon.icx.KeyWallet;
 import foundation.icon.icx.SignedTransaction;
+import foundation.icon.icx.Transaction;
+import foundation.icon.icx.TransactionBuilder;
 import foundation.icon.icx.data.Address;
+import foundation.icon.icx.data.IconAmount;
 import foundation.icon.icx.transport.http.HttpProvider;
+import foundation.icon.icx.transport.jsonrpc.RpcArray;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
 import foundation.icon.icx.transport.jsonrpc.RpcValue;
@@ -114,6 +122,35 @@ public class PRepService {
                 .build();
 
         return iconService.call(call).execute();
+    }
+
+    public String setDelegation(KeyWallet keyWallet, List<Delegation> delegations) throws IOException {
+        RpcArray.Builder arrayBuilder = new RpcArray.Builder();
+        for (Delegation d : delegations) {
+            if (d.isEdited()) {
+                RpcObject object = new RpcObject.Builder()
+                        .put("address", new RpcValue(d.getPrep().getAddress()))
+                        .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(d.getValue(), 18), 18)))
+                        .build();
+                arrayBuilder.add(object);
+            }
+        }
+
+        RpcObject params = new RpcObject.Builder()
+                .put("delegations", arrayBuilder.build())
+                .build();
+
+        Transaction transaction = TransactionBuilder.newBuilder()
+                .from(keyWallet.getAddress())
+                .to(new Address(Constants.ADDRESS_ZERO))
+                .value(IconAmount.of("0", IconAmount.Unit.ICX).toLoop())
+                .stepLimit(new BigInteger("200000"))
+                .nid(ICONexApp.NETWORK.getNid())
+                .call("setDelegation")
+                .params(params)
+                .build();
+
+        return iconService.sendTransaction(new SignedTransaction(transaction, keyWallet)).execute().toHexString(true);
     }
 
     public String claimIScore(SignedTransaction signedTransaction) throws IOException {

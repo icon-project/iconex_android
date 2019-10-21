@@ -55,18 +55,11 @@
                 style="@style/TextView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="@font/noto_sans_medium"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:text="34. Name Name Name"
-                android:textColor="@color/dark4D" />
-
-            <TextView
-                android:id="@+id/prep_grade"
-                style="@style/TextView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:fontFamily="@font/noto_sans_regular"
-                android:text="(Sub P-Rep)"
                 android:textColor="@color/dark4D" />
         </LinearLayout>
 
@@ -248,6 +241,7 @@
                         android:textColor="@color/dark4D" />
 
                     <TextView
+                        android:id="@+id/txt_max"
                         style="@style/TextView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
