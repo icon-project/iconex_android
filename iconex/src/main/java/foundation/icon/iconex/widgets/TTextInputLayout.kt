@@ -15,12 +15,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import foundation.icon.iconex.R
-import java.lang.reflect.AccessibleObject.setAccessible
-import java.lang.reflect.AccessibleObject.setAccessible
-
-
-
-
 
 
 class TTextInputLayout : LinearLayout {
@@ -104,6 +98,8 @@ class TTextInputLayout : LinearLayout {
                         tvError.visibility = View.INVISIBLE
 
                     edit.hint = ""
+
+                    mOnMyFocusChangedListenerListener?.onFocused()
                 } else {
                     layout.background = resources.getDrawable(BG_LAYOUT_N, null)
                     tvHint.background = resources.getDrawable(BG_FLOATING_LABEL_N, null)
@@ -114,7 +110,7 @@ class TTextInputLayout : LinearLayout {
                         edit.hint = hint
                     }
 
-                    mOnFocusReleasedListener?.onReleased()
+                    mOnMyFocusChangedListenerListener?.onReleased()
                 }
             }
         }
@@ -334,12 +330,13 @@ class TTextInputLayout : LinearLayout {
         edit.setTextIsSelectable(false)
     }
 
-    private var mOnFocusReleasedListener: OnFocusReleased? = null
-    fun setOnFocusChangedListener(onFocusReleasedListener: OnFocusReleased) {
-        mOnFocusReleasedListener = onFocusReleasedListener
+    private var mOnMyFocusChangedListenerListener: OnMyFocusChangedListener? = null
+    fun setOnFocusChangedListener(onMyFocusChangedListenerListener: OnMyFocusChangedListener) {
+        mOnMyFocusChangedListenerListener = onMyFocusChangedListenerListener
     }
 
-    interface OnFocusReleased {
+    interface OnMyFocusChangedListener {
+        fun onFocused()
         fun onReleased()
     }
 

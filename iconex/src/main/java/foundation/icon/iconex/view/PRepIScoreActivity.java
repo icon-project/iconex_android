@@ -17,9 +17,9 @@ import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
-import foundation.icon.connect.IconexConnect;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.ClaimIScoreDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -110,6 +110,15 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_claim:
+                if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).compareTo(stepLimit.multiply(stepPrice)) < 0) {
+                    MessageDialog messageDialog = new MessageDialog(this);
+                    messageDialog.setSingleButton(true);
+                    messageDialog.setTitleText(getString(R.string.errIcxOwnNotEnough));
+                    messageDialog.show();
+
+                    return;
+                }
+
                 showConfirmDialog();
                 break;
 

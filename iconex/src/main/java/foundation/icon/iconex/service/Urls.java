@@ -45,5 +45,14 @@ public class Urls {
             this.tracker = tracker;
             this.nid = nid;
         }
+
+        public static Network fromNid(int nid) {
+            for (Network network : values()) {
+                if (nid == network.getNid().intValue())
+                    return network;
+            }
+
+            return null;
+        }
     }
 }

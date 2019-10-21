@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 
 import java.math.BigInteger;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
@@ -261,7 +262,7 @@ public class PasswordFragment extends Fragment implements View.OnClickListener {
                 .build();
 
         String url = null;
-        switch (network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             case MyConstants.NETWORK_MAIN:
                 url = ServiceConstants.TRUSTED_HOST_MAIN + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
                 break;

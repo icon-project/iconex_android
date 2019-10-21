@@ -103,7 +103,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     votePercent));
 
             h.btnManage.setImageResource(R.drawable.bg_btn_prep_delete);
-            if (!delegation.getValue().equals(BigInteger.ZERO)) {
+            if (!delegation.isNew() && !delegation.getValue().equals(BigInteger.ZERO)) {
+                Log.d(TAG, "isNew=" + delegation.isNew());
                 h.btnManage.setSelected(true);
                 h.btnManage.setImageResource(R.drawable.ic_delete_list_disabled);
             }
@@ -204,11 +205,21 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                             votePercent = 0.0f;
                             editDelegation.setText(voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                         } else {
-                            votePercent = voted.divide(available, RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
+                            votePercent = voted.scaleByPowerOfTen(-18).divide(available.scaleByPowerOfTen(-18), RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
                             editDelegation.setText(voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                         }
 
                         txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", votePercent));
+
+                        float maxPercent = available.scaleByPowerOfTen(-18).divide(getTotalVoted().add(available).subtract(voted).scaleByPowerOfTen(-18), RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
+                        txtMax.setText(String.format(Locale.getDefault(), "%.1f%%", maxPercent));
+
+                        layoutGraph.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                seekbar.setProgress(seekbar.getProgress());
+                            }
+                        }, 300);
                     } else {
                         layoutGraph.setVisibility(View.GONE);
                         layoutMyVotes.setVisibility(View.VISIBLE);
@@ -221,7 +232,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
                 case R.id.btn_prep_manage:
                     ToolTip toolTip = new ToolTip(context);
-                    if (delegation.getValue().compareTo(BigInteger.ZERO) > 0) {
+                    if (!delegation.isNew() && delegation.getValue().compareTo(BigInteger.ZERO) > 0) {
                         toolTip.setText(context.getString(R.string.tipHasDelegation));
                         toolTip.setPosition(root, btnManage);
                         toolTip.show();
@@ -261,16 +272,23 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                         seekbar.setProgress(100);
                     } else {
 //                        int percent = input.divide(available, RoundingMode.FLOOR).multiply(new BigDecimal("100")).intValue();
-                        int percent = (int) ((input.floatValue() / available.floatValue()) * 100);
+                        float percent = (input.floatValue() / available.floatValue()) * 100;
                         Log.i(TAG, "Voting percent=" + percent + "input=" + input.toString() + ", available=" + available.toString());
-                        seekbar.setProgress(percent);
+                        txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
+                        seekbar.setProgress((int) percent);
                     }
+                } else {
+                    float percent = (input.floatValue() / available.floatValue()) * 100;
+                    Log.i(TAG, "Voting percent=" + percent + "input=" + input.toString() + ", available=" + available.toString());
+                    txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
                 }
 
                 if (!input.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR)
                         .equals(voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR))) {
+                    boolean isNew = delegations.get(getAdapterPosition()).isNew();
                     Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(input.toBigInteger()).build();
                     d.isEdited(true);
+                    d.isNew(isNew);
                     delegations.set(getAdapterPosition(), d);
                     mListener.onVoted(delegations);
                 }
@@ -283,6 +301,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                 if (fromUser) {
                     editDelegation.setTag("seekbar");
                     editDelegation.setText(calculateIcx(progress).toString());
+                    editDelegation.setSelection(editDelegation.getText().toString().length());
                     editDelegation.setTag(null);
                 }
             }
@@ -316,6 +335,15 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                 return multiply.divide(new BigDecimal("100"), RoundingMode.FLOOR).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR);
             }
         }
+    }
+
+    private BigDecimal getTotalVoted() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Delegation d : delegations) {
+            total = total.add(new BigDecimal(d.getValue()));
+        }
+
+        return total;
     }
 
     public void setData(List<Delegation> delegations) {

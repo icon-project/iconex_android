@@ -44,22 +44,22 @@ public class VersionCheck extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            String url = null;
-            switch (network) {
-                case MyConstants.NETWORK_MAIN:
-                    url = ServiceConstants.URL_VERSION_MAIN;
-                    break;
+//            String url = null;
+//            switch (network) {
+//                case MyConstants.NETWORK_MAIN:
+//                    url = ServiceConstants.URL_VERSION_MAIN;
+//                    break;
+//
+//                case MyConstants.NETWORK_TEST:
+//                    url = ServiceConstants.URL_VERSION_TEST;
+//                    break;
+//
+//                case MyConstants.NETWORK_DEV:
+//                    url = ServiceConstants.DEV_TRACKER;
+//                    break;
+//            }
 
-                case MyConstants.NETWORK_TEST:
-                    url = ServiceConstants.URL_VERSION_TEST;
-                    break;
-
-                case MyConstants.NETWORK_DEV:
-                    url = ServiceConstants.DEV_TRACKER;
-                    break;
-            }
-
-            RESTClient client = new RESTClient(url);
+            RESTClient client = new RESTClient(ICONexApp.NETWORK.getTracker());
             Call<VSResponse> response = client.sendVersionCheck();
             response.enqueue(new Callback<VSResponse>() {
                 @Override

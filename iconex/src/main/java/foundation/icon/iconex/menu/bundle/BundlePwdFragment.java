@@ -49,7 +49,12 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
         editPwd = v.findViewById(R.id.edit_pwd);
         editPwd.setOnKeyPreImeListener(mKeyPreImeListener);
-        editPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 int result = PasswordValidator.validatePassword(editPwd.getText());
@@ -98,7 +103,12 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
         editCheck = v.findViewById(R.id.edit_check);
         editCheck.setOnKeyPreImeListener(mKeyPreImeListener);
-        editCheck.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (editCheck.getText().isEmpty()) {

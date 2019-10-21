@@ -97,7 +97,12 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
         // ================= init current password
         editOldPwd.setOnKeyPreImeListener(onKeyPreIme);
-        editOldPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editOldPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (!editOldPwd.getText().isEmpty()) {
@@ -123,7 +128,12 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
         // ==================== init new password
         editPwd.setOnKeyPreImeListener(onKeyPreIme);
-        editPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 int result = PasswordValidator.validatePassword(editPwd.getText().toString());
@@ -179,7 +189,12 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
         // ====================== init check password
         editCheck.setOnKeyPreImeListener(onKeyPreIme);
-        editCheck.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (!editCheck.getText().toString().isEmpty()) {

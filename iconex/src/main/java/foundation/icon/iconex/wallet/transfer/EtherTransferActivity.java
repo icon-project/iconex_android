@@ -10,7 +10,6 @@ import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -20,10 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -43,9 +39,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.dialogs.TransactionSendDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
@@ -262,7 +256,12 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 setSendEnable();
             }
         });
-        editSend.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editSend.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (editSend.getText().length() > 0) {
@@ -343,7 +342,12 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 setSendEnable();
             }
         });
-        editAddress.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editAddress.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (editAddress.getText().toString().length() > 0)
@@ -370,7 +374,12 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 setSendEnable();
             }
         });
-        editLimit.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editLimit.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 validateGasLimit();
@@ -441,7 +450,12 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 setSendEnable();
             }
         });
-        editData.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editData.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 validateData();

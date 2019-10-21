@@ -256,6 +256,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                             Delegation delegation = new Delegation.Builder()
                                     .prep(prep)
                                     .build();
+                            delegation.isNew(true);
                             delegations.add(delegation);
                             vm.setDelegations(delegations);
 

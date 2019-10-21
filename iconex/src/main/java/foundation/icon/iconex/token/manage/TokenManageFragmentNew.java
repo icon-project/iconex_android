@@ -322,7 +322,12 @@ public class TokenManageFragmentNew extends Fragment implements TTextInputLayout
     // ============================= init View
     private void initView() {
         editAddr.setOnKeyPreImeListener(this);
-        editAddr.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editAddr.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (!editAddr.getText().toString().isEmpty())

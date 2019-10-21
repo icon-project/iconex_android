@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,6 +51,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         return new CreateWalletStep2Fragment();
     }
 
+    private ScrollView scroll;
     private TTextInputLayout inputAlias, inputPwd, inputCheck;
     private Button btnBack, btnNext;
     private ProgressBar progress;
@@ -98,9 +100,15 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     }
 
     private void initView(View v) {
+        scroll = v.findViewById(R.id.scroll);
         inputAlias = v.findViewById(R.id.input_alias);
         inputAlias.disableCopyPaste();
-        inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (checkAlias(inputAlias.getText()) == ALIAS_DUP) {
@@ -134,7 +142,12 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
         inputPwd = v.findViewById(R.id.input_pwd);
         inputPwd.disableCopyPaste();
-        inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 int result = PasswordValidator.validatePassword(inputPwd.getText());
@@ -182,7 +195,17 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
         inputCheck = v.findViewById(R.id.input_pwd_check);
         inputCheck.disableCopyPaste();
-        inputCheck.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        inputCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+                scroll.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scroll.scrollTo(0, scroll.getScrollY() + 50);
+                    }
+                });
+            }
+
             @Override
             public void onReleased() {
                 if (inputCheck.getText().isEmpty()) {

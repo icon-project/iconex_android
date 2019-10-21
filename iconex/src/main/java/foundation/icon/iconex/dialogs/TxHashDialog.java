@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -56,7 +57,7 @@ public class TxHashDialog extends MessageDialog {
             @Override
             public void onClick(View v) {
                 String tracker = null;
-                switch (network) {
+                switch (ICONexApp.NETWORK.getNid().intValue()) {
                     case MyConstants.NETWORK_MAIN:
                         tracker = ServiceConstants.URL_TRACKER_MAIN;
                         break;
