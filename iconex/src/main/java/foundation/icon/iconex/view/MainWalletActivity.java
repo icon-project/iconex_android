@@ -411,9 +411,15 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         combineTotalAssets();
     }
 
+    private boolean setIndex0 = false;
     @Override
     public void fragmentResume() {
         Log.d(TAG, "fragmentResume() called");
+
+        if (setIndex0) {
+            setIndex0 = false;
+            findFragment().setIndex(0);
+        }
 
         if (onceLoading) {
             onceLoading = false;
@@ -450,8 +456,11 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                 onceLoading = true;
             } break;
             case MainWalletFragment.REQ_DETAIL: {
-                if (resultCode == WalletDetailActivity.RESULT_WALLET_REFRESH) {
-                    onceLoading = true;
+                switch (resultCode) {
+                    case WalletDetailActivity.RESULT_WALLET_DELETED:
+                        setIndex0 = true;
+                    case WalletDetailActivity.RESULT_WALLET_REFRESH:
+                        onceLoading = true;
                 }
             } break;
             default: {

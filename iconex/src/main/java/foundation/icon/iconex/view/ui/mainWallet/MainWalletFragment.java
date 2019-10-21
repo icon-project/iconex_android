@@ -100,6 +100,11 @@ public class MainWalletFragment extends Fragment {
     public void notifyDataSetChange(List<WalletViewData> walletVDs, List<WalletViewData> tokenListVDs) {
         this.walletVDs = walletVDs;
         this.tokenListVDs = tokenListVDs;
+        try {
+            walletViewPager.getCurrentItem();
+        } catch (Exception e) {
+            walletViewPager.setCurrentItem(0);
+        }
         updateWalletView();
     }
 
@@ -422,6 +427,10 @@ public class MainWalletFragment extends Fragment {
         }
 
         ((RequestActivity) getActivity()).changeExchangeUnit(exchangeUnit.name());
+    }
+
+    public void setIndex(int position){
+        walletViewPager.setCurrentItem(position);
     }
 
     private void updateCollapsable() {

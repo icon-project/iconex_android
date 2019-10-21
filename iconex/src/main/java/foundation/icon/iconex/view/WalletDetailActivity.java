@@ -45,7 +45,7 @@ public class WalletDetailActivity extends AppCompatActivity {
     private WalletDetailViewModel viewModel = null;
     private WalletDetailServiceHelper serviceHelper = null;
 
-    public static final int RESULT_WALLET_PATCH = 13941;
+    public static final int RESULT_WALLET_DELETED = 13941;
     public static final int RESULT_WALLET_REFRESH = 140108;
 
     @Override

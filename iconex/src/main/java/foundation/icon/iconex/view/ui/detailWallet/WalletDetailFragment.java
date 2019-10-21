@@ -23,6 +23,7 @@ import java.util.List;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
+import foundation.icon.iconex.view.WalletDetailActivity;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectTokenDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectType;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionFloatingMenu;
@@ -115,7 +116,7 @@ public class WalletDetailFragment extends Fragment {
                                             viewModel.name.setValue(viewModel.wallet.getValue().getAlias());
                                         } break;
                                         case Delete: {
-                                            getActivity().setResult(RESULT_WALLET_REFRESH);
+                                            getActivity().setResult(WalletDetailActivity.RESULT_WALLET_DELETED);
                                             getActivity().finish();
                                         }
                                     }
