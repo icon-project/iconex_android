@@ -25,7 +25,7 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
     private TextView txtNoTransaction;
     private TextView lnkEtehrscan;
     private ViewGroup loading;
-
+    private ViewGroup container;
     private boolean mIsEtherscanVisible = false;
     private RecyclerView.Adapter adapter = null;
     private List<TransactionItemViewData> lstViewData = new ArrayList<>();
@@ -66,6 +66,7 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
         lstTransaction = findViewById(R.id.lstTransaction);
         txtNoTransaction = findViewById(R.id.txt_no_transaction);
         lnkEtehrscan = findViewById(R.id.link_etherscan);
+        container = findViewById(R.id.container);
 
         txtNoTransaction.setOnClickListener(this);
         lnkEtehrscan.setOnClickListener(this);
@@ -133,6 +134,11 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
         }
     }
 
+    public void setContainerHeight(int height) {
+        container.getLayoutParams().height = height;
+        container.requestLayout();
+    }
+
     public void setOnScrollBottomListener(OnScrollBottomListener listener) {
         mOnScrollBottomListener = listener;
     }
@@ -147,6 +153,7 @@ public class TransactionListView extends FrameLayout implements View.OnClickList
         adapter.notifyDataSetChanged();
 
         boolean isSize0 = lstViewData.size() == 0;
+
         txtNoTransaction.setVisibility(isSize0 ? VISIBLE : GONE);
         lnkEtehrscan.setVisibility(isSize0 && mIsEtherscanVisible ? VISIBLE : GONE);
     }

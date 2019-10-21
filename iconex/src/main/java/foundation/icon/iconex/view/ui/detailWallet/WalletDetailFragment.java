@@ -91,9 +91,7 @@ public class WalletDetailFragment extends Fragment {
                         - actionbar.getMeasuredHeight()
                         - infoView.getMeasuredHeight()
                         - listHeaderView.getMeasuredHeight();
-
-                listView.getLayoutParams().height = lstViewHiehgt;
-                listView.requestLayout();
+                listView.setContainerHeight(lstViewHiehgt);
             }
         });
 
