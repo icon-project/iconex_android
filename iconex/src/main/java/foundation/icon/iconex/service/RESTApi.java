@@ -27,7 +27,7 @@ public interface RESTApi {
     Call<TRResponse> sendGetExchangeList(@Query("codeList") String codeList);
 
     @GET(ServiceConstants.TR_V3 + ServiceConstants.TR_API_TX_LIST_HEADER)
-    Call<TRResponse> sendGetTxList(@Query("address") String address, @Query("page") int page);
+    Call<TRResponse> sendGetTxList(@Query("address") String address, @Query("page") int page, @Query("type") int txType);
 
     @GET(ServiceConstants.TR_V3 + ServiceConstants.TR_API_TOKEN_TX_LIST)
     Call<TRResponse> sendGetTokenTxList(@Query("page") int page, @Query("contractAddr") String contract, @Query("tokenAddr") String addr);
