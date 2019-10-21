@@ -85,7 +85,7 @@ public class PRepVoteFragment extends Fragment {
                 setData();
             }
         });
-
+        stepPrice = vm.getStepPrice().getValue();
         vm.getStepLimit().observe(this, new Observer<BigInteger>() {
             @Override
             public void onChanged(BigInteger stepLimit) {
@@ -93,8 +93,6 @@ public class PRepVoteFragment extends Fragment {
                         && !stepPrice.equals(BigInteger.ZERO)) {
 
                     fee = stepLimit.multiply(stepPrice);
-
-
                 }
             }
         });
@@ -140,23 +138,25 @@ public class PRepVoteFragment extends Fragment {
     }
 
     private void setData() {
-        txtVotedCount.setText(String.format(Locale.getDefault(), "(%d/10)", delegations.size()));
+        if (delegations != null) {
+            txtVotedCount.setText(String.format(Locale.getDefault(), "(%d/10)", delegations.size()));
 
-        BigDecimal total = new BigDecimal(vm.getTotal().getValue());
-        BigDecimal voted = BigDecimal.ZERO;
-        for (Delegation d : delegations) {
-            voted = voted.add(new BigDecimal(d.getValue()));
+            BigDecimal total = new BigDecimal(vm.getTotal().getValue());
+            BigDecimal voted = BigDecimal.ZERO;
+            for (Delegation d : delegations) {
+                voted = voted.add(new BigDecimal(d.getValue()));
+            }
+
+            vm.setVoted(voted.toBigInteger());
+            vm.setVotingPower(total.subtract(voted).toBigInteger());
+
+            voteGraph.setTotal(total);
+            voteGraph.setDelegation(voted);
+            voteGraph.updateGraph();
+
+            txtVotedIcx.setText(String.format(Locale.getDefault(), "%s", voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
+            txtAvailableIcx.setText(String.format(Locale.getDefault(), "%s", total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
         }
-
-        vm.setVoted(voted.toBigInteger());
-        vm.setVotingPower(total.subtract(voted).toBigInteger());
-
-        voteGraph.setTotal(total);
-        voteGraph.setDelegation(voted);
-        voteGraph.updateGraph();
-
-        txtVotedIcx.setText(String.format(Locale.getDefault(), "%s", voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
-        txtAvailableIcx.setText(String.format(Locale.getDefault(), "%s", total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
     }
 
     private OnVoteFragmentListener mListener;

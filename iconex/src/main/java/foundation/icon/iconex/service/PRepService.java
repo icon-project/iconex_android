@@ -124,7 +124,7 @@ public class PRepService {
         return iconService.call(call).execute();
     }
 
-    public String setDelegation(KeyWallet keyWallet, List<Delegation> delegations) throws IOException {
+    public String setDelegation(KeyWallet keyWallet, List<Delegation> delegations, BigInteger stepLimit) throws IOException {
         RpcArray.Builder arrayBuilder = new RpcArray.Builder();
         for (Delegation d : delegations) {
             if (d.isEdited()) {
@@ -144,7 +144,7 @@ public class PRepService {
                 .from(keyWallet.getAddress())
                 .to(new Address(Constants.ADDRESS_ZERO))
                 .value(IconAmount.of("0", IconAmount.Unit.ICX).toLoop())
-                .stepLimit(new BigInteger("200000"))
+                .stepLimit(stepLimit)
                 .nid(ICONexApp.NETWORK.getNid())
                 .call("setDelegation")
                 .params(params)

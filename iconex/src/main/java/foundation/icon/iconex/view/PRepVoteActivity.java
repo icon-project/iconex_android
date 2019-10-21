@@ -19,21 +19,22 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.tabs.TabLayout;
 
-import org.junit.internal.runners.statements.RunAfters;
-
 import java.io.InterruptedIOException;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.LoadingDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
+import foundation.icon.iconex.dialogs.VotingDialog;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.view.ui.prep.vote.PRepVoteFragment;
@@ -90,6 +91,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private Disposable delegationsDisposable, prepListDisposable, prepDisposable;
 
     private List<Delegation> delegations;
+    private VotingDialog votingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +184,34 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDelegations();
+                votingDialog = new VotingDialog(PRepVoteActivity.this);
+                int voteCount = 0;
+                for (Delegation d : delegations) {
+                    if (d.isEdited())
+                        voteCount++;
+                }
+
+                String icx = ConvertUtil.getValue(stepPrice, 18);
+                String mIcx = icx.indexOf(".") < 0 ? icx : icx.replaceAll("0*$", "").replaceAll("\\.$", "");
+                String fee = ConvertUtil.getValue(PRepVoteActivity.this.fee, 18);
+                String mFee = fee.indexOf(".") < 0 ? fee : fee.replaceAll("0*$", "").replaceAll("\\.$", "");
+
+                votingDialog.setVoteCount(String.format(Locale.getDefault(), "%d/10", voteCount));
+                votingDialog.setLimitNPrice(String.format(Locale.getDefault(), "%s/%s",
+                        Utils.formatFloating(stepLimit.toString(), 0), mIcx));
+                votingDialog.setFee(mFee);
+                votingDialog.setFeeUsd(String.format(Locale.getDefault(), "$%.2f",
+                        Double.parseDouble(ConvertUtil.getValue(PRepVoteActivity.this.fee, 18))
+                                * Float.parseFloat(ICONexApp.EXCHANGE_TABLE.get("icxusd"))));
+
+                votingDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                    @Override
+                    public Boolean invoke(View view) {
+                        setDelegations();
+                        return false;
+                    }
+                });
+                votingDialog.show();
             }
         });
 
@@ -378,7 +407,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             public void run() throws Exception {
                 PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
                 KeyWallet keyWallet = KeyWallet.load(new Bytes(privateKey));
-                pRepService.setDelegation(keyWallet, delegations);
+                pRepService.setDelegation(keyWallet, delegations, stepLimit);
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -390,6 +419,9 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
 
                     @Override
                     public void onComplete() {
+                        if (votingDialog.isShowing())
+                            votingDialog.dismiss();
+
                         CustomToast toast = new CustomToast();
                         toast.makeText(PRepVoteActivity.this, getString(R.string.completeVoting), Toast.LENGTH_SHORT).show();
                         finish();
@@ -406,7 +438,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private Runnable estimateLimitTask = new Runnable() {
         @Override
         public void run() {
-
+            estimateLimit();
         }
     };
 
@@ -453,6 +485,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                     @Override
                     public void onNext(BigInteger result) {
                         stepLimit = result;
+                        fee = stepLimit.multiply(stepPrice);
                     }
 
                     @Override
@@ -462,17 +495,29 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
 
                     @Override
                     public void onComplete() {
-
+                        vm.setStepLimit(stepLimit);
                     }
                 });
     }
 
     @Override
     public void onVoted(List<Delegation> delegations) {
+        if (delegations == null) {
+            btnSubmit.setEnabled(false);
+            return;
+        }
+
         if (!btnSubmit.isEnabled())
             btnSubmit.setEnabled(true);
 
         this.delegations = delegations;
+
+        try {
+            localHandler.removeCallbacks(estimateLimitTask);
+            localHandler.postDelayed(estimateLimitTask, 500);
+        } catch (Exception e) {
+            localHandler.postDelayed(estimateLimitTask, 500);
+        }
     }
 
     @Override
