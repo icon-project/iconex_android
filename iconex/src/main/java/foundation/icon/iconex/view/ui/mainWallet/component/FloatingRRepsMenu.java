@@ -228,10 +228,9 @@ public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListen
                                         .putExtra("privateKey", Hex.toHexString(bytePrivateKey)));
                             }
                         });
-
                 try {
-                    BigInteger votingPower = wallet.getVotingPower();
-                    if (votingPower.compareTo(BigInteger.ZERO) == 0) {
+                    BigInteger voted = wallet.getStaked();
+                    if (voted.compareTo(BigInteger.ZERO) == 0) {
                         messageDialog = new MessageDialog(getContext());
                         messageDialog.setTitleText(getContext().getString(R.string.hasNoVotingPower));
                         messageDialog.show();
