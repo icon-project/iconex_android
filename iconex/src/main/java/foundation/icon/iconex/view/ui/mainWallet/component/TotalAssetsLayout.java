@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ public class TotalAssetsLayout extends FrameLayout implements View.OnClickListen
     public TextView txtUint;
     public ImageView btnToggle;
     public TextView txtAsset;
+    public ProgressBar loading;
 
     public View.OnClickListener mOnClickExchangeUnitButtonListener = null;
 
@@ -30,6 +32,7 @@ public class TotalAssetsLayout extends FrameLayout implements View.OnClickListen
         txtUint = v.findViewById(R.id.txt_unit);
         btnToggle = v.findViewById(R.id.btn_toggle);
         txtAsset = v.findViewById(R.id.txt_total_asset);
+        loading = v.findViewById(R.id.loading);
 
         txtUint.setOnClickListener(this);
         btnToggle.setOnClickListener(this);

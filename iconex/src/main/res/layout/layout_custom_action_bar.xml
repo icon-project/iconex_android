@@ -27,7 +27,7 @@
 
         android:layout_marginRight="10dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_more_vert_darkgray"/>
+        android:src="@drawable/ic_appbar_more"/>
 
     <Button
         android:id="@+id/btn_text"

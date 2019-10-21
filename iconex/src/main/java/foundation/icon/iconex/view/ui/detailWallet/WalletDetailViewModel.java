@@ -1,6 +1,8 @@
 package foundation.icon.iconex.view.ui.detailWallet;
 
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import java.math.BigDecimal;
@@ -21,7 +23,6 @@ public class WalletDetailViewModel extends ViewModel {
     // activity
     public final MutableLiveData<Wallet> wallet = new MutableLiveData<>();
     public final MutableLiveData<WalletEntry> walletEntry = new MutableLiveData<>();
-    public final MutableLiveData<Integer> entryId = new MutableLiveData<>();
 
     public final MutableLiveData<Map<String, WalletEntry>> indexedWalletEntry = new MutableLiveData<>();
 
@@ -34,12 +35,13 @@ public class WalletDetailViewModel extends ViewModel {
     public final MutableLiveData<Boolean> isLoadMore = new MutableLiveData<>();
     public final MutableLiveData<SelectType> selectType = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isNoLoadMore = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> loadingBalance = new MutableLiveData<>();
 
     // actionbar
     public final MutableLiveData<String> name = new MutableLiveData<>();
 
     // info view
-    public final MutableLiveData<List<String>> lstUnit = new MutableLiveData<>();
+    public final MediatorLiveData<List<String>> lstUnit = new MediatorLiveData<>();
     public final MutableLiveData<BigDecimal> amount = new MutableLiveData<>();
     public final MutableLiveData<BigDecimal> exchange = new MutableLiveData<>();
     public final MutableLiveData<Map<Integer, BigDecimal>> exchanges = new MutableLiveData<>();
@@ -48,10 +50,9 @@ public class WalletDetailViewModel extends ViewModel {
     // listview
     public final MutableLiveData<List<TransactionItemViewData>> lstItemData =  new MutableLiveData<>();
 
-    public void initialize(Wallet wallet, WalletEntry walletEntry, int entryID) {
+    public void initialize(Wallet wallet, WalletEntry walletEntry) {
         this.wallet.setValue(wallet);
         this.walletEntry.setValue(walletEntry);
-        this.entryId.setValue(entryID);
 
         indexedWalletEntry.setValue(new HashMap<>());
         lstTxData.setValue(new ArrayList<>());
@@ -61,23 +62,62 @@ public class WalletDetailViewModel extends ViewModel {
 //        selectType.setValue();
 
         this.name.setValue(wallet.getAlias());
-
-        lstUnit.setValue(new ArrayList<String>() {{
-            if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
-                add("USD");
-                add("BTC");
-                add("ETH");
-            } else {
-                add("USD");
-                add("BTC");
-                add("ICX");
+        lstUnit.addSource(this.wallet, new Observer<Wallet>() {
+            @Override
+            public void onChanged(Wallet wallet) {
+                combineLstUnit();
             }
-        }});
+        });
+        lstUnit.addSource(this.walletEntry, new Observer<WalletEntry>() {
+            @Override
+            public void onChanged(WalletEntry entry) {
+                combineLstUnit();
+            }
+        });
 
         amount.setValue(BigDecimal.ZERO);
         exchange.setValue(BigDecimal.ZERO);
         exchanges.setValue(new HashMap<>());
-
     }
 
+    private void combineLstUnit() {
+        Wallet wallet = this.wallet.getValue();
+        WalletEntry entry = this.walletEntry.getValue();
+
+        // event filtering
+        if (wallet == null || entry == null) return;
+
+        boolean exist = false;
+        for (WalletEntry findEntry : wallet.getWalletEntries()) {
+            if (findEntry.getId() == entry.getId()) {
+                exist = true;
+                break;
+            }
+        }
+        if (!exist) return;
+
+        lstUnit.setValue(new ArrayList<String>() {{
+            if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                    add("USD");
+                    add("BTC");
+                    add("ETH");
+                } else {
+                    add("USD");
+                    add("BTC");
+                    add("ICX");
+                }
+            } else {
+                if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+                    add("USD");
+                    add("BTC");
+                    add("ICX");
+                } else {
+                    add("USD");
+                    add("BTC");
+                    add("ETH");
+                }
+            }
+        }});
+    }
 }

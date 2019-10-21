@@ -6,19 +6,18 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:background="@color/darkFA"
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
-
         <TextView
             android:id="@+id/txt_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/txRecords"
+            android:fontFamily="@font/noto_sans_light"
             android:textColor="@color/dark80"
             android:textSize="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -41,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/all"
+            android:fontFamily="@font/noto_sans_regular"
             android:textColor="@color/dark"
             android:textSize="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

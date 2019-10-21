@@ -35,7 +35,7 @@ public class TxHashDialog extends MessageDialog {
 
     private void buildDialog() {
         // set Head
-        setHeadText(getContext().getString(R.string.txID));
+        setHeadText(getContext().getString(R.string.dialogHeadTextTxHash));
 
         // set Content
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dlg_txhash_content, null, false);
@@ -49,7 +49,7 @@ public class TxHashDialog extends MessageDialog {
 
         // set button
         setSingleButton(false);
-        setConfirmButtonText(getContext().getString(R.string.copy));
+        setConfirmButtonText(getContext().getString(R.string.dialogTxHashCopyTxHash));
 
         // add button event
         mLnkTacker.setOnClickListener(new View.OnClickListener() {

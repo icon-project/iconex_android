@@ -449,7 +449,7 @@
     <!-- Dialogs -->
     <string name="dialogHeadTextTxHash">TxHash</string>
     <string name="dialogTxHashTrackerLink"><u>ICON Tracker로 이동</u></string>
-    <string name="dialogTxHashCopyTxHash">Copy TxHash</string>
+    <string name="dialogTxHashCopyTxHash">복사하기</string>
 
     <string name="forgot_passwword"><u>비밀번호를 잊으셨나요?</u></string>
 

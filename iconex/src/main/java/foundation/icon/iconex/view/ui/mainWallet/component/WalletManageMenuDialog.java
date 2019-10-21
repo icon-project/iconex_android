@@ -50,6 +50,7 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
     }
 
     public static final int REQ_PASSWORD_CHANGE = 14930;
+    public static final int REQ_UPDATE_TOKEN = 23097;
 
     public interface OnNotifyWalletDataChangeListener {
         void onNotifyWalletDataChange(UpdateDataType updateDataType);
@@ -162,7 +163,7 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 else
                     intent.putExtra("type", TokenManageActivity.TOKEN_TYPE.ERC);
 
-                getContext().startActivity(intent);
+                activity.startActivityForResult(intent, REQ_UPDATE_TOKEN);
             } break;
             case R.id.btnBackupWallet:
                 new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {

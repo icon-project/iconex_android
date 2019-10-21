@@ -186,9 +186,9 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         appbar.setTitle(wallet.getAlias());
 
         // set Symbol
-        String symbol = "(" + entry.getSymbol() + ")";
+        editSend.setAppendText(entry.getSymbol());
+        String symbol = "(" + MyConstants.SYMBOL_ICON + ")";
         labelSymbol.setText(symbol);
-        editSend.setAppendText(symbol.substring(1, symbol.length() -1));
         symbolStepLimit.setText(symbol);
         symbolEstimatedMaxFee.setText(symbol);
 
@@ -258,7 +258,11 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         } else
             layoutNetwork.setVisibility(View.GONE);
 
-        balance = new BigInteger(entry.getBalance());
+        try {
+            balance = new BigInteger(entry.getBalance());
+        } catch (Exception e) {
+            balance = BigInteger.ZERO;
+        }
 
         setBalance(balance);
     }
@@ -515,6 +519,13 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             }
         };
 
+        TTextInputLayout.OnEditorAction onEditorAction = new TTextInputLayout.OnEditorAction() {
+            @Override
+            public void onDone() {
+                setSendEnable();
+            }
+        };
+
         // init editSend
         editSend.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editSend.setOnKeyPreImeListener(onKeyPreIme);
@@ -552,8 +563,8 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                                     decimal = decimal.substring(0, 10);
                                     editSend.setText(decimal + "." + below);
                                     editSend.setSelection(editSend.getText().toString().length());
-                                } else if (below.length() > entry.getDefaultDec()) {
-                                    below = below.substring(0, entry.getDefaultDec());
+                                } else if (below.length() > 8) {
+                                    below = below.substring(0, 8);
                                     editSend.setText(decimal + "." + below);
                                     editSend.setSelection(editSend.getText().toString().length());
                                 }
@@ -580,7 +591,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                 }
             }
         });
-        // editSend.setOnEditorActionListener(); nothing
+        editSend.setOnEditorActionListener(onEditorAction);
 
         // init editAddress
         editAddress.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -612,7 +623,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                 }
             }
         });
-        // editAddress.setOnEditorActionListener(); nothing
+        editAddress.setOnEditorActionListener(onEditorAction);
     }
 
     private void addPlus(int plus) {
@@ -705,7 +716,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(entry.getSymbol().toLowerCase() + "usd");
         if (strPrice != null) {
-            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, entry.getDefaultDec()))
+            Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, entry.getUserDec()))
                     * Double.parseDouble(strPrice);
 
             String strBalanceUSD = String.format(Locale.getDefault(), "%,.2f", balanceUSD);
@@ -729,7 +740,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         else
             fee = BigInteger.ZERO;
         strFee = ConvertUtil.getValue(fee, 18);
-        txtEstimatedMaxFee.setText(strFee);
+        txtEstimatedMaxFee.setText(DecimalFomatter.format(new BigDecimal(strFee)));
 
         this.fee = ConvertUtil.getValue(fee, 18);
 
@@ -996,13 +1007,8 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void onClickSend() {
-        BigInteger value;
-        if (editSend.getText().isEmpty())
-            value = BigInteger.ZERO;
-        else
-            value = ConvertUtil.valueToBigInteger(editSend.getText(), entry.getDefaultDec());
-        final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), ConvertUtil.getValue(value, entry.getDefaultDec()),
-                strFee, Integer.toHexString(Integer.parseInt(strLimit)), entry.getSymbol());
+        final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), editSend.getText(),
+                txtEstimatedMaxFee.getText().toString(), Integer.toHexString(Integer.parseInt(strLimit)), entry.getSymbol());
 
         txInfo.setLimitPrice(txtStepLimit.getText().toString());
         txInfo.setTransFee(txtTransFee.getText().toString());

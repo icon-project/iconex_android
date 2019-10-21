@@ -117,9 +117,14 @@
         </foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <foundation.icon.iconex.view.ui.mainWallet.component.WalletFloatingMenu
+    <foundation.icon.iconex.view.ui.mainWallet.component.FloatingRRepsMenu
         android:id="@+id/floating_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <include layout="@layout/main_wallet_side_menu" />
+
+    <foundation.icon.iconex.view.ui.mainWallet.component.SideMenu
+        android:layout_gravity="start"
+        android:id="@+id/side_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
 </androidx.drawerlayout.widget.DrawerLayout>

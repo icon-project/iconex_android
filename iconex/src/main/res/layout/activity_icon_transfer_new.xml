@@ -354,6 +354,7 @@
                     app:layout_constraintBaseline_toBaselineOf="@id/lb_step_limit"
                     android:layout_marginLeft="5dp"
 
+                    android:fontFamily="@font/noto_sans_light"
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 
@@ -367,6 +368,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/lb_step_limit"
                     android:layout_marginTop="13dp"
 
+                    android:fontFamily="@font/noto_sans_light"
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 
@@ -380,6 +382,7 @@
                     app:layout_constraintBaseline_toBaselineOf="@id/lb_estimated_max_fee"
                     android:layout_marginLeft="5dp"
 
+                    android:fontFamily="@font/noto_sans_light"
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 

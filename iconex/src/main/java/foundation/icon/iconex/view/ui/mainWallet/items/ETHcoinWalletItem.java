@@ -5,12 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 
 public class ETHcoinWalletItem extends WalletItem {
 
@@ -21,6 +22,9 @@ public class ETHcoinWalletItem extends WalletItem {
     public TextView txtName;
     public TextView txtAmount;
     public TextView txtExchanged;
+
+    public ProgressBar loading0;
+    public ProgressBar loading1;
 
     public ETHcoinWalletItem(@NonNull Context context) {
         super(context);
@@ -38,11 +42,14 @@ public class ETHcoinWalletItem extends WalletItem {
         txtAmount = v.findViewById(R.id.txt_amount);
         txtExchanged = v.findViewById(R.id.txt_exchanged);
 
+        loading0 = v.findViewById(R.id.loading0);
+        loading1 = v.findViewById(R.id.loading1);
+
         addView(v, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }
 
     @Override
-    public void bind(WalletItemViewData data) {
+    public void bind(EntryViewData data) {
         // It's OK, If you don't
         // imgSymbol.setImageResource(data.getDrawableSymbolresId());
         // txtSymbol.setText(data.getSymbol());
@@ -50,6 +57,11 @@ public class ETHcoinWalletItem extends WalletItem {
 
         txtAmount.setText(data.getTxtAmount());
         txtExchanged.setText(data.getTxtExchanged());
+
+        txtAmount.setVisibility(data.amountLoading ? INVISIBLE : VISIBLE);
+        loading0.setVisibility(data.amountLoading ? VISIBLE : GONE);
+        txtExchanged.setVisibility(data.exchageLoading ? INVISIBLE : VISIBLE);
+        loading1.setVisibility(data.exchageLoading ? VISIBLE : GONE);
     }
 
     @Override

@@ -33,6 +33,7 @@ import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialo
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.main.WalletFragment;
+import loopchain.icon.wallet.core.Constants;
 
 
 public class WalletDetailActivity extends AppCompatActivity {
@@ -40,7 +41,6 @@ public class WalletDetailActivity extends AppCompatActivity {
 
     public static final String PARAM_WALLET = "wallet";
     public static final String PARAM_WALLET_ENTRY = "wallet entry";
-    public static final String PARAM_ENTRY_ID = "entry id";
 
     private WalletDetailViewModel viewModel = null;
     private WalletDetailServiceHelper serviceHelper = null;
@@ -55,8 +55,7 @@ public class WalletDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         viewModel.initialize(
                 ((Wallet) intent.getSerializableExtra(PARAM_WALLET)),
-                ((WalletEntry) intent.getSerializableExtra(PARAM_WALLET_ENTRY)),
-                intent.getIntExtra(PARAM_ENTRY_ID, -1)
+                ((WalletEntry) intent.getSerializableExtra(PARAM_WALLET_ENTRY))
         );
 
         getSupportFragmentManager()
@@ -109,7 +108,11 @@ public class WalletDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    serviceHelper.loadMoreIcxTxList();
+                    if (viewModel.wallet.getValue().getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
+                        serviceHelper.loadMoreIcxTxList();
+                    } else {
+                        viewModel.isLoadMore.setValue(false);
+                    }
                 }
             }
         });
@@ -119,8 +122,8 @@ public class WalletDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<TransactionItemViewData> viewDataes) {
                 WalletEntry entry = viewModel.walletEntry.getValue();
-                viewModel.isRefreshing.postValue(false);
-                viewModel.isLoadMore.postValue(false);
+                viewModel.isRefreshing.setValue(false);
+                viewModel.isLoadMore.setValue(false);
 
                 String symbol = viewModel.walletEntry.getValue().getSymbol();
 
@@ -305,6 +308,23 @@ public class WalletDetailActivity extends AppCompatActivity {
                         viewModel.wallet.setValue(wallet);
                     }
                 });
+            } break;
+            case WalletManageMenuDialog.REQ_UPDATE_TOKEN: {
+                String address = viewModel.wallet.getValue().getAddress();
+                WalletEntry oldEntry = viewModel.walletEntry.getValue();
+
+                for (Wallet wallet : ICONexApp.wallets) {
+                    if (wallet.getAddress().equals(address)) {
+                        for (WalletEntry newEntry : wallet.getWalletEntries()) {
+                            if(oldEntry.getContractAddress().equals(newEntry.getContractAddress())) {
+                                viewModel.walletEntry.setValue(newEntry);
+                                break;
+                            }
+                        }
+                        viewModel.wallet.setValue(wallet);
+                        break;
+                    }
+                }
             } break;
             default: {
                 super.onActivityResult(requestCode, resultCode, data);

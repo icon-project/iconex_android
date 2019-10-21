@@ -4,12 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 
 public class WalletWalletItem extends WalletItem{
 
@@ -19,6 +20,9 @@ public class WalletWalletItem extends WalletItem{
     public TextView txtName;
     public TextView txtAmount;
     public TextView txtExchanged;
+
+    public ProgressBar loading0;
+    public ProgressBar loading1;
 
     public WalletWalletItem(@NonNull Context context) {
         super(context);
@@ -35,15 +39,23 @@ public class WalletWalletItem extends WalletItem{
         txtAmount = v.findViewById(R.id.txt_amount);
         txtExchanged = v.findViewById(R.id.txt_exchanged);
 
+        loading0 = v.findViewById(R.id.loading0);
+        loading1 = v.findViewById(R.id.loading1);
+
         addView(v);
     }
 
     @Override
-    public void bind(WalletItemViewData data) {
-        txtSymbol.setText(data.getSymbol());
-        txtName.setText(data.getName());
+    public void bind(EntryViewData data) {
+        txtSymbol.setText(data.getWallet().getAlias());
+        txtName.setText(data.getWallet().getAddress());
         txtAmount.setText(data.getTxtAmount());
         txtExchanged.setText(data.getTxtExchanged());
+
+        txtAmount.setVisibility(data.amountLoading ? INVISIBLE : VISIBLE);
+        loading0.setVisibility(data.amountLoading ? VISIBLE : GONE);
+        txtExchanged.setVisibility(data.exchageLoading ? INVISIBLE : VISIBLE);
+        loading1.setVisibility(data.exchageLoading ? VISIBLE : GONE);
     }
 
     @Override

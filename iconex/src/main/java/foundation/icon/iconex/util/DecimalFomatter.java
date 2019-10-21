@@ -3,8 +3,6 @@ package foundation.icon.iconex.util;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
-
 public class DecimalFomatter {
 
     public static String format(BigDecimal decimal, int scale) {

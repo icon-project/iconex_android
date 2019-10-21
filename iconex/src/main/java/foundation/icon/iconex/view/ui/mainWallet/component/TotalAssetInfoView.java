@@ -23,6 +23,9 @@ public class TotalAssetInfoView extends FrameLayout {
     private TotalAssetsLayout mTotalAsset;
     private TotalAssetsLayout mVotedPower;
 
+    private Runnable totalAssetInfoLooper = null;
+    private int LOOPING_TIME_INTERVAL = 5000;
+
     public TotalAssetInfoView(@NonNull Context context) {
         super(context);
         initView();
@@ -47,10 +50,11 @@ public class TotalAssetInfoView extends FrameLayout {
 
         // inflate Total Asset view ==================
         mTotalAsset = new TotalAssetsLayout(getContext());
+        mTotalAsset.txtLabel.setText(getContext().getString(R.string.totalAssets));
 
         // inflate Voted Power view ==================
         mVotedPower = new TotalAssetsLayout(getContext());
-        mVotedPower.txtLabel.setText("Voting Power");
+        mVotedPower.txtLabel.setText(getContext().getString(R.string.totalVotedPower));
         mVotedPower.txtUint.setVisibility(GONE);
         mVotedPower.btnToggle.setVisibility(GONE);
 
@@ -85,11 +89,19 @@ public class TotalAssetInfoView extends FrameLayout {
             @Override
             public int getCount() { return 2; }
         });
-
+        totalAssetInfoLooper = new Runnable() {
+            @Override
+            public void run() {
+                setIndex(1 - getIndex());
+            }
+        };
+        postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 mIndicator.setIndex(position);
+                removeCallbacks(totalAssetInfoLooper);
+                postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
             }
         });
     }
@@ -108,10 +120,25 @@ public class TotalAssetInfoView extends FrameLayout {
         mTotalAsset.txtUint.setText(data.getTxtExchangeUnit());
         mTotalAsset.txtAsset.setText(data.getTxtTotalAsset());
         mVotedPower.txtAsset.setText(data.getTxtVotedPower());
+
+        mTotalAsset.txtAsset.setVisibility(data.loadingTotalAssets ? INVISIBLE : VISIBLE);
+        mTotalAsset.loading.setVisibility(data.loadingTotalAssets ? VISIBLE : GONE);
+
+        mVotedPower.txtAsset.setVisibility(data.loadingVotedpower ? INVISIBLE : VISIBLE);
+        mVotedPower.loading.setVisibility(data.loadingVotedpower ? VISIBLE : GONE);
     }
 
     public void setOnClickExchangeUnitButton(View.OnClickListener listener) {
-        mTotalAsset.setOnClickExchangeUnitButton(listener);
+        mTotalAsset.setOnClickExchangeUnitButton(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onClick(view);
+                }
+                removeCallbacks(totalAssetInfoLooper);
+                postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
+            }
+        });
     }
 
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {

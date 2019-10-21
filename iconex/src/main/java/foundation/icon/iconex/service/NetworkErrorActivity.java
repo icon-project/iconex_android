@@ -13,6 +13,8 @@ public class NetworkErrorActivity extends AppCompatActivity {
 
     private static final String TAG = NetworkErrorActivity.class.getSimpleName();
 
+    public static String PARAM_TARGET_SPLASH = "param_target_splash";
+
     private Button btnRetry;
 
     @Override
@@ -33,7 +35,9 @@ public class NetworkErrorActivity extends AppCompatActivity {
 
                             @Override
                             public void onPass() {
-                                startActivity(new Intent(NetworkErrorActivity.this, SplashActivity.class));
+                                boolean isTargetSplash = getIntent().getBooleanExtra(PARAM_TARGET_SPLASH, false);
+                                if (isTargetSplash)
+                                    startActivity(new Intent(NetworkErrorActivity.this, SplashActivity.class));
                                 finish();
                             }
                         });

@@ -217,7 +217,7 @@ class TTextInputLayout : LinearLayout {
     fun setText(text: String) {
         edit.setText(text)
         if (text.isNotEmpty())
-            edit.setSelection(text.length)
+            edit.setSelection(edit.text!!.length)
         tvHint.visibility = if (text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
     }
 

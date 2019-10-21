@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 
 public abstract class WalletItem extends FrameLayout {
     public WalletItem(@NonNull Context context) {
@@ -27,6 +27,6 @@ public abstract class WalletItem extends FrameLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public abstract void bind(WalletItemViewData data);
+    public abstract void bind(EntryViewData data);
     public abstract void setOnClickWalletItem(View.OnClickListener listener);
 }

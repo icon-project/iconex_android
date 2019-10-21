@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="148dp">
+
         <TextView
             android:id="@+id/txt_symbol"
             android:layout_width="wrap_content"
@@ -41,13 +42,14 @@
             android:layout_height="44dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
+            android:autoSizeTextType="uniform"
             android:fontFamily="@font/nanum_square_light"
             android:maxLines="1"
             android:text="9,000,000.02"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:autoSizeTextType="uniform"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_symbol" />
 
@@ -70,10 +72,10 @@
             android:id="@+id/txt_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_medium"
             android:text="USD"
             android:textColor="@android:color/white"
             android:textSize="14dp"
-            android:fontFamily="@font/noto_sans_medium"
             app:layout_constraintBottom_toBottomOf="@+id/txt_exchange"
             app:layout_constraintEnd_toStartOf="@+id/btn_unit"
             app:layout_constraintStart_toEndOf="@+id/txt_exchange"
@@ -83,13 +85,22 @@
             android:id="@+id/btn_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="@+id/txt_exchange"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/txt_unit"
             app:layout_constraintTop_toTopOf="@+id/txt_exchange"
-            android:background="@android:color/transparent"
             app:srcCompat="@drawable/ic_toggle" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:indeterminateDrawable="@drawable/anim_loading"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_amount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt_amount" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

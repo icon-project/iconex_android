@@ -254,11 +254,25 @@ public class WalletDetailFragment extends Fragment {
         });
         infoView.setTextSymbol(viewModel.walletEntry.getValue().getName());
         infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
-        infoView.setUnitList(viewModel.lstUnit.getValue());
+
         boolean isICX = "ICX".equals(viewModel.wallet.getValue().getCoinType());
         listView.setTextNoTransaction(isICX ? getString(R.string.noTransaction) : getString(R.string.txRecords), !isICX);
         viewModel.selectType.setValue(SelectType.All);
-        viewModel.unit.setValue(viewModel.lstUnit.getValue().get(0));
+
+        viewModel.lstUnit.observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> strings) {
+                infoView.setUnitList(strings);
+                viewModel.unit.setValue(viewModel.lstUnit.getValue().get(0));
+            }
+        });
+
+        viewModel.wallet.observe(this, new Observer<Wallet>() {
+            @Override
+            public void onChanged(Wallet wallet) {
+                infoView.setBtnSymbolVisible(wallet.getWalletEntries().size() > 1);
+            }
+        });
 
         viewModel.walletEntry.observe(this, new Observer<WalletEntry>() {
             @Override
@@ -280,6 +294,7 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onChanged(BigDecimal bigDecimal) {
                 infoView.setAmount(bigDecimal);
+                viewModel.loadingBalance.setValue(false);
             }
         });
         // info view exchange
@@ -338,6 +353,13 @@ public class WalletDetailFragment extends Fragment {
                 Boolean loadMore = viewModel.isLoadMore.getValue();
 
                 listView.setLoading(refreash || loadMore);
+            }
+        });
+
+        viewModel.loadingBalance.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                infoView.setLoading(aBoolean);
             }
         });
     }

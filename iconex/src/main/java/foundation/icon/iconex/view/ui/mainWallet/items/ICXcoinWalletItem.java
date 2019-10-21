@@ -5,12 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletItemViewData;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 
 public class ICXcoinWalletItem extends WalletItem{
 
@@ -25,6 +26,11 @@ public class ICXcoinWalletItem extends WalletItem{
     public TextView txtStaked;
     public TextView labelIScore;
     public TextView txtIScore;
+
+    public ProgressBar loading0;
+    public ProgressBar loading1;
+    public ProgressBar loading2;
+    public ProgressBar loading3;
 
     public ICXcoinWalletItem(@NonNull Context context) {
         super(context);
@@ -46,11 +52,16 @@ public class ICXcoinWalletItem extends WalletItem{
         labelIScore = v.findViewById(R.id.lb_iscore);
         txtIScore = v.findViewById(R.id.txt_iscore);
 
+        loading0 = v.findViewById(R.id.loading0);
+        loading1 = v.findViewById(R.id.loading1);
+        loading2 = v.findViewById(R.id.loading2);
+        loading3 = v.findViewById(R.id.loading3);
+
         addView(v, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }
 
     @Override
-    public void bind(WalletItemViewData data) {
+    public void bind(EntryViewData data) {
         // It's OK, If you don't
         // imgSymbol.setImageResource(data.getDrawableSymbolresId());
         // txtSymbol.setText(data.getSymbol());
@@ -61,6 +72,16 @@ public class ICXcoinWalletItem extends WalletItem{
 
         txtStaked.setText(data.getTxtStacked());
         txtIScore.setText(data.getTxtIScore());
+
+        txtAmount.setVisibility(data.amountLoading ? INVISIBLE : VISIBLE);
+        loading0.setVisibility(data.amountLoading ? VISIBLE : GONE);
+        txtExchanged.setVisibility(data.exchageLoading ? INVISIBLE : VISIBLE);
+        loading1.setVisibility(data.exchageLoading ? VISIBLE : GONE);
+
+        txtStaked.setVisibility(data.prepsLoading ? INVISIBLE : VISIBLE);
+        loading2.setVisibility(data.prepsLoading ? VISIBLE : GONE);
+        txtIScore.setVisibility(data.iscoreLoading ? INVISIBLE : VISIBLE);
+        loading3.setVisibility(data.iscoreLoading ? VISIBLE : GONE);
     }
 
     public void setTextStaked(String textStaked) {

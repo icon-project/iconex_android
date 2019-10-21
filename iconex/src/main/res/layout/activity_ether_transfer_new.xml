@@ -302,6 +302,7 @@
                     app:layout_constraintBaseline_toBaselineOf="@+id/lb_slow"
                     app:layout_constraintEnd_toEndOf="@+id/txt_price"
 
+                    android:fontFamily="@font/noto_sans_light"
                     android:textSize="10dp"
                     android:textColor="@color/dark4D"
 
@@ -367,8 +368,8 @@
                     android:layout_marginTop="30dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:fontFamily="@font/noto_sans_light"
 
+                    android:fontFamily="@font/noto_sans_light"
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 
@@ -382,6 +383,7 @@
                     app:layout_constraintLeft_toRightOf="@id/lb_estimated_max_fee"
                     app:layout_constraintBaseline_toBaselineOf="@id/lb_estimated_max_fee"
 
+                    android:fontFamily="@font/noto_sans_light"
                     android:textSize="10dp"
                     android:textColor="@color/dark80"
 
