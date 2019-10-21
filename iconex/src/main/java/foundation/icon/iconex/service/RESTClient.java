@@ -55,7 +55,7 @@ public class RESTClient {
     }
 
     public Call<TRResponse> sendGetTxList(String address, int page) throws IOException {
-        Call<TRResponse> response = RESTService.sendGetTxList(address, page);
+        Call<TRResponse> response = RESTService.sendGetTxList(address, page, 0);
         return response;
     }
 
