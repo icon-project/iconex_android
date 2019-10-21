@@ -23,7 +23,7 @@ public class VoteViewModel extends ViewModel {
     private MutableLiveData<List<PRep>> preps;
     private MutableLiveData<BigInteger> prepTotalDelegated;
 
-    private MutableLiveData<BigInteger> stepPrice;
+    private MutableLiveData<BigInteger> stepLimit, stepPrice, fee;
 
     public MutableLiveData<Wallet> getWallet() {
         if (wallet == null)
@@ -119,5 +119,31 @@ public class VoteViewModel extends ViewModel {
 
     public void setStepPrice(BigInteger stepPrice) {
         getStepPrice().setValue(stepPrice);
+    }
+
+    public MutableLiveData<BigInteger> getStepLimit() {
+        if (stepLimit == null) {
+            stepLimit = new MutableLiveData<>();
+            stepLimit.setValue(BigInteger.ZERO);
+        }
+
+        return stepLimit;
+    }
+
+    public void setStepLimit(BigInteger stepLimit) {
+        getStepLimit().setValue(stepLimit);
+    }
+
+    public MutableLiveData<BigInteger> getFee() {
+        if (fee == null) {
+            fee = new MutableLiveData<>();
+            fee.setValue(BigInteger.ZERO);
+        }
+
+        return fee;
+    }
+
+    public void setFee(BigInteger fee) {
+        getFee().setValue(fee);
     }
 }

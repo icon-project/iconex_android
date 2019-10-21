@@ -17,30 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/noto_sans_medium"
-            android:text="@string/currentIScore"
+            android:text="@string/votePReps"
             android:textColor="@color/dark4D" />
 
         <TextView
-            android:id="@+id/txt_current_iscore"
-            style="@style/TextView16"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/nanum_square_regular"
-            android:gravity="end"
-            android:textColor="@color/primary" />
-
-        <TextView
-            style="@style/TextView10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:text="@string/receiveIScroe"
-            android:textColor="@color/dark4D" />
-
-        <TextView
-            android:id="@+id/txt_receive_icx"
+            android:id="@+id/txt_vote_count"
             style="@style/TextView16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

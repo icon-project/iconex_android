@@ -43,7 +43,7 @@ public class PRepVoteFragment extends Fragment {
 
     private Disposable delegationsDisposable, prepDisposable;
 
-    private BigInteger totalDelegated, votingPower;
+    private BigInteger totalDelegated, votingPower, stepLimit, stepPrice, fee;
 
     public PRepVoteFragment() {
         // Required empty public constructor
@@ -83,6 +83,19 @@ public class PRepVoteFragment extends Fragment {
                 }
 
                 setData();
+            }
+        });
+
+        vm.getStepLimit().observe(this, new Observer<BigInteger>() {
+            @Override
+            public void onChanged(BigInteger stepLimit) {
+                if (!stepLimit.equals(BigInteger.ZERO)
+                        && !stepPrice.equals(BigInteger.ZERO)) {
+
+                    fee = stepLimit.multiply(stepPrice);
+
+
+                }
             }
         });
     }

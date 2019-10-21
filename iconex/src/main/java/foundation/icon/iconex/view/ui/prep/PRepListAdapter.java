@@ -49,6 +49,9 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     private Activity root;
     private VoteViewModel vm;
 
+    private int TYPE_ITEM = 1;
+    private int TYPE_FOOTER = 2;
+
     private LoadingDialog loading;
 
     public PRepListAdapter(Context context, Type type, List<PRep> preps) {
@@ -75,81 +78,102 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.item_voting, parent, false);
+
+        View v;
+        if (viewType == TYPE_ITEM)
+            v = inflater.inflate(R.layout.item_voting, parent, false);
+        else
+            v = inflater.inflate(R.layout.item_voting, parent, false);
+
         return new ItemVH(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ItemVH h = (ItemVH) holder;
-        PRep prep = preps.get(position);
-        ConstraintLayout.LayoutParams layoutParams =
-                (ConstraintLayout.LayoutParams) h.layoutVotes.getLayoutParams();
+        if (holder instanceof ItemVH) {
+            ItemVH h = (ItemVH) holder;
+            PRep prep = preps.get(position);
+            ConstraintLayout.LayoutParams layoutParams =
+                    (ConstraintLayout.LayoutParams) h.layoutVotes.getLayoutParams();
 
-        Log.d(TAG, "TotalDelegated=" + prep.getTotalDelegated() + " // " + ConvertUtil.getValue(prep.getTotalDelegated(), 18));
-        Log.d(TAG, "Delegated=" + prep.getDelegated() + " // " + ConvertUtil.getValue(prep.getDelegated(), 18));
+            Log.d(TAG, "TotalDelegated=" + prep.getTotalDelegated() + " // " + ConvertUtil.getValue(prep.getTotalDelegated(), 18));
+            Log.d(TAG, "Delegated=" + prep.getDelegated() + " // " + ConvertUtil.getValue(prep.getDelegated(), 18));
 
-        BigDecimal totalDelegated = new BigDecimal(prep.getTotalDelegated());
-        BigDecimal delegated = new BigDecimal(prep.getDelegated());
+            BigDecimal totalDelegated = new BigDecimal(prep.getTotalDelegated());
+            BigDecimal delegated = new BigDecimal(prep.getDelegated());
 
-        switch (mType) {
-            case NORMAL:
-                h.btnManage.setVisibility(View.GONE);
-                h.layoutMyVotes.setVisibility(View.GONE);
-                layoutParams.setMargins(layoutParams.getMarginStart(),
-                        (int) mContext.getResources().getDimension(R.dimen.dp12),
-                        layoutParams.getMarginEnd(),
-                        (int) mContext.getResources().getDimension(R.dimen.dp25));
-                h.layoutVotes.setLayoutParams(layoutParams);
-                h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                        String.format(Locale.getDefault(), "%d. %s", position + 1, prep.getName()),
-                        String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
-                h.tvTotalVotes.setText(String.format(Locale.getDefault(),
-                        "%s(%s%%)",
-                        Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
-                        Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
-                break;
-
-            case VOTE:
-                try {
-                    for (Delegation d : delegations) {
-                        if (prep.getAddress().equals(d.getPrep().getAddress())) {
-                            h.btnManage.setSelected(true);
-                            h.btnManage.setImageResource(R.drawable.ic_add_list_disabled);
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    // Do nothing.
-                }
-
-                h.layoutMyVotes.setVisibility(View.GONE);
-                layoutParams.setMargins(layoutParams.getMarginStart(),
-                        (int) mContext.getResources().getDimension(R.dimen.dp12),
-                        layoutParams.getMarginEnd(),
-                        (int) mContext.getResources().getDimension(R.dimen.dp25));
-                h.layoutVotes.setLayoutParams(layoutParams);
-
-                if (h.btnManage.isSelected())
-                    h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                            String.format(Locale.getDefault(), "%d. %s", position + 1, prep.getName()),
-                            String.format(Locale.getDefault(), "(%s / Voted)", prep.getGrade().getLabel())));
-                else
+            switch (mType) {
+                case NORMAL:
+                    h.btnManage.setVisibility(View.GONE);
+                    h.layoutMyVotes.setVisibility(View.GONE);
+                    layoutParams.setMargins(layoutParams.getMarginStart(),
+                            (int) mContext.getResources().getDimension(R.dimen.dp12),
+                            layoutParams.getMarginEnd(),
+                            (int) mContext.getResources().getDimension(R.dimen.dp25));
+                    h.layoutVotes.setLayoutParams(layoutParams);
                     h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
                             String.format(Locale.getDefault(), "%d. %s", position + 1, prep.getName()),
                             String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
+                    h.tvTotalVotes.setText(String.format(Locale.getDefault(),
+                            "%s(%s%%)",
+                            Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
+                            Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
+                    break;
 
-                h.tvTotalVotes.setText(String.format(Locale.getDefault(),
+                case VOTE:
+                    try {
+                        for (Delegation d : delegations) {
+                            if (prep.getAddress().equals(d.getPrep().getAddress())) {
+                                h.btnManage.setSelected(true);
+                                h.btnManage.setImageResource(R.drawable.ic_add_list_disabled);
+                            }
+                        }
+                    } catch (NullPointerException e) {
+                        // Do nothing.
+                    }
 
-                        "%s(%s%%)",
-                        Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
-                        Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
-                break;
+                    h.layoutMyVotes.setVisibility(View.GONE);
+                    layoutParams.setMargins(layoutParams.getMarginStart(),
+                            (int) mContext.getResources().getDimension(R.dimen.dp12),
+                            layoutParams.getMarginEnd(),
+                            (int) mContext.getResources().getDimension(R.dimen.dp25));
+                    h.layoutVotes.setLayoutParams(layoutParams);
+
+                    if (h.btnManage.isSelected())
+                        h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                                String.format(Locale.getDefault(), "%d. %s", position + 1, prep.getName()),
+                                String.format(Locale.getDefault(), "(%s / Voted)", prep.getGrade().getLabel())));
+                    else
+                        h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                                String.format(Locale.getDefault(), "%d. %s", position + 1, prep.getName()),
+                                String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
+
+                    h.tvTotalVotes.setText(String.format(Locale.getDefault(),
+
+                            "%s(%s%%)",
+                            Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
+                            Utils.formatFloating(Double.toString(prep.delegatedPercent()), 1)));
+                    break;
+            }
+        } else {
+
         }
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position == preps.size())
+            return TYPE_FOOTER;
+        else
+            return TYPE_ITEM;
+    }
+
+    @Override
     public int getItemCount() {
-        return preps.size();
+        if (mType == Type.VOTE)
+            return preps.size();
+        else
+            return preps.size() + 1;
     }
 
     class ItemVH extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -242,6 +266,13 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                     }
                     break;
             }
+        }
+    }
+
+    class Footer extends RecyclerView.ViewHolder {
+
+        public Footer(@NonNull View itemView) {
+            super(itemView);
         }
     }
 

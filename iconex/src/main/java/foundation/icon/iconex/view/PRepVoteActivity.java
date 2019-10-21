@@ -2,6 +2,7 @@ package foundation.icon.iconex.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.tabs.TabLayout;
+
+import org.junit.internal.runners.statements.RunAfters;
 
 import java.io.InterruptedIOException;
 import java.io.Serializable;
@@ -39,21 +42,29 @@ import foundation.icon.iconex.view.ui.prep.vote.VoteViewModel;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.icx.KeyWallet;
+import foundation.icon.icx.Transaction;
+import foundation.icon.icx.TransactionBuilder;
+import foundation.icon.icx.data.Address;
 import foundation.icon.icx.data.Bytes;
+import foundation.icon.icx.data.IconAmount;
 import foundation.icon.icx.transport.jsonrpc.RpcArray;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
+import foundation.icon.icx.transport.jsonrpc.RpcValue;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import kotlin.jvm.functions.Function1;
+import loopchain.icon.wallet.core.Constants;
 
 public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragment.OnVoteFragmentListener,
         VotePRepListFragment.OnVotePRepListListener {
@@ -75,7 +86,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
 
     private LoadingDialog loading;
 
-    private BigInteger stepPrice;
+    private BigInteger stepLimit, stepPrice, fee;
     private Disposable delegationsDisposable, prepListDisposable, prepDisposable;
 
     private List<Delegation> delegations;
@@ -386,6 +397,71 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
 
                     @Override
                     public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    private Handler localHandler = new Handler();
+    private Runnable estimateLimitTask = new Runnable() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    private void estimateLimit() {
+        RpcArray.Builder arrayBuilder = new RpcArray.Builder();
+        for (Delegation d : delegations) {
+            if (d.isEdited()) {
+                RpcObject object = new RpcObject.Builder()
+                        .put("address", new RpcValue(d.getPrep().getAddress()))
+                        .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(d.getValue(), 18), 18)))
+                        .build();
+                arrayBuilder.add(object);
+            }
+        }
+
+        RpcObject params = new RpcObject.Builder()
+                .put("delegations", arrayBuilder.build())
+                .build();
+
+        Transaction transaction = TransactionBuilder.newBuilder()
+                .from(new Address(wallet.getAddress()))
+                .to(new Address(Constants.ADDRESS_ZERO))
+                .value(IconAmount.of("0", IconAmount.Unit.ICX).toLoop())
+                .nid(ICONexApp.NETWORK.getNid())
+                .call("setDelegation")
+                .params(params)
+                .build();
+
+        Observable.just(transaction)
+                .map(new Function<Transaction, BigInteger>() {
+                    @Override
+                    public BigInteger apply(Transaction transaction) throws Exception {
+                        IconService iconService = new IconService(ICONexApp.NETWORK.getUrl());
+                        return iconService.estimateStep(transaction);
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<BigInteger>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(BigInteger result) {
+                        stepLimit = result;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });
