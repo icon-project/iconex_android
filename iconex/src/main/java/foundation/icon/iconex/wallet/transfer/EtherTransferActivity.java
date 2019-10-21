@@ -23,6 +23,7 @@ import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -43,6 +44,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.dialogs.TransactionSendDialog;
 import foundation.icon.iconex.realm.RealmUtil;
@@ -520,7 +522,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         View.OnClickListener onClickPlusButtons = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean check = true;
                 switch (v.getId()) {
                     case R.id.btn_plus_10: addPlus(10); break;
                     case R.id.btn_plus_100: addPlus(100); break;
@@ -531,9 +532,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                             BigInteger bigFee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
 
                             if (balance.compareTo(bigFee) == -1) {
-                                editSend.setText("");
-                                editSend.setError(true, getString(R.string.errETHFee));
-                                check = false;
+                                editSend.setText("0");
                             } else {
                                 editSend.setText(ConvertUtil.getValue(balance.subtract(bigFee), mWalletEntry.getDefaultDec()));
                             }
@@ -543,7 +542,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                         }
                         break;
                 }
-                if(check) setSendEnable();
+                setSendEnable();
                 editSend.setSelection(editSend.getText().length());
             }
         };
@@ -576,6 +575,19 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                BigInteger intBalance = balance;
+                BigInteger intAmount = ConvertUtil.valueToBigInteger(editSend.getText(), mWalletEntry.getDefaultDec());
+                BigInteger intFee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
+                BigInteger remainBalance = intBalance.subtract(intAmount);
+
+                if (remainBalance.compareTo(intFee) == -1) {
+                    MessageDialog messageDialog = new MessageDialog(EtherTransferActivity.this);
+                    messageDialog.setTitleText(getString(R.string.errETHFee));
+                    messageDialog.show();
+                    return;
+                }
+
                 TransactionSendDialog dialog = new TransactionSendDialog(EtherTransferActivity.this, makeTxInfo());
                 dialog.setOnDialogListener(new TransactionSendDialog.OnDialogListener() {
                     @Override
@@ -796,34 +808,14 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         BigInteger fee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
 
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-            BigInteger canICX = balance.subtract(fee);
-            if (sendAmount.equals(BigInteger.ZERO)) {
-                editSend.setError(true, getString(R.string.errETHFee));
-
-                return false;
-            } else if (balance.compareTo(sendAmount) < 0) {
+            if (balance.compareTo(sendAmount) < 0) {
                 editSend.setError(true, getString(R.string.errNotEnough));
-
-                return false;
-            } else if (canICX.compareTo(sendAmount) < 0) {
-                editSend.setError(true, getString(R.string.errETHFee));
-
                 return false;
             }
         } else {
-            WalletEntry own = mWallet.getWalletEntries().get(0);
-            BigInteger ownBalance = new BigInteger(own.getBalance());
 
-            if (sendAmount.equals(BigInteger.ZERO)) {
-                editSend.setError(true, getString(R.string.errETHFee));
-
-                return false;
-            } else if (balance.compareTo(sendAmount) < 0) {
+            if (balance.compareTo(sendAmount) < 0) {
                 editSend.setError(true, getString(R.string.errNotEnough));
-
-                return false;
-            } else if (ownBalance.compareTo(fee) < 0) {
-                editSend.setError(true, getString(R.string.errETHFee));
 
                 return false;
             }
@@ -990,7 +982,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         if (contactName == null)
             contactName = "";
 
-        RealmUtil.addRecentSend(MyConstants.Coin.ETH, "", contactName,
+        RealmUtil.addRecentSend(MyConstants.Coin.ETH, mWalletEntry.getContractAddress(), contactName,
                 mWalletEntry.getAddress(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }

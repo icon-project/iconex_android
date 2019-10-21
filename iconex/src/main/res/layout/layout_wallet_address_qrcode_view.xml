@@ -72,7 +72,7 @@
             <Button
                 android:id="@+id/btn_request_send"
                 android:layout_width="95dp"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="5dp"
 
@@ -82,7 +82,7 @@
                 android:background="@drawable/bg_btn_outline_01"
                 android:textAllCaps="false"
 
-                android:text="@string/requestSend"/>
+                android:text="@string/generateQRcode"/>
         </LinearLayout>
 
         <TextView
@@ -96,33 +96,6 @@
             android:textColor="@color/darkB3"
 
             android:text="$ 0.00"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="14dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/noto_sans_light"
-                android:textSize="10dp"
-                android:text="· "
-                android:textColor="@color/primary00"/>
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:textSize="10dp"
-                android:fontFamily="@font/noto_sans_light"
-                android:text="@string/msgRequestSend"
-                android:textColor="@color/primary00"/>
-
-        </LinearLayout>
 
     </LinearLayout>
 

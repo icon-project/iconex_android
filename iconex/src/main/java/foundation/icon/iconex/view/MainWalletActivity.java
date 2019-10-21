@@ -3,6 +3,7 @@ package foundation.icon.iconex.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.service.NetworkErrorActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
@@ -36,6 +38,7 @@ import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
 
 public class MainWalletActivity extends AppCompatActivity implements MainWalletServiceHelper.OnLoadListener, MainWalletFragment.RequestActivity {
+    private static String TAG = MainWalletActivity.class.getSimpleName();
 
     private MainWalletServiceHelper serviceHelper = new MainWalletServiceHelper();
 
@@ -50,6 +53,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     private boolean exchangeLoading = true;
     private boolean patchingData = false;
 
+    private boolean onceLoading = true;
 
     private void loadViewData() {
         walletVDs.clear();
@@ -95,8 +99,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                 tokenListVDs.add(tokenListVD);
             }
         }
-        tokenListVDs.add(0, icxWallet);
-        tokenListVDs.add(1, ethWallet);
+        if (icxWallet != null) tokenListVDs.add(0, icxWallet);
+        if (ethWallet != null) tokenListVDs.add(tokenListVDs.size() > 0 && icxWallet != null ? 1 : 0, ethWallet);
 
         for (int i = 0; tokenListVDs.size() > i; i++) {
             WalletViewData walletVD = tokenListVDs.get(i);
@@ -132,9 +136,11 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         combineExchanges(-1, -1);
         combineTotalAssets();
         onLoadCompletePReps();
+        combineTopToken();
         patchingData = false;
 
         findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+        findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
     }
 
     @Override
@@ -284,7 +290,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
 
     @Override
     public void onNetworkError() {
-
+        startActivity(new Intent(this, NetworkErrorActivity.class));
     }
 
     private void combineTotalAssets() {
@@ -386,41 +392,52 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     }
 
     @Override
-    public void refreashViewData() {
+    public void refreshViewData() {
         loadViewData();
-        serviceHelper.setListener(this);
-        serviceHelper.requestAllData();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                serviceHelper.setListener(MainWalletActivity.this);
+                serviceHelper.requestAllData();
+            }
+        });
     }
 
     @Override
-    public void chagneExchageUnit(String unit) {
+    public void changeExchangeUnit(String unit) {
         currentUnit = unit;
         combineExchanges(-1, -1);
         combineTopToken();
         combineTotalAssets();
     }
 
+    private boolean setIndex0 = false;
     @Override
-    public void fragmentStart() {
-        loadViewData();
-        serviceHelper.setListener(this);
-        serviceHelper.requestAllData();
-    }
+    public void fragmentResume() {
+        Log.d(TAG, "fragmentResume() called");
 
+        if (setIndex0) {
+            setIndex0 = false;
+            findFragment().setIndex(0);
+        }
 
-    @Override
-    public void fragmenetResume() {
-        serviceHelper.setListener(this);
-        patchViewData();
+        if (onceLoading) {
+            onceLoading = false;
+            refreshViewData();
+        } else {
+            patchViewData();
+        }
     }
 
     @Override
     public void fragmentStop() {
+        Log.d(TAG, "fragmentStop() called");
         serviceHelper.clearListener();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         switch (requestCode) {
             case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
                 WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {
@@ -431,12 +448,21 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        loadViewData();
-                        serviceHelper.requestAllData();
+                        onceLoading = true;
                     }
                 });
-            }
-            break;
+            }break;
+            case WalletManageMenuDialog.REQ_UPDATE_TOKEN: {
+                onceLoading = true;
+            } break;
+            case MainWalletFragment.REQ_DETAIL: {
+                switch (resultCode) {
+                    case WalletDetailActivity.RESULT_WALLET_DELETED:
+                        setIndex0 = true;
+                    case WalletDetailActivity.RESULT_WALLET_REFRESH:
+                        onceLoading = true;
+                }
+            } break;
             default: {
                 super.onActivityResult(requestCode, resultCode, data);
             }
