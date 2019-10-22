@@ -15,6 +15,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -198,15 +199,18 @@ public class WalletDetailFragment extends Fragment {
         fixedListHeaderView.setInfoButtonVisible(isICX);
         listHeaderView.setInfoButtonVisible(isICX);
 
-        listView.setOnScrollBottomListener(new TransactionListView.OnScrollBottomListener() {
-            @Override
-            public void onScrollBottom() {
-                Boolean refresh = viewModel.isRefreshing.getValue();
-                Boolean loadMore = viewModel.isLoadMore.getValue();
-                Boolean isNoLoadMore= viewModel.isNoLoadMore.getValue();
+        scroll.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if(v.getChildAt(v.getChildCount() - 1) != null) {
+                if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
+                        scrollY > oldScrollY) {
+                    Boolean refresh = viewModel.isRefreshing.getValue();
+                    Boolean loadMore = viewModel.isLoadMore.getValue();
+                    Boolean isNoLoadMore= viewModel.isNoLoadMore.getValue();
 
-                if (!refresh && !loadMore && !isNoLoadMore && moreLoadable)
-                    viewModel.isLoadMore.setValue(true);
+                    Log.d(TAG, "onScrollBottom() called");
+                    if (!refresh && !loadMore && !isNoLoadMore && moreLoadable)
+                        viewModel.isLoadMore.setValue(true);
+                }
             }
         });
 
