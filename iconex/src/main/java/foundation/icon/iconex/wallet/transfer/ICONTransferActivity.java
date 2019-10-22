@@ -1025,12 +1025,20 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                 String timestamp = getTimeStamp();
                 Transaction tx;
                 String nid;
-                if (ICONexApp.network == MyConstants.NETWORK_MAIN)
-                    nid = "0x1";
-                else if (ICONexApp.network == MyConstants.NETWORK_TEST)
-                    nid = "0x2";
-                else
-                    nid = "0x3";
+                switch (ICONexApp.NETWORK.getNid().intValue()) {
+                    case MyConstants.NETWORK_MAIN:
+                        nid = "0x1";
+                        break;
+
+                    case MyConstants.NETWORK_TEST:
+                        nid = "0x2";
+                        break;
+
+                    default:
+                    case MyConstants.NETWORK_DEV:
+                        nid = "0x3";
+                        break;
+                }
 
                 if (entry.getType().equals(MyConstants.TYPE_COIN)) {
                     tx = new Transaction.Builder(entry.getId(), nid, privateKey)
