@@ -24,18 +24,20 @@ import java.util.List;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
+import foundation.icon.iconex.dialogs.TxHashDialog;
+import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.view.WalletDetailActivity;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectTokenDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectType;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionFloatingMenu;
+import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemView;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
-import foundation.icon.iconex.view.ui.detailWallet.component.TransactionListView;
+import foundation.icon.iconex.view.ui.detailWallet.component.NoDataView;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionListViewHeader;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionViewOptionDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.WalletDetailInfoView;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
-import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.CustomActionBar;
@@ -44,7 +46,6 @@ import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
 import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.ICONexApp.network;
-import static foundation.icon.iconex.view.WalletDetailActivity.RESULT_WALLET_REFRESH;
 
 
 public class WalletDetailFragment extends Fragment {
@@ -54,13 +55,17 @@ public class WalletDetailFragment extends Fragment {
     private RefreshLayout refresh;
     private NestedScrollView scroll;
     private WalletDetailInfoView infoView;
-    private TransactionListView listView;
     private TransactionListViewHeader listHeaderView;
     private TransactionListViewHeader fixedListHeaderView;
     private TransactionFloatingMenu floatingMenu;
     private boolean moreLoadable = false;
 
     private WalletDetailViewModel viewModel;
+
+    private NoDataView noDataView;
+    private RecyclerView lstTransaction;
+    private RecyclerView.Adapter adapter = null;
+    private List<TransactionItemViewData> lstViewData = new ArrayList<>();
 
     public WalletDetailFragment() { }
 
@@ -73,10 +78,12 @@ public class WalletDetailFragment extends Fragment {
         refresh = v.findViewById(R.id.refresh);
         scroll = v.findViewById(R.id.scroll);
         infoView = v.findViewById(R.id.wallet_detail_info);
-        listView = v.findViewById(R.id.transaction_list);
         listHeaderView = v.findViewById(R.id.transaction_list_header);
         fixedListHeaderView = v.findViewById(R.id.fixed_tansaction_list);
         floatingMenu = v.findViewById(R.id.floating_menu);
+
+        lstTransaction = v.findViewById(R.id.lstTransaction);
+        noDataView = v.findViewById(R.id.transaction_list);
 
         viewModel = ViewModelProviders.of(getActivity()).get(WalletDetailViewModel.class);
 
@@ -88,11 +95,14 @@ public class WalletDetailFragment extends Fragment {
             public void onGlobalLayout() {
                 v.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                int lstViewHiehgt = v.getMeasuredHeight()
+                int expandedHeight = v.getMeasuredHeight()
                         - actionbar.getMeasuredHeight()
-                        - infoView.getMeasuredHeight()
+                        - infoView.getMeasuredHeight();
+                int collapsedHeight = expandedHeight
                         - listHeaderView.getMeasuredHeight();
-                listView.setContainerHeight(lstViewHiehgt);
+
+                noDataView.setContainerHeight(expandedHeight, collapsedHeight);
+                noDataView.setExpaned(false);
             }
         });
 
@@ -100,6 +110,43 @@ public class WalletDetailFragment extends Fragment {
     }
 
     private void initUiInteraction() {
+        adapter = new RecyclerView.Adapter() {
+            @NonNull
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                TransactionItemView v = new TransactionItemView(parent.getContext());
+
+                v.setLayoutParams(new RecyclerView.LayoutParams(
+                        RecyclerView.LayoutParams.MATCH_PARENT,
+                        RecyclerView.LayoutParams.WRAP_CONTENT
+                ));
+
+                RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) { };
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int position = holder.getAdapterPosition();
+                            TransactionItemViewData viewData = lstViewData.get(position);
+                            new TxHashDialog(getContext(), viewData.getTxHash()).show();
+                        }
+                    });
+
+                return holder;
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+                TransactionItemViewData viewData = lstViewData.get(position);
+                ((TransactionItemView) holder.itemView).bind(viewData);
+            }
+
+            @Override
+            public int getItemCount() {
+                return lstViewData.size();
+            }
+        };
+        lstTransaction.setAdapter(adapter);
+
         actionbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
             @Override
             public void onClickAction(CustomActionBar.ClickAction action) {
@@ -157,7 +204,22 @@ public class WalletDetailFragment extends Fragment {
         scroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                fixedListHeaderView.setVisibility(scrollY >= infoView.getHeight() ? View.VISIBLE : View.GONE);
+                boolean isExpanded = scrollY >= infoView.getHeight();
+                fixedListHeaderView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                noDataView.setExpaned(isExpanded);
+
+                if(v.getChildAt(v.getChildCount() - 1) != null) {
+                    if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
+                            scrollY > oldScrollY) {
+                        Boolean refresh = viewModel.isRefreshing.getValue();
+                        Boolean loadMore = viewModel.isLoadMore.getValue();
+                        Boolean isNoLoadMore= viewModel.isNoLoadMore.getValue();
+
+                        Log.d(TAG, "onScrollBottom() called");
+                        if (!refresh && !loadMore && !isNoLoadMore && moreLoadable)
+                            viewModel.isLoadMore.setValue(true);
+                    }
+                }
             }
         });
 
@@ -199,22 +261,7 @@ public class WalletDetailFragment extends Fragment {
         fixedListHeaderView.setInfoButtonVisible(isICX);
         listHeaderView.setInfoButtonVisible(isICX);
 
-        scroll.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            if(v.getChildAt(v.getChildCount() - 1) != null) {
-                if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
-                        scrollY > oldScrollY) {
-                    Boolean refresh = viewModel.isRefreshing.getValue();
-                    Boolean loadMore = viewModel.isLoadMore.getValue();
-                    Boolean isNoLoadMore= viewModel.isNoLoadMore.getValue();
-
-                    Log.d(TAG, "onScrollBottom() called");
-                    if (!refresh && !loadMore && !isNoLoadMore && moreLoadable)
-                        viewModel.isLoadMore.setValue(true);
-                }
-            }
-        });
-
-        listView.setOnClickEtherScanListener(new TransactionListView.OnClickEtherScanListener() {
+        noDataView.setOnClickEtherScanListener(new NoDataView.OnClickEtherScanListener() {
             @Override
             public void onClickEtherScan() {
                 String tracker;
@@ -261,7 +308,7 @@ public class WalletDetailFragment extends Fragment {
         infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
 
         boolean isICX = "ICX".equals(viewModel.wallet.getValue().getCoinType());
-        listView.setTextNoTransaction(isICX ? getString(R.string.noTransaction) : getString(R.string.txRecords), !isICX);
+        noDataView.setTextNoTransaction(isICX ? getString(R.string.noTransaction) : getString(R.string.txRecords), !isICX);
         viewModel.selectType.setValue(SelectType.All);
 
         viewModel.lstUnit.observe(this, new Observer<List<String>>() {
@@ -348,7 +395,7 @@ public class WalletDetailFragment extends Fragment {
                 Boolean refreash = viewModel.isRefreshing.getValue();
                 Boolean loadMore = viewModel.isLoadMore.getValue();
 
-                listView.setLoading(refreash || loadMore);
+                noDataView.setLoading(refreash || loadMore);
             }
         });
         viewModel.isLoadMore.observe(this, new Observer<Boolean>() {
@@ -357,7 +404,7 @@ public class WalletDetailFragment extends Fragment {
                 Boolean refreash = viewModel.isRefreshing.getValue();
                 Boolean loadMore = viewModel.isLoadMore.getValue();
 
-                listView.setLoading(refreash || loadMore);
+                noDataView.setLoading(refreash || loadMore);
             }
         });
 
@@ -389,6 +436,14 @@ public class WalletDetailFragment extends Fragment {
                 break;
         }
 
-        listView.setViewDataList(viewDataList);
+        setViewDataList(viewDataList);
+    }
+
+    public void setViewDataList(List<TransactionItemViewData> viewDataList) {
+        lstViewData = viewDataList;
+        adapter.notifyDataSetChanged();
+
+        boolean isSize0 = lstViewData.size() == 0;
+        noDataView.setNodata(isSize0);
     }
 }
