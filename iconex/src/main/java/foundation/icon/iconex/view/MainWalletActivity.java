@@ -421,12 +421,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
             findFragment().setIndex(0);
         }
 
-        if (onceLoading) {
-            onceLoading = false;
-            refreshViewData();
-        } else {
-            patchViewData();
-        }
+        refreshViewData();
+        patchViewData();
     }
 
     @Override

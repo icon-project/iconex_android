@@ -298,6 +298,11 @@ public class MainWalletFragment extends Fragment {
             public int getCount() {
                 return mShownWalletDataList.size();
             }
+
+            @Override
+            public int getItemPosition(@NonNull Object object) {
+                return POSITION_NONE;
+            }
         };
         walletViewPager.setAdapter(pagerAdapter);
         float scale = getContext().getResources().getDisplayMetrics().density;
