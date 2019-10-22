@@ -8,16 +8,14 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
@@ -45,8 +43,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     private static String MAIN_WALLET_FRAGMENT_TAG = "main wallet fragment";
 
     private TotalAssetsViewData totalAssetsVD = new TotalAssetsViewData();
-    private List<WalletViewData> walletVDs = new Vector<>();
-    private List<WalletViewData> tokenListVDs = new Vector<>();
+    private List<WalletViewData> walletVDs = Collections.synchronizedList(new ArrayList<>());
+    private List<WalletViewData> tokenListVDs = Collections.synchronizedList(new ArrayList<>());
 
     private String currentUnit = "USD";
     private boolean balanceLoading = true;
@@ -55,10 +53,106 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
 
     private boolean onceLoading = true;
 
+    private boolean allLoading = true;
+    final List<Integer> wallets = Collections.synchronizedList(new ArrayList<>());
+    final List<Integer> tokens = Collections.synchronizedList(new ArrayList<>());
+    private boolean isUpdateAll = false;
+    private boolean isUpdateAssets = false;
+
+    private Handler handler = new Handler();
+    private Runnable flusher = new Runnable() {
+        @Override
+        public void run() {
+            do {
+                try { Thread.sleep(300); } catch (InterruptedException e) { }
+                if (isUpdateAssets) {
+                    isUpdateAssets = false;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            findFragment().updateAssetsVD(totalAssetsVD);
+                        }
+                    });
+                }
+
+                if (isUpdateAll) {
+                    isUpdateAll = false;
+                    wallets.clear();
+                    tokens.clear();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            findFragment().updateAllWallet();
+                        }
+                    });
+                } else {
+                    List<Integer> _wallets = new ArrayList<>(wallets);
+                    wallets.clear();
+                    List<Integer> _tokens = new ArrayList<>(tokens);
+                    tokens.clear();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            findFragment().updateWallet(_wallets, _tokens);
+                        }
+                    });
+                }
+            } while (allLoading);
+        }
+    };
+
+    void updateAssets() {
+        if (allLoading)
+            isUpdateAssets = true;
+        else {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    findFragment().updateAssetsVD(totalAssetsVD);
+                }
+            });
+        }
+    }
+
+    void updateAll() {
+        if (allLoading)
+            isUpdateAll = true;
+        else {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    findFragment().updateAllWallet();
+                }
+            });
+        }
+    }
+
+    void updateEntry(int wallet, int entry){
+        EntryViewData entryVD = walletVDs.get(wallet).getEntryVDs().get(entry);
+        Integer intWallet = new Integer(wallet);
+        Integer intToken = new Integer(entryVD.pos0);
+        if (!wallets.contains(intWallet)) wallets.add(intWallet);
+        if (!tokens.contains(intToken)) tokens.add(intToken);
+
+        if (!allLoading) {
+            List<Integer> _wallets = new ArrayList<>(wallets);
+            wallets.clear();
+            List<Integer> _tokens = new ArrayList<>(tokens);
+            tokens.clear();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    findFragment().updateWallet(_wallets, _tokens);
+                }
+            });
+        }
+    }
+
     private void loadViewData() {
         walletVDs.clear();
         tokenListVDs.clear();
         totalAssetsVD = new TotalAssetsViewData();
+        allLoading = true;
         balanceLoading = true;
         exchangeLoading = true;
 
@@ -109,8 +203,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
             }
         }
 
-        findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
-        findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
+        findFragment().initWalletVDs(walletVDs, tokenListVDs);
+        findFragment().updateAssetsVD(totalAssetsVD);
     }
 
     @Override
@@ -139,8 +233,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         combineTopToken();
         patchingData = false;
 
-        findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
-        findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
+        findFragment().updateAllWallet();
+        findFragment().updateAssetsVD(totalAssetsVD);
     }
 
     @Override
@@ -198,7 +292,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
             entryVD.setTxtIScore(MyConstants.NO_BALANCE);
         }
         entryVD.iscoreLoading = false;
-        if (!patchingData) findFragment().notifyItemChange(walletPosition, 0);
+        if (!patchingData) updateEntry(walletPosition, 0);
     }
 
     @Override
@@ -227,7 +321,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
             entryVD.setTxtStacked("- ( - %)");
         }
         entryVD.prepsLoading = false;
-        if (!patchingData) findFragment().notifyItemChange(walletPosition, 0);
+        if (!patchingData) updateEntry(walletPosition, 0);
     }
 
     @Override
@@ -254,7 +348,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                 entryVD.prepsLoading = false;
             }
         }
-        if (!patchingData) findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+        if (!patchingData) updateAll();
 
         // update total assets
         BigInteger totalVoting = BigInteger.ZERO;
@@ -279,12 +373,13 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
             totalAssetsVD.setVotedPower(new BigDecimal("0.0"));
         }
         totalAssetsVD.loadingVotedpower = false;
-        if (!patchingData) findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
+        if (!patchingData) updateAssets();
     }
 
     @Override
     public void onLoadCompleteAll() {
         combineTopToken();
+        allLoading = false;
         findFragment().notifyCompleteDataLoad();
     }
 
@@ -307,7 +402,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         }
         totalAssetsVD.setTotalAsset(totalBalance, currentUnit);
         totalAssetsVD.loadingTotalAssets = false;
-        findFragment().notifyTotalAssetsDataChanged(totalAssetsVD);
+        if(!patchingData) updateAssets();
     }
 
     private void combineTopToken() {
@@ -338,7 +433,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
             topTokenVD.setExchanged(exchanged, currentUnit);
             topTokenVD.exchageLoading = false;
         }
-        if (!patchingData) findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+        if (!patchingData) updateAll();
     }
 
     // -1, -1 -> totally refresh
@@ -368,9 +463,9 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
 
         if (!patchingData)
             if (isTotally) {
-                findFragment().notifyDataSetChange(walletVDs, tokenListVDs);
+                updateAll();
             } else {
-                findFragment().notifyItemChange(walletPosition, entryPosition);
+                updateEntry(walletPosition, entryPosition);
             }
     }
 
@@ -394,13 +489,10 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     @Override
     public void refreshViewData() {
         loadViewData();
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                serviceHelper.setListener(MainWalletActivity.this);
-                serviceHelper.requestAllData();
-            }
-        });
+        allLoading = true;
+        serviceHelper.setListener(MainWalletActivity.this);
+        serviceHelper.requestAllData();
+        new Thread(flusher).start();
     }
 
     @Override
@@ -422,7 +514,6 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         }
 
         refreshViewData();
-        patchViewData();
     }
 
     @Override

@@ -82,8 +82,6 @@ public class MainWalletServiceHelper {
         void onNetworkError();
     }
 
-    private Handler handler = new Handler();
-
     private int cntBalance = 0;
     private int cntExchange = 0;
     private int cntIScore = 0;
@@ -130,36 +128,31 @@ public class MainWalletServiceHelper {
             }
         }
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (!isRequesting && listener != null) {
-                    if (cntBalance == 0 && !isNotifyCompleteLoadBalance) {
-                        listener.onLoadCompleteBalance();
-                        Log.d(TAG, "checking: load complete balance!");
-                        isNotifyCompleteLoadBalance = true;
-                    }
-
-                    if (cntExchange == 0 && !isNotifyCompleteLoadExchange) {
-                        listener.onLoadCompleteExchangeTable();
-                        Log.d(TAG, "checking: load complete exchange Table!");
-                        isNotifyCompleteLoadExchange = true;
-                    }
-
-                    if (cntIScore == 0 && cntStake == 0 && cntDelegation == 0 && !isNotifyCompleteLoadPReps) {
-                        listener.onLoadCompletePReps();
-                        Log.d(TAG, "checking: load complete preps data!");
-                        isNotifyCompleteLoadPReps = true;
-                    }
-
-                    if (cntBalance == 0 && cntExchange == 0 && cntIScore == 0 && cntStake == 0 && cntDelegation == 0 && !isNotifyCompleteLoadAll) {
-                        listener.onLoadCompleteAll();
-                        Log.d(TAG, "checking: load complete all data!");
-                        isNotifyCompleteLoadAll = true;
-                    }
-                }
+        if (!isRequesting && listener != null) {
+            if (cntBalance == 0 && !isNotifyCompleteLoadBalance) {
+                listener.onLoadCompleteBalance();
+                Log.d(TAG, "checking: load complete balance!");
+                isNotifyCompleteLoadBalance = true;
             }
-        });
+
+            if (cntExchange == 0 && !isNotifyCompleteLoadExchange) {
+                listener.onLoadCompleteExchangeTable();
+                Log.d(TAG, "checking: load complete exchange Table!");
+                isNotifyCompleteLoadExchange = true;
+            }
+
+            if (cntIScore == 0 && cntStake == 0 && cntDelegation == 0 && !isNotifyCompleteLoadPReps) {
+                listener.onLoadCompletePReps();
+                Log.d(TAG, "checking: load complete preps data!");
+                isNotifyCompleteLoadPReps = true;
+            }
+
+            if (cntBalance == 0 && cntExchange == 0 && cntIScore == 0 && cntStake == 0 && cntDelegation == 0 && !isNotifyCompleteLoadAll) {
+                listener.onLoadCompleteAll();
+                Log.d(TAG, "checking: load complete all data!");
+                isNotifyCompleteLoadAll = true;
+            }
+        }
     }
 
     public OnLoadListener listener[] = null;
@@ -187,12 +180,7 @@ public class MainWalletServiceHelper {
                 requestExchangeTable(10);
                 requestBalance(10);
                 requestRReps(10);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        checking(listener, null, null, null, null, null, false);
-                    }
-                });
+                checking(listener, null, null, null, null, null, false);
             }
         }).start();
     }
@@ -589,23 +577,13 @@ public class MainWalletServiceHelper {
                 try {
                     act.run();
                 } catch (UnknownHostException e) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isNotifyNetworkError && listener != null) {
-                                Log.d(TAG, "onError() called with: e = [" + e + "]");
-                                listener.onNetworkError();
-                                isNotifyNetworkError = true;
-                            }
-                        }
-                    });
+                    if (!isNotifyNetworkError && listener != null) {
+                        Log.d(TAG, "onError() called with: e = [" + e + "]");
+                        listener.onNetworkError();
+                        isNotifyNetworkError = true;
+                    }
                 } finally {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ob.onDone();
-                        }
-                    });
+                    ob.onDone();
                 }
             }
         }).start();
