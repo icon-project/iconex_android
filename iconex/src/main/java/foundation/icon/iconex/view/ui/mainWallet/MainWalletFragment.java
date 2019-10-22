@@ -298,11 +298,6 @@ public class MainWalletFragment extends Fragment {
             public int getCount() {
                 return mShownWalletDataList.size();
             }
-
-            @Override
-            public int getItemPosition(@NonNull Object object) {
-                return POSITION_NONE;
-            }
         };
         walletViewPager.setAdapter(pagerAdapter);
         float scale = getContext().getResources().getDisplayMetrics().density;
@@ -460,15 +455,24 @@ public class MainWalletFragment extends Fragment {
             case walletView: {
                 mShownWalletDataList.addAll(walletVDs);
                 actionBar.setTitle(getString(R.string.appbarSelectorWallets));
-                updateShowPRepsMenu(-1);
             } break;
             case tokenView: {
                 mShownWalletDataList.addAll(tokenListVDs);
                 actionBar.setTitle(getString(R.string.appbarSelectorCoinsNTokens));
-                prepsMenu.setEnableFloatingButton(false);
             } break;
         }
-        pagerAdapter.notifyDataSetChanged();
+
+        if (mShownWalletDataList.size() != walletViewPager.getChildCount()) {
+            pagerAdapter.notifyDataSetChanged();
+        }
+
+        for (int i = 0; walletViewPager.getChildCount() > i; i++) {
+            WalletCardView walletView = (WalletCardView) walletViewPager.getChildAt(i);
+            WalletViewData walletVD = mShownWalletDataList.get(i);
+            walletView.bindData(walletVD);
+        }
+
+        updateShowPRepsMenu(-1);
         walletIndicator.setSize(mShownWalletDataList.size());
     }
 

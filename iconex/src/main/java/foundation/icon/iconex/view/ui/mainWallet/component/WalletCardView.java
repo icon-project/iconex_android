@@ -253,6 +253,6 @@ public class WalletCardView extends FrameLayout {
         setTextAliasLabel(data.getTitle());
         walletItems.clear();
         walletItems.addAll(data.getEntryVDs());
-
+        walletItemAdapter.notifyDataSetChanged();
     }
 }
