@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.service.Urls;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.TDropdownLayout;
@@ -77,18 +78,18 @@ public class DeveloperModeFragment extends Fragment {
                     public void onSelect(String network) {
                         selectNetwokr.setText(network);
                         if (network.equals(getString(R.string.networkMain)))
-                            ICONexApp.network = MyConstants.NETWORK_MAIN;
+                            ICONexApp.NETWORK = Urls.Network.MainNet;
                         else
-                            ICONexApp.network = MyConstants.NETWORK_TEST;
+                            ICONexApp.NETWORK = Urls.Network.Euljiro;
 
-                        new PreferenceUtil(getActivity()).setNetwork(ICONexApp.network);
+                        new PreferenceUtil(getActivity()).setNetwork(ICONexApp.NETWORK.getNid().intValue());
                     }
                 }).show();
             }
         });
 
         // set data
-        switch (ICONexApp.network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             case MyConstants.NETWORK_MAIN:
                 selectNetwokr.setText(getString(R.string.networkMain));
                 break;

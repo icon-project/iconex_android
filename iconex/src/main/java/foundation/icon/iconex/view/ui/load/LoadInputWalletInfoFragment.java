@@ -97,7 +97,12 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
     private void initView(View v) {
         inputAlias = v.findViewById(R.id.input_alias);
-        inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (checkAlias(inputAlias.getText()) == ALIAS_DUP) {
@@ -130,7 +135,12 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         inputAlias.setOnKeyPreImeListener(onKeyPreIme);
 
         inputPwd = v.findViewById(R.id.input_pwd);
-        inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 int result = PasswordValidator.validatePassword(inputPwd.getText());
@@ -177,7 +187,12 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         inputPwd.setOnKeyPreImeListener(onKeyPreIme);
 
         inputCheck = v.findViewById(R.id.input_pwd_check);
-        inputCheck.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        inputCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (inputCheck.getText().isEmpty()) {

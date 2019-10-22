@@ -132,7 +132,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.TRUSTED_HOST_MAIN;
                             break;
@@ -196,7 +196,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.TRUSTED_HOST_MAIN;
                             break;
@@ -273,7 +273,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.URL_VERSION_MAIN;
                             break;
@@ -333,7 +333,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.URL_VERSION_MAIN;
                             break;
@@ -386,7 +386,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.URL_VERSION_MAIN;
                             break;
@@ -434,7 +434,7 @@ public class NetworkService extends Service {
 
     public void requestICXTransaction(Transaction tx) {
         String url = null;
-        switch (network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             case MyConstants.NETWORK_MAIN:
                 url = ServiceConstants.TRUSTED_HOST_MAIN;
                 break;
@@ -483,7 +483,7 @@ public class NetworkService extends Service {
 //            public void run() {
 //                try {
 //                    String url = null;
-//                    switch (network) {
+//                    switch (ICONexApp.NETWORK.getNid().intValue()) {
 //                        case MyConstants.NETWORK_MAIN:
 //                            url = ServiceConstants.TRUSTED_HOST_MAIN;
 //                            break;

@@ -74,7 +74,7 @@
             android:layout_marginTop="6dp"
             android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
-            android:text="@string/selectWallet"
+            android:text="@string/loadSelectMethod"
             android:textColor="@color/primary00"
             android:textSize="10dp"
             app:layout_constraintHorizontal_bias="0.5"

@@ -92,8 +92,8 @@
     <string name="titleLoadWallet">지갑 가져오기</string>
     <string name="cancelLoadWallet">지갑 가져오기를 취소하시겠습니까?</string>
     <string name="loadWalletHeader">지갑을 가져올 방법을 선택해주세요.</string>
-    <string name="loadByKeystore">지갑 백업 파일(Keystore 파일)</string>
-    <string name="loadByPrivateKey">개인 키</string>
+    <string name="loadByKeystore">백업 파일</string>
+    <string name="loadByPrivateKey">Private Key</string>
     <string name="selectKeyStore">지갑 백업 파일 선택</string>
     <string name="loadKeystoreHeader">지갑 백업 파일(Keystore 파일) 선택 후 비밀번호를 입력해주세요.</string>
     <string name="loadKeystoreSub">다른 기기에 지갑 백업 파일이 저장되어 있는 경우, 백업 파일을 이 기기로 옮기거나 클라우드 서비스에 업로드한 다음 백업 파일을 선택해주세요.</string>
@@ -526,7 +526,7 @@
     <!-- Dialog -->
     <string name="showDetail">상세 정보 보기</string>
 
-    <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 5 ICX 이상 잔액이\n있어야 합니다.</string>
+    <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 1 ICX 이상 잔액이\n있어야 합니다.</string>
     <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
     <string name="stakeDone">Stake 실행이\n완료되었습니다.</string>
 

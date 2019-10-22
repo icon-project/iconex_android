@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.Locale;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.VoteGraph;
 import io.reactivex.disposables.Disposable;
+import kotlin.jvm.functions.Function1;
 
 public class PRepVoteFragment extends Fragment {
     private static final String TAG = PRepVoteFragment.class.getSimpleName();
@@ -133,6 +135,22 @@ public class PRepVoteFragment extends Fragment {
         txtAvailableIcx = v.findViewById(R.id.txt_available_icx);
         sort = v.findViewById(R.id.sort);
         resetVotes = v.findViewById(R.id.reset_votes);
+        resetVotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessageDialog messageDialog = new MessageDialog(getContext());
+                messageDialog.setSingleButton(false);
+                messageDialog.setTitleText(getString(R.string.voteReset));
+                messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                    @Override
+                    public Boolean invoke(View view) {
+                        mListener.onReset(delegations);
+                        return true;
+                    }
+                });
+                messageDialog.show();
+            }
+        });
         list = v.findViewById(R.id.my_votes);
         list.setFocusable(false);
     }
@@ -140,6 +158,9 @@ public class PRepVoteFragment extends Fragment {
     private void setData() {
         if (delegations != null) {
             txtVotedCount.setText(String.format(Locale.getDefault(), "(%d/10)", delegations.size()));
+
+            if (delegations.size() != 0)
+                resetVotes.setTextColor(getResources().getColor(R.color.dark4D));
 
             BigDecimal total = new BigDecimal(vm.getTotal().getValue());
             BigDecimal voted = BigDecimal.ZERO;
@@ -163,5 +184,7 @@ public class PRepVoteFragment extends Fragment {
 
     public interface OnVoteFragmentListener {
         void onVoted(List<Delegation> delegations);
+
+        void onReset(List<Delegation> delegations);
     }
 }

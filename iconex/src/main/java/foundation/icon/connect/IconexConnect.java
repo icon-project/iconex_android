@@ -435,7 +435,7 @@ public class IconexConnect {
     private void initIconService() {
         if (iconService == null) {
             String url = null;
-            switch (network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_MAIN:
                     url = ServiceConstants.TRUSTED_HOST_MAIN + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
                     break;

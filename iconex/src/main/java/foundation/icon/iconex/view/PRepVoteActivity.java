@@ -184,6 +184,15 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).compareTo(fee) < 0) {
+                    MessageDialog messageDialog = new MessageDialog(PRepVoteActivity.this);
+                    messageDialog.setSingleButton(true);
+                    messageDialog.setTitleText(getString(R.string.errIcxOwnNotEnough));
+                    messageDialog.show();
+
+                    return;
+                }
+
                 votingDialog = new VotingDialog(PRepVoteActivity.this);
                 int voteCount = 0;
                 for (Delegation d : delegations) {
@@ -407,6 +416,8 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             public void run() throws Exception {
                 PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
                 KeyWallet keyWallet = KeyWallet.load(new Bytes(privateKey));
+                if (stepLimit == null)
+                    stepLimit = new BigInteger("200000");
                 pRepService.setDelegation(keyWallet, delegations, stepLimit);
             }
         }).subscribeOn(Schedulers.io())
@@ -419,7 +430,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
 
                     @Override
                     public void onComplete() {
-                        if (votingDialog.isShowing())
+                        if (votingDialog != null && votingDialog.isShowing())
                             votingDialog.dismiss();
 
                         CustomToast toast = new CustomToast();
@@ -429,7 +440,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
                 });
     }
@@ -517,6 +528,19 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             localHandler.postDelayed(estimateLimitTask, 500);
         } catch (Exception e) {
             localHandler.postDelayed(estimateLimitTask, 500);
+        }
+    }
+
+    @Override
+    public void onReset(List<Delegation> delegations) {
+        this.delegations = delegations;
+        if (this.delegations != null && this.delegations.size() > 0) {
+            for (int i = 0; i < this.delegations.size(); i++) {
+                Delegation reset = this.delegations.get(i).newBuilder().value(BigInteger.ZERO).build();
+                this.delegations.set(i, reset);
+            }
+
+            setDelegations();
         }
     }
 

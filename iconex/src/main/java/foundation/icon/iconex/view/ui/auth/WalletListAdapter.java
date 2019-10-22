@@ -148,7 +148,7 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
 
 
     private String getIcxHost() {
-        switch (ICONexApp.network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             default:
             case MyConstants.NETWORK_MAIN: return ServiceConstants.TRUSTED_HOST_MAIN;
             case MyConstants.NETWORK_TEST: return ServiceConstants.TRUSTED_HOST_TEST;
@@ -157,7 +157,7 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
     }
 
     public String getEthHost() {
-        switch (ICONexApp.network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             case MyConstants.NETWORK_MAIN:
                 return ServiceConstants.ETH_HOST;
             default:

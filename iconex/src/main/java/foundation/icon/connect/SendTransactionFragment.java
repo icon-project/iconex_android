@@ -462,7 +462,7 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
                 .build();
 
         String url = null;
-        switch (network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             case MyConstants.NETWORK_MAIN:
                 url = ServiceConstants.TRUSTED_HOST_MAIN;
                 break;
@@ -497,7 +497,7 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
             String trList = "icxusd";
 
             String url = null;
-            switch (network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_MAIN:
                     url = ServiceConstants.URL_VERSION_MAIN;
                     break;

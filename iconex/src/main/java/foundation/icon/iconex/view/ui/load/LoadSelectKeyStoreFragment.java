@@ -307,18 +307,9 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
                         isBundle = false;
                         result = validateKeyStore(keyStore.getAsJsonObject());
                         if (result) {
-                            if (checkAddress(keyStore.getAsJsonObject().get("address").getAsString())) {
-//                                inputFileName.setFile(fileName);
-//                                mKeyStore = keyStore.getAsJsonObject();
-//                                isSelect = true;
-//                            } else {
-//                                inputFileName.setFileError(fileName, getString(R.string.duplicateWalletAddress));
-//                                isSelect = false;
-//                            }
-                                inputFileName.setFile(fileName);
-                                mKeyStore = keyStore.getAsJsonObject();
-                                isSelect = true;
-                            }
+                            inputFileName.setFile(fileName);
+                            mKeyStore = keyStore.getAsJsonObject();
+                            isSelect = true;
                         } else {
                             inputFileName.setFileError(fileName, getString(R.string.invalidKeyStoreFile));
                             isSelect = false;

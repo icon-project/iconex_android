@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -75,7 +76,7 @@ public class TrackerDialog extends Dialog implements View.OnClickListener {
 
             case R.id.btn_tracker:
                 String tracker = null;
-                switch (network) {
+                switch (ICONexApp.NETWORK.getNid().intValue()) {
                     case MyConstants.NETWORK_MAIN:
                         tracker = ServiceConstants.URL_TRACKER_MAIN;
                         break;

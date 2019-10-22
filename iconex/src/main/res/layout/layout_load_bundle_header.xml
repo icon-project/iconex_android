@@ -22,7 +22,7 @@
             android:layout_marginTop="30dp"
             android:fontFamily="@font/noto_sans_medium"
             android:gravity="center"
-            android:text="@string/titleLoadBundle"
+            android:text="@string/loadBundleConfirm"
             android:textColor="@color/txt_default" />
 
         <LinearLayout

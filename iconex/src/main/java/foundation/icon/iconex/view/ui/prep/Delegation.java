@@ -7,6 +7,7 @@ public class Delegation implements Serializable {
 
     private PRep prep;
     private BigInteger value;
+    private boolean isNew = false;
     private boolean isEdited = false;
 
     public PRep getPrep() {
@@ -15,6 +16,14 @@ public class Delegation implements Serializable {
 
     public BigInteger getValue() {
         return value;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void isNew(boolean isNew) {
+        this.isNew = isNew;
     }
 
     public void isEdited(boolean isEdited) {
@@ -27,6 +36,7 @@ public class Delegation implements Serializable {
 
     Delegation(Builder builder) {
         prep = builder.prep;
+        isNew = builder.isNew;
 
         if (builder.value == null)
             value = BigInteger.ZERO;
@@ -43,6 +53,7 @@ public class Delegation implements Serializable {
     public static class Builder {
         private PRep prep;
         private BigInteger value;
+        private boolean isNew = false;
 
         public Builder() {
         }

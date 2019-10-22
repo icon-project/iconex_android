@@ -1,6 +1,5 @@
 package foundation.icon.iconex.view.ui.mainWallet;
 
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -15,7 +14,6 @@ import org.web3j.tx.Contract;
 
 import java.math.BigInteger;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -46,6 +44,7 @@ import retrofit2.Response;
 public class MainWalletServiceHelper {
 
     public static String TAG = MainWalletServiceHelper.class.getSimpleName();
+
     private String LogWallet(Wallet wallet, boolean wrapping) {
         if (wrapping) {
             return " wallet = [" + wallet.getAlias() + ", " + wallet.getAddress() + "]";
@@ -53,6 +52,7 @@ public class MainWalletServiceHelper {
             return wallet.getAlias() + ", " + wallet.getAddress();
         }
     }
+
     private String LogEntry(WalletEntry entry, boolean wrapping) {
         if (wrapping) {
             return " entry = [" + entry.getSymbol() + ", " + entry.getAddress() + "]";
@@ -63,16 +63,21 @@ public class MainWalletServiceHelper {
 
     public interface OnLoadListener {
         void onLoadNextBalance(WalletEntry entry, int walletPosition, int entryPosition);
+
         void onLoadCompleteBalance();
 
         void onLoadCompleteExchangeTable();
 
         void onLoadNextiScore(Wallet wallet, int walletPosition);
+
         void onLoadNextStake(Wallet wallet, int walletPosition, BigInteger unstake);
+
         void onLoadNextDelegation(Wallet wallet, int walletPosition);
+
         void onLoadCompletePReps();
 
         void onLoadCompleteAll();
+
         void onNetworkError();
     }
 
@@ -150,9 +155,11 @@ public class MainWalletServiceHelper {
     }
 
     public OnLoadListener listener[] = null;
+
     public void setListener(OnLoadListener listener) {
-        this.listener = new OnLoadListener[] {listener};
+        this.listener = new OnLoadListener[]{listener};
     }
+
     public void clearListener() {
         if (listener != null) {
             listener[0] = null;
@@ -180,7 +187,7 @@ public class MainWalletServiceHelper {
         for (int i = 0; szWallets > i; i++) {
             Wallet wallet = ICONexApp.wallets.get(i);
             int szEntries = wallet.getWalletEntries().size();
-            for (int j = 0; szEntries > j; j++){
+            for (int j = 0; szEntries > j; j++) {
                 WalletEntry entry = wallet.getWalletEntries().get(j);
 
                 if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
@@ -201,7 +208,7 @@ public class MainWalletServiceHelper {
     }
 
     private Completable getIcxCoinBalance(WalletEntry entry, int walletPosition, int entryPosition) {
-        Log.d(TAG, "getIcxCoinBalance() called with: entry = [" + LogEntry(entry,false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
+        Log.d(TAG, "getIcxCoinBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
         checking(listener, true, null, null, null, null, null);
         int entryId = entry.getId();
@@ -236,7 +243,7 @@ public class MainWalletServiceHelper {
     }
 
     private Completable getIcxTokenBalance(WalletEntry entry, int walletPosition, int entryPosition) {
-        Log.d(TAG, "getIcxTokenBalance() called with: entry = [" + LogEntry(entry,false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
+        Log.d(TAG, "getIcxTokenBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
         checking(listener, true, null, null, null, null, null);
         int entryId = entry.getId();
@@ -351,7 +358,7 @@ public class MainWalletServiceHelper {
                 StringBuilder lstExchange = new StringBuilder();
                 for (int i = 0; ICONexApp.EXCHANGES.size() > i; i++) {
                     String sym = ICONexApp.EXCHANGES.get(i);
-                    lstExchange.append(sym+"usd,"+sym+"btc,"+sym+"eth,"+sym+"icx");
+                    lstExchange.append(sym + "usd," + sym + "btc," + sym + "eth," + sym + "icx");
                     if (i < ICONexApp.EXCHANGES.size() - 1) lstExchange.append(",");
                 }
 
@@ -374,7 +381,7 @@ public class MainWalletServiceHelper {
         }, new SimpleObserver() {
             @Override
             public void onDone() {
-                Log.d(TAG, "onDone() called in requestExchangeTable with: exchageTable = [" + exchangeTable +"]");
+                Log.d(TAG, "onDone() called in requestExchangeTable with: exchageTable = [" + exchangeTable + "]");
                 ICONexApp.EXCHANGE_TABLE = exchangeTable;
 
                 if (listener != null) {
@@ -385,10 +392,10 @@ public class MainWalletServiceHelper {
         });
     }
 
-    private void  requestRReps() {
+    private void requestRReps() {
         Log.d(TAG, "requestRReps() called");
         int size = ICONexApp.wallets.size();
-        for (int i = 0;  size > i; i++) {
+        for (int i = 0; size > i; i++) {
             Wallet wallet = ICONexApp.wallets.get(i);
             if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 getIScore(wallet, i);
@@ -399,7 +406,7 @@ public class MainWalletServiceHelper {
     }
 
     private Completable getIScore(Wallet wallet, int walletPosition) {
-        Log.d(TAG, "getIScore() called with: wallet = [" + LogWallet(wallet,false) + "], walletPosition = [" + walletPosition + "]");
+        Log.d(TAG, "getIScore() called with: wallet = [" + LogWallet(wallet, false) + "], walletPosition = [" + walletPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
         checking(listener, null, null, true, null, null, null);
         String address = wallet.getAddress();
@@ -468,7 +475,7 @@ public class MainWalletServiceHelper {
     }
 
     private Completable getDelegation(Wallet wallet, int walletPosition) {
-        Log.d(TAG, "getDelegation() called with: wallet = [" + LogWallet(wallet,false) + "], walletPosition = [" + walletPosition + "]");
+        Log.d(TAG, "getDelegation() called with: wallet = [" + LogWallet(wallet, false) + "], walletPosition = [" + walletPosition + "]");
         final OnLoadListener listener = this.listener != null ? this.listener[0] : null;
         checking(listener, null, null, null, null, true, null);
         String address = wallet.getAddress();
@@ -490,7 +497,7 @@ public class MainWalletServiceHelper {
         }, new SimpleObserver() {
             @Override
             public void onDone() {
-                Log.d(TAG, "onDone() called in getDelegation with = [" + LogWallet(wallet,false) + "], votingpower=("+ votingPower[0] + ")");
+                Log.d(TAG, "onDone() called in getDelegation with = [" + LogWallet(wallet, false) + "], votingpower=(" + votingPower[0] + ")");
                 wallet.setVotingPower(votingPower[0]);
                 if (listener != null) {
                     listener.onLoadNextDelegation(wallet, walletPosition);
@@ -501,25 +508,31 @@ public class MainWalletServiceHelper {
     }
 
     private String getVersionHost() {
-        switch (ICONexApp.network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             default:
-            case MyConstants.NETWORK_MAIN: return ServiceConstants.URL_VERSION_MAIN;
-            case MyConstants.NETWORK_TEST: return ServiceConstants.URL_VERSION_TEST;
-            case MyConstants.NETWORK_DEV: return ServiceConstants.DEV_TRACKER;
+            case MyConstants.NETWORK_MAIN:
+                return ServiceConstants.URL_VERSION_MAIN;
+            case MyConstants.NETWORK_TEST:
+                return ServiceConstants.URL_VERSION_TEST;
+            case MyConstants.NETWORK_DEV:
+                return ServiceConstants.DEV_TRACKER;
         }
     }
 
     private String getIcxHost() {
-        switch (ICONexApp.network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             default:
-            case MyConstants.NETWORK_MAIN: return ServiceConstants.TRUSTED_HOST_MAIN;
-            case MyConstants.NETWORK_TEST: return ServiceConstants.TRUSTED_HOST_TEST;
-            case MyConstants.NETWORK_DEV: return ServiceConstants.DEV_HOST;
+            case MyConstants.NETWORK_MAIN:
+                return ServiceConstants.TRUSTED_HOST_MAIN;
+            case MyConstants.NETWORK_TEST:
+                return ServiceConstants.TRUSTED_HOST_TEST;
+            case MyConstants.NETWORK_DEV:
+                return ServiceConstants.DEV_HOST;
         }
     }
 
     public String getEthHost() {
-        switch (ICONexApp.network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             case MyConstants.NETWORK_MAIN:
                 return ServiceConstants.ETH_HOST;
             default:
@@ -529,20 +542,24 @@ public class MainWalletServiceHelper {
 
     abstract class SimpleObserver {
         abstract void onDone();
-        void onNetworkError(UnknownHostException e) { }
+
+        void onNetworkError(UnknownHostException e) {
+        }
     }
 
-    abstract class NetworkErrorAction implements Action{
+    abstract class NetworkErrorAction implements Action {
         public void run() throws UnknownHostException {
             try {
-                 action();
+                action();
             } catch (UnknownHostException e) {
                 throw e;
             } catch (Throwable e) {
                 onOtherError(e);
             }
         }
+
         abstract public void action() throws Throwable;
+
         abstract public void onOtherError(Throwable e);
     }
 

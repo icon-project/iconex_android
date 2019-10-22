@@ -25,7 +25,6 @@ import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongycastle.util.encoders.Hex;
-import org.web3j.abi.datatypes.Int;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -43,7 +42,6 @@ import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.SendConfirmDialog;
 import foundation.icon.iconex.dialogs.TransactionSendDialog;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -200,7 +198,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         // set LoopChainClient
         if (LCClient == null) {
             String url = null;
-            switch (ICONexApp.network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_MAIN:
                     url = ServiceConstants.TRUSTED_HOST_MAIN;
                     break;
@@ -247,7 +245,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
         if (ICONexApp.isDeveloper) {
             layoutNetwork.setVisibility(View.VISIBLE);
-            switch (ICONexApp.network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_MAIN:
                     txtNetwork.setText(getString(R.string.networkMain));
                     break;
@@ -526,7 +524,12 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         // init editSend
         editSend.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editSend.setOnKeyPreImeListener(onKeyPreIme);
-        editSend.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editSend.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (editSend.getText().length() > 0) {
@@ -593,7 +596,12 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         // init editAddress
         editAddress.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         editAddress.setOnKeyPreImeListener(onKeyPreIme);
-        editAddress.setOnFocusChangedListener(new TTextInputLayout.OnFocusReleased() {
+        editAddress.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
+            @Override
+            public void onFocused() {
+
+            }
+
             @Override
             public void onReleased() {
                 if (editAddress.getText().length() > 0) {
@@ -1072,7 +1080,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         @Override
         protected BigInteger doInBackground(Void... voids) {
             String url;
-            switch (ICONexApp.network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_TEST:
                     url = ServiceConstants.TRUSTED_HOST_TEST + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
                     break;
@@ -1112,7 +1120,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         @Override
         protected BigInteger doInBackground(Void... voids) {
             String url;
-            switch (ICONexApp.network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_TEST:
                     url = ServiceConstants.TRUSTED_HOST_TEST + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
                     break;

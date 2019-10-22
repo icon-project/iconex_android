@@ -63,6 +63,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static foundation.icon.ICONexApp.ICONEX_CONNECT;
 import static foundation.icon.ICONexApp.network;
 
 public class SendTxActivity extends AppCompatActivity implements View.OnClickListener {
@@ -257,7 +258,7 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
 
         if (ICONexApp.isDeveloper) {
             layoutNetwork.setVisibility(View.VISIBLE);
-            switch (ICONexApp.network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_MAIN:
                     txtNetwork.setText("Main");
                     break;
@@ -588,7 +589,7 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
                     + "," + txData.getSymbol().toLowerCase() + MyConstants.EXCHANGE_USD.toLowerCase();
 
         String url = null;
-        switch (network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             case MyConstants.NETWORK_MAIN:
                 url = ServiceConstants.URL_VERSION_MAIN;
                 break;
@@ -798,7 +799,7 @@ public class SendTxActivity extends AppCompatActivity implements View.OnClickLis
     private void initIconService() {
         if (iconService == null) {
             String url = null;
-            switch (network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_MAIN:
                     url = ServiceConstants.TRUSTED_HOST_MAIN + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
                     break;

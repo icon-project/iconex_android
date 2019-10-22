@@ -206,7 +206,7 @@ public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListen
 
                 try {
                     BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
-                    if (balance.compareTo(new BigInteger("5")) < 0) {
+                    if (balance.compareTo(new BigInteger("1")) < 0) {
                         messageDialog = new MessageDialog(getContext());
                         messageDialog.setTitleText(getContext().getString(R.string.notEnoughForStaking));
                         messageDialog.show();
