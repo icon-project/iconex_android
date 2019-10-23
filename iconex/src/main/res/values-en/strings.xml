@@ -110,7 +110,7 @@
     <string name="enterPrivateKey">Enter your private key</string>
 
     <string name="titleLoadBundle">Load Wallet Bundle</string>
-    <string name="loadBundleHeader">If you load a wallet bundle, the wallets that are already registered in your wallet will not be loaded.\nDo you want to proceed?</string>
+    <string name="loadBundleHeader">If you load a wallet bundle, the wallets that are already registered in your wallet will not be loaded.</string>
     <string name="loadBundleDetailed">The password of each wallet is the same as the wallet bundle password.</string>
     <string name="loadBundleTotal">out of %d are already registered in your ICONex</string>
     <string name="loadBundleRegistered">%d wallets</string>

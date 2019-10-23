@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.Utils;
@@ -42,6 +44,11 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     private VoteViewModel vm;
 
     private List<Delegation> delegations = new ArrayList<>();
+    private BigInteger stepLimit, stepPrice;
+
+    private final int TYPE_EMPTY = 1;
+    private final int TYPE_ITEM = 2;
+    private final int TYPE_FOOTER = 3;
 
     private int currentManage = -1;
 
@@ -54,6 +61,21 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
         this.root = root;
 
         vm = ViewModelProviders.of((FragmentActivity) root).get(VoteViewModel.class);
+        stepPrice = vm.getStepPrice().getValue();
+        stepLimit = vm.getStepLimit().getValue();
+        vm.getStepLimit().observe((FragmentActivity) root, new Observer<BigInteger>() {
+            @Override
+            public void onChanged(BigInteger stepLimit) {
+                Log.d(TAG, "StepLimit onChanged");
+                stepPrice = vm.getStepPrice().getValue();
+                if (!stepLimit.equals(BigInteger.ZERO)
+                        && !stepPrice.equals(BigInteger.ZERO)) {
+                    Log.d(TAG, "notifyItemChanged=" + (MyVoteListAdapter.this.getItemCount() - 1));
+                    MyVoteListAdapter.this.stepLimit = stepLimit;
+                    notifyItemChanged(MyVoteListAdapter.this.getItemCount() - 1);
+                }
+            }
+        });
     }
 
     @NonNull
@@ -61,31 +83,46 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v;
-        if (delegations.size() == 0) {
+        if (viewType == TYPE_EMPTY) {
             v = inflater.inflate(R.layout.layout_my_vote_empty, parent, false);
             return new EmptyViewHolder(v);
-        } else {
+        } else if (viewType == TYPE_ITEM) {
             v = inflater.inflate(R.layout.item_voting, parent, false);
             return new ItemViewHolder(v);
+        } else {
+            v = inflater.inflate(R.layout.layout_my_vote_footer, parent, false);
+            return new FooterViewHolder(v);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
+            Log.d(TAG, "ItemViewHolder, position=" + position);
             ItemViewHolder h = (ItemViewHolder) holder;
             Delegation delegation = delegations.get(position);
             Log.d(TAG, "onBindViewHolder value=" + delegation.getValue());
             PRep pRep = delegation.getPrep();
 
+            String voteStatus;
             if (delegation.isEdited()) {
+                if (!delegation.isNew())
+                    voteStatus = String.format(Locale.getDefault(), "(%s / Voted / Edited)", pRep.getGrade().getLabel());
+                else
+                    voteStatus = String.format(Locale.getDefault(), "(%s / Edited)", pRep.getGrade().getLabel());
+
                 h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                        String.format(Locale.getDefault(), "%s", pRep.getName()),
-                        String.format(Locale.getDefault(), "(%s / Edited)", pRep.getGrade().getLabel())));
+                        String.format(Locale.getDefault(), "%d. %s", pRep.getRank(), pRep.getName()),
+                        voteStatus));
             } else {
+                if (!delegation.isNew())
+                    voteStatus = String.format(Locale.getDefault(), "(%s / Voted)", pRep.getGrade().getLabel());
+                else
+                    voteStatus = String.format(Locale.getDefault(), "(%s)", pRep.getGrade().getLabel());
+
                 h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                        String.format(Locale.getDefault(), "%s", pRep.getName()),
-                        String.format(Locale.getDefault(), "(%s)", pRep.getGrade().getLabel())));
+                        String.format(Locale.getDefault(), "%d. %s", pRep.getRank(), pRep.getName()),
+                        voteStatus));
             }
 
             h.tvTotalVotes.setText(String.format(Locale.getDefault(), "%s (%s%%)",
@@ -111,6 +148,34 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
             h.layoutGraph.setVisibility(View.GONE);
             h.layoutMyVotes.setVisibility(View.VISIBLE);
+        } else if (holder instanceof FooterViewHolder) {
+            Log.d(TAG, "FooterViewHolder, position=" + position);
+            if (!stepLimit.equals(BigInteger.ZERO)) {
+                FooterViewHolder h = (FooterViewHolder) holder;
+                String icx = ConvertUtil.getValue(stepPrice, 18);
+                String mIcx = icx.indexOf(".") < 0 ? icx : icx.replaceAll("0*$", "").replaceAll("\\.$", "");
+                String fee = ConvertUtil.getValue(stepLimit.multiply(stepPrice), 18);
+                String mFee = fee.indexOf(".") < 0 ? fee : fee.replaceAll("0*$", "").replaceAll("\\.$", "");
+                String icxusd = ICONexApp.EXCHANGE_TABLE.get("icxusd");
+
+                h.txtLimitPrice.setText(String.format(Locale.getDefault(), "%s / %s",
+                        stepLimit.toString(), mIcx));
+                h.txtFee.setText(mFee);
+                h.txtFeeUsd.setText(String.format(Locale.getDefault(), "$ %.2f",
+                        Double.parseDouble(mFee) * Double.parseDouble(icxusd)));
+            }
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (delegations.size() == 0) {
+            return TYPE_EMPTY;
+        } else {
+            if (position == delegations.size())
+                return TYPE_FOOTER;
+            else
+                return TYPE_ITEM;
         }
     }
 
@@ -118,8 +183,9 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         if (delegations.size() == 0)
             return 1;
-        else
-            return delegations.size();
+        else {
+            return delegations.size() + 1;
+        }
     }
 
     class EmptyViewHolder extends RecyclerView.ViewHolder {
@@ -245,6 +311,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             }
         }
 
+        String preInput;
+
         private TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -258,9 +326,39 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
             @Override
             public void afterTextChanged(Editable s) {
+                String inputString = s.toString();
+
+                if (inputString.charAt(0) == '.') {
+                    editDelegation.setText(inputString.substring(1));
+                    editDelegation.setSelection(inputString.substring(1).length());
+
+                    return;
+                } else if (inputString.contains(".")) {
+                    String[] split = inputString.split("\\.");
+                    if (split.length > 2) {
+                        int index = inputString.indexOf(".");
+                        inputString = inputString.substring(0, index);
+
+                        editDelegation.setText(inputString);
+                        editDelegation.setSelection(inputString.length());
+
+                        return;
+                    } else {
+                        if (split[1].length() > 4) {
+                            split[1] = split[1].substring(0, 4);
+                            inputString = split[0] + "." + split[1];
+
+                            editDelegation.setText(inputString);
+                            editDelegation.setSelection(inputString.length());
+
+                            return;
+                        }
+                    }
+                }
+
                 BigDecimal input;
                 try {
-                    input = new BigDecimal(new BigDecimal(editDelegation.getText().toString()).scaleByPowerOfTen(18).toBigInteger());
+                    input = new BigDecimal(new BigDecimal(inputString).scaleByPowerOfTen(18).toBigInteger());
                 } catch (Exception e) {
                     mListener.onVoted(null);
                     return;
@@ -334,6 +432,18 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                 BigDecimal multiply = available.multiply(percent);
                 return multiply.divide(new BigDecimal("100"), RoundingMode.FLOOR).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR);
             }
+        }
+    }
+
+    class FooterViewHolder extends RecyclerView.ViewHolder {
+        private TextView txtLimitPrice, txtFee, txtFeeUsd;
+
+        public FooterViewHolder(@NonNull View v) {
+            super(v);
+
+            txtLimitPrice = v.findViewById(R.id.txt_limit_price);
+            txtFee = v.findViewById(R.id.txt_fee);
+            txtFeeUsd = v.findViewById(R.id.txt_fee_usd);
         }
     }
 

@@ -102,9 +102,11 @@ public class PRepListActivity extends AppCompatActivity {
                         ConvertUtil.hexStringToBigInt(
                                 result.asObject().getItem("totalDelegated").asString(), 0);
                 List<PRep> list = new ArrayList<>();
-                for (RpcItem i : result.asObject().getItem("preps").asArray().asList()) {
-                    RpcObject object = i.asObject();
+                List<RpcItem> prepList = result.asObject().getItem("preps").asArray().asList();
+                for (int i = 0; i < prepList.size(); i++) {
+                    RpcObject object = prepList.get(i).asObject();
                     PRep prep = PRep.valueOf(object);
+                    prep = prep.newBuilder().rank(i+1).build();
                     prep.setTotalDelegated(totalDelegated);
                     list.add(prep);
                 }
