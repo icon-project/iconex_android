@@ -72,7 +72,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            findFragment().updateAssetsVD(totalAssetsVD);
+                            MainWalletFragment fragment = findFragment();
+                            if(fragment != null)fragment.updateAssetsVD(totalAssetsVD);
                             Log.d(TAG, "run() called in update total assets");
                         }
                     });
@@ -85,7 +86,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            findFragment().updateAllWallet();
+                            MainWalletFragment fragment = findFragment();
+                            if(fragment != null)fragment.updateAllWallet();
                             Log.d(TAG, "run() called in update all wallet");
                         }
                     });
@@ -97,7 +99,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            findFragment().updateWallet(_wallets, _tokens);
+                            MainWalletFragment fragment = findFragment();
+                            if(fragment != null)fragment.updateWallet(_wallets, _tokens);
                             Log.d(TAG, "run() called with: wallets " + _wallets + ", _tokens" + _tokens);
                         }
                     });
@@ -389,7 +392,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     public void onLoadCompleteAll() {
         combineTopToken();
         allLoading = false;
-        findFragment().notifyCompleteDataLoad();
+        MainWalletFragment fragment = findFragment();
+        if (fragment != null) fragment.notifyCompleteDataLoad();
     }
 
     @Override

@@ -109,24 +109,6 @@ public class MainWalletFragment extends Fragment {
         updateWalletView();
     }
 
-    public void notifyItemChange(int walletPosition, int entryPosition) {
-        switch (viewMode) {
-            case walletView: {
-                WalletCardView walletView = (WalletCardView) walletViewPager.getChildAt(walletPosition);
-                if (walletView != null) {
-                    walletView.notifyItemChange(entryPosition);
-                }
-            } break;
-            case tokenView: {
-                EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(entryPosition);
-                WalletCardView walletView = ((WalletCardView) walletViewPager.getChildAt(entryVD.pos0));
-                if (walletView != null) {
-                    walletView.notifyItemChange(entryVD.pos1);
-                }
-            } break;
-        }
-    }
-
     public void updateWallet(List<Integer> wallets, List<Integer> tokens) {
         List<Integer> update = new ArrayList<>();
         int pos = walletViewPager.getCurrentItem();
@@ -156,7 +138,7 @@ public class MainWalletFragment extends Fragment {
 
         for (Integer idx : update) {
             WalletCardView walletView = (WalletCardView) walletViewPager.getChildAt(idx);
-            walletView.notifyDataSetChange();
+            if (walletView != null) walletView.notifyDataSetChange();
         }
     }
 
