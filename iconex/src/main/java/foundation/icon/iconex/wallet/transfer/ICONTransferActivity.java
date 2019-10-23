@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -166,16 +167,6 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             wallet = (Wallet) getIntent().getExtras().get("walletInfo");
             entry = (WalletEntry) getIntent().getExtras().get("walletEntry");
             privateKey = getIntent().getStringExtra("privateKey");
-
-            // for main wallet fragment - walletCardView.setOnClickQrScan
-            if (getIntent().getBooleanExtra("qr code scan start", false)) {
-                Intent intent = new Intent(ICONTransferActivity.this, BarcodeCaptureActivity.class);
-                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
-                intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
-                intent.putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE, BarcodeCaptureActivity.ScanType.ICX_Address.name());
-
-                startActivityForResult(intent, RC_BARCODE_CAPTURE);
-            }
         }
 
         loadView();
@@ -219,7 +210,16 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
         getStepPrice();
         getStepLimit();
+
+        if (getIntent().getStringExtra("address") != null)
+            editAddress.setText(getIntent().getStringExtra("address"));
+
+        if (getIntent().getSerializableExtra("amount") != null) {
+            BigInteger amount = (BigInteger) getIntent().getSerializableExtra("amount");
+            requestAmount = ConvertUtil.getValue(amount, 18);
+        }
     }
+    String requestAmount = null;
 
     @Override
     protected void onStart() {
@@ -264,6 +264,11 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         }
 
         setBalance(balance);
+        if (requestAmount != null) {
+            editSend.setText(requestAmount);
+            validateSendAmount(requestAmount);
+            requestAmount = null;
+        }
     }
 
     @Override

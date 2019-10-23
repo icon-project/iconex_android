@@ -1,12 +1,8 @@
 package foundation.icon.iconex.widgets;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.InputType;
@@ -15,10 +11,8 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,15 +28,11 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletAddressCardView;
 import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.WalletEntry;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -51,7 +41,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 import loopchain.icon.wallet.core.Constants;
 
-// TODO: implement request amount qrcode
 public class WalletAddressQrcodeView extends FrameLayout {
     private TextView txtName;
     private ImageView imgQrCode;

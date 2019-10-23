@@ -30,6 +30,7 @@ import java.util.Vector;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.view.AboutActivity;
@@ -52,6 +53,8 @@ import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
 import loopchain.icon.wallet.core.Constants;
+
+import static foundation.icon.iconex.barcode.BarcodeCaptureActivity.PARAM_SCANTYPE;
 
 public class MainWalletFragment extends Fragment {
 
@@ -372,11 +375,11 @@ public class MainWalletFragment extends Fragment {
                     @Override
                     public void onPass(byte[] bytePrivateKey) {
                         getContext() // only icx wallet, icx coin wallet entry.
-                                .startActivity(new Intent(getContext(), ICONTransferActivity.class)
-                                        .putExtra("walletInfo", (Serializable) wallet)
-                                        .putExtra("walletEntry", (Serializable) wallet.getWalletEntries().get(0))
+                                .startActivity(new Intent(getContext(), BarcodeCaptureActivity.class)
+                                        .putExtra(PARAM_SCANTYPE, BarcodeCaptureActivity.ScanType.ICX_Address.name())
+                                        .putExtra("wallet", (Serializable) wallet)
+                                        .putExtra("entry", (Serializable) wallet.getWalletEntries().get(0))
                                         .putExtra("privateKey", Hex.toHexString(bytePrivateKey))
-                                        .putExtra("qr code scan start", true)
                                 );
                     }
                 }).show();

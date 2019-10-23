@@ -34,6 +34,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewPropertyAnimatorCompat;
 
+import android.util.Base64;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -57,12 +58,17 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.math.BigInteger;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import foundation.icon.iconex.widgets.CustomToast;
 
 /**
@@ -490,6 +496,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         }
     }
 
+    boolean isStartActivity = false;
     private void validate(Barcode barcode) {
         String value = barcode.displayValue;
 
@@ -505,8 +512,51 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                     }
                 } break;
                 case ICX_Address: {
-                    if (!(value.startsWith("hx") || value.startsWith("cx"))) {
+                    boolean fromWallet = getIntent().getSerializableExtra("wallet") != null &&
+                            getIntent().getSerializableExtra("entry") != null &&
+                            getIntent().getStringExtra("privateKey") != null;
+
+                    if (value.startsWith("iconex://pay")) {
+                        try {
+                            String base64Encoded = value.split("data=")[1];
+                            JSONObject jsonObject = new JSONObject(new String(Base64.decode(base64Encoded, Base64.NO_WRAP)));
+                            String address = jsonObject.getString("address");
+                            BigInteger amount = ConvertUtil.hexStringToBigInt(jsonObject.getString("amount"), 18);
+
+                            if (!fromWallet) throw new Exception();
+
+
+                            if (!isStartActivity)
+                                startActivity(new Intent(this, ICONTransferActivity.class)
+                                    .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
+                                    .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
+                                    .putExtra("privateKey", getIntent().getStringExtra("privateKKey"))
+                                    .putExtra("address", address)
+                                    .putExtra("amount", amount)
+                            );
+                            isStartActivity = true;
+
+                            finish();
+                            return;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            CustomToast.makeText(this, getString(R.string.errIncorrectICXAddr), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else if (!(value.startsWith("hx") || value.startsWith("cx"))) {
                         CustomToast.makeText(this, getString(R.string.errIncorrectICXAddr), Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (fromWallet){
+                        if (!isStartActivity)
+                            startActivity(new Intent(this, ICONTransferActivity.class)
+                                .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
+                                .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
+                                .putExtra("privateKey", getIntent().getStringExtra("privateKKey"))
+                                .putExtra("address", barcode.displayValue)
+                        );
+
+                        isStartActivity = true;
+                        finish();
                         return;
                     }
                 } break;
