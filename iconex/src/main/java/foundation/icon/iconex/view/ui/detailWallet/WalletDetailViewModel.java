@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +32,7 @@ public class WalletDetailViewModel extends ViewModel {
     // service helper
     public final MutableLiveData<List<TransactionItemViewData>> lstTxData = new MutableLiveData<>();
     public final MutableLiveData<List<String[]>> lstBalanceResults = new MutableLiveData<>();
+    public final MutableLiveData<BigDecimal[]> stake = new MutableLiveData<>();
 
     // fragment
     public final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>();
@@ -46,9 +50,12 @@ public class WalletDetailViewModel extends ViewModel {
     public final MutableLiveData<BigDecimal> exchange = new MutableLiveData<>();
     public final MutableLiveData<Map<Integer, BigDecimal>> exchanges = new MutableLiveData<>();
     public final MutableLiveData<String> unit = new MutableLiveData<>();
+    public final MediatorLiveData<BigDecimal[]> stakeViewData = new MediatorLiveData<>();
+    public final MutableLiveData<Boolean> loadingSatke = new MutableLiveData<>();
 
     // listview
     public final MutableLiveData<List<TransactionItemViewData>> lstItemData =  new MutableLiveData<>();
+
 
     public void initialize(Wallet wallet, WalletEntry walletEntry) {
         this.wallet.setValue(wallet);
@@ -75,9 +82,38 @@ public class WalletDetailViewModel extends ViewModel {
             }
         });
 
+        stakeViewData.addSource(this.loadingBalance, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                combineStakeViewData();
+            }
+        });
+        stakeViewData.addSource(this.stake, new Observer<BigDecimal[]>() {
+            @Override
+            public void onChanged(BigDecimal[] bigDecimals) {
+                combineStakeViewData();
+            }
+        });
+
+
         amount.setValue(BigDecimal.ZERO);
         exchange.setValue(BigDecimal.ZERO);
         exchanges.setValue(new HashMap<>());
+    }
+
+    private void combineStakeViewData() {
+        Boolean loading = loadingBalance.getValue();
+        BigDecimal amount = this.amount.getValue();
+        BigDecimal[] stakes = this.stake.getValue();
+
+        if (loading != null && !loading && stakes != null && amount != null) {
+            BigDecimal stake = stakes[0];
+            BigDecimal unstake = stakes[1];
+            if (stake.compareTo(BigDecimal.ZERO) == 0) return;
+            BigDecimal[] result = {unstake.add(amount), amount, stake};
+            loadingSatke.setValue(false);
+            stakeViewData.setValue(result);
+        }
     }
 
     private void combineLstUnit() {

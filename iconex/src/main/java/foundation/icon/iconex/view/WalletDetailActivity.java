@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
 import foundation.icon.iconex.realm.RealmUtil;
@@ -93,6 +94,10 @@ public class WalletDetailActivity extends AppCompatActivity {
                 if (serviceHelper.isBind()) {
                     serviceHelper.loadTxList();
                     serviceHelper.requestBalance();
+
+                    if (walletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
+                        viewModel.stakeViewData.setValue(null);
+                    }
                 }
             }
         });

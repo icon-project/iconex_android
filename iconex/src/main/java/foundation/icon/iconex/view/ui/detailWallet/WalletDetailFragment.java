@@ -95,14 +95,23 @@ public class WalletDetailFragment extends Fragment {
             public void onGlobalLayout() {
                 v.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                int expandedHeight = v.getMeasuredHeight()
-                        - actionbar.getMeasuredHeight()
-                        - infoView.getMeasuredHeight();
-                int collapsedHeight = expandedHeight
-                        - listHeaderView.getMeasuredHeight();
+                noDataView.setNodata(false);
+                noDataView.setLoading(true);
+            }
+        });
 
-                noDataView.setContainerHeight(expandedHeight, collapsedHeight);
-                noDataView.setExpaned(false);
+        noDataView.setOnUpdateHeightListener(new NoDataView.OnUpdateHeightListener() {
+            @Override
+            public int getHeight() {
+                int height = v.getMeasuredHeight() - actionbar.getMeasuredHeight();
+
+                if (fixedListHeaderView.getVisibility() == View.VISIBLE) {
+                    height -= fixedListHeaderView.getMeasuredHeight();
+                } else {
+                    height -= (infoView.getMeasuredHeight() + listHeaderView.getMeasuredHeight());
+                }
+
+                return height;
             }
         });
 
@@ -206,7 +215,6 @@ public class WalletDetailFragment extends Fragment {
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 boolean isExpanded = scrollY >= infoView.getHeight();
                 fixedListHeaderView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                noDataView.setExpaned(isExpanded);
 
                 if(v.getChildAt(v.getChildCount() - 1) != null) {
                     if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
@@ -412,6 +420,20 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 infoView.setLoading(aBoolean);
+            }
+        });
+        infoView.setLoadingStake(true);
+        infoView.setStakeData(null);
+        viewModel.loadingSatke.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean loading) {
+                infoView.setLoadingStake(loading);
+            }
+        });
+        viewModel.stakeViewData.observe(this, new Observer<BigDecimal[]>() {
+            @Override
+            public void onChanged(BigDecimal[] bigDecimals) {
+                infoView.setStakeData(bigDecimals);
             }
         });
     }

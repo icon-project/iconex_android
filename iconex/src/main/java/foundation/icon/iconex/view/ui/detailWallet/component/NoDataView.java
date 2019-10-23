@@ -19,19 +19,24 @@ public class NoDataView extends FrameLayout implements View.OnClickListener {
     private TextView txtNoTransaction;
     private TextView lnkEtehrscan;
     private ViewGroup loading;
-    private ViewGroup container;
     private boolean mIsEtherscanVisible = false;
-
-    private int expandedHeight;
-    private int collapsedHeight;
 
     public interface OnClickEtherScanListener {
         void onClickEtherScan();
     }
     private OnClickEtherScanListener mOnClickEtherScanListener = null;
 
+    public interface OnUpdateHeightListener {
+        int getHeight();
+    }
+    OnUpdateHeightListener updateHeightListener = null;
+
     public void setOnClickEtherScanListener (OnClickEtherScanListener listener){
         mOnClickEtherScanListener = listener;
+    }
+
+    public void setOnUpdateHeightListener(OnUpdateHeightListener listener) {
+        updateHeightListener = listener;
     }
 
     public NoDataView(@NonNull Context context) {
@@ -56,7 +61,6 @@ public class NoDataView extends FrameLayout implements View.OnClickListener {
 
         txtNoTransaction = findViewById(R.id.txt_no_transaction);
         lnkEtehrscan = findViewById(R.id.link_etherscan);
-        container = findViewById(R.id.container);
 
         txtNoTransaction.setOnClickListener(this);
         lnkEtehrscan.setOnClickListener(this);
@@ -75,33 +79,32 @@ public class NoDataView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    public void setContainerHeight(int expandedHeight, int collapsedHeight) {
-        this.expandedHeight = expandedHeight;
-        this.collapsedHeight = collapsedHeight;
-    }
-
     public void setTextNoTransaction(String text, boolean isVisibleEtherscan) {
         txtNoTransaction.setText(text);
         mIsEtherscanVisible = isVisibleEtherscan;
     }
 
-    public void setExpaned(boolean isExpanded) {
-        getLayoutParams().height = isExpanded ? expandedHeight : collapsedHeight;
-        requestLayout();
-    }
-
     public void setLoading(boolean isLoading) {
         loading.setVisibility(isLoading ? VISIBLE : GONE);
-
-        boolean isVisible = loading.getVisibility() == VISIBLE || txtNoTransaction.getVisibility() == VISIBLE;
-        setVisibility(isVisible ? VISIBLE : GONE);
+        updateView();
     }
 
     public void setNodata(boolean isSize0) {
         txtNoTransaction.setVisibility(isSize0 ? VISIBLE : GONE);
         lnkEtehrscan.setVisibility(isSize0 && mIsEtherscanVisible ? VISIBLE : GONE);
+        updateView();
+    }
 
+    private void updateView() {
         boolean isVisible = loading.getVisibility() == VISIBLE || txtNoTransaction.getVisibility() == VISIBLE;
         setVisibility(isVisible ? VISIBLE : GONE);
+
+        if (isVisible && updateHeightListener != null) {
+            int height = updateHeightListener.getHeight();
+            if (getLayoutParams().height != height) {
+                getLayoutParams().height = height;
+                requestLayout();
+            }
+        }
     }
 }

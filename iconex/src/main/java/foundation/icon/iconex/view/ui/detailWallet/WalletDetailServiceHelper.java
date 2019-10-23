@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,11 +22,15 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.service.PRepService;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.icx.transport.jsonrpc.RpcItem;
+import foundation.icon.icx.transport.jsonrpc.RpcObject;
 import loopchain.icon.wallet.core.Constants;
 
 public class WalletDetailServiceHelper {
@@ -291,6 +296,7 @@ public class WalletDetailServiceHelper {
         cancleRequest();
 
         mViewModle.loadingBalance.setValue(true);
+        mViewModle.loadingSatke.setValue(true);
         Log.d(TAG, "request remote data");
         Object[] balanceList = makeGetBalanceList();
         HashMap<String, String> icxList = (HashMap<String, String>) balanceList[0];
@@ -304,6 +310,21 @@ public class WalletDetailServiceHelper {
         mService.getTokenBalance(ircList, Constants.KS_COINTYPE_ICX);
         mService.getBalance(ethList, Constants.KS_COINTYPE_ETH);
         mService.getTokenBalance(ercList, Constants.KS_COINTYPE_ETH);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String address = mViewModle.wallet.getValue().getAddress();
+                    RpcObject rpcObject = new PRepService(ICONexApp.NETWORK.getUrl()).getStake(address).asObject();
+                    BigDecimal stake = new BigDecimal(ConvertUtil.getValue(rpcObject.getItem("stake").asInteger(), 18));
+                    BigDecimal unstake = rpcObject.getItem("unstake") == null ? BigDecimal.ZERO :
+                            new BigDecimal(ConvertUtil.getValue(rpcObject.getItem("unstake").asInteger(), 18));
+                    mViewModle.stake.postValue(new BigDecimal[] { stake, unstake});
+                } catch (IOException e) { }
+            }
+        }).start();
     }
 
     private Object[] makeGetBalanceList() {
