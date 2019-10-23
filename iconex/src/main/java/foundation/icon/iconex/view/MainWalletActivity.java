@@ -375,8 +375,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         }
 
         if (totalStaked.compareTo(BigInteger.ZERO) != 0) {
-            BigDecimal percent = new BigDecimal(totalStaked.subtract(totalVoting))
-                    .divide(new BigDecimal(totalStaked).multiply(new BigDecimal(100)), 1, RoundingMode.HALF_UP);
+            BigDecimal percent = new BigDecimal(totalStaked.subtract(totalVoting)).multiply(new BigDecimal(100))
+                    .divide(new BigDecimal(totalStaked), 1, RoundingMode.HALF_UP);
             totalAssetsVD.setVotedPower(percent);
         } else {
             totalAssetsVD.setVotedPower(new BigDecimal("0.0"));
