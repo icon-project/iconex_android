@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
@@ -29,6 +30,7 @@ import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
@@ -181,8 +183,15 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                         .putExtra("walletInfo", (Serializable) wallet),REQ_PASSWORD_CHANGE);
             } break;
             case R.id.btnRemoveWallet: {
+                boolean isRemain = false;
+                for (WalletEntry entry : wallet.getWalletEntries()) {
+                    try {
+                        if (new BigInteger(entry.getBalance()).compareTo(BigInteger.ZERO) != 0)
+                            isRemain = true;
+                    } catch (Exception e) { }
+                }
                 MessageDialog messageDialog = new MessageDialog(getContext());
-                messageDialog.setTitleText(getString(R.string.warningRemoveWallet));
+                messageDialog.setTitleText(getString(isRemain ? R.string.warningRemoveWallet : R.string.removeWallet));
                 messageDialog.setSingleButton(false);
                 messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                     @Override
