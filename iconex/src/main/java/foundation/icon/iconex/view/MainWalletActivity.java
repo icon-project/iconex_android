@@ -63,14 +63,17 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     private Runnable flusher = new Runnable() {
         @Override
         public void run() {
+            Log.d(TAG, "flusher start");
             do {
-                try { Thread.sleep(300); } catch (InterruptedException e) { }
+                try { Thread.sleep(1000); } catch (InterruptedException e) { }
+                Log.d(TAG, "flusher wake");
                 if (isUpdateAssets) {
                     isUpdateAssets = false;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             findFragment().updateAssetsVD(totalAssetsVD);
+                            Log.d(TAG, "run() called in update total assets");
                         }
                     });
                 }
@@ -83,6 +86,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                         @Override
                         public void run() {
                             findFragment().updateAllWallet();
+                            Log.d(TAG, "run() called in update all wallet");
                         }
                     });
                 } else {
@@ -94,14 +98,17 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                         @Override
                         public void run() {
                             findFragment().updateWallet(_wallets, _tokens);
+                            Log.d(TAG, "run() called with: wallets " + _wallets + ", _tokens" + _tokens);
                         }
                     });
                 }
             } while (allLoading);
+            Log.d(TAG, "flusher died");
         }
     };
 
     void updateAssets() {
+        Log.d(TAG, "updateAssets() called");
         if (allLoading)
             isUpdateAssets = true;
         else {
@@ -115,6 +122,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     }
 
     void updateAll() {
+        Log.d(TAG, "updateAll() called");
         if (allLoading)
             isUpdateAll = true;
         else {
@@ -128,6 +136,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     }
 
     void updateEntry(int wallet, int entry){
+        Log.d(TAG, "updateEntry() called with: wallet = [" + wallet + "], entry = [" + entry + "]");
         EntryViewData entryVD = walletVDs.get(wallet).getEntryVDs().get(entry);
         Integer intWallet = new Integer(wallet);
         Integer intToken = new Integer(entryVD.pos0);
