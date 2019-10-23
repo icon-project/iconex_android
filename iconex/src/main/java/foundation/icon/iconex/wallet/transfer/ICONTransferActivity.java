@@ -177,8 +177,8 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
         // set Symbol
         editSend.setAppendText(entry.getSymbol());
+        labelSymbol.setText("(" + entry.getSymbol() + ")");
         String symbol = "(" + MyConstants.SYMBOL_ICON + ")";
-        labelSymbol.setText(symbol);
         symbolStepLimit.setText(symbol);
         symbolEstimatedMaxFee.setText(symbol);
 
