@@ -200,6 +200,10 @@ public class WalletCardView extends FrameLayout {
         walletItemAdapter.notifyItemChanged(position);
     }
 
+    public void notifyDataSetChange() {
+        walletItemAdapter.notifyDataSetChanged();
+    }
+
     private void updateIsScrollTop(boolean isScrollTop) {
         if (mIsScrollTop != isScrollTop && changeIsScrollTopListener != null) {
             mIsScrollTop = isScrollTop;
@@ -253,6 +257,6 @@ public class WalletCardView extends FrameLayout {
         setTextAliasLabel(data.getTitle());
         walletItems.clear();
         walletItems.addAll(data.getEntryVDs());
-
+        walletItemAdapter.notifyDataSetChanged();
     }
 }

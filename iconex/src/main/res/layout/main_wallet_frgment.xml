@@ -80,7 +80,7 @@
                     </LinearLayout>
 
 
-                    <foundation.icon.iconex.view.ui.mainWallet.component.ExpanableViewPager
+                    <foundation.icon.iconex.view.ui.mainWallet.component.ExpandableViewPager
                         android:id="@+id/wallet_viewpager"
                         android:layout_width="0dp"
                         android:layout_height="450dp"

@@ -14,10 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.viewpager.widget.ViewPager;
 
-public class ExpanableViewPager extends ViewPager {
+public class ExpandableViewPager extends ViewPager {
 
     // Declaration
-    private String TAG = ExpanableViewPager.class.getSimpleName();
+    private String TAG = ExpandableViewPager.class.getSimpleName();
     public enum State { Expaned, Collapsed, Dragging, Expanding, Collapsing }
     public interface OnStateChangeListener { void onChangeState(State state); }
     private static final int ANIMATION_DURATION = 200;
@@ -39,12 +39,12 @@ public class ExpanableViewPager extends ViewPager {
     private float mLastActionDownY = 0;
 
     // =============== init methods
-    public ExpanableViewPager(@NonNull Context context) {
+    public ExpandableViewPager(@NonNull Context context) {
         super(context);
         initGesture();
     }
 
-    public ExpanableViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ExpandableViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initGesture();
     }
