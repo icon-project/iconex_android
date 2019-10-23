@@ -392,8 +392,15 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     public void onLoadCompleteAll() {
         combineTopToken();
         allLoading = false;
-        MainWalletFragment fragment = findFragment();
-        if (fragment != null) fragment.notifyCompleteDataLoad();
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                MainWalletFragment fragment = findFragment();
+                if (fragment != null) fragment.notifyCompleteDataLoad();
+            }
+        });
+
     }
 
     @Override

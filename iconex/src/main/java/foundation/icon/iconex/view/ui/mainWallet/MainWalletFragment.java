@@ -143,6 +143,7 @@ public class MainWalletFragment extends Fragment {
     }
 
     public void notifyCompleteDataLoad() {
+        updateAllWallet();
         refresh.stopRefresh(true);
     }
 
