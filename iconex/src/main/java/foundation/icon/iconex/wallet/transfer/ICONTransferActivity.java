@@ -999,10 +999,9 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     private void onClickSend() {
 
         if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-            BigInteger sendAmount = ConvertUtil.valueToBigInteger(editSend.getText(), 18);
             BigInteger canICX = balance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
 
-            if (canICX.compareTo(sendAmount) < 0) {
+            if (canICX.compareTo(BigInteger.ZERO) < 0) {
                 MessageDialog messageDialog = new MessageDialog(this);
                 messageDialog.setTitleText(getString(R.string.errICXFee));
                 messageDialog.show();
@@ -1013,7 +1012,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             BigInteger ownBalance = new BigInteger(own.getBalance());
             BigInteger canICX = ownBalance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
 
-            if (ownBalance.compareTo(canICX) < 0) {
+            if (canICX.compareTo(BigInteger.ZERO) < 0) {
                 MessageDialog messageDialog = new MessageDialog(this);
                 messageDialog.setTitleText(getString(R.string.errICXFee));
                 messageDialog.show();

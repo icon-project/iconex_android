@@ -20,6 +20,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -590,24 +591,18 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             @Override
             public void onClick(View v) {
 
-                BigInteger sendAmount = ConvertUtil.valueToBigInteger(editSend.getText(), mWalletEntry.getDefaultDec());
                 BigInteger fee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
                 boolean feeError = false;
 
                 if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
                     BigInteger canICX = balance.subtract(fee);
-                    if (sendAmount.equals(BigInteger.ZERO)) {
-                        feeError = true;
-                    } else if (canICX.compareTo(sendAmount) < 0) {
+                    if (canICX.compareTo(BigInteger.ZERO) < 0) {
                         feeError = true;
                     }
                 } else {
                     WalletEntry own = mWallet.getWalletEntries().get(0);
                     BigInteger ownBalance = new BigInteger(own.getBalance());
-
-                    if (sendAmount.equals(BigInteger.ZERO)) {
-                        feeError = true;
-                    } else if (ownBalance.compareTo(fee) < 0) {
+                    if (ownBalance.compareTo(fee) < 0) {
                         feeError = true;
                     }
                 }
