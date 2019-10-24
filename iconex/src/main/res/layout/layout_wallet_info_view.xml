@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:background="@color/primary">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="148dp">
+        android:layout_height="138dp">
 
         <TextView
             android:id="@+id/txt_symbol"
@@ -101,6 +102,99 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/txt_amount" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_sataked"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_8dp_rounded_opacity10">
+
+        <TextView
+            android:id="@+id/lb_icxBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/noto_sans_light"
+            android:text="@string/icxBalance"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/lb_liquidICX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/noto_sans_light"
+            android:text="@string/liquidICX"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            app:layout_constraintStart_toStartOf="@id/lb_icxBalance"
+            app:layout_constraintTop_toBottomOf="@id/lb_icxBalance" />
+
+        <TextView
+            android:id="@+id/lb_stakedICX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/noto_sans_light"
+            android:text="@string/stakeICX"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/lb_liquidICX"
+            app:layout_constraintTop_toBottomOf="@id/lb_liquidICX" />
+
+        <TextView
+            android:id="@+id/txtICXBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:fontFamily="@font/nanum_square_light"
+            android:text="0"
+            android:textColor="@color/colorWhite"
+            android:textSize="12dp"
+            app:layout_constraintBaseline_toBaselineOf="@id/lb_icxBalance"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/txtLiquidICX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanum_square_light"
+            android:text="0"
+            android:textColor="@color/colorWhite"
+            android:textSize="12dp"
+            app:layout_constraintBaseline_toBaselineOf="@id/lb_liquidICX"
+            app:layout_constraintEnd_toEndOf="@id/txtICXBalance" />
+
+        <TextView
+            android:id="@+id/txtStakedICX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanum_square_light"
+            android:text="0"
+            android:textColor="@color/colorWhite"
+            android:textSize="12dp"
+            app:layout_constraintBaseline_toBaselineOf="@id/lb_stakedICX"
+            app:layout_constraintEnd_toEndOf="@+id/txtLiquidICX" />
+
+        <ProgressBar
+            android:id="@+id/loading_stake"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:indeterminateDrawable="@drawable/anim_loading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</LinearLayout>

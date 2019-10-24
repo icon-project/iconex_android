@@ -40,6 +40,7 @@ import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.core.response.TRResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainWalletServiceHelper {
@@ -93,6 +94,14 @@ public class MainWalletServiceHelper {
     private boolean isNotifyCompleteLoadPReps = false;
     private boolean isNotifyCompleteLoadAll = false;
     private boolean isNotifyNetworkError = false;
+
+    synchronized public void notifyNetworkError(Exception e, OnLoadListener listener) {
+        if (!isNotifyNetworkError && listener != null) {
+            Log.d(TAG, "onError() called with: e = [" + e + "]");
+            listener.onNetworkError();
+            isNotifyNetworkError = true;
+        }
+    }
 
     synchronized private void checking(
             OnLoadListener listener,
@@ -577,11 +586,7 @@ public class MainWalletServiceHelper {
                 try {
                     act.run();
                 } catch (UnknownHostException e) {
-                    if (!isNotifyNetworkError && listener != null) {
-                        Log.d(TAG, "onError() called with: e = [" + e + "]");
-                        listener.onNetworkError();
-                        isNotifyNetworkError = true;
-                    }
+                    notifyNetworkError(e, listener);
                 } finally {
                     ob.onDone();
                 }

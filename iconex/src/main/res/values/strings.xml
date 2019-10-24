@@ -593,6 +593,11 @@
     <string name="appVer">앱 버전</string>
     <string name="errPasscodeSame">현재 잠금번호와 동일합니다. 새 잠금 번호를 입력해주세요.</string>
 
+    <!-- New Detail Wallet -->
+    <string name="icxBalance">ICX Balance</string>
+    <string name="liquidICX">Liquid ICX</string>
+    <string name="stakeICX">Staked ICX (Voting Power)</string>
+
     <!-- New - Transfer -->
     <string name="availableBalance">사용 가능 잔액</string>
     <string name="sendBalance">전송 수량</string>

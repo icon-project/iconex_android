@@ -1,12 +1,8 @@
 package foundation.icon.iconex.widgets;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.InputType;
@@ -15,11 +11,10 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,10 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-
 import foundation.icon.ICONexApp;
+import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletAddressCardView;
@@ -51,7 +44,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 import loopchain.icon.wallet.core.Constants;
 
-// TODO: implement request amount qrcode
 public class WalletAddressQrcodeView extends FrameLayout {
     private TextView txtName;
     private ImageView imgQrCode;
@@ -62,6 +54,8 @@ public class WalletAddressQrcodeView extends FrameLayout {
     private TTextInputLayout editSendAmount;
     private Button btnRequestSend;
     private TextView txtTransSendAmount;
+
+    private ProgressBar qr_loading;
 
     private String symbol;
 
@@ -74,7 +68,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
         this.listener = listener;
     }
 
-    public void bind(String title, Wallet wallet) {
+    public void bind(String title, Wallet wallet, WalletEntry entry) {
         // bind data
         txtName.setText(title);
         txtAddress.setText(wallet.getAddress());
@@ -82,7 +76,8 @@ public class WalletAddressQrcodeView extends FrameLayout {
         symbol = wallet.getWalletEntries().get(0).getSymbol();
 
         // set only icx
-        boolean isICX = wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX);
+        boolean isICX = wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)
+                && entry.getType().equals(MyConstants.TYPE_COIN);
         layoutRequestSend.setVisibility(isICX ? VISIBLE : INVISIBLE);
     }
 
@@ -120,6 +115,8 @@ public class WalletAddressQrcodeView extends FrameLayout {
         editSendAmount = findViewById(R.id.edit_send_amount);
         btnRequestSend = findViewById(R.id.btn_request_send);
         txtTransSendAmount = findViewById(R.id.txt_trans_send_amount);
+
+        qr_loading = findViewById(R.id.qr_loading);
 
         editSendAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         btnRequestSend.setOnClickListener(new OnClickListener() {
@@ -206,6 +203,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
     }
 
     private void setQrCode(String string, ImageView target){
+        qr_loading.setVisibility(VISIBLE);
         final Bitmap[] qrCode = {null};
         target.setImageBitmap(null);
         Completable.fromAction(new Action() {
@@ -234,6 +232,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
                     @Override
                     public void onComplete() {
                         target.setImageBitmap(qrCode[0]);
+                        qr_loading.setVisibility(GONE);
                     }
 
                     @Override

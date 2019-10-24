@@ -17,12 +17,24 @@
 
         android:text="지갑 이름 TEST"/>
 
-    <ImageView
-        android:id="@+id/img_qrcode"
+    <RelativeLayout
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="26dp"
-        android:src="@color/dark4D"/>
+        android:layout_marginTop="26dp">
+
+        <ImageView
+            android:id="@+id/img_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/qr_loading"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/anim_loading" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/txt_address"

@@ -32,6 +32,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import foundation.icon.iconex.widgets.WalletAddressQrcodeView;
@@ -59,9 +60,9 @@ public class WalletAddressCardView extends FrameLayout {
         this.listener = listener;
     }
 
-    public void show(Wallet wallet) {
+    public void show(Wallet wallet, WalletEntry entry) {
         // bind data
-        walletAddressQrcodeView.bind(wallet.getAlias(), wallet);
+        walletAddressQrcodeView.bind(wallet.getAlias(), wallet, entry);
 
         // animation start
         setVisibility(VISIBLE);

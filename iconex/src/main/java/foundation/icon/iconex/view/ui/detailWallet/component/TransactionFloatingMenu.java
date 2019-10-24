@@ -114,7 +114,8 @@ public class TransactionFloatingMenu extends FrameLayout implements View.OnClick
         switch (v.getId()) {
             case R.id.btn_deposit: {
                 getContext().startActivity(new Intent(getContext(), DepositActivity.class)
-                .putExtra(DepositActivity.PARAM_WALLET, ((Serializable) wallet)));
+                .putExtra(DepositActivity.PARAM_WALLET, ((Serializable) wallet))
+                .putExtra(DepositActivity.PARAM_ENTRY, (Serializable)entry));
             } break;
             case R.id.btn_send: { // Transfer
                 new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {

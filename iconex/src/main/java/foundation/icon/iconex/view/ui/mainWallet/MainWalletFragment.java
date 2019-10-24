@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.Vector;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.view.AboutActivity;
@@ -53,7 +55,10 @@ import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
 import loopchain.icon.wallet.core.Constants;
 
+import static foundation.icon.iconex.barcode.BarcodeCaptureActivity.PARAM_SCANTYPE;
+
 public class MainWalletFragment extends Fragment {
+    public static final String TAG = MainWalletFragment.class.getSimpleName();
 
     public static final int REQ_DETAIL = 10405;
 
@@ -67,6 +72,7 @@ public class MainWalletFragment extends Fragment {
     }
     private ExchangeUnit exchangeUnit = ExchangeUnit.USD;
 
+    SparseArray<WalletCardView> walletViews = new SparseArray<>();
 
     public interface RequestActivity {
         void refreshViewData();
@@ -110,6 +116,7 @@ public class MainWalletFragment extends Fragment {
     }
 
     public void updateWallet(List<Integer> wallets, List<Integer> tokens) {
+        Log.d(TAG, "updateWallet() called with: wallets = [" + wallets + "], tokens = [" + tokens + "]");
         List<Integer> update = new ArrayList<>();
         int pos = walletViewPager.getCurrentItem();
         if (pos -1 >= 0) update.add(new Integer(pos -1));
@@ -121,14 +128,16 @@ public class MainWalletFragment extends Fragment {
 
         for (Integer idx : update) {
             if (isW ? !wallets.contains(idx) : !tokens.contains(idx)) continue;
-            WalletCardView walletView = (WalletCardView) walletViewPager.getChildAt(idx);
+            WalletCardView walletView = walletViews.get(idx);
             walletView.notifyDataSetChange();
+            Log.d(TAG, "updateWallet: notifyDataSetChange idx: " + idx);
         }
     }
 
     public void updateAllWallet() {
         List<Integer> update = new ArrayList<>();
         int pos = walletViewPager.getCurrentItem();
+        Log.d(TAG, "updateAllWallet() called: current idx" + pos);
         if (pos -1 >= 0) update.add(new Integer(pos -1));
         update.add(new Integer(pos));
 
@@ -137,8 +146,11 @@ public class MainWalletFragment extends Fragment {
         if (pos + 1 < size) update.add(new Integer(pos +1));
 
         for (Integer idx : update) {
-            WalletCardView walletView = (WalletCardView) walletViewPager.getChildAt(idx);
-            if (walletView != null) walletView.notifyDataSetChange();
+            WalletCardView walletView = walletViews.get(idx);
+            if (walletView != null) {
+                walletView.notifyDataSetChange();
+                Log.d(TAG, "updateWallet: notifyDataSetChange idx: " + idx + ", " + walletView.getAlias());
+            }
         }
     }
 
@@ -257,6 +269,7 @@ public class MainWalletFragment extends Fragment {
         initWalletViewPager(content);
     }
 
+
     private void initWalletViewPager(View content) {
         int dp10 = ScreenUnit.dp2px(getContext(), 10);
         walletViewPager.setClipToPadding(false);
@@ -290,13 +303,14 @@ public class MainWalletFragment extends Fragment {
                 }
             }
         });
+
         pagerAdapter = new PagerAdapter() {
             @NonNull
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
                 WalletCardView walletCardView = newWalletCardView(container, position);
+                walletViews.put(position, walletCardView);
                 container.addView(walletCardView);
-
                 WalletViewData data = mShownWalletDataList.get(position);
                 walletCardView.bindData(data);
                 return walletCardView;
@@ -305,6 +319,7 @@ public class MainWalletFragment extends Fragment {
             @Override
             public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 container.removeView(((View) object));
+                walletViews.remove(position);
             }
 
             @Override
@@ -319,7 +334,16 @@ public class MainWalletFragment extends Fragment {
 
             @Override
             public int getItemPosition(@NonNull Object object) {
-                return POSITION_NONE;
+                WalletCardView walletView = (WalletCardView) object;
+                int pos = walletViews.indexOfValue(walletView);
+
+                try {
+                    WalletViewData walletVD = mShownWalletDataList.get(pos);
+                    walletView.bindData(walletVD);
+                    return pos;
+                } catch (Exception e) {
+                    return POSITION_NONE;
+                }
             }
         };
         walletViewPager.setAdapter(pagerAdapter);
@@ -372,11 +396,11 @@ public class MainWalletFragment extends Fragment {
                     @Override
                     public void onPass(byte[] bytePrivateKey) {
                         getContext() // only icx wallet, icx coin wallet entry.
-                                .startActivity(new Intent(getContext(), ICONTransferActivity.class)
-                                        .putExtra("walletInfo", (Serializable) wallet)
-                                        .putExtra("walletEntry", (Serializable) wallet.getWalletEntries().get(0))
+                                .startActivity(new Intent(getContext(), BarcodeCaptureActivity.class)
+                                        .putExtra(PARAM_SCANTYPE, BarcodeCaptureActivity.ScanType.ICX_Address.name())
+                                        .putExtra("wallet", (Serializable) wallet)
+                                        .putExtra("entry", (Serializable) wallet.getWalletEntries().get(0))
                                         .putExtra("privateKey", Hex.toHexString(bytePrivateKey))
-                                        .putExtra("qr code scan start", true)
                                 );
                     }
                 }).show();
@@ -388,7 +412,7 @@ public class MainWalletFragment extends Fragment {
             public void onClick(View v) {
                 Wallet wallet = ICONexApp.wallets.get(walletPosition);
                 prepsMenu.setEnableFloatingButton(false);
-                walletAddressCard.show(wallet);
+                walletAddressCard.show(wallet, wallet.getWalletEntries().get(0));
 
                 Animator aniDisappear = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_disappear);
                 aniDisappear.setTarget(walletViewPager);
@@ -453,7 +477,7 @@ public class MainWalletFragment extends Fragment {
 
     private void updateCollapsable() {
         int position = walletViewPager.getCurrentItem();
-        WalletCardView walletCardView = ((WalletCardView) walletViewPager.getChildAt(position));
+        WalletCardView walletCardView = walletViews.get(position);
         boolean collapsable = walletCardView == null || walletCardView.getIsScrollTop();
         walletViewPager.setIsCollapsable(collapsable);
     }
@@ -485,15 +509,7 @@ public class MainWalletFragment extends Fragment {
             } break;
         }
 
-        if (mShownWalletDataList.size() != walletViewPager.getChildCount()) {
-            pagerAdapter.notifyDataSetChanged();
-        }
-
-        for (int i = 0; walletViewPager.getChildCount() > i; i++) {
-            WalletCardView walletView = (WalletCardView) walletViewPager.getChildAt(i);
-            WalletViewData walletVD = mShownWalletDataList.get(i);
-            walletView.bindData(walletVD);
-        }
+        pagerAdapter.notifyDataSetChanged();
 
         updateShowPRepsMenu(-1);
         walletIndicator.setSize(mShownWalletDataList.size());

@@ -324,12 +324,20 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
 
     private void getStepCost() {
         String url;
-        if (ICONexApp.network == MyConstants.NETWORK_MAIN)
-            url = ServiceConstants.TRUSTED_HOST_MAIN;
-        else if (ICONexApp.network == MyConstants.NETWORK_TEST)
-            url = ServiceConstants.TRUSTED_HOST_TEST;
-        else
-            url = ServiceConstants.DEV_HOST;
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
+            case MyConstants.NETWORK_MAIN:
+                url = ServiceConstants.TRUSTED_HOST_MAIN;
+                break;
+
+            case MyConstants.NETWORK_TEST:
+                url = ServiceConstants.TRUSTED_HOST_TEST;
+                break;
+
+            default:
+            case MyConstants.NETWORK_DEV:
+                url = ServiceConstants.DEV_HOST;
+                break;
+        }
 
         try {
             LoopChainClient client = new LoopChainClient(url);
