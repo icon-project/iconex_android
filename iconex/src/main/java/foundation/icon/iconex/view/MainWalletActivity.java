@@ -53,20 +53,32 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
 
     private boolean onceLoading = true;
 
-    private boolean allLoading = true;
+    private boolean isLoadingAll = false;
+    private boolean setLoadingAll(Boolean loadingAll) {
+        if (loadingAll != null) isLoadingAll = loadingAll;
+        return isLoadingAll;
+    }
     final List<Integer> wallets = Collections.synchronizedList(new ArrayList<>());
     final List<Integer> tokens = Collections.synchronizedList(new ArrayList<>());
     private boolean isUpdateAll = false;
     private boolean isUpdateAssets = false;
 
+    private int dieCounter;
     private Handler handler = new Handler();
     private Runnable flusher = new Runnable() {
         @Override
         public void run() {
             Log.d(TAG, "flusher start");
+            dieCounter = 3;
             do {
                 try { Thread.sleep(1000); } catch (InterruptedException e) { }
                 Log.d(TAG, "flusher wake");
+
+                if (wallets.size() == 0 && tokens.size() == 0 & !isUpdateAssets && !isUpdateAll) {
+                    Log.d(TAG, "run: nothing flush " + dieCounter);
+                    dieCounter--;
+                }
+
                 if (isUpdateAssets) {
                     isUpdateAssets = false;
                     handler.post(new Runnable() {
@@ -107,14 +119,14 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                         }
                     });
                 }
-            } while (allLoading);
+            } while (setLoadingAll(null) & dieCounter > 0);
             Log.d(TAG, "flusher died");
         }
     };
 
     void updateAssets() {
         Log.d(TAG, "updateAssets() called");
-        if (allLoading)
+        if (setLoadingAll(null))
             isUpdateAssets = true;
         else {
             handler.post(new Runnable() {
@@ -127,8 +139,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     }
 
     void updateAll() {
-        Log.d(TAG, "updateAll() called: allLoding: " + allLoading);
-        if (allLoading)
+        Log.d(TAG, "updateAll() called: allLoding: " + setLoadingAll(null));
+        if (setLoadingAll(null))
             isUpdateAll = true;
         else {
             handler.post(new Runnable() {
@@ -149,7 +161,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         if (!wallets.contains(intWallet)) wallets.add(intWallet);
         if (!tokens.contains(intToken)) tokens.add(intToken);
 
-        if (!allLoading) {
+        if (!setLoadingAll(null)) {
             List<Integer> _wallets = new ArrayList<>(wallets);
             wallets.clear();
             List<Integer> _tokens = new ArrayList<>(tokens);
@@ -167,7 +179,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         walletVDs.clear();
         tokenListVDs.clear();
         totalAssetsVD = new TotalAssetsViewData();
-        allLoading = true;
+        setLoadingAll(true);
         balanceLoading = true;
         exchangeLoading = true;
 
@@ -394,7 +406,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     @Override
     public void onLoadCompleteAll() {
         combineTopToken();
-        allLoading = false;
+        setLoadingAll(false);
 
         handler.post(new Runnable() {
             @Override
@@ -511,8 +523,13 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
 
     @Override
     public void refreshViewData() {
+        if (setLoadingAll(null)) {
+            MainWalletFragment fragment = findFragment();
+            if (fragment != null) fragment.notifyCompleteDataLoad();
+            return;
+        }
         loadViewData();
-        allLoading = true;
+        setLoadingAll(true);
         serviceHelper.setListener(MainWalletActivity.this);
         serviceHelper.requestAllData();
         new Thread(flusher).start();
