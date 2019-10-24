@@ -10,6 +10,8 @@ public class TotalAssetsViewData {
     public boolean loadingTotalAssets = true;
     public boolean loadingVotedpower = true;
 
+    public boolean existVotingPower = false;
+
     private String txtTotalAsset = MyConstants.NO_BALANCE;
     private String txtVotedPower = MyConstants.NO_BALANCE;
     private String txtExchangeUnit = "USD";

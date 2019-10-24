@@ -22,9 +22,15 @@ public class TotalAssetInfoView extends FrameLayout {
 
     private TotalAssetsLayout mTotalAsset;
     private TotalAssetsLayout mVotedPower;
+    private PagerAdapter adapter;
 
-    private Runnable totalAssetInfoLooper = null;
     private int LOOPING_TIME_INTERVAL = 5000;
+    private Runnable totalAssetInfoLooper = new Runnable() {
+        @Override
+        public void run() {
+            setIndex(1 - getIndex());
+        }
+    };
 
     public TotalAssetInfoView(@NonNull Context context) {
         super(context);
@@ -39,6 +45,21 @@ public class TotalAssetInfoView extends FrameLayout {
     public TotalAssetInfoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
+    }
+
+    public boolean isVotedPowerShow = false;
+    public void setVotedPowerVisible(boolean isShow) {
+        isVotedPowerShow = isShow;
+        adapter.notifyDataSetChanged();
+        if (isShow) {
+            mIndicator.setVisibility(VISIBLE);
+            postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
+        } else {
+            removeCallbacks(totalAssetInfoLooper);
+            mViewPager.setCurrentItem(0);
+            mIndicator.setIndex(0);
+            mIndicator.setVisibility(INVISIBLE);
+        }
     }
 
     private void initView () {
@@ -59,7 +80,7 @@ public class TotalAssetInfoView extends FrameLayout {
         mVotedPower.btnToggle.setVisibility(GONE);
 
         // set view page Adapter
-        mViewPager.setAdapter(new PagerAdapter() {
+        adapter = new PagerAdapter() {
             @NonNull
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -87,15 +108,9 @@ public class TotalAssetInfoView extends FrameLayout {
             }
 
             @Override
-            public int getCount() { return 2; }
-        });
-        totalAssetInfoLooper = new Runnable() {
-            @Override
-            public void run() {
-                setIndex(1 - getIndex());
-            }
+            public int getCount() { return isVotedPowerShow ? 2 : 1; }
         };
-        postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
+        mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -104,11 +119,10 @@ public class TotalAssetInfoView extends FrameLayout {
                 postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
             }
         });
+        setVotedPowerVisible(false);
     }
 
     public void setIndex(int idx) {
-        if (0 > idx  || mViewPager.getChildCount() <= idx )
-            throw new IllegalArgumentException("not allow idx=" + idx + " idx range: 0 || 1");
         mViewPager.setCurrentItem(idx, true);
     }
 
@@ -117,6 +131,7 @@ public class TotalAssetInfoView extends FrameLayout {
     }
 
     public void bind(TotalAssetsViewData data) {
+        setVotedPowerVisible(data.existVotingPower);
         mTotalAsset.txtUint.setText(data.getTxtExchangeUnit());
         mTotalAsset.txtAsset.setText(data.getTxtTotalAsset());
         mVotedPower.txtAsset.setText(data.getTxtVotedPower());
@@ -135,8 +150,11 @@ public class TotalAssetInfoView extends FrameLayout {
                 if (listener != null) {
                     listener.onClick(view);
                 }
-                removeCallbacks(totalAssetInfoLooper);
-                postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
+
+                if (isVotedPowerShow) {
+                    removeCallbacks(totalAssetInfoLooper);
+                    postDelayed(totalAssetInfoLooper, LOOPING_TIME_INTERVAL);
+                }
             }
         });
     }

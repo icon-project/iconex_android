@@ -393,6 +393,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         } else {
             totalAssetsVD.setVotedPower(new BigDecimal("0.0"));
         }
+        totalAssetsVD.existVotingPower = totalStaked.compareTo(BigInteger.ZERO) != 0;
         totalAssetsVD.loadingVotedpower = false;
         if (!patchingData) updateAssets();
     }
