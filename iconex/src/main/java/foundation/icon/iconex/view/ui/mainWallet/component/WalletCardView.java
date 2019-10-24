@@ -60,6 +60,10 @@ public class WalletCardView extends FrameLayout {
         initView();
     }
 
+    public String getAlias() {
+        return txtAlias.getText().toString();
+    }
+
     private void initView() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_wallet_card, this, false);
 

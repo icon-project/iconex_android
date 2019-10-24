@@ -87,8 +87,10 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                         @Override
                         public void run() {
                             MainWalletFragment fragment = findFragment();
-                            if(fragment != null)fragment.updateAllWallet();
-                            Log.d(TAG, "run() called in update all wallet");
+                            if(fragment != null) {
+                                fragment.updateAllWallet();
+                            }
+                            Log.d(TAG, "run() called in update all wallet: " + fragment);
                         }
                     });
                 } else {
@@ -101,7 +103,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                         public void run() {
                             MainWalletFragment fragment = findFragment();
                             if(fragment != null)fragment.updateWallet(_wallets, _tokens);
-                            Log.d(TAG, "run() called with: wallets " + _wallets + ", _tokens" + _tokens);
+                            Log.d(TAG, "run() called with: wallets " + _wallets + ", _tokens" + _tokens + "fragment: " + fragment);
                         }
                     });
                 }
@@ -125,13 +127,14 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     }
 
     void updateAll() {
-        Log.d(TAG, "updateAll() called");
+        Log.d(TAG, "updateAll() called: allLoding: " + allLoading);
         if (allLoading)
             isUpdateAll = true;
         else {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d(TAG, "run() called in update");
                     findFragment().updateAllWallet();
                 }
             });

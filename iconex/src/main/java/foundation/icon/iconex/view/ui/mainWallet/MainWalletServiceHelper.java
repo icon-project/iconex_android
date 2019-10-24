@@ -40,6 +40,7 @@ import loopchain.icon.wallet.core.response.LCResponse;
 import loopchain.icon.wallet.core.response.TRResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainWalletServiceHelper {
