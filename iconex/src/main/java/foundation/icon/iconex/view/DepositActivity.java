@@ -10,17 +10,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.wallet.Wallet;
+import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.WalletAddressQrcodeView;
 
 public class DepositActivity extends AppCompatActivity {
 
     public static final String PARAM_WALLET = "wallet";
+    public static final String PARAM_ENTRY = "entry";
 
     private Button btnClose;
     private TextView txtTitle;
     private WalletAddressQrcodeView walletAddressQrcodeView;
 
     private Wallet wallet;
+    private WalletEntry entry;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class DepositActivity extends AppCompatActivity {
         walletAddressQrcodeView = findViewById(R.id.wallet_address_qrcode_view);
 
         wallet = ((Wallet) getIntent().getSerializableExtra(PARAM_WALLET));
+        entry = ((WalletEntry) getIntent().getSerializableExtra(PARAM_ENTRY));
 
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +45,6 @@ public class DepositActivity extends AppCompatActivity {
         });
 
         txtTitle.setText(wallet.getAlias());
-        walletAddressQrcodeView.bind(getString(R.string.walletAddress), wallet);
+        walletAddressQrcodeView.bind(getString(R.string.walletAddress), wallet, entry);
     }
 }

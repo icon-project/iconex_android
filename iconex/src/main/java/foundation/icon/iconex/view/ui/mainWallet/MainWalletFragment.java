@@ -412,7 +412,7 @@ public class MainWalletFragment extends Fragment {
             public void onClick(View v) {
                 Wallet wallet = ICONexApp.wallets.get(walletPosition);
                 prepsMenu.setEnableFloatingButton(false);
-                walletAddressCard.show(wallet);
+                walletAddressCard.show(wallet, wallet.getWalletEntries().get(0));
 
                 Animator aniDisappear = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_disappear);
                 aniDisappear.setTarget(walletViewPager);
