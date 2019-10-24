@@ -247,6 +247,10 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                 && editDec.getText().toString().trim().isEmpty();
     }
 
+    public boolean isEdited() {
+        return !mToken.getUserName().equals(editName.getText());
+    }
+
     // =================================== private method
     @Override
     public void onClick(View v) {

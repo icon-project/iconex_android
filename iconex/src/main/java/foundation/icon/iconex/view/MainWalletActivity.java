@@ -63,21 +63,15 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     private boolean isUpdateAll = false;
     private boolean isUpdateAssets = false;
 
-    private int dieCounter;
     private Handler handler = new Handler();
     private Runnable flusher = new Runnable() {
         @Override
         public void run() {
             Log.d(TAG, "flusher start");
-            dieCounter = 3;
+
             do {
                 try { Thread.sleep(1000); } catch (InterruptedException e) { }
                 Log.d(TAG, "flusher wake");
-
-                if (wallets.size() == 0 && tokens.size() == 0 & !isUpdateAssets && !isUpdateAll) {
-                    Log.d(TAG, "run: nothing flush " + dieCounter);
-                    dieCounter--;
-                }
 
                 if (isUpdateAssets) {
                     isUpdateAssets = false;
@@ -119,7 +113,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
                         }
                     });
                 }
-            } while (setLoadingAll(null) & dieCounter > 0);
+            } while (setLoadingAll(null));
             Log.d(TAG, "flusher died");
         }
     };

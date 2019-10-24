@@ -9,9 +9,11 @@ import android.view.View;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.widgets.CustomActionBar;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
 public class TokenManageActivity extends AppCompatActivity implements View.OnClickListener, TokenListFragment.OnTokenListClickListener,
@@ -64,68 +66,43 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         super.onResume();
     }
 
+    public void BackToMangaeToken() {
+        fragmentManager.popBackStackImmediate();
+        appbar.setTitle(getString(R.string.tokenManageTitle));
+
+        appbar.setTextButtonSelected(false);
+        appbar.setTextButton(getString(R.string.edit));
+        appbar.setIconEnd(CustomActionBar.IconEnd.none);
+
+        listFragment.tokenNotifyDataChanged();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_close: // not use
             case R.id.btn_start_icon:
                 if (fragmentManager.getBackStackEntryCount() > 0) {
-                    if (appbar.isTextButtonSelected()) {
-                        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-                        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                            @Override
-                            public void onOk() {
-                                fragmentManager.popBackStackImmediate();
-                                appbar.setTitle(getString(R.string.tokenManageTitle));
+                    MessageDialog messageDialog = new MessageDialog(this);
+                    messageDialog.setSingleButton(false);
+                    messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                        @Override
+                        public Boolean invoke(View view) {
+                            BackToMangaeToken();
+                            return true;
+                        }
+                    });
 
-                                appbar.setTextButtonSelected(false);
-                                appbar.setTextButton(getString(R.string.edit));
-                                appbar.setIconEnd(CustomActionBar.IconEnd.none);
-
-                                listFragment.tokenNotifyDataChanged();
-                            }
-
-                            @Override
-                            public void onCancel() {
-
-                            }
-                        });
-                        dialog.setMessage(getString(R.string.msgTokenCancelMod));
-                        dialog.show();
+                    if (modFragment != null && modFragment.isEdited()) {
+                        messageDialog.setTitleText(getString(R.string.msgTokenCancelMod));
+                        messageDialog.show();
                     } else if (addFragment != null && !addFragment.isEmpty()) {
-                        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-                        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                            @Override
-                            public void onOk() {
-                                fragmentManager.popBackStackImmediate();
-                                appbar.setTitle(getString(R.string.tokenManageTitle));
-
-                                appbar.setTextButtonSelected(false);
-                                appbar.setTextButton(getString(R.string.edit));
-                                appbar.setIconEnd(CustomActionBar.IconEnd.none);
-
-                                listFragment.tokenNotifyDataChanged();
-                            }
-
-                            @Override
-                            public void onCancel() {
-
-                            }
-                        });
-                        dialog.setMessage(getString(R.string.msgTokenCancelAdd));
-                        dialog.show();
+                        messageDialog.setTitleText(getString(R.string.msgTokenCancelAdd));
+                        messageDialog.show();
                     } else {
-                        fragmentManager.popBackStackImmediate();
-                        appbar.setTitle(getString(R.string.tokenManageTitle));
-
-                        appbar.setTextButtonSelected(false);
-                        appbar.setTextButton(getString(R.string.edit));
-                        appbar.setIconEnd(CustomActionBar.IconEnd.none);
-
-                        listFragment.tokenNotifyDataChanged();
+                        BackToMangaeToken();
                     }
-                } else
-                    finish();
+                } else finish();
                 break;
 
             case R.id.txt_mod: // not use
