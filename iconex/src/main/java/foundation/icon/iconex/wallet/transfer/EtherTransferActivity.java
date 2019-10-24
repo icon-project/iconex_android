@@ -590,12 +590,29 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             @Override
             public void onClick(View v) {
 
-                BigInteger intBalance = balance;
-                BigInteger intAmount = ConvertUtil.valueToBigInteger(editSend.getText(), mWalletEntry.getDefaultDec());
-                BigInteger intFee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
-                BigInteger remainBalance = intBalance.subtract(intAmount);
+                BigInteger sendAmount = ConvertUtil.valueToBigInteger(editSend.getText(), mWalletEntry.getDefaultDec());
+                BigInteger fee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
+                boolean feeError = false;
 
-                if (remainBalance.compareTo(intFee) == -1) {
+                if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                    BigInteger canICX = balance.subtract(fee);
+                    if (sendAmount.equals(BigInteger.ZERO)) {
+                        feeError = true;
+                    } else if (canICX.compareTo(sendAmount) < 0) {
+                        feeError = true;
+                    }
+                } else {
+                    WalletEntry own = mWallet.getWalletEntries().get(0);
+                    BigInteger ownBalance = new BigInteger(own.getBalance());
+
+                    if (sendAmount.equals(BigInteger.ZERO)) {
+                        feeError = true;
+                    } else if (ownBalance.compareTo(fee) < 0) {
+                        feeError = true;
+                    }
+                }
+
+                if (feeError) {
                     MessageDialog messageDialog = new MessageDialog(EtherTransferActivity.this);
                     messageDialog.setTitleText(getString(R.string.errETHFee));
                     messageDialog.show();

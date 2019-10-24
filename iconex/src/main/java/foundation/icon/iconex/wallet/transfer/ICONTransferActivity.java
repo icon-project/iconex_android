@@ -997,16 +997,29 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void onClickSend() {
-        BigInteger intBalance = balance;
-        BigInteger intAmount = ConvertUtil.valueToBigInteger(editSend.getText(), 18);
-        BigInteger intFee = ConvertUtil.valueToBigInteger(fee, 18);
-        BigInteger remainBalance = intBalance.subtract(intAmount);
 
-        if (remainBalance.compareTo(intFee) == -1) {
-            MessageDialog messageDialog = new MessageDialog(this);
-            messageDialog.setTitleText(getString(R.string.errICXFee));
-            messageDialog.show();
-            return;
+        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+            BigInteger sendAmount = ConvertUtil.valueToBigInteger(editSend.getText(), 18);
+            BigInteger canICX = balance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+
+            if (canICX.compareTo(sendAmount) < 0) {
+                MessageDialog messageDialog = new MessageDialog(this);
+                messageDialog.setTitleText(getString(R.string.errICXFee));
+                messageDialog.show();
+                return;
+            }
+        } else {
+            WalletEntry own = wallet.getWalletEntries().get(0);
+            BigInteger ownBalance = new BigInteger(own.getBalance());
+            BigInteger canICX = ownBalance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+
+            if (ownBalance.compareTo(canICX) < 0) {
+                MessageDialog messageDialog = new MessageDialog(this);
+                messageDialog.setTitleText(getString(R.string.errICXFee));
+                messageDialog.show();
+
+                return;
+            }
         }
 
         final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), editSend.getText(),
