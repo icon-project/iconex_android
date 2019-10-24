@@ -15,10 +15,15 @@ import foundation.icon.icx.transport.jsonrpc.RpcObject;
 public class PRep implements Serializable {
     private static final String TAG = PRep.class.getSimpleName();
 
+    private int rank;
     private String name, country, city, address, irep, irepUpdated, irepGen;
     private Grade grade;
     private BigInteger stake, totalDelegated, delegated, totalBlocks, validatedBlocks;
     private String penalty, email, website, details, p2pEndPoint;
+
+    public int getRank() {
+        return rank;
+    }
 
     public String getName() {
         return name;
@@ -97,6 +102,7 @@ public class PRep implements Serializable {
     }
 
     PRep(Builder b) {
+        rank = b.rank;
         name = b.name;
         country = b.country;
         city = b.city;
@@ -119,13 +125,18 @@ public class PRep implements Serializable {
     }
 
     public static class Builder {
-
+        private int rank;
         private String name, country, city, address, irep, irepUpdated, irepGen;
         private Grade grade;
         private BigInteger stake, totalDelegated, delegated, totalBlocks, validatedBlocks;
         private String penalty, email, website, details, p2pEndPoint;
 
         public Builder() {
+        }
+
+        public Builder rank(int rank) {
+            this.rank = rank;
+            return this;
         }
 
         public Builder name(String name) {
@@ -278,6 +289,7 @@ public class PRep implements Serializable {
 
     public Builder newBuilder() {
         return new Builder()
+                .rank(rank)
                 .name(name)
                 .country(country)
                 .city(city)
@@ -303,9 +315,9 @@ public class PRep implements Serializable {
     }
 
     public enum Grade {
-        PRep(0, "P-Rep"),
+        PRep(0, "Main P-Rep"),
         SubPRep(1, "Sub P-Rep"),
-        Candidate(2, "Candidate");
+        Candidate(2, "P-Rep");
 
         private int grade;
         private String label;

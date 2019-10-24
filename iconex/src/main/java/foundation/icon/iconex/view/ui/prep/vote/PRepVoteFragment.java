@@ -138,17 +138,27 @@ public class PRepVoteFragment extends Fragment {
         resetVotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessageDialog messageDialog = new MessageDialog(getContext());
-                messageDialog.setSingleButton(false);
-                messageDialog.setTitleText(getString(R.string.voteReset));
-                messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
-                    @Override
-                    public Boolean invoke(View view) {
-                        mListener.onReset(delegations);
-                        return true;
-                    }
-                });
-                messageDialog.show();
+                if (delegations.size() > 0) {
+                    MessageDialog messageDialog = new MessageDialog(getContext());
+                    messageDialog.setSingleButton(false);
+                    messageDialog.setTitleText(getString(R.string.voteReset));
+                    messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                        @Override
+                        public Boolean invoke(View view) {
+                            for (int i = 0; i < delegations.size(); i++) {
+                                Delegation reset = delegations.get(i).newBuilder().value(BigInteger.ZERO).build();
+                                reset.isEdited(true);
+
+                                delegations.set(i, reset);
+                            }
+
+                            vm.setDelegations(delegations);
+                            mListener.onVoted(delegations);
+                            return true;
+                        }
+                    });
+                    messageDialog.show();
+                }
             }
         });
         list = v.findViewById(R.id.my_votes);

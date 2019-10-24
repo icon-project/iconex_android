@@ -105,9 +105,8 @@ public class UnstakeFragment extends Fragment {
         Log.i(TAG, "Estimated Time=" + estimatedSec);
         long hour = estimatedSec / 3600;
         long min = (estimatedSec % 3600) / 60;
-        long sec = estimatedSec % 60;
-        txtEstimatedTime.setText(String.format(Locale.getDefault(), "%02d : %02d : %02d",
-                TimeUnit.HOURS.toHours(hour), TimeUnit.MINUTES.toMinutes(min), TimeUnit.SECONDS.toSeconds(sec)));
+        txtEstimatedTime.setText(String.format(Locale.getDefault(), getString(R.string.unstake_required_time),
+                TimeUnit.HOURS.toHours(hour), TimeUnit.MINUTES.toMinutes(min)));
     }
 
     private OnUnstakeFragmentListener mListener;

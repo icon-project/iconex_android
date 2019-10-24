@@ -104,10 +104,7 @@ public class PRepService {
                 .method("estimateUnstakeLockPeriod")
                 .build();
 
-        BigInteger unstakeLockPeriod = iconService.call(call).execute().asObject().getItem("unstakeLockPeriod").asInteger();
-        BigInteger currentBlockHeight = iconService.getLastBlock().execute().getHeight();
-
-        return unstakeLockPeriod.subtract(currentBlockHeight);
+        return iconService.call(call).execute().asObject().getItem("unstakeLockPeriod").asInteger();
     }
 
     public RpcItem getDelegation(String address) throws IOException {
@@ -127,13 +124,11 @@ public class PRepService {
     public String setDelegation(KeyWallet keyWallet, List<Delegation> delegations, BigInteger stepLimit) throws IOException {
         RpcArray.Builder arrayBuilder = new RpcArray.Builder();
         for (Delegation d : delegations) {
-            if (d.isEdited()) {
-                RpcObject object = new RpcObject.Builder()
-                        .put("address", new RpcValue(d.getPrep().getAddress()))
-                        .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(d.getValue(), 18), 18)))
-                        .build();
-                arrayBuilder.add(object);
-            }
+            RpcObject object = new RpcObject.Builder()
+                    .put("address", new RpcValue(d.getPrep().getAddress()))
+                    .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(d.getValue(), 18), 18)))
+                    .build();
+            arrayBuilder.add(object);
         }
 
         RpcObject params = new RpcObject.Builder()

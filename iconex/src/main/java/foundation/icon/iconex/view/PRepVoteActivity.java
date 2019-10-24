@@ -323,9 +323,11 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                                 ConvertUtil.hexStringToBigInt(
                                         result.asObject().getItem("totalDelegated").asString(), 0);
                         List<PRep> list = new ArrayList<>();
-                        for (RpcItem i : result.asObject().getItem("preps").asArray().asList()) {
-                            RpcObject object = i.asObject();
+                        List<RpcItem> prepList = result.asObject().getItem("preps").asArray().asList();
+                        for (int i = 0; i < prepList.size(); i++) {
+                            RpcObject object = prepList.get(i).asObject();
                             PRep prep = PRep.valueOf(object);
+                            prep = prep.newBuilder().rank(i+1).build();
                             prep.setTotalDelegated(totalDelegated);
                             list.add(prep);
                         }
@@ -456,13 +458,11 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private void estimateLimit() {
         RpcArray.Builder arrayBuilder = new RpcArray.Builder();
         for (Delegation d : delegations) {
-            if (d.isEdited()) {
-                RpcObject object = new RpcObject.Builder()
-                        .put("address", new RpcValue(d.getPrep().getAddress()))
-                        .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(d.getValue(), 18), 18)))
-                        .build();
-                arrayBuilder.add(object);
-            }
+            RpcObject object = new RpcObject.Builder()
+                    .put("address", new RpcValue(d.getPrep().getAddress()))
+                    .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(d.getValue(), 18), 18)))
+                    .build();
+            arrayBuilder.add(object);
         }
 
         RpcObject params = new RpcObject.Builder()
@@ -497,6 +497,8 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                     public void onNext(BigInteger result) {
                         stepLimit = result;
                         fee = stepLimit.multiply(stepPrice);
+
+                        vm.setStepLimit(stepLimit);
                     }
 
                     @Override

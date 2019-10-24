@@ -110,7 +110,7 @@
     <string name="enterPrivateKey">Enter your private key</string>
 
     <string name="titleLoadBundle">Load Wallet Bundle</string>
-    <string name="loadBundleHeader">If you load a wallet bundle, the wallets that are already registered in your wallet will not be loaded.\nDo you want to proceed?</string>
+    <string name="loadBundleHeader">If you load a wallet bundle, the wallets that are already registered in your wallet will not be loaded.</string>
     <string name="loadBundleDetailed">The password of each wallet is the same as the wallet bundle password.</string>
     <string name="loadBundleTotal">out of %d are already registered in your ICONex</string>
     <string name="loadBundleRegistered">%d wallets</string>
@@ -513,6 +513,7 @@
     <string name="request_unstake">Unstake 요청 (ICX)</string>
     <string name="done_block">완료 BLOCK</string>
     <string name="estimate_done_time">완료 예상 시간</string>
+    <string name="unstake_required_time">%02d시간 %02d분 남음</string>
 
     <string name="adjust_stake">요청 수량 수정</string>
 
