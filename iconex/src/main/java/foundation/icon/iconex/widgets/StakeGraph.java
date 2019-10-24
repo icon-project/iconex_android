@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Locale;
 
@@ -71,12 +70,20 @@ public class StakeGraph extends ConstraintLayout {
 
         try {
             stakePer = stake.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).setScale(1, RoundingMode.HALF_UP).floatValue();
+            if (stakePer < 0)
+                stakePer = 0.0f;
+            else if (stakePer > 100)
+                stakePer = 100.0f;
         } catch (Exception e) {
             stakePer = 0.0f;
         }
 
         try {
             delegationPer = delegation.divide(stake, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).setScale(1, RoundingMode.HALF_UP).floatValue();
+            if (delegationPer < 0)
+                delegationPer = 0.0f;
+            else if (delegationPer > 100)
+                delegationPer = 100.0f;
         } catch (Exception e) {
             delegationPer = 0.0f;
         }
