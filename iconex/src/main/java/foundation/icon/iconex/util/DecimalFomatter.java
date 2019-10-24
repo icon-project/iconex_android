@@ -13,7 +13,7 @@ public class DecimalFomatter {
             string = String.format("%e", decimal);
         } else {
             String repeated0 = new String(new char[scale]).replace("\0", "0");
-            DecimalFormat decimalFormat = new DecimalFormat("#,##0." + repeated0);
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0"+ (scale == 0 ? "" : ".") + repeated0);
             string = decimalFormat.format(decimal.setScale(scale, BigDecimal.ROUND_FLOOR));
         }
         return string;

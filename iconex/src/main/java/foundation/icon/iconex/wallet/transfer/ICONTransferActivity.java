@@ -670,19 +670,10 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             return false;
         }
 
-        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-            if (!(address.startsWith("hx") || address.startsWith("cx"))) {
-                editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
-                return false;
-            }
-        }
 
-        if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
-            if (!address.startsWith("hx")) {
-                editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
-                return false;
-            }
-
+        if (!(address.startsWith("hx") || address.startsWith("cx"))) {
+            editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
+            return false;
         }
 
         address = address.substring(2);
