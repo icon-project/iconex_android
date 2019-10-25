@@ -597,6 +597,7 @@
     <string name="icxBalance">ICX Balance</string>
     <string name="liquidICX">Liquid ICX</string>
     <string name="stakeICX">Staked ICX (Voting Power)</string>
+    <string name="deposit_list">입금 내역</string>
 
     <!-- New - Transfer -->
     <string name="availableBalance">사용 가능 잔액</string>

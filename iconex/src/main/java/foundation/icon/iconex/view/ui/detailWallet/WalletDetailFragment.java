@@ -231,6 +231,8 @@ public class WalletDetailFragment extends Fragment {
             }
         });
 
+        boolean isShowEtherScan = false;
+        noDataView.setTextNoTransaction(!isShowEtherScan ? getString(R.string.noTransaction) : getString(R.string.deposit_list), isShowEtherScan);
         View.OnClickListener onClickViewOption = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -247,6 +249,9 @@ public class WalletDetailFragment extends Fragment {
                         }
                         fixedListHeaderView.setTextViewOption(s);
                         listHeaderView.setTextViewOption(s);
+
+                        boolean isShowEtherScan = !"ICX".equals(viewModel.wallet.getValue().getCoinType()) && selectType == SelectType.Deposit;
+                        noDataView.setTextNoTransaction(!isShowEtherScan ? getString(R.string.noTransaction) : getString(R.string.deposit_list), isShowEtherScan);
                     }
                 }).show();
             }
@@ -315,8 +320,6 @@ public class WalletDetailFragment extends Fragment {
         infoView.setTextSymbol(viewModel.walletEntry.getValue().getName());
         infoView.setBtnSymbolVisible(viewModel.wallet.getValue().getWalletEntries().size() > 1);
 
-        boolean isICX = "ICX".equals(viewModel.wallet.getValue().getCoinType());
-        noDataView.setTextNoTransaction(isICX ? getString(R.string.noTransaction) : getString(R.string.txRecords), !isICX);
         viewModel.selectType.setValue(SelectType.All);
 
         viewModel.lstUnit.observe(this, new Observer<List<String>>() {

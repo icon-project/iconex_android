@@ -30,37 +30,50 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scroll"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scroll"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:background="@android:color/white">
 
-                <foundation.icon.iconex.view.ui.detailWallet.component.WalletDetailInfoView
-                    android:id="@+id/wallet_detail_info"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <foundation.icon.iconex.view.ui.detailWallet.component.TransactionListViewHeader
-                    android:id="@+id/transaction_list_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    <foundation.icon.iconex.view.ui.detailWallet.component.WalletDetailInfoView
+                        android:id="@+id/wallet_detail_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/lstTransaction"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="30"
-                    tools:listitem="@layout/item_transaction"/>
+                    <foundation.icon.iconex.view.ui.detailWallet.component.TransactionListViewHeader
+                        android:id="@+id/transaction_list_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/lstTransaction"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="30"
+                        tools:listitem="@layout/item_transaction"/>
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <foundation.icon.iconex.view.ui.detailWallet.component.NoDataView
+                android:id="@+id/transaction_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout>
 
     <foundation.icon.iconex.view.ui.detailWallet.component.TransactionListViewHeader
@@ -69,14 +82,6 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintTop_toBottomOf="@id/actionbar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-    <foundation.icon.iconex.view.ui.detailWallet.component.NoDataView
-        android:id="@+id/transaction_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
