@@ -462,19 +462,12 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
             resultAddr = validateAddress(address);
         }
 
-        if (editName.getText().toString().isEmpty()) {
-            editName.setError(true, getString(R.string.errTokenName));
-            resultName = false;
-        } else {
-            editName.setError(false, null);
-            resultName = true;
-        }
+        resultName = !editName.getText().isEmpty();
 
         if (mMode == MyConstants.MODE_TOKEN.ADD) {
-            if (resultAddr && resultName)
-                btnAdd.setEnabled(true);
-            else
-                btnAdd.setEnabled(false);
+            btnAdd.setEnabled(resultAddr && resultName);
+        } else {
+            btnComplete.setEnabled(resultName);
         }
 
         checkEnteredInfo();
@@ -483,9 +476,9 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
     }
 
     private void checkEnteredInfo() {
-        if (!editName.getText().toString().isEmpty()
-                && !editSym.getText().toString().isEmpty()
-                && !editDec.getText().toString().isEmpty()) {
+        if (!editName.getText().isEmpty()
+                && !editSym.getText().isEmpty()
+                && !editDec.getText().isEmpty()) {
 
             if (layoutLoading.getVisibility() == View.VISIBLE)
                 layoutLoading.setVisibility(View.GONE);
