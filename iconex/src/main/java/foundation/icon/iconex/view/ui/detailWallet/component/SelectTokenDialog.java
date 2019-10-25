@@ -87,13 +87,18 @@ public class SelectTokenDialog extends BottomSheetDialog {
                 try {
                     String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
                     BigDecimal balance = new BigDecimal(strDecimal);
+                    walletViewHolder.txtAmount.setText(balance.setScale(4, BigDecimal.ROUND_FLOOR) + "");
 
                     String exchangeKey = entry.getSymbol().toLowerCase() + "usd";
                     BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
-                    BigDecimal exchanged = balance.multiply(exchanger);
 
-                    walletViewHolder.txtAmount.setText(balance.setScale(4, BigDecimal.ROUND_FLOOR) + "");
-                    walletViewHolder.txtExchange.setText("$ " + exchanged.setScale(2, BigDecimal.ROUND_FLOOR));
+                    if (exchanger.compareTo(BigDecimal.ZERO) == 0) {
+                        walletViewHolder.txtExchange.setText("$ -");
+                    } else {
+                        BigDecimal exchanged = balance.multiply(exchanger);
+                        walletViewHolder.txtExchange.setText("$ " + exchanged.setScale(2, BigDecimal.ROUND_FLOOR));
+                    }
+
                 } catch (Exception e) {
                     walletViewHolder.txtAmount.setText("-");
                     walletViewHolder.txtExchange.setText("$ -");
