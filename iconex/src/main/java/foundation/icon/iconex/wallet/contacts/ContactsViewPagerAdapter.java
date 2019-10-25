@@ -21,15 +21,17 @@ public class ContactsViewPagerAdapter extends FragmentStatePagerAdapter {
     private String tabTitles[];
     private Context mContext;
     private String mCoinType;
+    private String mTokenType;
     private String mAddress;
     private boolean mEditable;
 
-    public ContactsViewPagerAdapter(Context context, FragmentManager fm, String address, String coinType, boolean editable) {
+    public ContactsViewPagerAdapter(Context context, FragmentManager fm, String address, String coinType, String tokenType, boolean editable) {
         super(fm);
 
         mContext = context;
         tabTitles = new String[]{mContext.getString(R.string.contacts), mContext.getString(R.string.contactsWallet)};
         mCoinType = coinType;
+        mTokenType = tokenType;
         mAddress = address;
         mEditable = false;
     }
@@ -40,7 +42,7 @@ public class ContactsViewPagerAdapter extends FragmentStatePagerAdapter {
             MyContactsFragment myContactsFragment = MyContactsFragment.newInstance(mCoinType, mEditable);
             return myContactsFragment;
         } else {
-            ContactsFragment wallet = ContactsFragment.newInstance(mCoinType, mAddress, BasicContactsAdapter.TYPE_WALLET);
+            ContactsFragment wallet = ContactsFragment.newInstance(mCoinType, mTokenType, mAddress);
             return wallet;
         }
     }

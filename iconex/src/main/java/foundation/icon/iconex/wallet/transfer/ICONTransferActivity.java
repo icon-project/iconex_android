@@ -442,6 +442,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             public void onClick(View v) {
                 startActivityForResult(new Intent(ICONTransferActivity.this, ContactsActivity.class)
                         .putExtra("coinType", wallet.getCoinType())
+                        .putExtra("tokenType", entry.getSymbol())
                         .putExtra("address", wallet.getAddress()), RC_CONTACTS);
             }
         });

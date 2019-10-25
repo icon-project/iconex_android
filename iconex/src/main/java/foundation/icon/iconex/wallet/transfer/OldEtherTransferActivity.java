@@ -723,6 +723,7 @@ public class OldEtherTransferActivity extends AppCompatActivity implements View.
             case R.id.btn_contacts:
                 startActivityForResult(new Intent(this, ContactsActivity.class)
                         .putExtra("coinType", mWallet.getCoinType())
+                        .putExtra("tokenType", mWalletEntry.getSymbol())
                         .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
                 break;
 
