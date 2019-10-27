@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import org.spongycastle.util.encoders.Hex;
@@ -27,15 +26,14 @@ import org.spongycastle.util.encoders.Hex;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
-import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.WalletDetailActivity;
+import foundation.icon.iconex.view.WalletPageAdapter;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpandableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.FloatingRRepsMenu;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
@@ -49,7 +47,6 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
 import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
@@ -97,8 +94,7 @@ public class MainWalletFragment extends Fragment {
     private List<WalletViewData> walletVDs;
     private List<WalletViewData> tokenListVDs;
 
-    private PagerAdapter pagerAdapter = null;
-    private List<WalletViewData> mShownWalletDataList = new ArrayList<>();
+    private WalletPageAdapter adapter = null;
 
     public void updateAssetsVD(TotalAssetsViewData totalAssetsVD) {
         totalAssetInfoView.bind(totalAssetsVD);
@@ -107,51 +103,17 @@ public class MainWalletFragment extends Fragment {
     public void initWalletVDs(List<WalletViewData> walletVDs, List<WalletViewData> tokenListVDs) {
         this.walletVDs = walletVDs;
         this.tokenListVDs = tokenListVDs;
-        try {
-            walletViewPager.getCurrentItem();
-        } catch (Exception e) {
-            walletViewPager.setCurrentItem(0);
-        }
         updateWalletView();
     }
 
     public void updateWallet(List<Integer> wallets, List<Integer> tokens) {
-        Log.d(TAG, "updateWallet() called with: wallets = [" + wallets + "], tokens = [" + tokens + "]");
         List<Integer> update = new ArrayList<>();
-        int pos = walletViewPager.getCurrentItem();
-        if (pos -1 >= 0) update.add(new Integer(pos -1));
-        update.add(new Integer(pos));
-
-        boolean isW = viewMode == ViewMode.walletView;
-        int size = isW ? walletVDs.size() : tokenListVDs.size();
-        if (pos + 1 < size) update.add(new Integer(pos +1));
-
-        for (Integer idx : update) {
-            if (isW ? !wallets.contains(idx) : !tokens.contains(idx)) continue;
-            WalletCardView walletView = walletViews.get(idx);
-            walletView.notifyDataSetChange();
-            Log.d(TAG, "updateWallet: notifyDataSetChange idx: " + idx);
-        }
+        update.addAll(viewMode == ViewMode.walletView ? wallets : tokens);
+        for (int pos : update) adapter.notifyItemChanged(pos);
     }
 
     public void updateAllWallet() {
-        List<Integer> update = new ArrayList<>();
-        int pos = walletViewPager.getCurrentItem();
-        Log.d(TAG, "updateAllWallet() called: current idx" + pos);
-        if (pos -1 >= 0) update.add(new Integer(pos -1));
-        update.add(new Integer(pos));
-
-        boolean isW = viewMode == ViewMode.walletView;
-        int size = isW ? walletVDs.size() : tokenListVDs.size();
-        if (pos + 1 < size) update.add(new Integer(pos +1));
-
-        for (Integer idx : update) {
-            WalletCardView walletView = walletViews.get(idx);
-            if (walletView != null) {
-                walletView.notifyDataSetChange();
-                Log.d(TAG, "updateWallet: notifyDataSetChange idx: " + idx + ", " + walletView.getAlias());
-            }
-        }
+        adapter.notifyDataSetChanged();
     }
 
     public void notifyCompleteDataLoad() {
@@ -258,7 +220,7 @@ public class MainWalletFragment extends Fragment {
         walletAddressCard.setOnDismissListener(new WalletAddressCardView.OnDismissListener() {
             @Override
             public void onDismiss() {
-                updateShowPRepsMenu(-1);
+                updateShowPRepsMenu();
                 Animator aniShow = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_show);
                 aniShow.setTarget(walletViewPager);
                 walletViewPager.setVisibility(View.VISIBLE);
@@ -275,14 +237,13 @@ public class MainWalletFragment extends Fragment {
         walletViewPager.setClipToPadding(false);
         walletViewPager.setPadding(dp10, 0, dp10, 0);
         walletViewPager.setPageMargin(dp10);
-        walletViewPager.setOffscreenPageLimit(5);
         walletViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                updateAllWallet();
-                updateCollapsable();
+                Log.d(TAG, "onPageSelected() called with: position = [" + position + "]");
                 walletIndicator.setIndex(position);
-                updateShowPRepsMenu(position);
+                updateCollapsable();
+                updateShowPRepsMenu();
             }
         });
         walletViewPager.setOnStateChangeListener(new ExpandableViewPager.OnStateChangeListener() {
@@ -303,78 +264,12 @@ public class MainWalletFragment extends Fragment {
                 }
             }
         });
-
-        pagerAdapter = new PagerAdapter() {
-            @NonNull
-            @Override
-            public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                WalletCardView walletCardView = newWalletCardView(container, position);
-                walletViews.put(position, walletCardView);
-                container.addView(walletCardView);
-                WalletViewData data = mShownWalletDataList.get(position);
-                walletCardView.bindData(data);
-                return walletCardView;
-            }
-
-            @Override
-            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-                container.removeView(((View) object));
-                walletViews.remove(position);
-            }
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-                return view == object;
-            }
-
-            @Override
-            public int getCount() {
-                return mShownWalletDataList.size();
-            }
-
-            @Override
-            public int getItemPosition(@NonNull Object object) {
-                WalletCardView walletView = (WalletCardView) object;
-                int pos = walletViews.indexOfValue(walletView);
-
-                try {
-                    WalletViewData walletVD = mShownWalletDataList.get(pos);
-                    walletView.bindData(walletVD);
-                    return pos;
-                } catch (Exception e) {
-                    return POSITION_NONE;
-                }
-            }
-        };
-        walletViewPager.setAdapter(pagerAdapter);
-        float scale = getContext().getResources().getDisplayMetrics().density;
-        walletViewPager.setCameraDistance(scale * 8000);
-
-        content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                Rect pagerBound = new Rect();
-                Rect infoBound = new Rect();
-                walletViewPager.getGlobalVisibleRect(pagerBound);
-                totalAssetInfoView.getGlobalVisibleRect(infoBound);
-                walletViewPager.setExpandedHeight(pagerBound.bottom - infoBound.top);
-                walletViewPager.setCollapseHeight(pagerBound.bottom - infoBound.bottom);
-            }
-        });
-    }
-
-    private WalletCardView newWalletCardView(ViewGroup container, int walletPosition) {
-        WalletCardView walletCardView = new WalletCardView(container.getContext());
-        walletCardView.setOnChagneIsScrollTopListener(new WalletCardView.OnChangeIsScrollTopListener() {
+        adapter = new WalletPageAdapter(walletViewPager, new WalletPageAdapter.WalletViewEventListener() {
             @Override
             public void onChangeIsScrollTop(boolean isScrollTop) {
                 updateCollapsable();
             }
-        });
 
-        walletCardView.setOnClickWalletItemListner(new WalletCardView.OnClickWalletItemListner() {
             @Override
             public void onClickWalletItem(EntryViewData entryVD) {
                 if (entryVD.getWallet() == null || entryVD.getEntry() == null) return;
@@ -386,12 +281,10 @@ public class MainWalletFragment extends Fragment {
                         REQ_DETAIL
                 );
             }
-        });
 
-        walletCardView.setOnClickQrScanListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Wallet wallet = ICONexApp.wallets.get(walletPosition);
+            public void onClickQrScan(WalletViewData walletVD) {
+                Wallet wallet = walletVD.getWallet();
                 new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
                     @Override
                     public void onPass(byte[] bytePrivateKey) {
@@ -405,12 +298,10 @@ public class MainWalletFragment extends Fragment {
                     }
                 }).show();
             }
-        });
 
-        walletCardView.setOnClickQrCodeListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Wallet wallet = ICONexApp.wallets.get(walletPosition);
+            public void onClickQrCode(WalletViewData walletVD) {
+                Wallet wallet = walletVD.getWallet();
                 prepsMenu.setEnableFloatingButton(false);
                 walletAddressCard.show(wallet, wallet.getWalletEntries().get(0));
 
@@ -425,12 +316,10 @@ public class MainWalletFragment extends Fragment {
                     }
                 });
             }
-        });
 
-        walletCardView.setOnClickMoreListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Wallet wallet = ICONexApp.wallets.get(walletPosition);
+            public void onClickMore(WalletViewData walletVD) {
+                Wallet wallet = walletVD.getWallet();
                 new WalletManageMenuDialog(getActivity(), wallet, new WalletManageMenuDialog.OnNotifyWalletDataChangeListener() {
                     @Override
                     public void onNotifyWalletDataChange(WalletManageMenuDialog.UpdateDataType updateDataType) {
@@ -447,8 +336,24 @@ public class MainWalletFragment extends Fragment {
                 }).show();
             }
         });
+        walletViewPager.setAdapter(adapter);
 
-        return walletCardView;
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        walletViewPager.setCameraDistance(scale * 8000);
+
+        content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                Rect pagerBound = new Rect();
+                Rect infoBound = new Rect();
+                walletViewPager.getGlobalVisibleRect(pagerBound);
+                totalAssetInfoView.getGlobalVisibleRect(infoBound);
+                walletViewPager.setExpandedHeight(pagerBound.bottom - infoBound.top);
+                walletViewPager.setCollapseHeight(pagerBound.bottom - infoBound.bottom);
+            }
+        });
     }
 
     private void refreshViewData() {
@@ -482,9 +387,8 @@ public class MainWalletFragment extends Fragment {
         walletViewPager.setIsCollapsable(collapsable);
     }
 
-    private void updateShowPRepsMenu(int position) {
-        position = position == -1 ? walletViewPager.getCurrentItem() : position;
-        WalletViewData walletVD = mShownWalletDataList.get(position);
+    private void updateShowPRepsMenu() {
+        WalletViewData walletVD = adapter.getCurrentViewData();
 
         boolean isICX = !walletAddressCard.isShow() &&
                 walletVD.getWallet() != null &&
@@ -497,22 +401,23 @@ public class MainWalletFragment extends Fragment {
     }
 
     private void updateWalletView() {
-        mShownWalletDataList.clear();
+        Log.d(TAG, "updateWalletView() called");
+        adapter.walletVDs.clear();
         switch (viewMode) {
             case walletView: {
-                mShownWalletDataList.addAll(walletVDs);
+                adapter.walletVDs.addAll(walletVDs);
                 actionBar.setTitle(getString(R.string.appbarSelectorWallets));
             } break;
             case tokenView: {
-                mShownWalletDataList.addAll(tokenListVDs);
+                adapter.walletVDs.addAll(tokenListVDs);
                 actionBar.setTitle(getString(R.string.appbarSelectorCoinsNTokens));
             } break;
         }
 
-        pagerAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 
-        updateShowPRepsMenu(-1);
-        walletIndicator.setSize(mShownWalletDataList.size());
+        updateShowPRepsMenu();
+        walletIndicator.setSize(adapter.walletVDs.size());
     }
 
     private void toggleViewMode() {
