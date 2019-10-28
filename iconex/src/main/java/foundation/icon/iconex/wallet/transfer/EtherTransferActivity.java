@@ -56,6 +56,7 @@ import foundation.icon.iconex.wallet.transfer.data.TxInfo;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.CustomSeekbar;
 import foundation.icon.iconex.widgets.TTextInputLayout;
+import loopchain.icon.wallet.core.Constants;
 
 public class EtherTransferActivity extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter{
 
@@ -233,10 +234,10 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private void initView() {
         // set symbol
         appbar.setTitle(mWallet.getAlias());
+        symbolEstimatedMaxFee.setText("(" + Constants.KS_COINTYPE_ETH + ")");
         String symbol = "(" + mWalletEntry.getSymbol() + ")";
         labelSymbol.setText(symbol);
         editSend.setAppendText(symbol.substring(1, symbol.length() -1));
-        symbolEstimatedMaxFee.setText(symbol);
 
         // init appbar
         appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
