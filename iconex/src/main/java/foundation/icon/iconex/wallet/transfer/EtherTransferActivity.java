@@ -20,6 +20,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -55,6 +56,7 @@ import foundation.icon.iconex.wallet.transfer.data.TxInfo;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.CustomSeekbar;
 import foundation.icon.iconex.widgets.TTextInputLayout;
+import loopchain.icon.wallet.core.Constants;
 
 public class EtherTransferActivity extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter{
 
@@ -232,10 +234,10 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private void initView() {
         // set symbol
         appbar.setTitle(mWallet.getAlias());
+        symbolEstimatedMaxFee.setText("(" + Constants.KS_COINTYPE_ETH + ")");
         String symbol = "(" + mWalletEntry.getSymbol() + ")";
         labelSymbol.setText(symbol);
         editSend.setAppendText(symbol.substring(1, symbol.length() -1));
-        symbolEstimatedMaxFee.setText(symbol);
 
         // init appbar
         appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
@@ -570,6 +572,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             public void onClick(View v) {
                 startActivityForResult(new Intent(EtherTransferActivity.this, ContactsActivity.class)
                         .putExtra("coinType", mWallet.getCoinType())
+                        .putExtra("tokenType", mWalletEntry.getSymbol())
                         .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
             }
         });
@@ -590,12 +593,23 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             @Override
             public void onClick(View v) {
 
-                BigInteger intBalance = balance;
-                BigInteger intAmount = ConvertUtil.valueToBigInteger(editSend.getText(), mWalletEntry.getDefaultDec());
-                BigInteger intFee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
-                BigInteger remainBalance = intBalance.subtract(intAmount);
+                BigInteger fee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
+                boolean feeError = false;
 
-                if (remainBalance.compareTo(intFee) == -1) {
+                if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
+                    BigInteger canICX = balance.subtract(fee);
+                    if (canICX.compareTo(BigInteger.ZERO) < 0) {
+                        feeError = true;
+                    }
+                } else {
+                    WalletEntry own = mWallet.getWalletEntries().get(0);
+                    BigInteger ownBalance = new BigInteger(own.getBalance());
+                    if (ownBalance.compareTo(fee) < 0) {
+                        feeError = true;
+                    }
+                }
+
+                if (feeError) {
                     MessageDialog messageDialog = new MessageDialog(EtherTransferActivity.this);
                     messageDialog.setTitleText(getString(R.string.errETHFee));
                     messageDialog.show();

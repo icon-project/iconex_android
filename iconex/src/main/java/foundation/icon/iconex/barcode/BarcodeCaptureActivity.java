@@ -657,7 +657,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         aniText0.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
 
         AlphaAnimation aniText1 = new AlphaAnimation(1, 0);
-        aniText1.setStartOffset(900);
+        aniText1.setStartOffset(3000);
         aniText1.setDuration(1600);
         aniText1.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
 

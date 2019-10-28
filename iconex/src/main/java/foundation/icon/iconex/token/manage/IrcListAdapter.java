@@ -74,13 +74,11 @@ public class IrcListAdapter extends RecyclerView.Adapter {
                 ((ViewItemHolder) holder).checkBox.setEnabled(false);
                 ((ViewItemHolder) holder).checkBox.setButtonDrawable(R.drawable.btn_check_disabled);
                 ((ViewItemHolder) holder).txtIrc.setTextColor(mContext.getResources().getColor(R.color.colorText30));
-                ((ViewItemHolder) holder).btnOpen.setEnabled(false);
             } else {
                 ((ViewItemHolder) holder).checkBox.setEnabled(true);
                 ((ViewItemHolder) holder).checkBox.setChecked(token.isChecked());
                 ((ViewItemHolder) holder).checkBox.setButtonDrawable(R.drawable.bg_checkbox);
                 ((ViewItemHolder) holder).txtIrc.setTextColor(mContext.getResources().getColor(R.color.colorText));
-                ((ViewItemHolder) holder).btnOpen.setEnabled(true);
             }
         }
     }

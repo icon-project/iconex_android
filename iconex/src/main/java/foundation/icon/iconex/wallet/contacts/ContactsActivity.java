@@ -27,6 +27,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
     private ContactsViewPagerAdapter viewPagerAdapter;
 
     private String mCoinType;
+    private String mTokenType;
     private String mAddress;
 
     public static final int CODE_REQUEST = 30000;
@@ -70,6 +71,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
         btnMod.setTextColor(ContextCompat.getColorStateList(this, R.color.txt_btn_rounded_02));
 
         mCoinType = getIntent().getStringExtra("coinType");
+        mTokenType = getIntent().getStringExtra("tokenType");
         mAddress = getIntent().getStringExtra("address");
 
         tabLayout = findViewById(R.id.tab_layout);
@@ -103,7 +105,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
             }
         });
 
-        viewPagerAdapter = new ContactsViewPagerAdapter(this, getSupportFragmentManager(), mAddress, mCoinType, false);
+        viewPagerAdapter = new ContactsViewPagerAdapter(this, getSupportFragmentManager(), mAddress, mCoinType, mTokenType, false);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);

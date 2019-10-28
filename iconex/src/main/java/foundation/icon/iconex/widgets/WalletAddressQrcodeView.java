@@ -71,10 +71,12 @@ public class WalletAddressQrcodeView extends FrameLayout {
     public void bind(String title, Wallet wallet, WalletEntry entry) {
         // bind data
         txtName.setText(title);
-        txtAddress.setText(wallet.getAddress());
-        setQrCode(wallet.getAddress(), imgQrCode);
         symbol = wallet.getWalletEntries().get(0).getSymbol();
+        editSendAmount.setText("");
 
+        String address = (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX) ? "" : "0x") + wallet.getAddress();
+        txtAddress.setText(address);
+        setQrCode(address, imgQrCode);
         // set only icx
         boolean isICX = wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)
                 && entry.getType().equals(MyConstants.TYPE_COIN);

@@ -3,46 +3,21 @@ package foundation.icon.iconex.view.ui.mainWallet.component;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-
-import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.widgets.CustomToast;
-import foundation.icon.iconex.widgets.TTextInputLayout;
 import foundation.icon.iconex.widgets.WalletAddressQrcodeView;
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.schedulers.Schedulers;
-import loopchain.icon.wallet.core.Constants;
 
 
 public class WalletAddressCardView extends FrameLayout {
@@ -52,7 +27,8 @@ public class WalletAddressCardView extends FrameLayout {
     private ImageButton btnClose;
 
     public interface OnDismissListener {
-        void onDismiss();
+        void onDismissStart();
+        void onDismissFinish();
     }
     private OnDismissListener listener;
 
@@ -119,10 +95,12 @@ public class WalletAddressCardView extends FrameLayout {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         setVisibility(GONE);
+                        if (listener != null)
+                            listener.onDismissFinish();
                     }
                 });
                 if (listener != null)
-                    listener.onDismiss();
+                    listener.onDismissStart();
             }
         });
     }

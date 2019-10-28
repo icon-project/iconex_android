@@ -308,7 +308,7 @@ public class ContactsDialog extends Dialog implements View.OnClickListener {
         }
 
         if (mCoinType.equals(loopchain.icon.wallet.core.Constants.KS_COINTYPE_ICX)) {
-            if (address.startsWith("hx")) {
+            if (address.startsWith("hx") || address.startsWith("cx")) {
                 String temp = address.substring(2);
                 if (temp.length() != 40) {
                     lineAddress.setBackgroundColor(mContext.getResources().getColor(R.color.colorWarning));

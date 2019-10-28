@@ -27,23 +27,18 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
 
     private static final String TAG = BasicContactsAdapter.class.getSimpleName();
 
-    public static final String TYPE_RECENT = "RECENT";
-    public static final String TYPE_WALLET = "WALLET";
-
     private Context mContext;
     private LayoutInflater mInflater;
     private List<?> mData;
     private String mAddress;
     private String mCoinType;
-    private String mType;
 
-    public BasicContactsAdapter(Context context, String address, List<?> data, String coinType, String type) {
+    public BasicContactsAdapter(Context context, String address, List<?> data, String coinType) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mData = data;
         mCoinType = coinType;
         mAddress = address;
-        mType = type;
     }
 
     @Override
@@ -129,14 +124,6 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
         }
 
         return ConvertUtil.getValue(asset, 18);
-    }
-
-    private String getDate(String timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getDefault());
-        Date date = new Date(Long.parseLong(timestamp) / 1000);
-
-        return sdf.format(date);
     }
 
     private OnItemClickListener mListener = null;

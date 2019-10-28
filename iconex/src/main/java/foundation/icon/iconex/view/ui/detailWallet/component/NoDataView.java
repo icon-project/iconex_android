@@ -89,13 +89,17 @@ public class NoDataView extends FrameLayout implements View.OnClickListener {
         updateView();
     }
 
+    private boolean isSize0 = false;
     public void setNodata(boolean isSize0) {
-        txtNoTransaction.setVisibility(isSize0 ? VISIBLE : GONE);
-        lnkEtehrscan.setVisibility(isSize0 && mIsEtherscanVisible ? VISIBLE : GONE);
+        this.isSize0 = isSize0;
         updateView();
     }
 
     private void updateView() {
+        boolean loadingVisible = loading.getVisibility() == VISIBLE;
+        txtNoTransaction.setVisibility(isSize0 && !loadingVisible? VISIBLE : GONE);
+        lnkEtehrscan.setVisibility(isSize0 && mIsEtherscanVisible  && !loadingVisible ? VISIBLE : GONE);
+
         boolean isVisible = loading.getVisibility() == VISIBLE || txtNoTransaction.getVisibility() == VISIBLE;
         setVisibility(isVisible ? VISIBLE : GONE);
 

@@ -49,6 +49,7 @@
         android:maxLines="1"
         android:text="Token Full Name A"
         android:textColor="@color/darkB3"
+        android:ellipsize="end"
 
         android:textSize="10dp"
         app:layout_constraintEnd_toStartOf="@+id/txt_exchanged"
@@ -75,7 +76,8 @@
         android:layout_height="30dp"
         android:indeterminateDrawable="@drawable/anim_loading"
         app:layout_constraintRight_toRightOf="@id/txt_amount"
-        app:layout_constraintBottom_toBottomOf="@id/txt_amount"/>
+        app:layout_constraintBottom_toBottomOf="@id/txt_amount"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/loading1"
@@ -83,5 +85,6 @@
         android:layout_height="20dp"
         android:indeterminateDrawable="@drawable/anim_loading"
         app:layout_constraintRight_toRightOf="@id/txt_exchanged"
-        app:layout_constraintBottom_toBottomOf="@id/txt_exchanged"/>
+        app:layout_constraintBottom_toBottomOf="@id/txt_exchanged"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

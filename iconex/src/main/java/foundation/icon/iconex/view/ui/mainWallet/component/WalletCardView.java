@@ -235,6 +235,10 @@ public class WalletCardView extends FrameLayout {
         btnMore.setOnClickListener(listener);
     }
 
+    public WalletViewData getData() {
+        return walletViewData;
+    }
+
     public void bindData(WalletViewData data) {
         walletViewData = data;
 

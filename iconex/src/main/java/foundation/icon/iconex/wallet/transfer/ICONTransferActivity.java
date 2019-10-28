@@ -442,6 +442,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             public void onClick(View v) {
                 startActivityForResult(new Intent(ICONTransferActivity.this, ContactsActivity.class)
                         .putExtra("coinType", wallet.getCoinType())
+                        .putExtra("tokenType", entry.getSymbol())
                         .putExtra("address", wallet.getAddress()), RC_CONTACTS);
             }
         });
@@ -670,19 +671,10 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             return false;
         }
 
-        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-            if (!(address.startsWith("hx") || address.startsWith("cx"))) {
-                editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
-                return false;
-            }
-        }
 
-        if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
-            if (!address.startsWith("hx")) {
-                editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
-                return false;
-            }
-
+        if (!(address.startsWith("hx") || address.startsWith("cx"))) {
+            editAddress.setError(true, getString(R.string.errIncorrectICXAddr));
+            return false;
         }
 
         address = address.substring(2);
@@ -1006,16 +998,28 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void onClickSend() {
-        BigInteger intBalance = balance;
-        BigInteger intAmount = ConvertUtil.valueToBigInteger(editSend.getText(), 18);
-        BigInteger intFee = ConvertUtil.valueToBigInteger(fee, 18);
-        BigInteger remainBalance = intBalance.subtract(intAmount);
 
-        if (remainBalance.compareTo(intFee) == -1) {
-            MessageDialog messageDialog = new MessageDialog(this);
-            messageDialog.setTitleText(getString(R.string.errICXFee));
-            messageDialog.show();
-            return;
+        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
+            BigInteger canICX = balance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+
+            if (canICX.compareTo(BigInteger.ZERO) < 0) {
+                MessageDialog messageDialog = new MessageDialog(this);
+                messageDialog.setTitleText(getString(R.string.errICXFee));
+                messageDialog.show();
+                return;
+            }
+        } else {
+            WalletEntry own = wallet.getWalletEntries().get(0);
+            BigInteger ownBalance = new BigInteger(own.getBalance());
+            BigInteger canICX = ownBalance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+
+            if (canICX.compareTo(BigInteger.ZERO) < 0) {
+                MessageDialog messageDialog = new MessageDialog(this);
+                messageDialog.setTitleText(getString(R.string.errICXFee));
+                messageDialog.show();
+
+                return;
+            }
         }
 
         final ICONTxInfo txInfo = new ICONTxInfo(editAddress.getText(), editSend.getText(),
