@@ -24,8 +24,8 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkErrorActivity;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
+import foundation.icon.iconex.view.ui.mainWallet.MainWalletDataRequester;
 import foundation.icon.iconex.view.ui.mainWallet.MainWalletFragment;
-import foundation.icon.iconex.view.ui.mainWallet.MainWalletServiceHelper;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
 import foundation.icon.iconex.view.ui.mainWallet.items.TokenWalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
@@ -35,10 +35,10 @@ import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
 
-public class MainWalletActivity extends AppCompatActivity implements MainWalletServiceHelper.OnLoadListener, MainWalletFragment.RequestActivity {
+public class MainWalletActivity extends AppCompatActivity implements
+        MainWalletDataRequester.OnLoadListener,
+        MainWalletFragment.RequestActivity {
     private static String TAG = MainWalletActivity.class.getSimpleName();
-
-    private MainWalletServiceHelper serviceHelper = new MainWalletServiceHelper();
 
     private static String MAIN_WALLET_FRAGMENT_TAG = "main wallet fragment";
 
@@ -286,6 +286,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         }
         entryVD.amountLoading = false;
         combineExchanges(walletPosition, entryPosition);
+        combineStake(entryVD, walletPosition);
     }
 
     @Override
@@ -320,20 +321,30 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     public void onLoadNextStake(Wallet wallet, int walletPosition, BigInteger unstake) {
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         entryVD.unstake = unstake;
+        combineStake(entryVD, walletPosition);
     }
 
     @Override
     public void onLoadNextDelegation(Wallet wallet, int walletPosition) {
-        WalletEntry entry = wallet.getWalletEntries().get(0);
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
+        entryVD.prepsLoading = false;
+        combineStake(entryVD, walletPosition);
+    }
+
+    private void combineStake(EntryViewData entryVD, int walletPosition) {
+        Wallet wallet = entryVD.getWallet();
+        WalletEntry entry = entryVD.getEntry();
+        if (entryVD.amountLoading || entryVD.prepsLoading || entryVD.unstake == null) return;
+
         try {
             BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec()));
             BigDecimal staked = new BigDecimal(ConvertUtil.getValue(wallet.getStaked(), 18));
+            BigDecimal unstake = new BigDecimal(ConvertUtil.getValue(entryVD.unstake, 18));
 
             BigDecimal percent = BigDecimal.ZERO.setScale(1);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 percent = staked.multiply(new BigDecimal(100))
-                        .divide(balance.add(staked), 1, BigDecimal.ROUND_HALF_UP);
+                        .divide(balance.add(staked).add(unstake), 1, BigDecimal.ROUND_HALF_UP);
             }
 
             entryVD.setTxtStacked(DecimalFomatter.format(staked) + " (" + percent + "%)");
@@ -341,7 +352,7 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         } catch (Exception e) {
             entryVD.setTxtStacked("- ( - %)");
         }
-        entryVD.prepsLoading = false;
+
         if (!patchingData) updateEntry(walletPosition, 0);
     }
 
@@ -516,6 +527,8 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         }
     }
 
+    private MainWalletDataRequester requester = null;
+
     @Override
     public void refreshViewData() {
         if (setLoadingAll(null)) {
@@ -525,8 +538,9 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
         }
         loadViewData();
         setLoadingAll(true);
-        serviceHelper.setListener(MainWalletActivity.this);
-        serviceHelper.requestAllData();
+        requester = new MainWalletDataRequester();
+        requester.setListener(this);
+        requester.requestAllData();
         new Thread(flusher).start();
     }
 
@@ -554,7 +568,10 @@ public class MainWalletActivity extends AppCompatActivity implements MainWalletS
     @Override
     public void fragmentStop() {
         Log.d(TAG, "fragmentStop() called");
-        serviceHelper.clearListener();
+        if (requester != null) {
+            requester.setListener(null);
+            requester = null;
+        }
     }
 
     @Override
