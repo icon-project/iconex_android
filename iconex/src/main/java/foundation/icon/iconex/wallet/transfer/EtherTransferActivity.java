@@ -571,6 +571,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             public void onClick(View v) {
                 startActivityForResult(new Intent(EtherTransferActivity.this, ContactsActivity.class)
                         .putExtra("coinType", mWallet.getCoinType())
+                        .putExtra("tokenType", mWalletEntry.getSymbol())
                         .putExtra("address", mWallet.getAddress()), RC_CONTACTS);
             }
         });
