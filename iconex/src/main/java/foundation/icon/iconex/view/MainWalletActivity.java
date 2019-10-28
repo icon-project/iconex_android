@@ -46,82 +46,143 @@ public class MainWalletActivity extends AppCompatActivity implements
     private List<WalletViewData> walletVDs = Collections.synchronizedList(new ArrayList<>());
     private List<WalletViewData> tokenListVDs = Collections.synchronizedList(new ArrayList<>());
 
-    private String currentUnit = "USD";
-    private boolean balanceLoading = true;
-    private boolean exchangeLoading = true;
     private boolean patchingData = false;
-
-    private boolean onceLoading = true;
-
-    private boolean isLoadingAll = false;
-    private boolean setLoadingAll(Boolean loadingAll) {
-        if (loadingAll != null) isLoadingAll = loadingAll;
-        return isLoadingAll;
-    }
-    final List<Integer> wallets = Collections.synchronizedList(new ArrayList<>());
-    final List<Integer> tokens = Collections.synchronizedList(new ArrayList<>());
-    private boolean isUpdateAll = false;
-    private boolean isUpdateAssets = false;
-
+    private String currentUnit = "USD";
     private Handler handler = new Handler();
-    private Runnable flusher = new Runnable() {
-        @Override
-        public void run() {
-            Log.d(TAG, "flusher start");
 
-            do {
-                try { Thread.sleep(1000); } catch (InterruptedException e) { }
-                Log.d(TAG, "flusher wake");
+    public class UIupdater {
+        private boolean loadCompleteBalance = false;
+        private boolean loadCompleteExchange = false;
+        private boolean loadCompleteAll = false;
 
-                if (isUpdateAssets) {
-                    isUpdateAssets = false;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MainWalletFragment fragment = findFragment();
-                            if(fragment != null)fragment.updateAssetsVD(totalAssetsVD);
-                            Log.d(TAG, "run() called in update total assets");
-                        }
-                    });
-                }
-
-                if (isUpdateAll) {
-                    isUpdateAll = false;
-                    wallets.clear();
-                    tokens.clear();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MainWalletFragment fragment = findFragment();
-                            if(fragment != null) {
-                                fragment.updateAllWallet();
-                            }
-                            Log.d(TAG, "run() called in update all wallet: " + fragment);
-                        }
-                    });
-                } else {
-                    List<Integer> _wallets = new ArrayList<>(wallets);
-                    wallets.clear();
-                    List<Integer> _tokens = new ArrayList<>(tokens);
-                    tokens.clear();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MainWalletFragment fragment = findFragment();
-                            if(fragment != null)fragment.updateWallet(_wallets, _tokens);
-                            Log.d(TAG, "run() called with: wallets " + _wallets + ", _tokens" + _tokens + "fragment: " + fragment);
-                        }
-                    });
-                }
-            } while (setLoadingAll(null));
-            Log.d(TAG, "flusher died");
+        synchronized public boolean isLoadCompleteBalance() {
+            return loadCompleteBalance;
         }
-    };
 
-    void updateAssets() {
-        Log.d(TAG, "updateAssets() called");
-        if (setLoadingAll(null))
-            isUpdateAssets = true;
+        synchronized public UIupdater setLoadCompleteBalance(boolean loadCompleteBalance) {
+            this.loadCompleteBalance = loadCompleteBalance;
+            return this;
+        }
+
+        synchronized public boolean isLoadCompleteExchange() {
+            return loadCompleteExchange;
+        }
+
+        synchronized public UIupdater setLoadCompleteExchange(boolean loadCompleteExchange) {
+            this.loadCompleteExchange = loadCompleteExchange;
+            return this;
+        }
+
+        synchronized public boolean isLoadCompleteAll() {
+            return loadCompleteAll;
+        }
+
+        synchronized public UIupdater setLoadCompleteAll(boolean loadCompleteAll) {
+            this.loadCompleteAll = loadCompleteAll;
+            return this;
+        }
+
+        private boolean isUpdateAssetsView = false;
+        private boolean isUpdateAllView = false;
+        final List<Integer> updateWalletViews = Collections.synchronizedList(new ArrayList<>());
+        final List<Integer> updatetokenViews = Collections.synchronizedList(new ArrayList<>());
+
+        synchronized public boolean isUpdateAssetsView() {
+            return isUpdateAssetsView;
+        }
+
+        synchronized public UIupdater setUpdateAssetsView(boolean updateAssetsView) {
+            isUpdateAssetsView = updateAssetsView;
+            return this;
+        }
+
+        synchronized public boolean isUpdateAllView() {
+            return isUpdateAllView;
+        }
+
+        synchronized public UIupdater setUpdateAllView(boolean updateAllView) {
+            isUpdateAllView = updateAllView;
+            return this;
+        }
+
+        private MainWalletFragment mFragment = null;
+
+
+        public void setFragment(MainWalletFragment fragment) {
+            mFragment = fragment;
+        }
+
+        public void startListening() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "flusher start");
+
+                    boolean _loadCompleteAll;
+                    do {
+                        try { Thread.sleep(500); } catch (InterruptedException e) { }
+                        Log.d(TAG, "flusher wake");
+
+                        if (mFragment == null) break;
+
+                        synchronized (UIupdater.this) {
+                            _loadCompleteAll = loadCompleteAll;
+                            if (isUpdateAssetsView) {
+                                isUpdateAssetsView = false;
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mFragment.updateAssetsVD(totalAssetsVD);
+                                    }
+                                });
+                            }
+
+                            if (isUpdateAllView) {
+                                isUpdateAllView = false;
+                                updateWalletViews.clear();
+                                updatetokenViews.clear();
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mFragment.updateAllWallet();
+                                    }
+                                });
+                            } else {
+                                List<Integer> _wallets = new ArrayList<>(updateWalletViews);
+                                updateWalletViews.clear();
+                                List<Integer> _tokens = new ArrayList<>(updatetokenViews);
+                                updatetokenViews.clear();
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        MainWalletFragment fragment = findFragment();
+                                        if(fragment != null)fragment.updateWallet(_wallets, _tokens);
+                                        Log.d(TAG, "run() called with: updateWalletViews " + _wallets + ", _tokens" + _tokens + "fragment: " + fragment);
+                                    }
+                                });
+                            }
+
+                        }
+                    } while (!_loadCompleteAll);
+                    Log.d(TAG, "flusher died");
+                }
+            }).start();
+        }
+    }
+    private UIupdater uiUpdater = null;
+    public boolean isAvailablleUIupdater () {
+        if (uiUpdater == null) return false;
+
+        synchronized (uiUpdater) {
+            return !uiUpdater.loadCompleteAll && uiUpdater.mFragment != null;
+        }
+    }
+
+
+    void internalUpdateAssetsView() {
+        Log.d(TAG, "internalUpdateAssetsView() called isAvailablleUIupdater()=" + isAvailablleUIupdater());
+        if (isAvailablleUIupdater())
+            uiUpdater.setUpdateAssetsView(true);
         else {
             handler.post(new Runnable() {
                 @Override
@@ -132,50 +193,52 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
     }
 
-    void updateAll() {
-        Log.d(TAG, "updateAll() called: allLoding: " + setLoadingAll(null));
-        if (setLoadingAll(null))
-            isUpdateAll = true;
+    void internalUpdateAllView() {
+        Log.d(TAG, "internalUpdateAllView() called isAvailablleUIupdater()=" + isAvailablleUIupdater());
+        if (isAvailablleUIupdater())
+            uiUpdater.setUpdateAllView(true);
         else {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "run() called in update");
                     findFragment().updateAllWallet();
                 }
             });
         }
     }
 
-    void updateEntry(int wallet, int entry){
-        Log.d(TAG, "updateEntry() called with: wallet = [" + wallet + "], entry = [" + entry + "]");
+    void internalUpdateEntryView(int wallet, int entry){
+        Log.d(TAG, "internalUpdateEntryView() called with: wallet = [" + wallet + "], entry = [" + entry + "]");
         EntryViewData entryVD = walletVDs.get(wallet).getEntryVDs().get(entry);
         Integer intWallet = new Integer(wallet);
         Integer intToken = new Integer(entryVD.pos0);
-        if (!wallets.contains(intWallet)) wallets.add(intWallet);
-        if (!tokens.contains(intToken)) tokens.add(intToken);
+        if (isAvailablleUIupdater()) {
+            synchronized (uiUpdater) {
+                if (!uiUpdater.updateWalletViews.contains(intWallet))
+                    uiUpdater.updateWalletViews.add(intWallet);
 
-        if (!setLoadingAll(null)) {
-            List<Integer> _wallets = new ArrayList<>(wallets);
-            wallets.clear();
-            List<Integer> _tokens = new ArrayList<>(tokens);
-            tokens.clear();
+                if (!uiUpdater.updatetokenViews.contains(intToken))
+                    uiUpdater.updatetokenViews.add(intToken);
+            }
+        } else {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    findFragment().updateWallet(_wallets, _tokens);
+                    findFragment().updateWallet(
+                            new ArrayList<Integer>() {{ add(intWallet); }},
+                            new ArrayList<Integer>() {{ add(intToken); }}
+                    );
                 }
             });
         }
+
     }
 
     private void loadViewData() {
+        Log.d(TAG, "loadViewData() called");
         walletVDs.clear();
         tokenListVDs.clear();
         totalAssetsVD = new TotalAssetsViewData();
-        setLoadingAll(true);
-        balanceLoading = true;
-        exchangeLoading = true;
 
         Map<String, List<EntryViewData>> mapTokenListEntries = new HashMap<>();
         TokenWalletItem.TokenColor tokenColor = new TokenWalletItem.TokenColor(); // token background color
@@ -230,9 +293,8 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void patchViewData() {
+        Log.d(TAG, "patchViewData() called");
         loadViewData();
-        balanceLoading = false;
-        exchangeLoading = false;
         patchingData = true;
 
         for (int i = 0; ICONexApp.wallets.size() > i; i++) {
@@ -275,6 +337,7 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadNextBalance(WalletEntry entry, int walletPosition, int entryPosition) {
+        Log.d(TAG, "onLoadNextBalance() called with: entry = [" + entry + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(entryPosition);
         try {
             BigInteger intBalance = new BigInteger(entry.getBalance());
@@ -291,19 +354,22 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadCompleteBalance() {
-        balanceLoading = false;
+        Log.d(TAG, "onLoadCompleteBalance() called");
+        if (isAvailablleUIupdater()) uiUpdater.setLoadCompleteBalance(true);
         combineTotalAssets();
     }
 
     @Override
     public void onLoadCompleteExchangeTable() {
-        exchangeLoading = false;
+        Log.d(TAG, "onLoadCompleteExchangeTable() called");
+        if (isAvailablleUIupdater()) uiUpdater.setLoadCompleteExchange(true);
         combineExchanges(-1, -1);
         combineTotalAssets();
     }
 
     @Override
     public void onLoadNextiScore(Wallet wallet, int walletPosition) {
+        Log.d(TAG, "onLoadNextiScore() called with: wallet = [" + wallet + "], walletPosition = [" + walletPosition + "]");
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         try {
             BigInteger intIScore = wallet.getiScore();
@@ -314,11 +380,12 @@ public class MainWalletActivity extends AppCompatActivity implements
             entryVD.setTxtIScore(MyConstants.NO_BALANCE);
         }
         entryVD.iscoreLoading = false;
-        if (!patchingData) updateEntry(walletPosition, 0);
+        if (!patchingData) internalUpdateEntryView(walletPosition, 0);
     }
 
     @Override
     public void onLoadNextStake(Wallet wallet, int walletPosition, BigInteger unstake) {
+        Log.d(TAG, "onLoadNextStake() called with: wallet = [" + wallet + "], walletPosition = [" + walletPosition + "], unstake = [" + unstake + "]");
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         entryVD.unstake = unstake;
         combineStake(entryVD, walletPosition);
@@ -326,12 +393,14 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadNextDelegation(Wallet wallet, int walletPosition) {
+        Log.d(TAG, "onLoadNextDelegation() called with: wallet = [" + wallet + "], walletPosition = [" + walletPosition + "]");
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         entryVD.prepsLoading = false;
         combineStake(entryVD, walletPosition);
     }
 
     private void combineStake(EntryViewData entryVD, int walletPosition) {
+        Log.d(TAG, "combineStake() called with: entryVD = [" + entryVD + "], walletPosition = [" + walletPosition + "]");
         Wallet wallet = entryVD.getWallet();
         WalletEntry entry = entryVD.getEntry();
         if (entryVD.amountLoading || entryVD.prepsLoading || entryVD.unstake == null) return;
@@ -353,11 +422,12 @@ public class MainWalletActivity extends AppCompatActivity implements
             entryVD.setTxtStacked("- ( - %)");
         }
 
-        if (!patchingData) updateEntry(walletPosition, 0);
+        if (!patchingData) internalUpdateEntryView(walletPosition, 0);
     }
 
     @Override
     public void onLoadCompletePReps() {
+        Log.d(TAG, "onLoadCompletePReps() called");
         // update preps data
         for (WalletViewData walletVD : walletVDs) {
             Wallet wallet = walletVD.getWallet();
@@ -380,7 +450,7 @@ public class MainWalletActivity extends AppCompatActivity implements
                 entryVD.prepsLoading = false;
             }
         }
-        if (!patchingData) updateAll();
+        if (!patchingData) internalUpdateAllView();
 
         // update total assets
         BigInteger totalVoting = BigInteger.ZERO;
@@ -406,14 +476,14 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
         totalAssetsVD.existVotingPower = totalStaked.compareTo(BigInteger.ZERO) != 0;
         totalAssetsVD.loadingVotedpower = false;
-        if (!patchingData) updateAssets();
+        if (!patchingData) internalUpdateAssetsView();
     }
 
     @Override
     public void onLoadCompleteAll() {
+        Log.d(TAG, "onLoadCompleteAll() called");
         combineTopToken();
-        setLoadingAll(false);
-
+        if(isAvailablleUIupdater()) uiUpdater.setLoadCompleteAll(true);
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -426,11 +496,15 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onNetworkError() {
+        Log.d(TAG, "onNetworkError() called");
+        clearListening();
         startActivity(new Intent(this, NetworkErrorActivity.class));
     }
 
     private void combineTotalAssets() {
-        if (exchangeLoading || balanceLoading) return;
+        Log.d(TAG, "combineTotalAssets() called");
+        if (!patchingData && isAvailablleUIupdater() &&
+                (!uiUpdater.isLoadCompleteExchange() || !uiUpdater.isLoadCompleteBalance())) return;
 
         BigDecimal totalBalance = BigDecimal.ZERO;
         for (WalletViewData walletVD : walletVDs) {
@@ -443,10 +517,11 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
         totalAssetsVD.setTotalAsset(totalBalance, currentUnit);
         totalAssetsVD.loadingTotalAssets = false;
-        if(!patchingData) updateAssets();
+        if(!patchingData) internalUpdateAssetsView();
     }
 
     private void combineTopToken() {
+        Log.d(TAG, "combineTopToken() called");
         for (WalletViewData walletVD : tokenListVDs) {
 
             List<EntryViewData> entryVDs = walletVD.getEntryVDs();
@@ -474,14 +549,15 @@ public class MainWalletActivity extends AppCompatActivity implements
             topTokenVD.setExchanged(exchanged, currentUnit);
             topTokenVD.exchageLoading = false;
         }
-        if (!patchingData) updateAll();
+        if (!patchingData) internalUpdateAllView();
     }
 
     // -1, -1 -> totally refresh
     private void combineExchanges(int walletPosition, int entryPosition) {
+        Log.d(TAG, "combineExchanges() called with: walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         boolean isTotally = walletPosition == -1 || entryPosition == -1;
 
-        if (!exchangeLoading) {
+        if (patchingData || !isAvailablleUIupdater() || isAvailablleUIupdater() && uiUpdater.isLoadCompleteExchange()) {
             if (isTotally) {
                 for (int i = 0; walletVDs.size() > i; i++) {
                     WalletViewData walletVD = walletVDs.get(i);
@@ -504,9 +580,9 @@ public class MainWalletActivity extends AppCompatActivity implements
 
         if (!patchingData)
             if (isTotally) {
-                updateAll();
+                internalUpdateAllView();
             } else {
-                updateEntry(walletPosition, entryPosition);
+                internalUpdateEntryView(walletPosition, entryPosition);
             }
     }
 
@@ -529,53 +605,58 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     private MainWalletDataRequester requester = null;
 
+    private void clearListening() {
+        Log.d(TAG, "clearListening() called");
+        if (requester != null) {
+            requester.setListener(null);
+            requester = null;
+        }
+
+        if (isAvailablleUIupdater()) {
+            uiUpdater.setFragment(null);
+        } uiUpdater = null;
+    }
+
     @Override
     public void refreshViewData() {
-        if (setLoadingAll(null)) {
-            MainWalletFragment fragment = findFragment();
-            if (fragment != null) fragment.notifyCompleteDataLoad();
-            return;
-        }
+        Log.d(TAG, "refreshViewData() called");
+        clearListening();
+
         loadViewData();
-        setLoadingAll(true);
+
+        uiUpdater = new UIupdater();
+        uiUpdater.setFragment(findFragment());
+        uiUpdater.startListening();
+
         requester = new MainWalletDataRequester();
         requester.setListener(this);
         requester.requestAllData();
-        new Thread(flusher).start();
     }
 
     @Override
     public void changeExchangeUnit(String unit) {
+        Log.d(TAG, "changeExchangeUnit() called with: unit = [" + unit + "]");
         currentUnit = unit;
         combineExchanges(-1, -1);
         combineTopToken();
         combineTotalAssets();
     }
 
-    private boolean setIndex0 = false;
     @Override
     public void fragmentResume() {
         Log.d(TAG, "fragmentResume() called");
-
-        if (setIndex0) {
-            setIndex0 = false;
-            findFragment().setIndex(0);
-        }
-
         refreshViewData();
     }
 
     @Override
     public void fragmentStop() {
         Log.d(TAG, "fragmentStop() called");
-        if (requester != null) {
-            requester.setListener(null);
-            requester = null;
-        }
+        clearListening();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         switch (requestCode) {
             case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
@@ -587,24 +668,10 @@ public class MainWalletActivity extends AppCompatActivity implements
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        onceLoading = true;
                     }
                 });
-            }break;
-            case WalletManageMenuDialog.REQ_UPDATE_TOKEN: {
-                onceLoading = true;
-            } break;
-            case MainWalletFragment.REQ_DETAIL: {
-                switch (resultCode) {
-                    case WalletDetailActivity.RESULT_WALLET_DELETED:
-                        setIndex0 = true;
-                    case WalletDetailActivity.RESULT_WALLET_REFRESH:
-                        onceLoading = true;
-                }
-            } break;
-            default: {
-                super.onActivityResult(requestCode, resultCode, data);
             }
+            break;
         }
     }
 }

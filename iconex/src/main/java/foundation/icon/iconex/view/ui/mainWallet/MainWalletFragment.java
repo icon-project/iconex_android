@@ -380,10 +380,6 @@ public class MainWalletFragment extends Fragment {
         ((RequestActivity) getActivity()).changeExchangeUnit(exchangeUnit.name());
     }
 
-    public void setIndex(int position){
-        walletViewPager.setCurrentItem(position);
-    }
-
     private void updateCollapsable() {
         int position = walletViewPager.getCurrentItem();
         WalletCardView walletCardView = walletViews.get(position);
