@@ -35,10 +35,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewPropertyAnimatorCompat;
 
 import android.util.Base64;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
@@ -100,6 +102,9 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
     private Handler localHandler = new Handler();
 
+    private ViewGroup toast;
+    private TextView toastText;
+
     public static final String PARAM_SCANTYPE = "scanType";
     public enum ScanType{
         ETH_Address,
@@ -118,6 +123,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
+
+        toast = findViewById(R.id.toast);
+        toastText = findViewById(R.id.text);
+        toast.setVisibility(View.INVISIBLE);
 
         imgTarget = findViewById(R.id.img_target);
         imgTarget.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -498,89 +507,99 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
     boolean isStartActivity = false;
     private void validate(Barcode barcode) {
+        Log.d(TAG, "validate() called with: barcode = [" + barcode.displayValue + "]");
         String value = barcode.displayValue;
 
-        if (scanType != null)
-            switch (scanType) {
-                case PrivateKey: {
+        
+        switch (scanType) {
+            case PrivateKey: {
+                Log.d(TAG, "validate: privatekey");
+                try {
+                    Hex.decode(value);
+                    Intent data = new Intent();
+                    data.putExtra(BarcodeObject, barcode);
+                    setResult(CommonStatusCodes.SUCCESS, data);
+                    finish();
+                } catch (Exception e) {
+                    showToast(getString(R.string.errScanPrivateKey));
+                    Log.d(TAG, "validate: err private key");
+                }
+            } break;
+
+            case ICX_Address: {
+                Log.d(TAG, "validate: icx address");
+                boolean fromWallet = getIntent().getSerializableExtra("wallet") != null &&
+                        getIntent().getSerializableExtra("entry") != null &&
+                        getIntent().getStringExtra("privateKey") != null;
+
+                if (value.startsWith("iconex://pay")) {
+                    Log.d(TAG, "validate: iconex://pay");
                     try {
-                        Hex.decode(value);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        CustomToast.makeText(this, getString(R.string.errScanPrivateKey), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } break;
-                case ICX_Address: {
-                    boolean fromWallet = getIntent().getSerializableExtra("wallet") != null &&
-                            getIntent().getSerializableExtra("entry") != null &&
-                            getIntent().getStringExtra("privateKey") != null;
+                        String base64Encoded = value.split("data=")[1];
+                        JSONObject jsonObject = new JSONObject(new String(Base64.decode(base64Encoded, Base64.NO_WRAP)));
+                        String address = jsonObject.getString("address");
+                        BigInteger amount = ConvertUtil.hexStringToBigInt(jsonObject.getString("amount"), 18);
 
-                    if (value.startsWith("iconex://pay")) {
-                        try {
-                            String base64Encoded = value.split("data=")[1];
-                            JSONObject jsonObject = new JSONObject(new String(Base64.decode(base64Encoded, Base64.NO_WRAP)));
-                            String address = jsonObject.getString("address");
-                            BigInteger amount = ConvertUtil.hexStringToBigInt(jsonObject.getString("amount"), 18);
-
-                            if (!fromWallet) throw new Exception();
-
-
+                        if (!fromWallet) {
+                            Log.d(TAG, "validate: fr");
+                            Intent data = new Intent();
+                            barcode.displayValue = address;
+                            data.putExtra(BarcodeObject, barcode);
+                            setResult(CommonStatusCodes.SUCCESS, data);
+                            finish();
+                        } else {
                             if (!isStartActivity)
                                 startActivity(new Intent(this, ICONTransferActivity.class)
+                                        .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
+                                        .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
+                                        .putExtra("privateKey", getIntent().getStringExtra("privateKKey"))
+                                        .putExtra("address", address)
+                                        .putExtra("amount", amount)
+                                );
+                            isStartActivity = true;
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Log.d(TAG, "validate: err icon address");
+                        showToast(getString(R.string.errIncorrectICXAddr));
+                    }
+                } else if (value.startsWith("hx") || value.startsWith("cx")) {
+                    if (fromWallet) {
+                        if (!isStartActivity)
+                            startActivity(new Intent(this, ICONTransferActivity.class)
                                     .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
                                     .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
                                     .putExtra("privateKey", getIntent().getStringExtra("privateKKey"))
-                                    .putExtra("address", address)
-                                    .putExtra("amount", amount)
+                                    .putExtra("address", barcode.displayValue)
                             );
-                            isStartActivity = true;
-
-                            finish();
-                            return;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            CustomToast.makeText(this, getString(R.string.errIncorrectICXAddr), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    } else if (!(value.startsWith("hx") || value.startsWith("cx"))) {
-                        CustomToast.makeText(this, getString(R.string.errIncorrectICXAddr), Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (fromWallet){
-                        if (!isStartActivity)
-                            startActivity(new Intent(this, ICONTransferActivity.class)
-                                .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
-                                .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
-                                .putExtra("privateKey", getIntent().getStringExtra("privateKKey"))
-                                .putExtra("address", barcode.displayValue)
-                        );
 
                         isStartActivity = true;
                         finish();
-                        return;
-                    }
-                } break;
-                case ETH_Address: {
-                    if (value.startsWith("0x")) {
-                        value = value.substring(2);
-                        if (value.length() != 40) {
-                            CustomToast.makeText(this, getString(R.string.errIncorrectETHAddr), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    } else if (value.contains(" ")) {
-                        CustomToast.makeText(this, getString(R.string.errIncorrectETHAddr), Toast.LENGTH_SHORT).show();
-                        return;
                     } else {
-                        CustomToast.makeText(this, getString(R.string.errIncorrectETHAddr), Toast.LENGTH_SHORT).show();
-                        return;
+                        Intent data = new Intent();
+                        data.putExtra(BarcodeObject, barcode);
+                        setResult(CommonStatusCodes.SUCCESS, data);
+                        finish();
                     }
-                } break;
-            }
-
-        Intent data = new Intent();
-        data.putExtra(BarcodeObject, barcode);
-        setResult(CommonStatusCodes.SUCCESS, data);
-        finish();
+                } else {
+                    Log.d(TAG, "validate: err icon address");
+                    showToast(getString(R.string.errIncorrectICXAddr));
+                }
+            } break;
+            case ETH_Address: {
+                Log.d(TAG, "validate: eth address");
+                if (value.startsWith("0x") && value.length() == 42 && !value.contains(" ")) {
+                    Log.d(TAG, "validate: eth success");
+                    Intent data = new Intent();
+                    data.putExtra(BarcodeObject, barcode);
+                    setResult(CommonStatusCodes.SUCCESS, data);
+                    finish();
+                } else {
+                    showToast(getString(R.string.errIncorrectETHAddr));
+                    Log.d(TAG, "validate: err ether address");
+                }
+            } break;
+        }
     }
 
     public float scaleX(float horizontal) {
@@ -613,6 +632,45 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
      */
     public float translateY(float y) {
         return scaleY(y);
+    }
+
+    private void showToast(String text) {
+        if (toast.getVisibility() == View.VISIBLE && toastText.getText().toString().equals(text)) return;
+
+        toast.clearAnimation();
+
+        AlphaAnimation aniShow = new AlphaAnimation(0, 1);
+        aniShow.setFillAfter(true);
+        aniShow.setDuration(500);
+
+        AlphaAnimation aniDismiss = new AlphaAnimation(1, 0);
+        aniDismiss.setFillAfter(true);
+        aniDismiss.setStartOffset(1500);
+        aniDismiss.setDuration(500);
+
+        AnimationSet ani = new AnimationSet(false);
+        ani.addAnimation(aniShow);
+        ani.addAnimation(aniDismiss);
+        ani.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                toast.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        toastText.setText(text);
+        toast.startAnimation(ani);
+        toast.setVisibility(View.VISIBLE);
     }
 
     private void animatie() {
