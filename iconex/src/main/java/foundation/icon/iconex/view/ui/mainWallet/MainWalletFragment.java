@@ -219,12 +219,16 @@ public class MainWalletFragment extends Fragment {
 
         walletAddressCard.setOnDismissListener(new WalletAddressCardView.OnDismissListener() {
             @Override
-            public void onDismiss() {
-                updateShowPRepsMenu();
+            public void onDismissStart() {
                 Animator aniShow = AnimatorInflater.loadAnimator(getContext(), R.animator.wallet_card_flip_show);
                 aniShow.setTarget(walletViewPager);
                 walletViewPager.setVisibility(View.VISIBLE);
                 aniShow.start();
+            }
+
+            @Override
+            public void onDismissFinish() {
+                updateShowPRepsMenu();
             }
         });
 
