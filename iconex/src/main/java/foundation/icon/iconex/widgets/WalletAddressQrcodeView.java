@@ -72,6 +72,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
         // bind data
         txtName.setText(title);
         symbol = wallet.getWalletEntries().get(0).getSymbol();
+        editSendAmount.setText("");
 
         String address = (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX) ? "" : "0x") + wallet.getAddress();
         txtAddress.setText(address);
