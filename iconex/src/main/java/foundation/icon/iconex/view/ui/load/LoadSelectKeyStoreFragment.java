@@ -288,6 +288,7 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
         inputFileName.setText("");
         inputPwd.setText("");
         inputPwd.setInputEnabled(inputEnabled);
+        isSelect = false;
     }
 
     @Override

@@ -178,6 +178,14 @@ public class PRepVoteFragment extends Fragment {
                 voted = voted.add(new BigDecimal(d.getValue()));
             }
 
+            if (delegations.size() > 0 && !voted.equals(BigDecimal.ZERO)) {
+                resetVotes.setTextColor(getResources().getColor(R.color.dark4D));
+                resetVotes.setEnabled(true);
+            } else {
+                resetVotes.setTextColor(getResources().getColor(R.color.darkE6));
+                resetVotes.setEnabled(false);
+            }
+
             vm.setVoted(voted.toBigInteger());
             vm.setVotingPower(total.subtract(voted).toBigInteger());
 
