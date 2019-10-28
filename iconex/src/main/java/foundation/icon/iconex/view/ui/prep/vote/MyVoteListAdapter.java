@@ -328,6 +328,9 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             public void afterTextChanged(Editable s) {
                 String inputString = s.toString();
 
+                if (inputString.isEmpty())
+                    return;
+
                 if (inputString.charAt(0) == '.') {
                     editDelegation.setText(inputString.substring(1));
                     editDelegation.setSelection(inputString.substring(1).length());
@@ -335,7 +338,9 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     return;
                 } else if (inputString.contains(".")) {
                     String[] split = inputString.split("\\.");
-                    if (split.length > 2) {
+                    if (split.length < 2) {
+                        return;
+                    } else if (split.length > 2) {
                         int index = inputString.indexOf(".");
                         inputString = inputString.substring(0, index);
 
