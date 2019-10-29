@@ -90,8 +90,8 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
     public interface OnTokenManageListener {
         void onClose();
-
-        void onDone(String name);
+        void onDoneEditToken(String name);
+        void onDoneAddToken();
     }
     private OnTokenManageListener mListener;
 
@@ -272,7 +272,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
             case R.id.btn_add_token: {
                 if (validateToken(true)) {
                     addToken();
-                    mListener.onClose();
+                    mListener.onDoneAddToken();
                 }
             } break;
         }
@@ -320,7 +320,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
             mToken.setUserDec(Integer.parseInt(editDec.getText().toString()));
 
             setReadOnly();
-            mListener.onDone(editName.getText().toString());
+            mListener.onDoneEditToken(editName.getText().toString());
         }
     }
 

@@ -314,7 +314,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBaseline_toBaselineOf="@+id/lb_slow"
-                    app:layout_constraintEnd_toEndOf="@+id/txt_price"
+                    app:layout_constraintEnd_toEndOf="@+id/unit_price"
 
                     android:fontFamily="@font/noto_sans_light"
                     android:textSize="10dp"
