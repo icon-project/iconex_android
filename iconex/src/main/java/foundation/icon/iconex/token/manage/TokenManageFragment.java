@@ -144,6 +144,9 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         editSym = v.findViewById(R.id.edit_symbol);
         editDec = v.findViewById(R.id.edit_decimals);
 
+        editSym.setInputEnabled(false);
+        editDec.setInputEnabled(false);
+
         btnScan = v.findViewById(R.id.btn_qr_scan);
         btnAdd = v.findViewById(R.id.btn_add_token);
         btnComplete = v.findViewById(R.id.btn_complete);
