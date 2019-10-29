@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <foundation.icon.iconex.widgets.TitleBar
         android:id="@+id/appbar"

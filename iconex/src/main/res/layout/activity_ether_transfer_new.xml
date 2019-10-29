@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <foundation.icon.iconex.widgets.CustomActionBar
@@ -26,6 +24,8 @@
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         app:layout_constraintTop_toBottomOf="@id/appbar">
 
         <LinearLayout
@@ -33,12 +33,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <!-- Available Balance -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <TextView
                     android:id="@+id/txt_sub_balance"
@@ -205,8 +209,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="26dp">
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btn_contacts"
@@ -358,7 +361,6 @@
                     android:id="@+id/btn_view_data"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginTop="26dp"
 
                     android:background="@drawable/bg_btn_outline_01"
                     android:fontFamily="@font/noto_sans_light"

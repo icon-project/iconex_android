@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -83,8 +84,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         View v = inflater.inflate(R.layout.fragment_enter_data, container, false);
 
@@ -187,10 +187,11 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
             layoutComplete.setVisibility(View.GONE);
             layoutDataLimit.setVisibility(View.GONE);
 
-        } // else new data
+        } else {
+            editData.requestFocus();
+        }
 
         btnOption.setEnabled(data.getData() != null && !data.getData().isEmpty());
-        editData.requestFocus();
 
         return v;
     }
@@ -281,7 +282,11 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
     }
 
     public void showCancel() {
-        if (data.getData() == null && editData.getText().length() > 0) {
+        String _data = data.getData() == null ? "" : data.getData();
+        if (_data.startsWith("0x")) _data = new String(Hex.decode(Utils.remove0x(_data)));
+        String edit = editData.getText().toString();
+
+        if (!edit.equals(_data)) {
             MessageDialog messageDialog = new MessageDialog(getActivity());
             messageDialog.setSingleButton(false);
             messageDialog.setTitleText(getString(R.string.cancelEnterData));
