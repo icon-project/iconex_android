@@ -158,8 +158,6 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         } else {
             btnScan.setVisibility(View.VISIBLE);
             layoutAdd.setVisibility(View.VISIBLE);
-
-            editAddr.requestFocus();
             editName.setEnabled(true);
         }
 
@@ -354,6 +352,8 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                     }
                 } else {
                     editAddr.setError(false, null);
+                    btnAdd.setEnabled(false);
+                    btnComplete.setEnabled(false);
                 }
             }
         });
@@ -367,6 +367,11 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                 } else if (mMode == MyConstants.MODE_TOKEN.MOD) {
                     if (s.length() <= 0 && !isEditable)
                         editName.setError(false, null);
+                }
+
+                if (s.length() == 0) {
+                    btnAdd.setEnabled(false);
+                    btnComplete.setEnabled(false);
                 }
             }
         });
