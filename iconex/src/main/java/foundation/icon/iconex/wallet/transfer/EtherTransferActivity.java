@@ -333,7 +333,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
                         if (strPrice != null) {
                             if (strPrice.equals(MyConstants.NO_EXCHANGE)) {
-                                txtTransSend.setText("$ -");
+                                txtTransSend.setText("$ 0.00");
                             } else {
                                 Double transUSD = Double.parseDouble(amount)
                                         * Double.parseDouble(strPrice);
@@ -345,7 +345,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                         setRemain(amount);
                     }
                 } else {
-                    txtTransSend.setText("$ -");
+                    txtTransSend.setText("$ 0.00");
                     editSend.setError(false, null);
                 }
 
@@ -702,7 +702,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 ((TextView) findViewById(R.id.txt_trans_balance))
                         .setText("$ -");
 
-                txtTransSend.setText("$ -");
+                txtTransSend.setText("$ 0.00");
             } else {
                 Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()))
                         * Double.parseDouble(strPrice);

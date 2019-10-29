@@ -47,7 +47,7 @@
                 android:fontFamily="@font/noto_sans_medium"
                 android:hint="@string/hintContactsName"
                 android:imeOptions="actionNext"
-                android:inputType="text"
+                android:inputType="textUri"
                 android:longClickable="false"
                 android:maxLines="1"
                 android:paddingStart="10dp"
@@ -98,7 +98,7 @@
                     android:layout_toStartOf="@+id/btn_addr_delete"
                     android:background="@color/colorWhite"
                     android:fontFamily="@font/noto_sans_medium"
-                    android:inputType="textMultiLine"
+                    android:inputType="textMultiLine|textUri"
                     android:paddingStart="10dp"
                     android:textSize="14dp" />
 

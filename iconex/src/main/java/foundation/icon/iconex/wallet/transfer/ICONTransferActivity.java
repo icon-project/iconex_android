@@ -589,7 +589,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                         setRemain(amount);
                     }
                 } else {
-                    txtTransSend.setText(String.format("$ %s", MyConstants.NO_BALANCE));
+                    txtTransSend.setText(String.format("$ %s", "0.00"));
                     btnSend.setEnabled(false);
 
                     editSend.setError(false, null);
