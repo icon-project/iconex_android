@@ -139,7 +139,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
             mService = binder.getService();
             mService.registerExchangeCallback(mExchangeCallback);
-//            mService.registerRemCallback(mRemittanceCallback);
+            mService.registerRemCallback(mRemittanceCallback);
 
             if (mBound) {
                 mService.requestExchangeList(CODE_EXCHANGE);
@@ -169,6 +169,23 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
         @Override
         public void onReceiveException(Throwable t) {
+        }
+    };
+
+    private NetworkService.TransferCallback mRemittanceCallback = new NetworkService.TransferCallback() {
+        @Override
+        public void onReceiveTransactionResult(String id, String txHash) {
+            saveRecentSent(txHash);
+        }
+
+        @Override
+        public void onReceiveError(String address, int code) {
+
+        }
+
+        @Override
+        public void onReceiveException(Throwable t) {
+
         }
     };
 
@@ -631,7 +648,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                                     Integer.toString(mWalletEntry.getDefaultDec()), privKey);
                         }
                         timestamp = getTimeStamp();
-                        saveRecentSent();
                         Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -1005,13 +1021,13 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             return address;
     }
 
-    private void saveRecentSent() {
+    private void saveRecentSent(String txHash) {
         String contactName = findContactName(editAddress.getText().toString());
         if (contactName == null)
             contactName = "";
 
-        RealmUtil.addRecentSend(MyConstants.Coin.ETH, mWalletEntry.getContractAddress(), contactName,
-                mWalletEntry.getAddress(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
+        RealmUtil.addRecentSend(MyConstants.Coin.ETH, txHash, contactName,
+                mWalletEntry.getAddress(), timestamp, editSend.getText(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }
 

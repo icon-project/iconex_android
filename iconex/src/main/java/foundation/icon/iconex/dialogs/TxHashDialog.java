@@ -18,6 +18,7 @@ import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.widgets.CustomToast;
 import kotlin.jvm.functions.Function1;
+import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.ICONexApp.network;
 
@@ -26,11 +27,13 @@ public class TxHashDialog extends MessageDialog {
     private TextView mTxHash;
     private TextView mLnkTacker;
 
+    private String coinType;
     private String txHash;
 
-    public TxHashDialog(@NotNull Context context, String txHash) {
+    public TxHashDialog(@NotNull Context context, String txHash, String coinType) {
         super(context);
         this.txHash = txHash;
+        this.coinType = coinType;
         buildDialog();
     }
 
@@ -46,6 +49,9 @@ public class TxHashDialog extends MessageDialog {
         mTxHash = v.findViewById(R.id.txt_tx_hash);
         mLnkTacker = v.findViewById(R.id.lnk_tracker);
 
+        int resText = Constants.KS_COINTYPE_ICX.equals(coinType) ?
+                R.string.dialogTxHashTrackerLink_ICON : R.string.dialogTxHashTrackerLink_ETHER;
+        mLnkTacker.setText(getContext().getString(resText));
         mTxHash.setText(txHash);
 
         // set button
@@ -56,22 +62,37 @@ public class TxHashDialog extends MessageDialog {
         mLnkTacker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tracker = null;
-                switch (ICONexApp.NETWORK.getNid().intValue()) {
-                    case MyConstants.NETWORK_MAIN:
-                        tracker = ServiceConstants.URL_TRACKER_MAIN;
-                        break;
+                String tracker;
+                String url;
+                if (Constants.KS_COINTYPE_ICX.equals(coinType)) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
+                        case MyConstants.NETWORK_MAIN:
+                            tracker = ServiceConstants.URL_TRACKER_MAIN;
+                            break;
 
-                    case MyConstants.NETWORK_TEST:
-                        tracker = ServiceConstants.URL_TRACKER_TEST;
-                        break;
+                        default:
+                        case MyConstants.NETWORK_TEST:
+                            tracker = ServiceConstants.URL_TRACKER_TEST;
+                            break;
 
-                    case MyConstants.NETWORK_DEV:
-                        tracker = ServiceConstants.DEV_TRACKER;
-                        break;
+                        case MyConstants.NETWORK_DEV:
+                            tracker = ServiceConstants.DEV_TRACKER;
+                            break;
+                    }
+                    url = tracker + txHash;
+
+                } else {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
+                        case MyConstants.NETWORK_MAIN:
+                            tracker = ServiceConstants.URL_ETHERSCAN;
+                            break;
+                        default:
+                            tracker = ServiceConstants.URL_ROPSTEN;
+                            break;
+                    }
+                    url = tracker + "tx/" + txHash;
                 }
 
-                String url = tracker + txHash;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 getContext().startActivity(intent);
                 dismiss();

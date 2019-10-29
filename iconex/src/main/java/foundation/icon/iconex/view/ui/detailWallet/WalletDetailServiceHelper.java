@@ -100,13 +100,12 @@ public class WalletDetailServiceHelper {
             RealmUtil.loadRecents();
             List<TransactionItemViewData> viewDataList = new ArrayList<>();
             for(RecentSendInfo tx: ICONexApp.ETHSendInfo) {
-                if (walletEntry.getAddress().equals(tx.getAddress()) &&
-                        ( tx.getTxHash() == null && walletEntry.getContractAddress().equals("") ||
-                                tx.getTxHash() != null && tx.getTxHash().equals(walletEntry.getContractAddress()))) {
+                if (walletEntry.getAddress().equals(tx.getAddress()) && walletEntry.getSymbol().equals(tx.getSymbol())) {
                     TransactionItemViewData viewData = new TransactionItemViewData();
                     viewData.setState(1);
                     viewData.setDate(tx.getDate());
                     viewData.setFrom(tx.getAddress());
+                    viewData.setTxHash(tx.getTxHash());
                     viewData.setAmount(DecimalFomatter.format(new BigDecimal(tx.getAmount())));
                     viewDataList.add(viewData);
                 }

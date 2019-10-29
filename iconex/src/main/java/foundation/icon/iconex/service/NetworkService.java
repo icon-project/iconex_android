@@ -685,11 +685,11 @@ public class NetworkService extends Service {
         protected void onPostExecute(String[] result) {
             super.onPostExecute(result);
 
-//            if (result != null) {
-//                mTransferCallback.onReceiveTransactionResult(result[0], result[1]);
-//            } else {
-//                mTransferCallback.onReceiveError("ETHTransfer", 9999);
-//            }
+            if (result != null) {
+                mTransferCallback.onReceiveTransactionResult(result[0], result[1]);
+            } else {
+                mTransferCallback.onReceiveError("ETHTransfer", 9999);
+            }
         }
     }
 
