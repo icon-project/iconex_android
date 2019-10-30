@@ -96,6 +96,7 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
             case R.id.btnRename: {
                 EditText2Dialog editText2Dialog = new EditText2Dialog(getContext(), getString(R.string.modWalletAlias));
                 editText2Dialog.setHint(getString(R.string.hintWalletAlias));
+                editText2Dialog.setPastable(false);
                 editText2Dialog.setText(wallet.getAlias());
                 final String[] beforeStr = {""};
                 editText2Dialog.setOnTextChangedListener(new EditText2Dialog.OnTextChangedListener() {
@@ -142,6 +143,7 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                             }
                         }
 
+                        alias = alias.trim();
                         RealmUtil.modWalletAlias(wallet.getAddress(), alias);
                         wallet.setAlias(alias);
                         for (int i = 0; ICONexApp.wallets.size() > i; i++) {
