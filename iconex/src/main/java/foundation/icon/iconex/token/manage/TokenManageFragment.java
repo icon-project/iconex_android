@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -326,6 +327,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
     // ============================= init View
     private void initView() {
+        editAddr.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         editAddr.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
