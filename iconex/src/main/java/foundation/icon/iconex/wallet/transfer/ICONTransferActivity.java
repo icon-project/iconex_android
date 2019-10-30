@@ -827,7 +827,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
     private boolean validateSendAmount(String value) {
         if (value.isEmpty()) {
-            editSend.setError(true, getString(R.string.errNoSendAmount));
+            //editSend.setError(true, getString(R.string.errNoSendAmount));
             return false;
         }
 

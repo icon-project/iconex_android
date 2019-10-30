@@ -272,7 +272,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         editSend.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
-                setSendEnable();
+                validateSendAmount(editSend.getText(), true);
+                setSendEnable(false);
             }
         });
         editSend.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
@@ -284,8 +285,9 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             @Override
             public void onReleased() {
                 if (editSend.getText().length() > 0) {
-                    validateSendAmount(editSend.getText().toString());
+                    validateSendAmount(editSend.getText(), true);
                 }
+                setSendEnable(false);
             }
         });
         editSend.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -358,7 +360,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         editAddress.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
-                setSendEnable();
+                validateAddress(editAddress.getText(), true);
+                setSendEnable(false);
             }
         });
         editAddress.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
@@ -369,8 +372,10 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
             @Override
             public void onReleased() {
-                if (editAddress.getText().toString().length() > 0)
-                    validateAddress(editAddress.getText().toString());
+                if (editAddress.getText().length() > 0) {
+                    validateAddress(editAddress.getText(), true);
+                }
+                setSendEnable(false);
             }
         });
         editAddress.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -390,7 +395,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         editLimit.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
-                setSendEnable();
+                validateGasLimit(true);
+                setSendEnable(false);
             }
         });
         editLimit.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
@@ -401,7 +407,10 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
             @Override
             public void onReleased() {
-                validateGasLimit();
+                if (editAddress.getText().length() > 0) {
+                    validateGasLimit(true);
+                }
+                setSendEnable(false);
             }
         });
         editLimit.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -418,21 +427,15 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                     editLimit.setError(false, null);
                     txtFee.setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
                     setRemain(calculateFee());
+                    setSendEnable(false);
                 }
             }
         });
         editLimit.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
             @Override
             public void onDone() {
-                boolean result = validateSendAmount(editSend.getText().toString())
-                        && validateAddress(editAddress.getText().toString())
-                        && validateGasLimit()
-                        && validateData();
-                if (result) {
-                    btnSend.setEnabled(true);
-                } else {
-                    btnSend.setEnabled(false);
-                }
+                validateGasLimit(true);
+                setSendEnable(false);
             }
         });
 
@@ -466,7 +469,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         editData.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
-                setSendEnable();
+                validateData(true);
+                setSendEnable(false);
             }
         });
         editData.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
@@ -477,7 +481,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
             @Override
             public void onReleased() {
-                validateData();
+                validateData(true);
+                setSendEnable(false);
             }
         });
         editData.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -497,15 +502,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         editData.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
             @Override
             public void onDone() {
-                boolean result = validateSendAmount(editSend.getText())
-                        && validateAddress(editAddress.getText())
-                        && validateGasLimit()
-                        && validateData();
-                if (result) {
-                    btnSend.setEnabled(true);
-                } else {
-                    btnSend.setEnabled(false);
-                }
+                validateData(true);
+                setSendEnable(false);
             }
         });
 
@@ -575,7 +573,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                         }
                         break;
                 }
-                setSendEnable();
+                validateSendAmount(editSend.getText(), true);
+                setSendEnable(false);
                 editSend.setSelection(editSend.getText().length());
             }
         };
@@ -842,7 +841,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         }
     }
 
-    private boolean validateSendAmount(String value) {
+    private boolean validateSendAmount(String value, boolean errShow) {
         if (value.isEmpty()) {
             editSend.setError(false, null);
             return false;
@@ -853,13 +852,13 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
             if (balance.compareTo(sendAmount) < 0) {
-                editSend.setError(true, getString(R.string.errNotEnough));
+                if (errShow) editSend.setError(true, getString(R.string.errNotEnough));
                 return false;
             }
         } else {
 
             if (balance.compareTo(sendAmount) < 0) {
-                editSend.setError(true, getString(R.string.errNotEnough));
+                if (errShow) editSend.setError(true, getString(R.string.errNotEnough));
 
                 return false;
             }
@@ -869,29 +868,29 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         return true;
     }
 
-    private boolean validateAddress(String address) {
+    private boolean validateAddress(String address, boolean errShow) {
         if (address.isEmpty()) {
             return false;
         }
 
         if (address.equals(mWallet.getAddress())) {
-            editAddress.setError(true, getString(R.string.errSameAddress));
+            if (errShow) editAddress.setError(true, getString(R.string.errSameAddress));
             return false;
         }
 
         if (address.startsWith("0x")) {
             address = address.substring(2);
             if (address.length() != 40) {
-                editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
+                if (errShow) editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
 
                 return false;
             }
         } else if (address.contains(" ")) {
-            editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
+            if (errShow) editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
 
             return false;
         } else {
-            editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
+            if (errShow) editAddress.setError(true, getString(R.string.errIncorrectETHAddr));
 
             return false;
         }
@@ -901,12 +900,12 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         return true;
     }
 
-    private boolean validateGasLimit() {
+    private boolean validateGasLimit(boolean errShow) {
         if (editLimit.getText().isEmpty()) {
-            editLimit.setError(true, getString(R.string.errGasLimitEmpty));
+            if (errShow) editLimit.setError(true, getString(R.string.errGasLimitEmpty));
             return false;
         } if (Integer.parseInt(editLimit.getText()) < 21000) {
-            editLimit.setError(true, getString(R.string.errEtherGasLimit));
+            if (errShow) editLimit.setError(true, getString(R.string.errEtherGasLimit));
             return false;
         } else {
             editLimit.setError(false, null);
@@ -914,7 +913,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         }
     }
 
-    private boolean validateData() {
+    private boolean validateData(boolean errShow) {
         if (layoutDataInfo.getVisibility() == View.GONE)
             return true;
 
@@ -922,14 +921,14 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             return true;
         else {
             if (!editData.getText().startsWith("0x")) {
-                editData.setError(true, getString(R.string.errInvalidData));
+                if (errShow) editData.setError(true, getString(R.string.errInvalidData));
                 return false;
             } else {
                 try {
                     String data = editData.getText().toString().substring(2);
                     byte[] temp = Hex.decode(data);
                 } catch (Exception e) {
-                    editData.setError(true, getString(R.string.errInvalidData));
+                    if (errShow) editData.setError(true, getString(R.string.errInvalidData));
 
                     return false;
                 }
@@ -952,11 +951,11 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         return Convert.fromWei(limit.multiply(price).multiply(ETH_MULTI).toString(), Convert.Unit.ETHER).toPlainString();
     }
 
-    private void setSendEnable() {
-        if (validateSendAmount(editSend.getText())
-                && validateAddress(editAddress.getText())
-                && validateGasLimit()
-                && validateData()) {
+    private void setSendEnable(boolean errShow) {
+        if (validateSendAmount(editSend.getText(), errShow)
+                && validateAddress(editAddress.getText(), errShow)
+                && validateGasLimit(errShow)
+                && validateData(errShow)) {
             btnSend.setEnabled(true);
         } else {
             btnSend.setEnabled(false);
@@ -1039,18 +1038,16 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 String address = data.getStringExtra("address");
                 editAddress.setText(checkAddress(address));
 
-                boolean result = validateSendAmount(editSend.getText().toString())
-                        && validateAddress(editAddress.getText().toString());
-                btnSend.setEnabled(result);
+                validateAddress(editAddress.getText(), true);
+                setSendEnable(false);
             }
         } else if (requestCode == RC_BARCODE_CAPTURE) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     editAddress.setText(checkAddress(barcode.displayValue));
-                    boolean validSend = validateSendAmount(editSend.getText());
-                    boolean validAddress = validateAddress(editAddress.getText());
-                    btnSend.setEnabled(validSend && validAddress);
+                    validateAddress(editAddress.getText(), true);
+                    btnSend.setEnabled(false);
                 } else {
                 }
             }
@@ -1063,7 +1060,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     public void onSetData(String data) {
         editData.setText(data);
         btnViewData.setVisibility(View.VISIBLE);
-        setSendEnable();
+        validateData(true);
+        setSendEnable(false);
     }
 
     @Override
