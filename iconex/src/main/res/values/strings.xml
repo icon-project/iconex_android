@@ -444,7 +444,6 @@
 
     <!-- ICON Connect -->
     <string name="selectWallet">Select Wallet</string>
-    <string name="txData">Tx Data</string>
 
     <string name="msgCancelBind">Cancel select wallet?\nYou will return to previous app.</string>
     <string name="msgCancelPassword">Cancel enter password?\nYou will return to previous app.</string>
@@ -461,15 +460,10 @@
 
     <string name="forgot_passwword"><u>비밀번호를 잊으셨나요?</u></string>
 
-    <string name="dialogHeadTextMinExchangeRate">허용가능 최소 환전비율</string>
-    <string name="dialogTitleTextMinExchangeRate">암호화폐의 환율은 변동이 심하므로,\n최소환전비율 설정을 통해 자산을 보호하세요.</string>
-    <string name="dialogSubTextMinExchangeRate">실제 환전이 체결되는 시점에 최소 환전 비율\n미만으로 받게 되면 Transaction이 취소되고,\n이미 사용한 수수료는 소진됩니다.</string>
 
-    <string name="dialogHeatTextUnstakeCancel">Unstake Cancel</string>
     <string name="dialogLabelTimeRequired">Time Required</string>
     <string name="dialogLabelStepLimit">Step Limit / Price (ICX)</string>
     <string name="dialogLabelEstimatedMaxFee">Estimated Maximum Fee (ICX)</string>
-    <string name="dialogDescriptionUnstakeCancle">Unstake 취소 시 Transaction 수수료를 지불해야 합니다.</string>
 
     <!-- New -->
     <string name="createWalletStep1Detailed1">· You can add IRC tokens using ICON wallet menu.</string>
@@ -577,18 +571,13 @@
     <string name="staked">Staked</string>
     <string name="iscore">I-Score</string>
     <string name="icon_voting">ICON Voting</string>
-    <string name="requestSend">전송 요청</string>
-    <string name="msgRequestSend">전송 요청 수량 입력 시, 입력한 수량 정보가 포함된 QR 코드로 변경됩니다.</string>
     <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
-    <string name="messageRequestSend">ICX를 ICONex 지갑으로 보내주세요.</string>
-    <string name="chooseMsgRequestSend">전송 요청 메세지 보내기</string>
     <string name="generateQRcode">QR 코드 생성</string>
 
     <!-- New - wallet menu -->
     <string name="totalAssets">전체 자산 가치</string>
     <string name="totalVotedPower">전체 Voted Power</string>
     <string name="msgTokenDelete2">삭제하시겠습니까?</string>
-    <string name="password">Password</string>
 
     <!-- New side Menu -->
     <string name="appVer">앱 버전</string>
@@ -621,7 +610,7 @@
     <string name="mainWalletInfo02">평가금액은 참고용으로만 활용해주세요.</string>
 
     <string name="mainWalletInfo10">P-Rep</string>
-    <string name="mainWalletInfo11">P-Rep 이란...</string>
+    <string name="mainWalletInfo11">ICON Network는 대표자(Public Representative, 이하 P-Rep)에 의해 운영되는 블록체인 네트워크로, 사용자(ICONist)들은 양질의 P-Rep을 선별하여 투표해야 합니다. 각 대표자들은 ICON Network 전체 보상량에 영향을 주는 대표자 월간 보상 변수(i_rep) 값을 제출할 수 있으며, 사용자들은 각 대표자들이 제출한 값을 살펴볼 수 있습니다. 아울러, 투표에 참여한 사용자들은 대표자 위임 연간 보상률(r_rep)에 의해 투표에 대한 보상을 받습니다.</string>
 
     <string name="mainWalletInfo20">Stake</string>
     <string name="mainWalletInfo21">원하는 수량 만큼 ICX를 잠금 상태로 전환하는 기능입니다.</string>
@@ -641,7 +630,4 @@
 
     <string name="msgNewPasswordSame">현재 비밀번호와 동일합니다. 새 비밀번호를 입력해주세요.</string>
     <string name="totalWalletCount">총 %d개 지갑</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
