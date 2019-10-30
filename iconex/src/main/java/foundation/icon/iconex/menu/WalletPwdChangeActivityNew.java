@@ -31,7 +31,7 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
     private Wallet mWallet;
     private byte[] mPrivateKey;
-    private String beforePwd, beforeCheck;
+    private String beforePwd;
     public static final int RESULT_CODE = 3333;
 
     // ui
@@ -214,17 +214,7 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         editCheck.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {
-                if (s.length() > 0) {
-                    if (s.charAt(s.length() - 1) == ' ') {
-                        editCheck.setText(s.subSequence(0, s.length() - 1).toString());
-                        if (editCheck.getText().toString().length() > 0)
-                            editCheck.setSelection(editCheck.getText().toString().length());
-                    } else if (s.toString().contains(" ")) {
-                        editCheck.setText(beforeCheck);
-                        editCheck.setSelection(beforeCheck.length());
-                    } else
-                        beforeCheck = s.toString();
-                } else {
+                if (s.length() == 0) {
                     editCheck.setError(false, null);
                     btnChange.setEnabled(false);
                 }
