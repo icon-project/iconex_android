@@ -409,7 +409,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         }
 
         wallet.setCoinType(coin.getSymbol().toUpperCase());
-        wallet.setAlias(inputAlias.getText());
+        wallet.setAlias(Utils.strip(inputAlias.getText()));
         wallet.setAddress(loadedWallet[0]);
         wallet.setKeyStore(loadedWallet[2]);
 

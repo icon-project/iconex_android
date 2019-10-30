@@ -136,7 +136,7 @@ public class WalletDetailFragment extends Fragment {
                         public void onClick(View v) {
                             int position = holder.getAdapterPosition();
                             TransactionItemViewData viewData = lstViewData.get(position);
-                            new TxHashDialog(getContext(), viewData.getTxHash()).show();
+                            new TxHashDialog(getContext(), viewData.getTxHash(), viewModel.wallet.getValue().getCoinType()).show();
                         }
                     });
 

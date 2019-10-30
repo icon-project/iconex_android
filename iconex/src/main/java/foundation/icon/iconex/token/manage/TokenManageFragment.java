@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,8 +92,8 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
     public interface OnTokenManageListener {
         void onClose();
-
-        void onDone(String name);
+        void onDoneEditToken(String name);
+        void onDoneAddToken();
     }
 
     private OnTokenManageListener mListener;
@@ -147,6 +148,9 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         editSym = v.findViewById(R.id.edit_symbol);
         editDec = v.findViewById(R.id.edit_decimals);
 
+        editSym.setInputEnabled(false);
+        editDec.setInputEnabled(false);
+
         btnScan = v.findViewById(R.id.btn_qr_scan);
         btnAdd = v.findViewById(R.id.btn_add_token);
         btnComplete = v.findViewById(R.id.btn_complete);
@@ -161,9 +165,15 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         } else {
             btnScan.setVisibility(View.VISIBLE);
             layoutAdd.setVisibility(View.VISIBLE);
-
-            editAddr.requestFocus();
             editName.setEnabled(true);
+            editAddr.setFocus(true);
+            editAddr.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(editAddr.getEditView(), InputMethodManager.SHOW_FORCED);
+                }
+            }, 100);
         }
 
         return v;
@@ -274,9 +284,9 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
             }
             break;
             case R.id.btn_add_token: {
-                if (validateToken()) {
+                if (validateToken(true)) {
                     addToken();
-                    mListener.onClose();
+                    mListener.onDoneAddToken();
                 }
             }
             break;
@@ -309,7 +319,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
     }
 
     private void completeToken() {
-        boolean check = validateToken();
+        boolean check = validateToken(false);
         if (check) {
             try {
                 RealmUtil.modToken(mWalletAddr, editAddr.getText().toString(),
@@ -325,13 +335,19 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
             mToken.setUserDec(Integer.parseInt(editDec.getText().toString()));
 
             setReadOnly();
-            mListener.onDone(editName.getText().toString());
+            mListener.onDoneEditToken(editName.getText().toString());
         }
     }
 
     // ============================= init View
     private void initView() {
-        editAddr.setOnKeyPreImeListener(this);
+        editAddr.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        editAddr.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                validateToken(true);
+            }
+        });
         editAddr.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
@@ -340,8 +356,8 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
             @Override
             public void onReleased() {
-                if (!editAddr.getText().toString().isEmpty())
-                    validateAddress(editAddr.getText().toString());
+                if (!editAddr.getText().isEmpty())
+                    validateAddress(editAddr.getText(), true);
             }
         });
         editAddr.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -350,7 +366,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                 if (s.length() > 0) {
                     if (mMode != MyConstants.MODE_TOKEN.MOD) {
                         if (s.length() == 42) {
-                            boolean available = validateAddress(s.toString());
+                            boolean available = validateAddress(s.toString(), true);
                             if (available)
                                 if (tokenType == TokenManageActivity.TOKEN_TYPE.IRC)
                                     getIrcToken(s.toString());
@@ -360,11 +376,19 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                     }
                 } else {
                     editAddr.setError(false, null);
+                    btnAdd.setEnabled(false);
+                    btnComplete.setEnabled(false);
                 }
             }
         });
 
-        editName.setOnKeyPreImeListener(this);
+        editName.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                editName.clearFocus();
+                validateToken(false);
+            }
+        });
         editName.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {
@@ -374,12 +398,20 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                     if (s.length() <= 0 && !isEditable)
                         editName.setError(false, null);
                 }
+
+                if (s.length() == 0) {
+                    btnAdd.setEnabled(false);
+                    btnComplete.setEnabled(false);
+                }
             }
         });
         editName.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
             @Override
             public void onDone() {
-                validateToken();
+                editName.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editName.getWindowToken(), 0);
+                validateToken(false);
             }
         });
 
@@ -417,26 +449,26 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
     // ====================================== validate methods
     @Override // OnKeyPreImeListener
     public void onDone() {
-        validateToken();
+        validateToken(false);
     }
 
-    private boolean validateAddress(String address) {
+    private boolean validateAddress(String address, boolean showErr) {
         if (address.isEmpty()) {
-            editAddr.setError(true, getString(R.string.errNoAddress));
+            if (showErr) editAddr.setError(true, getString(R.string.errNoAddress));
             return false;
         } else if (checkAddressDup(address)) {
-            editAddr.setError(true, getString(R.string.errTokenDuplication));
+            if (showErr) editAddr.setError(true, getString(R.string.errTokenDuplication));
             return false;
         }
 
         if (tokenType == TokenManageActivity.TOKEN_TYPE.IRC) {
             if (!address.startsWith(MyConstants.PREFIX_IRC)) {
-                editAddr.setError(true, getString(R.string.errContractAddress));
+                if (showErr) editAddr.setError(true, getString(R.string.errContractAddress));
                 return false;
             }
         } else {
             if (!address.startsWith(MyConstants.PREFIX_HEX)) {
-                editAddr.setError(true, getString(R.string.errContractAddress));
+                if (showErr) editAddr.setError(true, getString(R.string.errContractAddress));
                 return false;
             }
         }
@@ -458,14 +490,14 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         return false;
     }
 
-    private boolean validateToken() {
+    private boolean validateToken(boolean showAddressErr) {
         boolean resultAddr = true;
         boolean resultName;
 
         String address = editAddr.getText().toString();
 
         if (mMode == MyConstants.MODE_TOKEN.ADD) {
-            resultAddr = validateAddress(address);
+            resultAddr = validateAddress(address,showAddressErr);
         }
 
         resultName = !editName.getText().isEmpty();
@@ -644,7 +676,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
                 editStatus = EDIT_STATUS.LOADED;
 
-                validateToken();
+                validateToken(true);
             }
         }
     }

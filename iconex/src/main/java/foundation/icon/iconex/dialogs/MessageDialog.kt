@@ -84,7 +84,7 @@ open class MessageDialog: Dialog {
         get() = mConfirmButton.text.toString()
         set(s) = mConfirmButton.setText(s)
 
-    var cancleButtonText: String
+    var cancelButtonText: String
         get() = mCancelButton.text.toString()
         set(s) = mCancelButton.setText(s)
 

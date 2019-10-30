@@ -48,6 +48,11 @@ public class IrcListFragment extends Fragment implements View.OnClickListener {
             if (mListener != null)
                 mListener.enterInfo();
         }
+
+        @Override
+        public void onChangeCheckList() {
+            btnAdd.setEnabled(ircAdapter.getCheckedList().size() != 0);
+        }
     };
 
     public IrcListFragment() {

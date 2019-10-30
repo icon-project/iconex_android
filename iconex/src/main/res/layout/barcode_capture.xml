@@ -103,4 +103,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_target" />
+
+    <FrameLayout
+        android:id="@+id/toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <include layout="@layout/layout_custom_toast"/>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

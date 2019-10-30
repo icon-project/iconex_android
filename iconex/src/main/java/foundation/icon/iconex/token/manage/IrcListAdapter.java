@@ -143,6 +143,9 @@ public class IrcListAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     list.get(getAdapterPosition()).setChecked(isChecked);
+                    if (mListener != null) {
+                        mListener.onChangeCheckList();
+                    }
                 }
             });
             txtIrc = itemView.findViewById(R.id.txt_irc);
@@ -194,5 +197,6 @@ public class IrcListAdapter extends RecyclerView.Adapter {
 
     public interface OnClickListener {
         void onClick();
+        void onChangeCheckList();
     }
 }

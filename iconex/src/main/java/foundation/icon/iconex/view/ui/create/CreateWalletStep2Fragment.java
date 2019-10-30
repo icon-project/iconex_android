@@ -275,7 +275,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                             @Override
                             public void onNext(String[] result) {
                                 Wallet wallet = new Wallet();
-                                wallet.setAlias(inputAlias.getText());
+                                wallet.setAlias(Utils.strip(inputAlias.getText()));
                                 wallet.setAddress(result[0]);
                                 vm.setPrivateKey(result[1]);
                                 wallet.setKeyStore(result[2]);

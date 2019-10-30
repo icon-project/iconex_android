@@ -372,6 +372,7 @@ public class RealmUtil {
             send.setAmount(amount);
             send.setDate(date);
             send.setSymbol(symbol);
+            send.setTxHash(txHash);
             send.setIsDone(MyConstants.TX_PENDING);
             realm.commitTransaction();
 

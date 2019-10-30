@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.View.OnFocusChangeListener
@@ -47,6 +48,10 @@ class TTextInputLayout : LinearLayout {
 
     private var hint = ""
     private var isError = false
+
+    private var isDetectPaste = false
+    private var isDisabledPaste = false
+    private var prevString = ""
 
     constructor(context: Context) : super(context) {
         initView()
@@ -122,6 +127,8 @@ class TTextInputLayout : LinearLayout {
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                prevString = p0!!.toString()
+                Log.d(TAG, "prevString: $prevString")
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -137,7 +144,13 @@ class TTextInputLayout : LinearLayout {
                     }
                 }
 
-                mOnTextChangedListener?.onChanged(s)
+                if (isDetectPaste) Log.d(TAG, "detecting paste...")
+                if (isDetectPaste && s.length - prevString.length > 1) {
+                    Log.d(TAG, "detect paste!")
+                    setText(prevString)
+                } else {
+                    mOnTextChangedListener?.onChanged(s)
+                }
             }
         })
 
@@ -211,10 +224,18 @@ class TTextInputLayout : LinearLayout {
     }
 
     fun setText(text: String) {
+        if (isDisabledPaste) {
+            isDetectPaste = false
+            Log.d(TAG, "isDetectPaste: $isDetectPaste")
+        }
         edit.setText(text)
         if (text.isNotEmpty())
             edit.setSelection(edit.text!!.length)
         tvHint.visibility = if (text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+        if (isDisabledPaste) {
+            isDetectPaste = true
+            Log.d(TAG, "isDetectPaste: $isDetectPaste")
+        }
     }
 
     fun setAppendText(text: String?) {
@@ -321,13 +342,30 @@ class TTextInputLayout : LinearLayout {
     }
 
     fun setPastable(pastable: Boolean) {
-        edit.isLongClickable = pastable;
+        edit.isLongClickable = pastable
+        isDisabledPaste = !pastable
+        isDetectPaste = !pastable
+        Log.d(TAG, "Set isDisabledPaste: $isDisabledPaste!")
     }
 
     fun disableCopyPaste() {
         edit.isLongClickable = false
         edit.customSelectionActionModeCallback = ActionModeCallbackInterceptor()
         edit.setTextIsSelectable(false)
+        isDisabledPaste = true
+        isDetectPaste = true
+        Log.d(TAG, "Set isDisabledPaste: $isDisabledPaste!")
+    }
+
+    fun setFocus(isFocus : Boolean) {
+        if (isFocus)
+            edit.requestFocus()
+        else
+            edit.clearFocus()
+    }
+
+    fun getEditView(): MyEditText {
+        return edit
     }
 
     private var mOnMyFocusChangedListenerListener: OnMyFocusChangedListener? = null

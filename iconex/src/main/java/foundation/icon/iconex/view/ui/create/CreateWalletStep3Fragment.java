@@ -22,9 +22,9 @@ import com.google.gson.JsonObject;
 import java.util.Objects;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
+import kotlin.jvm.functions.Function1;
 
 import static foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity.STORAGE_PERMISSION_REQUEST;
 
@@ -95,17 +95,16 @@ public class CreateWalletStep3Fragment extends Fragment implements View.OnClickL
                 if (isAccomplished)
                     mListener.onStep3Next();
                 else {
-                    Basic2ButtonDialog dialog = new Basic2ButtonDialog(getContext());
-                    dialog.setMessage(getString(R.string.noBackupKeyStoreFileConfirm));
-                    dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                    MessageDialog dialog = new MessageDialog(getContext());
+                    dialog.setSingleButton(false);
+                    dialog.setConfirmButtonText(getString(R.string.yes));
+                    dialog.setCancelButtonText(getString(R.string.no));
+                    dialog.setTitleText(getString(R.string.noBackupKeyStoreFileConfirm));
+                    dialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
-                        public void onOk() {
+                        public Boolean invoke(View view) {
                             mListener.onStep3Next();
-                        }
-
-                        @Override
-                        public void onCancel() {
-
+                            return true;
                         }
                     });
                     dialog.show();
@@ -119,25 +118,25 @@ public class CreateWalletStep3Fragment extends Fragment implements View.OnClickL
     }
 
     private void checkPermission() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(getContext());
+        MessageDialog dialog = new MessageDialog(getContext());
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            dialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            dialog.setSingleButton(false);
+            dialog.setConfirmButtonText(getString(R.string.yes));
+            dialog.setCancelButtonText(getString(R.string.no));
+            dialog.setTitleText(getString(R.string.backupKeyStoreFileConfirm));
+            dialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
-                public void onOk() {
+                public Boolean invoke(View view) {
                     isAccomplished = backupKeyStoreFile();
 
                     if (isAccomplished) {
-                        BasicDialog dialog = new BasicDialog(getActivity());
-                        dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+                        MessageDialog dialog = new MessageDialog(getActivity());
+                        dialog.setSingleButton(true);
+                        dialog.setTitleText(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
                         dialog.show();
                     }
-                }
-
-                @Override
-                public void onCancel() {
-
+                    return true;
                 }
             });
             dialog.show();

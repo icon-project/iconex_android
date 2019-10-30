@@ -166,7 +166,7 @@ public class LoadInputWalletAliasFragment extends Fragment implements View.OnCli
 
     private void saveWallet() {
         Wallet wallet = new Wallet();
-        wallet.setAlias(inputAlias.getText());
+        wallet.setAlias(Utils.strip(inputAlias.getText()));
         wallet.setAddress(keystore.get("address").getAsString());
         wallet.setKeyStore(keystore.toString());
 

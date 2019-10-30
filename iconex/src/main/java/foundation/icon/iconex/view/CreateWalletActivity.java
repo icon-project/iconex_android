@@ -7,19 +7,18 @@ import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import java.io.Serializable;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep1Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep2Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep3Fragment;
 import foundation.icon.iconex.view.ui.create.CreateWalletStep4Fragment;
 import foundation.icon.iconex.view.ui.wallet.ViewWalletInfoActivity;
 import foundation.icon.iconex.wallet.Wallet;
+import kotlin.jvm.functions.Function1;
 
 public class CreateWalletActivity extends FragmentActivity implements CreateWalletStep1Fragment.OnStep1Listener,
         CreateWalletStep2Fragment.OnStep2Listener, CreateWalletStep3Fragment.OnStep3Listener,
@@ -34,20 +33,23 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
         findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(CreateWalletActivity.this);
-                dialog.setMessage(getString(R.string.cancelCreateWallet));
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        finish();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-                dialog.show();
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    MessageDialog dialog = new MessageDialog(CreateWalletActivity.this);
+                    dialog.setSingleButton(false);
+                    dialog.setTitleText(getString(R.string.cancelCreateWallet));
+                    dialog.setConfirmButtonText(getString(R.string.yes));
+                    dialog.setCancelButtonText(getString(R.string.no));
+                    dialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                        @Override
+                        public Boolean invoke(View view) {
+                            finish();
+                            return true;
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    finish();
+                }
             }
         });
 
@@ -108,19 +110,22 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
 
     @Override
     public void onBackPressed() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(CreateWalletActivity.this);
-        dialog.setMessage(getString(R.string.cancelCreateWallet));
-        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-            @Override
-            public void onOk() {
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });
-        dialog.show();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            MessageDialog dialog = new MessageDialog(CreateWalletActivity.this);
+            dialog.setSingleButton(false);
+            dialog.setTitleText(getString(R.string.cancelCreateWallet));
+            dialog.setConfirmButtonText(getString(R.string.yes));
+            dialog.setCancelButtonText(getString(R.string.no));
+            dialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    finish();
+                    return true;
+                }
+            });
+            dialog.show();
+        } else {
+            finish();
+        }
     }
 }

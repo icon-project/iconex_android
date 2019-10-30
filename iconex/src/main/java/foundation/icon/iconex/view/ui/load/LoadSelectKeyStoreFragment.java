@@ -225,7 +225,7 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
 
     private void validatePassword() {
         if (!isSelect) {
-            inputFileName.setError(true, "Select File");
+            inputFileName.setError(true, getString(R.string.errNoKeystoreFile));
             return;
         }
 

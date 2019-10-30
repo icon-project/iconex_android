@@ -5,10 +5,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
@@ -66,43 +66,12 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         super.onResume();
     }
 
-    public void BackToMangaeToken() {
-        fragmentManager.popBackStackImmediate();
-        appbar.setTitle(getString(R.string.tokenManageTitle));
-
-        appbar.setTextButtonSelected(false);
-        appbar.setTextButton(getString(R.string.edit));
-        appbar.setIconEnd(CustomActionBar.IconEnd.none);
-
-        listFragment.tokenNotifyDataChanged();
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_close: // not use
             case R.id.btn_start_icon:
-                if (fragmentManager.getBackStackEntryCount() > 0) {
-                    MessageDialog messageDialog = new MessageDialog(this);
-                    messageDialog.setSingleButton(false);
-                    messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
-                        @Override
-                        public Boolean invoke(View view) {
-                            BackToMangaeToken();
-                            return true;
-                        }
-                    });
-
-                    if (modFragment != null && modFragment.isEdited()) {
-                        messageDialog.setTitleText(getString(R.string.msgTokenCancelMod));
-                        messageDialog.show();
-                    } else if (addFragment != null && !addFragment.isEmpty()) {
-                        messageDialog.setTitleText(getString(R.string.msgTokenCancelAdd));
-                        messageDialog.show();
-                    } else {
-                        BackToMangaeToken();
-                    }
-                } else finish();
+                onBackPressed();
                 break;
 
             case R.id.txt_mod: // not use
@@ -145,20 +114,28 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClose() {
         fragmentManager.popBackStackImmediate();
-        appbar.setTitle(getString(R.string.tokenManageTitle));
-
-        appbar.setTextButtonSelected(false);
-        appbar.setTextButton(getString(R.string.edit));
+        int resString = fragmentManager.getBackStackEntryCount() > 0 ?
+                R.string.addToken : R.string.tokenManageTitle;
+        appbar.setTitle(getString(resString));
         appbar.setIconEnd(CustomActionBar.IconEnd.none);
-
         listFragment.tokenNotifyDataChanged();
     }
 
     @Override
-    public void onDone(String name) {
+    public void onDoneEditToken(String name) {
         appbar.setTitle(name);
         appbar.setTextButtonSelected(false);
         appbar.setTextButton(getString(R.string.edit));
+    }
+
+    @Override
+    public void onDoneAddToken() {
+        fragmentManager.popBackStackImmediate();
+        if (fragmentManager.getBackStackEntryCount() > 0)
+            fragmentManager.popBackStackImmediate();
+        appbar.setTitle(getString(R.string.tokenManageTitle));
+        appbar.setIconEnd(CustomActionBar.IconEnd.none);
+        listFragment.tokenNotifyDataChanged();
     }
 
     @Override
@@ -184,7 +161,6 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void enterInfo() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        fragmentManager.popBackStackImmediate();
         addFragment = TokenManageFragment.newInstance(mWallet.getAddress(), MyConstants.MODE_TOKEN.ADD,
                 TOKEN_TYPE.IRC, null);
         transaction.add(R.id.container, addFragment);
@@ -207,63 +183,32 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onBackPressed() {
+
         if (fragmentManager.getBackStackEntryCount() > 0) {
-            if (appbar.isTextButtonSelected()) {
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        fragmentManager.popBackStackImmediate();
-                        appbar.setTitle(getString(R.string.tokenManageTitle));
+            MessageDialog messageDialog = new MessageDialog(this);
+            messageDialog.setSingleButton(false);
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    onClose();
+                    return true;
+                }
+            });
 
-                        appbar.setSelected(false);
-                        appbar.setTextButton(getString(R.string.edit));
-                        appbar.setIconEnd(CustomActionBar.IconEnd.none);
-
-                        listFragment.tokenNotifyDataChanged();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-                dialog.setMessage(getString(R.string.msgTokenCancelMod));
-                dialog.show();
+            if (modFragment != null && modFragment.isEdited()) {
+                messageDialog.setTitleText(getString(R.string.msgTokenCancelMod));
+                messageDialog.show();
             } else if (addFragment != null && !addFragment.isEmpty()) {
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        fragmentManager.popBackStackImmediate();
-                        appbar.setTitle(getString(R.string.tokenManageTitle));
-
-                        appbar.setTextButtonSelected(false);
-                        appbar.setTextButton(getString(R.string.edit));
-                        appbar.setIconEnd(CustomActionBar.IconEnd.none);
-
-                        listFragment.tokenNotifyDataChanged();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-                dialog.setMessage(getString(R.string.msgTokenCancelAdd));
-                dialog.show();
+                if (tokenType == TOKEN_TYPE.IRC && fragmentManager.getBackStackEntryCount() == 1) {
+                    onClose();
+                    return;
+                }
+                messageDialog.setTitleText(getString(R.string.msgTokenCancelAdd));
+                messageDialog.show();
             } else {
-                fragmentManager.popBackStackImmediate();
-                appbar.setTitle(getString(R.string.tokenManageTitle));
-
-                appbar.setTextButtonSelected(false);
-                appbar.setTextButton(getString(R.string.edit));
-                appbar.setIconEnd(CustomActionBar.IconEnd.none);
-
-                listFragment.tokenNotifyDataChanged();
+                onClose();
             }
-        } else
-            super.onBackPressed();
+        } else finish();
     }
 
     public enum TOKEN_TYPE {

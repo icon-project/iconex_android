@@ -65,8 +65,7 @@ public class EtherDataEnterFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         View v = inflater.inflate(R.layout.fragment_enter_data_ether, container, false);
 
@@ -119,6 +118,7 @@ public class EtherDataEnterFragment extends Fragment {
 
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(editData, InputMethodManager.SHOW_IMPLICIT);
+                    btnComplete.setEnabled(true);
 
                     state = State.INPUT;
                 } else {
@@ -127,7 +127,7 @@ public class EtherDataEnterFragment extends Fragment {
                     messageDialog.setTitleText(getString(R.string.msgDeleteData));
                     messageDialog.setSingleButton(false);
                     messageDialog.setConfirmButtonText(getString(R.string.yes));
-                    messageDialog.setCancleButtonText(getString(R.string.no));
+                    messageDialog.setCancelButtonText(getString(R.string.no));
                     messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
                         public Boolean invoke(View view) {
@@ -169,17 +169,19 @@ public class EtherDataEnterFragment extends Fragment {
             editData.setFocusable(false);
             btnOption.setText(getString(R.string.modified));
             layoutComplete.setVisibility(View.GONE);
+        } else {
+            editData.requestFocus();
         }
 
         btnOption.setEnabled(editData.getText().length() > 0);
-        editData.requestFocus();
 
         return v;
     }
 
     public void showCancel() {
         String data = (String) getArguments().get("data");
-        if (data.length() <= 0 && editData.getText().length() > 0) {
+        String edit = editData.getText().toString();
+        if (!edit.equals(data)) {
             MessageDialog messageDialog = new MessageDialog(getActivity());
             messageDialog.setSingleButton(false);
             messageDialog.setTitleText(getString(R.string.cancelEnterData));

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.view.ui.load.LoadBundleFragment;
 import foundation.icon.iconex.view.ui.load.LoadInputPrivateKeyFragment;
 import foundation.icon.iconex.view.ui.load.LoadInputWalletAliasFragment;
@@ -16,6 +17,7 @@ import foundation.icon.iconex.view.ui.load.LoadInputWalletInfoFragment;
 import foundation.icon.iconex.view.ui.load.LoadSelectKeyStoreFragment;
 import foundation.icon.iconex.view.ui.load.LoadSelectMethodFragment;
 import foundation.icon.iconex.view.ui.load.LoadViewModel;
+import kotlin.jvm.functions.Function1;
 
 public class LoadWalletActivity extends AppCompatActivity implements LoadSelectMethodFragment.OnSelectMethodListener,
         LoadSelectKeyStoreFragment.OnSelectKeyStoreCallback, LoadInputPrivateKeyFragment.OnLoadPrivateKeyListener,
@@ -40,20 +42,23 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
         findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(LoadWalletActivity.this);
-                dialog.setMessage(getString(R.string.cancelLoadWallet));
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        finish();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-                dialog.show();
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    MessageDialog dialog = new MessageDialog(LoadWalletActivity.this);
+                    dialog.setSingleButton(false);
+                    dialog.setConfirmButtonText(getString(R.string.yes));
+                    dialog.setCancelButtonText(getString(R.string.no));
+                    dialog.setTitleText(getString(R.string.cancelLoadWallet));
+                    dialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                        @Override
+                        public Boolean invoke(View view) {
+                            finish();
+                            return true;
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    finish();
+                }
             }
         });
 
@@ -136,19 +141,22 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
 
     @Override
     public void onBackPressed() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(LoadWalletActivity.this);
-        dialog.setMessage(getString(R.string.cancelLoadWallet));
-        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-            @Override
-            public void onOk() {
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });
-        dialog.show();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            MessageDialog dialog = new MessageDialog(LoadWalletActivity.this);
+            dialog.setSingleButton(false);
+            dialog.setConfirmButtonText(getString(R.string.yes));
+            dialog.setCancelButtonText(getString(R.string.no));
+            dialog.setTitleText(getString(R.string.cancelLoadWallet));
+            dialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    finish();
+                    return true;
+                }
+            });
+            dialog.show();
+        } else {
+            finish();
+        }
     }
 }

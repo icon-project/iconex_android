@@ -157,7 +157,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                             }
                         });
                         messageDialog.setConfirmButtonText(getString(R.string.yes));
-                        messageDialog.setCancleButtonText(getString(R.string.no));
+                        messageDialog.setCancelButtonText(getString(R.string.no));
                         messageDialog.show();
                     } else {
                         finish();
@@ -575,7 +575,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                     }
                 });
                 messageDialog.setConfirmButtonText(getString(R.string.yes));
-                messageDialog.setCancleButtonText(getString(R.string.no));
+                messageDialog.setCancelButtonText(getString(R.string.no));
                 messageDialog.show();
             } else {
                 finish();

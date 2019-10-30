@@ -86,6 +86,7 @@ public class SplashActivity extends AppCompatActivity {
             public void onDismiss(DialogInterface dialog) {
                 PreferenceUtil preferenceUtil = new PreferenceUtil(SplashActivity.this);
                 preferenceUtil.setPermissionConfirm(true);
+                preferenceUtil.loadPreference();
 
                 startActivity();
             }

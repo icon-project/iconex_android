@@ -103,20 +103,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                app:hint="Wallet Name" />
+                app:hint="@string/hintWalletAlias" />
 
             <foundation.icon.iconex.widgets.TTextInputLayout
                 android:id="@+id/input_pwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="Password"
+                app:hint="@string/hintWalletPassword"
                 app:inputType="password" />
 
             <foundation.icon.iconex.widgets.TTextInputLayout
                 android:id="@+id/input_pwd_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="Confirm Password"
+                app:hint="@string/hintWalletPasswordConfirm"
                 app:inputType="password" />
 
             <TextView
@@ -125,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/bg_outline_box_cyan"
+                android:fontFamily="@font/noto_sans_regular"
                 android:padding="20dp"
                 android:text="@string/createWalletStep2Notice"
                 android:textColor="@color/primary00" />

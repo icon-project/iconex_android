@@ -165,15 +165,6 @@
                 android:fontFamily="@font/noto_sans_light"
                 android:text="@string/createWalletStep1Detailed2"
                 android:textColor="@color/primary00" />
-
-            <TextView
-                style="@style/TextView10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/noto_sans_light"
-                android:text="@string/createWalletStep1Detailed3"
-                android:textColor="@color/primary00" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

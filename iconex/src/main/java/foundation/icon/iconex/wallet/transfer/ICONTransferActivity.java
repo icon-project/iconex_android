@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,9 +22,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
@@ -160,6 +167,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         setContentView(R.layout.activity_icon_transfer_new);
 
         // activity field init
@@ -210,6 +218,8 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
         getStepPrice();
         getStepLimit();
+
+        editSend.setFocus(true);
 
         if (getIntent().getStringExtra("address") != null)
             editAddress.setText(getIntent().getStringExtra("address"));
@@ -340,6 +350,9 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void initView() {
+
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtBalance, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtStepLimit, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         // init appbar
         appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
             @Override
@@ -589,7 +602,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                         setRemain(amount);
                     }
                 } else {
-                    txtTransSend.setText(String.format("$ %s", MyConstants.NO_BALANCE));
+                    txtTransSend.setText(String.format("$ %s", "0.00"));
                     btnSend.setEnabled(false);
 
                     editSend.setError(false, null);
@@ -827,7 +840,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
     private boolean validateSendAmount(String value) {
         if (value.isEmpty()) {
-            editSend.setError(true, getString(R.string.errNoSendAmount));
+            //editSend.setError(true, getString(R.string.errNoSendAmount));
             return false;
         }
 
