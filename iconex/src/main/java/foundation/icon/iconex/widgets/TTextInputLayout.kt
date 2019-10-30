@@ -330,6 +330,13 @@ class TTextInputLayout : LinearLayout {
         edit.setTextIsSelectable(false)
     }
 
+    fun setFocus(isFocus : Boolean) {
+        if (isFocus)
+            edit.requestFocus()
+        else
+            edit.clearFocus()
+    }
+
     private var mOnMyFocusChangedListenerListener: OnMyFocusChangedListener? = null
     fun setOnFocusChangedListener(onMyFocusChangedListenerListener: OnMyFocusChangedListener) {
         mOnMyFocusChangedListenerListener = onMyFocusChangedListenerListener

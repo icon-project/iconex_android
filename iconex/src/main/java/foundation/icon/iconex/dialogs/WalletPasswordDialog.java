@@ -145,4 +145,10 @@ public class WalletPasswordDialog extends MessageDialog {
             }
         });
     }
+
+    @Override
+    public void show() {
+        super.show();
+        mEditPassword.setFocus(true);
+    }
 }
