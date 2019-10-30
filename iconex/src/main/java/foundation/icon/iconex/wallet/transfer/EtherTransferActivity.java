@@ -255,6 +255,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         String symbol = "(" + mWalletEntry.getSymbol() + ")";
         labelSymbol.setText(symbol);
         editSend.setAppendText(symbol.substring(1, symbol.length() -1));
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtBalance, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
 
         // init appbar
         appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {

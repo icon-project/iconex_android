@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.TextViewCompat;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -87,6 +88,8 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
         btnSymbol.setOnClickListener(this);
         txtUnit.setOnClickListener(this);
         btnUnit.setOnClickListener(this);
+
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtAmount, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
     }
 
     public void setTextSymbol(String symbol) {

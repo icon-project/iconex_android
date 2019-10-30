@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.TextViewCompat;
 
 import foundation.icon.iconex.R;
 
@@ -33,6 +34,7 @@ public class TotalAssetsLayout extends FrameLayout implements View.OnClickListen
         btnToggle = v.findViewById(R.id.btn_toggle);
         txtAsset = v.findViewById(R.id.txt_total_asset);
         loading = v.findViewById(R.id.loading);
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtAsset, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
 
         txtUint.setOnClickListener(this);
         btnToggle.setOnClickListener(this);

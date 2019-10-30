@@ -18,6 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -340,6 +342,9 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void initView() {
+
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtBalance, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtStepLimit, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         // init appbar
         appbar.setOnActionClickListener(new CustomActionBar.OnActionClickListener() {
             @Override
