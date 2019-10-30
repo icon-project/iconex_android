@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +27,7 @@ import androidx.core.widget.TextViewCompat;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
@@ -162,6 +167,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         setContentView(R.layout.activity_icon_transfer_new);
 
         // activity field init
@@ -212,6 +218,8 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
         getStepPrice();
         getStepLimit();
+
+        editSend.setFocus(true);
 
         if (getIntent().getStringExtra("address") != null)
             editAddress.setText(getIntent().getStringExtra("address"));

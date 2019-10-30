@@ -10,10 +10,13 @@ import android.util.TypedValue
 import android.view.*
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import foundation.icon.iconex.R
 
 
@@ -335,6 +338,10 @@ class TTextInputLayout : LinearLayout {
             edit.requestFocus()
         else
             edit.clearFocus()
+    }
+
+    fun getEditView(): MyEditText {
+        return edit
     }
 
     private var mOnMyFocusChangedListenerListener: OnMyFocusChangedListener? = null

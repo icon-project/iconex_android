@@ -10,6 +10,8 @@ import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -192,6 +194,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         setContentView(R.layout.activity_ether_transfer_new);
 
         if (getIntent() != null) {
@@ -655,6 +658,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 dialog.show();
             }
         });
+
+        editSend.setFocus(true);
 
         if (mWalletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
             layoutDataInfo.setVisibility(View.GONE);

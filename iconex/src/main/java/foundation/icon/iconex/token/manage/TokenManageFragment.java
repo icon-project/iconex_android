@@ -163,6 +163,14 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
             btnScan.setVisibility(View.VISIBLE);
             layoutAdd.setVisibility(View.VISIBLE);
             editName.setEnabled(true);
+            editAddr.setFocus(true);
+            editAddr.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(editAddr.getEditView(), InputMethodManager.SHOW_FORCED);
+                }
+            }, 100);
         }
 
         return v;
