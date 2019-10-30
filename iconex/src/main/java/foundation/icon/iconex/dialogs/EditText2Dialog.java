@@ -79,4 +79,10 @@ public class EditText2Dialog extends MessageDialog{
         // confirm button enable;
         boolean onChangeText(String s);
     }
+
+    @Override
+    public void show() {
+        super.show();
+        mInputText.setFocus(true);
+    }
 }
