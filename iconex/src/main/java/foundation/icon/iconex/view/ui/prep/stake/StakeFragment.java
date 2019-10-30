@@ -177,8 +177,12 @@ public class StakeFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 String inputString = s.toString();
 
-                if (inputString.isEmpty())
+                if (inputString.isEmpty()) {
+                    txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", delegatedPercent));
+                    stakeSeekBar.setProgress(0);
+                    stakeGraph.updateGraph(delegated);
                     return;
+                }
 
                 if (inputString.charAt(0) == '.') {
                     editStaked.setText(inputString.substring(1));
@@ -472,6 +476,9 @@ public class StakeFragment extends Fragment {
         dialog.setStepLimit(txtStepNPrice.getText().toString());
         dialog.setEstimatedMaxFee(txtFee.getText().toString());
         dialog.setExchangedFee(txtFeeUsd.getText().toString());
+
+        Log.i(TAG, "setEstimatedFee=" + txtFee.getText().toString());
+        Log.i(TAG, "StakeDialog=" + dialog.getEstimatedMaxFee());
 
         dialog.setOnConfirmClick(new Function1<View, Boolean>() {
             @Override

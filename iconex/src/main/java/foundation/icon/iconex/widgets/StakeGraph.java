@@ -66,7 +66,7 @@ public class StakeGraph extends ConstraintLayout {
     }
 
     public void updateGraph() {
-        float stakePer, delegationPer;
+        float stakePer, delegationPer, totalDelegationPer;
 
         try {
             stakePer = stake.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).setScale(1, RoundingMode.HALF_UP).floatValue();
@@ -80,12 +80,19 @@ public class StakeGraph extends ConstraintLayout {
 
         try {
             delegationPer = delegation.divide(stake, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).setScale(1, RoundingMode.HALF_UP).floatValue();
+            totalDelegationPer = delegation.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).setScale(1, RoundingMode.HALF_UP).floatValue();
             if (delegationPer < 0)
                 delegationPer = 0.0f;
             else if (delegationPer > 100)
                 delegationPer = 100.0f;
+
+            if (totalDelegationPer < 0)
+                totalDelegationPer = 0.0f;
+            else if (delegationPer > 100)
+                totalDelegationPer = 100.0f;
         } catch (Exception e) {
             delegationPer = 0.0f;
+            totalDelegationPer = 0.0f;
         }
 
         Log.wtf(TAG, "stake=" + stake.toString());
@@ -105,7 +112,7 @@ public class StakeGraph extends ConstraintLayout {
         constraintSet.setHorizontalWeight(R.id.space, 100 - delegationPer);
         constraintSet.applyTo(findViewById(R.id.stake));
 
-        txtDelegationPer.setText(String.format(Locale.getDefault(), " %.1f%%", delegationPer));
+        txtDelegationPer.setText(String.format(Locale.getDefault(), " %.1f%%", totalDelegationPer));
     }
 
     public void updateGraph(BigDecimal stake) {

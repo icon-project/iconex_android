@@ -177,10 +177,15 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        txtCurrentIScore.setText(Utils.formatFloating(
-                                ConvertUtil.getValue(currentIScore, 18), 4));
-                        txtEstimatedIcx.setText(Utils.formatFloating(
-                                ConvertUtil.getValue(estimatedIcx, 18), 4));
+                        if (currentIScore.equals(BigInteger.ZERO)) {
+                            txtCurrentIScore.setText("0");
+                            txtEstimatedIcx.setText("0");
+                        } else {
+                            txtCurrentIScore.setText(Utils.formatFloating(
+                                    ConvertUtil.getValue(currentIScore, 15), 15));
+                            txtEstimatedIcx.setText(Utils.formatFloating(
+                                    ConvertUtil.getValue(estimatedIcx, 18), 8));
+                        }
 
                         String icx = ConvertUtil.getValue(stepPrice, 18);
                         String mIcx = icx.indexOf(".") < 0 ? icx : icx.replaceAll("0*$", "").replaceAll("\\.$", "");

@@ -85,15 +85,15 @@
             android:text="@string/staked"
             android:textColor="@color/primary" />
 
-        <TextView
-            android:id="@+id/txt_staked_icx"
-            style="@style/TextView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:fontFamily="@font/nanum_square_regular"
-            android:text="- ICX"
-            android:textColor="@color/primary" />
+        <!--<TextView-->
+            <!--android:id="@+id/txt_staked_icx"-->
+            <!--style="@style/TextView12"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="4dp"-->
+            <!--android:fontFamily="@font/nanum_square_regular"-->
+            <!--android:text="- ICX"-->
+            <!--android:textColor="@color/primary" />-->
 
         <TextView
             android:id="@+id/txt_staked_per"
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:fontFamily="@font/nanum_square_regular"
-            android:text="(-%)"
+            android:text="-%"
             android:textColor="@color/primary" />
     </LinearLayout>
 
@@ -122,15 +122,15 @@
             android:text="@string/under_unstake"
             android:textColor="@color/primary" />
 
-        <TextView
-            android:id="@+id/txt_unstake_icx"
-            style="@style/TextView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:fontFamily="@font/nanum_square_regular"
-            android:text="- ICX"
-            android:textColor="@color/primary" />
+        <!--<TextView-->
+            <!--android:id="@+id/txt_unstake_icx"-->
+            <!--style="@style/TextView10"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="4dp"-->
+            <!--android:fontFamily="@font/nanum_square_regular"-->
+            <!--android:text="- ICX"-->
+            <!--android:textColor="@color/primary" />-->
 
         <TextView
             android:id="@+id/txt_unstake_per"
@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:fontFamily="@font/nanum_square_regular"
-            android:text="(-%)"
+            android:text="-%"
             android:textColor="@color/primary" />
     </LinearLayout>
 </LinearLayout>

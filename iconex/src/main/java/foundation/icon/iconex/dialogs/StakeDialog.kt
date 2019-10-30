@@ -40,7 +40,7 @@ class StakeDialog(context: Context) : MessageDialog(context) {
 
     var estimatedMaxFee: String
         get() = mTxtEstimatedMaxFee.text.toString()
-        set(value) { mTxtExchangedFee.text = value }
+        set(value) { mTxtEstimatedMaxFee.text = value }
 
     var exchangedFee: String
         get() = mTxtExchangedFee.text.toString()

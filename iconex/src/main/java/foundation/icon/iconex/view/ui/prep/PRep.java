@@ -308,16 +308,14 @@ public class PRep implements Serializable {
     public double delegatedPercent() {
         BigDecimal total = new BigDecimal(totalDelegated).scaleByPowerOfTen(-18);
         BigDecimal delegation = new BigDecimal(delegated).scaleByPowerOfTen(-18);
-//        double total = totalDelegated.doubleValue();
-//        double del = delegated.doubleValue();
 
-        return delegation.divide(total, RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
+        return Double.parseDouble(delegation.divide(total, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).setScale(1, BigDecimal.ROUND_HALF_UP).toString());
     }
 
     public enum Grade {
         PRep(0, "Main P-Rep"),
         SubPRep(1, "Sub P-Rep"),
-        Candidate(2, "P-Rep");
+        Candidate(2, "Candidate");
 
         private int grade;
         private String label;

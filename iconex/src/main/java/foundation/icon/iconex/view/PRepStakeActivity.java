@@ -91,13 +91,12 @@ public class PRepStakeActivity extends AppCompatActivity implements UnstakeFragm
         loading = new LoadingDialog(this, R.style.DialogActivity);
 
         initView();
+        getData();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        getData();
     }
 
     @Override

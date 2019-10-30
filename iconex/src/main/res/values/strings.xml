@@ -175,12 +175,6 @@
     <string name="txState">Transaction Status</string>
     <string name="txType">Transaction Type</string>
 
-    <string name="history">History</string>
-    <string name="depositHistory">Deposit History</string>
-
-    <string name="send">Send</string>
-    <string name="convert">Convert</string>
-
     <!-- Wallet Manage Menu -->
     <string name="menuManageToken">Manage Token</string>
     <string name="menuBackupWallet">Backup Wallet</string>
@@ -454,11 +448,11 @@
     <string name="connSendFailed">Error occurred. Please try again.</string>
 
     <!-- Dialogs -->
-    <string name="dialogHeadTextTxHash">TxHash</string>
-    <string name="dialogTxHashTrackerLink"><u>ICON Tracker로 이동</u></string>
-    <string name="dialogTxHashCopyTxHash">복사하기</string>
+    <string name="dialogHeadTextTxHash">Tx Hash</string>
+    <string name="dialogTxHashTrackerLink"><u>Check in ICON Tracker</u></string>
+    <string name="dialogTxHashCopyTxHash">Copy</string>
 
-    <string name="forgot_passwword"><u>비밀번호를 잊으셨나요?</u></string>
+    <string name="forgot_passwword"><u>Forget Password?</u></string>
 
     <string name="dialogHeadTextMinExchangeRate">허용가능 최소 환전비율</string>
     <string name="dialogTitleTextMinExchangeRate">암호화폐의 환율은 변동이 심하므로,\n최소환전비율 설정을 통해 자산을 보호하세요.</string>
@@ -470,124 +464,109 @@
     <string name="dialogLabelEstimatedMaxFee">Estimated Maximum Fee (ICX)</string>
     <string name="dialogDescriptionUnstakeCancle">Unstake 취소 시 Transaction 수수료를 지불해야 합니다.</string>
 
-    <!-- New -->
-    <string name="createWalletStep1Detailed1">· You can add IRC tokens using ICON wallet menu.</string>
-    <string name="createWalletStep1Detailed2">· You can add ERC20 tokens using Ethereum wallet menu.</string>
-    <string name="createWalletStep1Detailed3">· Wallets for other coins will be added later.</string>
-
-    <string name="createWalletStep2Notice">DO NOT FORGET TO SAVE THIS.\nIf yo lose your password, you cannot restore it.</string>
-    <string name="createWalletStep2Detailed1">· You will need the password to load your wallet in other  devices using the Keystore file or your private key.</string>
-
-    <string name="createWalletStep3Detailed1">· Use this Keystore file to load your wallet from other device.</string>
-    <string name="createWalletStep3Detailed2">· You can download your Keystore file from the \`Backup wallet\` menu later.</string>
-
-    <string name="loadBundleConfirm">묶음 지갑을 가져오시겠습니까?</string>
-    <string name="loadSelectMethod">방법 선택</string>
-
-    <string name="claim">Claim</string>
-    <string name="currentIScore">현재 I-Score (ISC)</string>
-    <string name="receiveIScroe">받을 수 있는 수량 (ICX)</string>
-    <string name="IScoreClaim">I-Score Claim</string>
-    <string name="stepLimitNPrice">적정 Step 한도 / 가격 (ICX)</string>
-    <string name="estimatedMaximumFee">예상 최대 수수료 (ICX)</string>
-    <string name="claimDone">Claim 실행이 완료되었습니다.</string>
-
+    <!-- Stake -->
     <string name="submit">Submit</string>
-
     <string name="rankAscending">Rank ↑</string>
     <string name="rankDecending">Rank ↓</string>
-    <string name="prepDetail"><u>상세 정보</u></string>
-
+    <string name="prepDetail"><u>Detail information</u></string>
     <string name="stake">Stake</string>
     <string name="unstake">Unstake</string>
     <string name="unstaked">Unstaked</string>
     <string name="under_voted">┗ Voted</string>
-    <string name="under_unstake">┗ Unstake 요청</string>
+    <string name="under_unstake">┗ Request Unstake</string>
     <string name="voted">Voted</string>
     <string name="available">Available</string>
-
     <string name="balanceIcx">Balance (ICX)</string>
     <string name="unstakedIcx">Unstaked (ICX)</string>
     <string name="stakedIcx">Staked (ICX)</string>
-
-    <string name="request_unstake">Unstake 요청 (ICX)</string>
-    <string name="done_block">완료 BLOCK</string>
-    <string name="estimate_done_time">완료 예상 시간</string>
-    <string name="unstake_required_time">%02d시간 %02d분 남음</string>
-
-    <string name="adjust_stake">요청 수량 수정</string>
-
-    <string name="minLimit">최소 값은 %s 입니다.</string>
-    <string name="maxLimit">최대 값은 %s 입니다.</string>
-
+    <string name="request_unstake">Request Unstake (ICX)</string>
+    <string name="done_block">Completed BLOCK</string>
+    <string name="estimate_done_time">Estimated completion time</string>
+    <string name="unstake_required_time">%02dh %02dm remaining</string>
+    <string name="adjust_stake">Change request amount</string>
+    <string name="minLimit">Enter more than %s</string>
+    <string name="maxLimit">Enter less than %s</string>
     <string name="votedIcx">Voted ICX</string>
     <string name="availableIcx">Available ICX</string>
-
     <string name="min">Min</string>
     <string name="max">Max</string>
-
-    <string name="stakeNotice01">Stake되어 있는 수량 중, 이미 투표에 사용된 수량은 Unstake 할 수 없습니다.</string>
-    <string name="stakeNotice02">Unstaked 최소 수량은 3 ICX 입니다. 최소 수량이 확보되어야 추후 Voting 등의 수수료를 지불할 수 있습니다.</string>
-
-    <string name="unstakeNotice01">요청 수량 수정 시 완료 예정 시간이 초기화되며,\nTransaction 수수료를 지불해야 합니다.</string>
-
+    <string name="stakeNotice01">・ You cannot unstake the amount that is already delegated.</string>
+    <string name="stakeNotice02">・ Minimum Unstaked amount is 1 ICX. It is required to pay transaction fee occured by delegation.</string>
+    <string name="unstakeNotice01">・ Changing in request amount will reset the completion time and transaction fee should be paid again.</string>
     <string name="timeRequired">Time Required</string>
     <string name="immediately">Immediately</string>
-
-    <string name="stakeTimeRquired">즉시 Stake</string>
+    <string name="stakeTimeRquired">Immediately</string>
     <string name="unstakeTimeRequired">72시간 후 unstake</string>
+    <string name="stakeDone">Stake Operation completed.</string>
+    <string name="unstakeDone">Unstake Operation completed.</string>
 
+    <!-- Vote -->
     <string name="vote">Vote</string>
     <string name="myVotes">My Votes</string>
     <string name="myVotesAscending">My Votes ↑</string>
     <string name="myVotesDecending">My Votes ↓</string>
-    <string name="myVoteReset">투표 수량 초기화</string>
+    <string name="myVoteReset">Reset delegation amount</string>
     <string name="preps">P-Reps</string>
+    <string name="myVotesEmptyGuide">In the P-Reps tab, add candidates to vote in the voting list first, then adjust Voting Power.</string>
+    <string name="myVotesEmptyNotice">ICX used for Voting Power can be returned when you unstake your Staked ICX and I-Score will be paid to you as a reward for ecosystem contribution.</string>
+    <string name="tipAddedPRep">Already in the list.</string>
+    <string name="tipPRepMax">Maximum number of P-Reps to Vote is 10.</string>
+    <string name="tipHasDelegation">Delegated P-Rep is not able to delete in the list.\nSet Voting Power to 0 and press Vote button.</string>
+    <string name="voteNotExecute">By pressing Vote button will apply the change you made. \nVote Would you like to leave without making change?</string>
+    <string name="voteReset">Do you like to set 0 for all voting power that have delegated?</string>
 
-    <string name="myVotesEmptyGuide">P-Reps 탭에서 투표할 리스트 선택후,\nVoting Power를 분배해 주세요.</string>
-    <string name="myVotesEmptyNotice">Voting Power를 사용한 ICX는 언제든지 돌려받을 수 있으며,\nNetworkd 발전 기여에 대한 보상으로 I-Scaore를 지급해 드립니다.</string>
+    <!-- I-Score -->
+    <string name="claim">Claim</string>
+    <string name="currentIScore">Current I-Score</string>
+    <string name="receiveIScroe">Receivable amount</string>
+    <string name="IScoreClaim">I-Score Claim</string>
+    <string name="stepLimitNPrice">Step Limit / Price (ICX)</string>
+    <string name="estimatedMaximumFee">Expected Maximum transaction fee (ICX)</string>
+    <string name="claimDone">Claim operation completed.</string>
+
+    <!-- P-Rep List -->
+
+    <string name="prepName">Name</string>
+    <string name="createWalletStep1Detailed1">・ Selected coin wallet will created after the completion of creating wallet.</string>
+    <string name="createWalletStep1Detailed2">・ After creating wallet, token that is based on according coin can be added.</string>
+
+    <string name="createWalletStep2Notice">It is users responsible to manage password; There is no way to find it.</string>
+    <string name="createWalletStep2Detailed1">・ In order to restore wallet by Keystore file, it requires password to send transaction.</string>
+
+    <string name="createWalletStep3Detailed1">・ With wallet Keystore file and password, wallet can be install in different device and restore deleted wallet.</string>
+    <string name="createWalletStep3Detailed2">・ Keystore files can be dowload after creating wallet at \`Wallet Keystore\`.</string>
+
+    <string name="createWalletStep4Header">Save private key</string>
+
+    <string name="loadBundleConfirm">Would you like to import wallet bundle?</string>
+    <string name="loadSelectMethod">Select Method</string>
 
     <!-- Toast -->
-    <string name="addMyVote">%d/10 My Votes에 추가</string>
-    <string name="completeVoting">Voting이 완료되었습니다.</string>
+    <string name="addMyVote">%d/10 Add to My Votes</string>
+    <string name="completeVoting">Voting is Completed.</string>
 
     <!-- Dialog -->
-    <string name="showDetail">상세 정보 보기</string>
-
-    <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 1 ICX 이상 잔액이\n있어야 합니다.</string>
-    <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
-    <string name="stakeDone">Stake 실행이\n완료되었습니다.</string>
-    <string name="unstakeDone">Unstake 실행이\n완료되었습니다.</string>
-    <string name="voteNotExecute">Vote 버튼을 눌러야 설정한 수량이 실제 반영됩니다.\nVote 실행을 하지 않고 나가시겠습니까?</string>
-    <string name="voteReset">투표에 사용한 Voting Power를 모두 0으로 되돌리겠습니까?</string>
-
-    <string name="votePReps">투표한 P-Rep</string>
-
-    <!-- Tool Tip -->
-    <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>
-    <string name="tipPRepMax">Vote 가능한 리스트는 최대 10개 입니다.</string>
-    <string name="tipHasDelegation">이미 투표가 반영된 P-Rep은 삭제가 불가능합니다.\nVoting Power를 0으로 설정 후, Vote 버튼을 누르세요.</string>
+    <string name="showDetail">Detail information</string>
+    <string name="notEnoughForStaking">In order to stake or unstake account should have more than 1 ICX.</string>
+    <string name="hasNoVotingPower">There is no Voting Power. Staking ICX will create Voting Power on 1 to 1 ratio.</string>
+    <string name="votePReps">Voted P-Rep</string>
 
     <!-- New - Password dialog   -->
-    <string name="msgForgetPassword">개인 키를 알고 있다면 지갑을 새로 가져와서 비밀번호를 재설정 할 수 있습니다. 아래 단계를 따라 진행해주세요. “지갑 가져오기” 선택 > “개인 키” 선택 > 개인 키 입력 후 가져오기 > 새 비밀번호 입력</string>
+    <string name="msgForgetPassword">You can reset password using private key. Please follow directions.\nSelect the \"Load your wallet\"> Select the \"Private Key\" > Input the Private Key and load your wallet > Input the new password"</string>
 
     <!--  New - main wallet  -->
     <string name="about">About</string>
     <string name="staked">Staked</string>
     <string name="iscore">I-Score</string>
     <string name="icon_voting">ICON Voting</string>
-    <string name="requestSend">전송 요청</string>
-    <string name="msgRequestSend">전송 요청 수량 입력 시, 입력한 수량 정보가 포함된 QR 코드로 변경됩니다.</string>
-    <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
-    <string name="messageRequestSend">ICX를 ICONex 지갑으로 보내주세요.</string>
-    <string name="chooseMsgRequestSend">전송 요청 메세지 보내기</string>
-    <string name="generateQRcode">QR 코드 생성</string>
+    <string name="requestSend">Request transfer</string>
+    <string name="msgRequestSend">・ After submittng request amount, QR code will changed to cointained one.</string>
+    <string name="hintRequestSend">Transfer request amount (ICX)</string>
+    <string name="generateQRcode">Create QR code</string>
 
     <!-- New - wallet menu -->
-    <string name="totalAssets">전체 자산 가치</string>
-    <string name="totalVotedPower">전체 Voted Power</string>
-    <string name="msgTokenDelete2">삭제하시겠습니까?</string>
-    <string name="password">Password</string>
+    <string name="totalAssets">Total Asset Value</string>
+    <string name="totalVotedPower">Total Voted Power</string>
 
     <!-- New side Menu -->
     <string name="appVer">앱 버전</string>
@@ -607,7 +586,7 @@
     <string name="estimateFee">예상 최대 수수료</string>
     <string name="maxBalance">전액</string>
     <string name="transfer">전송</string>
-    <string name="errEtherGasLimit">21,000 이상으로 입력해주세요.</string>
+    <string name="errEtherGasLimit">Enter more than 21,000</string>
     <string name="qrcodeScanGuide">QR 코드를 인식해서 \n주소 또는 개인 키를 가져올 수 있습니다.</string>
     <string name="errScanPrivateKey">개인 키 형식이 올바르지 않습니다.</string>
 
@@ -640,7 +619,4 @@
 
     <string name="msgNewPasswordSame">현재 비밀번호와 동일합니다. 새 비밀번호를 입력해주세요.</string>
     <string name="totalWalletCount">총 %d개 지갑</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

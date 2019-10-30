@@ -24,7 +24,6 @@ public class UnstakeFragment extends Fragment {
     private static final String TAG = UnstakeFragment.class.getSimpleName();
 
     private UnstakeGraph unstakeGraph;
-    private TextView txtUnstakedPer, txtStakeIcx, txtStakePer, txtUnstakeIcx, txtUnstakePer;
     private TextView txtUnstakeAmount, txtBlockHeight, txtEstimatedTime;
 
     public UnstakeFragment() {
@@ -69,11 +68,6 @@ public class UnstakeFragment extends Fragment {
 
     private void initView(View v) {
         unstakeGraph = v.findViewById(R.id.unstake_graph);
-        txtUnstakedPer = v.findViewById(R.id.txt_unstaked_per);
-        txtStakeIcx = v.findViewById(R.id.txt_staked_icx);
-        txtStakePer = v.findViewById(R.id.txt_staked_per);
-        txtUnstakeIcx = v.findViewById(R.id.txt_unstake_icx);
-        txtUnstakePer = v.findViewById(R.id.txt_unstake_per);
 
         txtUnstakeAmount = v.findViewById(R.id.unstake_amount);
         txtBlockHeight = v.findViewById(R.id.block_height);

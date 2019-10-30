@@ -144,6 +144,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                 Log.d(TAG, "isNew=" + delegation.isNew());
                 h.btnManage.setSelected(true);
                 h.btnManage.setImageResource(R.drawable.ic_delete_list_disabled);
+            } else {
+                h.btnManage.setImageResource(R.drawable.ic_delete_list);
             }
 
             h.layoutGraph.setVisibility(View.GONE);
@@ -328,8 +330,15 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             public void afterTextChanged(Editable s) {
                 String inputString = s.toString();
 
-                if (inputString.isEmpty())
+                if (inputString.isEmpty()) {
+                    boolean isNew = delegations.get(getAdapterPosition()).isNew();
+                    Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(BigInteger.ZERO).build();
+                    d.isEdited(true);
+                    d.isNew(isNew);
+                    delegations.set(getAdapterPosition(), d);
+                    mListener.onVoted(delegations);
                     return;
+                }
 
                 if (inputString.charAt(0) == '.') {
                     editDelegation.setText(inputString.substring(1));

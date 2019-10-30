@@ -131,11 +131,24 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         (int) mContext.getResources().getDimension(R.dimen.dp25));
                 h.layoutVotes.setLayoutParams(layoutParams);
 
-                if (h.btnManage.isSelected())
-                    h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                            String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName()),
-                            String.format(Locale.getDefault(), "(%s / Voted)", prep.getGrade().getLabel())));
-                else
+                if (h.btnManage.isSelected()) {
+                    boolean isNew = false;
+                    for (Delegation d : delegations) {
+                        if (d.getPrep().getAddress().equals(prep.getAddress())) {
+                            isNew = d.isNew();
+                        }
+                    }
+
+                    if (isNew) {
+                        h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                                String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName()),
+                                String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
+                    } else {
+                        h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
+                                String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName()),
+                                String.format(Locale.getDefault(), "(%s / Voted)", prep.getGrade().getLabel())));
+                    }
+                } else
                     h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
                             String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName()),
                             String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));

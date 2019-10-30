@@ -47,9 +47,9 @@ public class UnstakeGraph extends LinearLayout {
         View v = View.inflate(getContext(), R.layout.layout_unstake_graph, null);
 
         txtUnstakedPer = v.findViewById(R.id.txt_unstaked_per);
-        txtStakedIcx = v.findViewById(R.id.txt_staked_icx);
+//        txtStakedIcx = v.findViewById(R.id.txt_staked_icx);
         txtStakedPer = v.findViewById(R.id.txt_staked_per);
-        txtUnstakeIcx = v.findViewById(R.id.txt_unstake_icx);
+//        txtUnstakeIcx = v.findViewById(R.id.txt_unstake_icx);
         txtUnstakePer = v.findViewById(R.id.txt_unstake_per);
 
         addView(v);
@@ -71,9 +71,9 @@ public class UnstakeGraph extends LinearLayout {
         constraintSet.applyTo(findViewById(R.id.root));
 
         txtUnstakedPer.setText(String.format(Locale.getDefault(), "%.1f%%", unstakedPer));
-        txtStakedIcx.setText(String.format(Locale.getDefault(), "%s ICX", staked.scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR)));
+//        txtStakedIcx.setText(String.format(Locale.getDefault(), "%s ICX", staked.scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR)));
         txtStakedPer.setText(String.format(Locale.getDefault(), "%.1f%%", stakedPer));
-        txtUnstakeIcx.setText(String.format(Locale.getDefault(), "%s ICX", unstake.scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR)));
+//        txtUnstakeIcx.setText(String.format(Locale.getDefault(), "%s ICX", unstake.scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR)));
         txtUnstakePer.setText(String.format(Locale.getDefault(), "%.1f%%", unstakePer));
     }
 

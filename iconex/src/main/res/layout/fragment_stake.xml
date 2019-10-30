@@ -335,6 +335,7 @@
                         style="@style/TextView12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_regular"
                         android:text="@string/immediately"
                         android:textColor="@color/dark4D"
                         app:layout_constraintEnd_toEndOf="parent"

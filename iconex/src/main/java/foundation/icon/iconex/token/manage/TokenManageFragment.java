@@ -31,6 +31,7 @@ import org.web3j.tx.exceptions.ContractCallException;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Random;
 
 import ethereum.contract.MyContract;
@@ -76,9 +77,9 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
     private ImageView btnScan;
     // private Button btnDel; move to actionbar
     private Button btnAdd;
-    private Button  btnComplete; // add complete button
+    private Button btnComplete; // add complete button
     private ViewGroup layoutAdd;
-    private ViewGroup  layoutComplete; // add complete button
+    private ViewGroup layoutComplete; // add complete button
 
     private ViewGroup layoutLoading;
 
@@ -93,6 +94,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
         void onDone(String name);
     }
+
     private OnTokenManageListener mListener;
 
     private enum EDIT_STATUS {
@@ -100,6 +102,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         LOADED,
         EDIT
     }
+
     private EDIT_STATUS editStatus;
 
     private static final int RC_SCAN = 11111;
@@ -221,8 +224,8 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
     public void deleteToken() {
         MessageDialog messageDialog = new MessageDialog(getContext());
-        messageDialog.setTitleText(getString(R.string.msgTokenDelete2));
-        messageDialog.setSubText(mToken.getUserName());
+        messageDialog.setTitleText(String.format(Locale.getDefault(), getString(R.string.msgTokenDelete),
+                mToken.getUserName()));
         messageDialog.setSingleButton(false);
         messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
             @Override
@@ -259,21 +262,24 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                 startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
                         .putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE,
                                 tokenType == TokenManageActivity.TOKEN_TYPE.IRC ?
-                                    BarcodeCaptureActivity.ScanType.ICX_Address.name() :
-                                    BarcodeCaptureActivity.ScanType.ETH_Address.name()
-                                )
+                                        BarcodeCaptureActivity.ScanType.ICX_Address.name() :
+                                        BarcodeCaptureActivity.ScanType.ETH_Address.name()
+                        )
                         .putExtra(BarcodeCaptureActivity.AutoFocus, true)
                         .putExtra(BarcodeCaptureActivity.UseFlash, false), RC_SCAN);
-            } break;
+            }
+            break;
             case R.id.btn_complete: {
                 completeToken();
-            } break;
+            }
+            break;
             case R.id.btn_add_token: {
                 if (validateToken()) {
                     addToken();
                     mListener.onClose();
                 }
-            } break;
+            }
+            break;
         }
     }
 

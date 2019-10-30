@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +42,7 @@ public class PRepVoteFragment extends Fragment {
     private TextView sort, resetVotes;
     private RecyclerView list;
     private MyVoteListAdapter adapter;
+    private Sort sortType = Sort.Ascending;
 
     private List<Delegation> delegations = new ArrayList<>();
 
@@ -134,6 +137,34 @@ public class PRepVoteFragment extends Fragment {
         txtVotedIcx = v.findViewById(R.id.txt_voted_icx);
         txtAvailableIcx = v.findViewById(R.id.txt_available_icx);
         sort = v.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (sortType) {
+                    case Ascending:
+                        Collections.sort(delegations, new Comparator<Delegation>() {
+                            @Override
+                            public int compare(Delegation o1, Delegation o2) {
+                                return o1.getValue().compareTo(o2.getValue());
+                            }
+                        });
+                        Collections.reverse(delegations);
+                        adapter.setData(delegations);
+                        adapter.notifyDataSetChanged();
+                        sortType = Sort.Descending;
+                        sort.setText(getString(R.string.myVotesAscending));
+                        break;
+
+                    case Descending:
+                        Collections.reverse(delegations);
+                        adapter.setData(delegations);
+                        adapter.notifyDataSetChanged();
+                        sortType = Sort.Ascending;
+                        sort.setText(getString(R.string.myVotesDecending));
+                        break;
+                }
+            }
+        });
         resetVotes = v.findViewById(R.id.reset_votes);
         resetVotes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,5 +235,10 @@ public class PRepVoteFragment extends Fragment {
         void onVoted(List<Delegation> delegations);
 
         void onReset(List<Delegation> delegations);
+    }
+
+    enum Sort {
+        Ascending,
+        Descending
     }
 }

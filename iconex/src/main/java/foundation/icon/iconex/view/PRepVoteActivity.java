@@ -156,6 +156,8 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                                 return true;
                             }
                         });
+                        messageDialog.setConfirmButtonText(getString(R.string.yes));
+                        messageDialog.setCancleButtonText(getString(R.string.no));
                         messageDialog.show();
                     } else {
                         finish();
@@ -173,8 +175,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(PRepVoteActivity.this, PRepSearchActivity.class)
-                                .putExtra("preps", (Serializable) vm.getPreps().getValue())
-                                .putExtra("delegations", (Serializable) vm.getDelegations().getValue()),
+                                .putExtra("preps", (Serializable) vm.getPreps().getValue()),
                         1000);
             }
         });
@@ -327,7 +328,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                         for (int i = 0; i < prepList.size(); i++) {
                             RpcObject object = prepList.get(i).asObject();
                             PRep prep = PRep.valueOf(object);
-                            prep = prep.newBuilder().rank(i+1).build();
+                            prep = prep.newBuilder().rank(i + 1).build();
                             prep.setTotalDelegated(totalDelegated);
                             list.add(prep);
                         }
@@ -573,6 +574,8 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                         return true;
                     }
                 });
+                messageDialog.setConfirmButtonText(getString(R.string.yes));
+                messageDialog.setCancleButtonText(getString(R.string.no));
                 messageDialog.show();
             } else {
                 finish();

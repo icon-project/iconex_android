@@ -99,6 +99,16 @@
         <item name="android:fontFamily">@font/noto_sans_regular</item>
     </style>
 
+    <!-- Search TextAppearance -->
+    <style name="SearchTextAppearanceS" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">10dp</item>
+        <item name="android:fontFamily">@font/noto_sans_medium</item>
+    </style>
+
+    <style name="SearchTextAppearanceN" parent="SearchTextAppearanceS">
+        <item name="android:fontFamily">@font/noto_sans_light</item>
+    </style>
+
     <!-- Button -->
     <style name="TextButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textAllCaps">false</item>

@@ -3,21 +3,25 @@ package foundation.icon.iconex.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.PRepService;
-import foundation.icon.iconex.service.Urls;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.view.ui.prep.PRepListAdapter;
@@ -38,8 +42,12 @@ public class PRepListActivity extends AppCompatActivity {
     private RecyclerView list;
     private PRepListAdapter adapter;
     private ImageButton btnSearch;
+    private ViewGroup sort;
+    private TextView sortRank, sortName;
+    private Sort sortTye = Sort.RankAscending;
 
     private List<PRep> prepList = new ArrayList<>();
+    private List<PRep> sortList = new ArrayList<>();
 
     private Disposable disposable;
 
@@ -90,6 +98,93 @@ public class PRepListActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        sortRank = findViewById(R.id.sort_rank);
+        sortName = findViewById(R.id.sort_name);
+        sort = findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (sortTye) {
+                    case RankAscending:
+                        sortList.addAll(prepList);
+
+                        Collections.reverse(sortList);
+                        adapter = new PRepListAdapter(
+                                PRepListActivity.this,
+                                PRepListAdapter.Type.NORMAL,
+                                sortList);
+
+                        list.setAdapter(adapter);
+                        sortTye = Sort.RankDescending;
+                        sortRank.setText(getString(R.string.rankAscending));
+                        break;
+
+                    case RankDescending:
+                        sortList = new ArrayList<>();
+                        sortList.addAll(prepList);
+
+                        Collections.sort(sortList, new Comparator<PRep>() {
+                            @Override
+                            public int compare(PRep o1, PRep o2) {
+                                try {
+                                    Integer i1 = Integer.parseInt(o1.getName());
+                                    Integer i2 = Integer.parseInt(o2.getName());
+
+                                    return i1.compareTo(i2);
+                                } catch (Exception e) {
+                                    return o1.getName().compareToIgnoreCase(o2.getName());
+                                }
+                            }
+                        });
+
+                        adapter = new PRepListAdapter(
+                                PRepListActivity.this,
+                                PRepListAdapter.Type.NORMAL,
+                                sortList);
+
+                        list.setAdapter(adapter);
+                        sortTye = Sort.NameAscending;
+
+                        TextViewCompat.setTextAppearance(sortRank, R.style.SearchTextAppearanceN);
+                        TextViewCompat.setTextAppearance(sortName, R.style.SearchTextAppearanceS);
+                        break;
+
+                    case NameAscending:
+                        Collections.reverse(sortList);
+
+                        adapter = new PRepListAdapter(
+                                PRepListActivity.this,
+                                PRepListAdapter.Type.NORMAL,
+                                sortList);
+
+                        list.setAdapter(adapter);
+                        sortTye = Sort.NameDescending;
+                        break;
+
+                    case NameDescending:
+                        if (sortList != null) {
+                            sortList = new ArrayList<>();
+                            sortList.addAll(prepList);
+                        } else {
+                            sortList.addAll(prepList);
+                        }
+
+                        adapter = new PRepListAdapter(
+                                PRepListActivity.this,
+                                PRepListAdapter.Type.NORMAL,
+                                sortList);
+
+                        list.setAdapter(adapter);
+                        sortTye = Sort.RankAscending;
+
+                        TextViewCompat.setTextAppearance(sortRank, R.style.SearchTextAppearanceS);
+                        TextViewCompat.setTextAppearance(sortName, R.style.SearchTextAppearanceN);
+                        sortRank.setText(getString(R.string.rankDecending));
+                        break;
+                }
+            }
+        });
     }
 
     private void getPRepList() {
@@ -106,7 +201,7 @@ public class PRepListActivity extends AppCompatActivity {
                 for (int i = 0; i < prepList.size(); i++) {
                     RpcObject object = prepList.get(i).asObject();
                     PRep prep = PRep.valueOf(object);
-                    prep = prep.newBuilder().rank(i+1).build();
+                    prep = prep.newBuilder().rank(i + 1).build();
                     prep.setTotalDelegated(totalDelegated);
                     list.add(prep);
                 }
@@ -139,5 +234,12 @@ public class PRepListActivity extends AppCompatActivity {
                         btnSearch.setEnabled(true);
                     }
                 });
+    }
+
+    public enum Sort {
+        RankAscending,
+        RankDescending,
+        NameAscending,
+        NameDescending
     }
 }

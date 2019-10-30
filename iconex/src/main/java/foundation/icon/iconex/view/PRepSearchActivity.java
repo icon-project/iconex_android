@@ -1,5 +1,6 @@
 package foundation.icon.iconex.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.view.ui.prep.PRepListAdapter;
 import foundation.icon.iconex.widgets.DividerItemDecorator;
@@ -32,7 +34,9 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
     private Button btnClear;
     private TextView btnCancel;
 
-    private List<PRep> pReps;
+    private List<PRep> pReps = new ArrayList<>();
+    private List<Delegation> delegations;
+    private Activity root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,9 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
 
         if (getIntent() != null) {
             pReps = (List<PRep>) getIntent().getSerializableExtra("preps");
+            delegations = (List<Delegation>) getIntent().getSerializableExtra("delegations");
         }
+
 
         initView();
     }
@@ -96,8 +102,15 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-        adapter = new PRepListAdapter(this, PRepListAdapter.Type.NORMAL, new ArrayList<>());
+
+        if (root == null)
+            adapter = new PRepListAdapter(this, PRepListAdapter.Type.NORMAL, new ArrayList<>());
+        else
+            adapter = new PRepListAdapter(this, PRepListAdapter.Type.VOTE, new ArrayList<>(), this);
+
         list.setAdapter(adapter);
+
+        editSearch.requestFocus();
     }
 
     @Override

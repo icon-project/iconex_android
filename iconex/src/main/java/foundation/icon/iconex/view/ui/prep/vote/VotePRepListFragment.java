@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -17,12 +18,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.InterruptedIOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.PRepListActivity;
 import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.view.ui.prep.PRepListAdapter;
@@ -38,6 +42,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
+import static foundation.icon.iconex.view.PRepListActivity.Sort.RankAscending;
+
 public class VotePRepListFragment extends Fragment {
     private static final String TAG = VotePRepListFragment.class.getSimpleName();
 
@@ -46,10 +52,14 @@ public class VotePRepListFragment extends Fragment {
 
     private RecyclerView list;
     private PRepListAdapter adapter;
+    private ViewGroup sort;
+    private TextView sortRank, sortName;
+    private PRepListActivity.Sort sortType = RankAscending;
 
     private Wallet wallet;
     private List<PRep> prepList;
     private List<Delegation> delegations = new ArrayList<>();
+    private List<PRep> sortList = new ArrayList<>();
 
     private Disposable disposable;
 
@@ -123,6 +133,93 @@ public class VotePRepListFragment extends Fragment {
                         getContext(),
                         ContextCompat.getDrawable(getContext(), R.drawable.line_divider));
         list.addItemDecoration(itemDecoration);
+
+        sortRank = v.findViewById(R.id.sort_rank);
+        sortName = v.findViewById(R.id.sort_name);
+        sort = v.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (sortType) {
+                    case RankAscending:
+                        sortList.addAll(prepList);
+
+                        Collections.reverse(sortList);
+                        adapter = new PRepListAdapter(
+                                getActivity(),
+                                PRepListAdapter.Type.VOTE,
+                                sortList);
+
+                        list.setAdapter(adapter);
+                        sortType = PRepListActivity.Sort.RankDescending;
+                        sortRank.setText(getString(R.string.rankAscending));
+                        break;
+
+                    case RankDescending:
+                        sortList = new ArrayList<>();
+                        sortList.addAll(prepList);
+
+                        Collections.sort(sortList, new Comparator<PRep>() {
+                            @Override
+                            public int compare(PRep o1, PRep o2) {
+                                try {
+                                    Integer i1 = Integer.parseInt(o1.getName());
+                                    Integer i2 = Integer.parseInt(o2.getName());
+
+                                    return i1.compareTo(i2);
+                                } catch (Exception e) {
+                                    return o1.getName().compareToIgnoreCase(o2.getName());
+                                }
+                            }
+                        });
+
+                        adapter = new PRepListAdapter(
+                                getActivity(),
+                                PRepListAdapter.Type.VOTE,
+                                sortList);
+
+                        list.setAdapter(adapter);
+                        sortType = PRepListActivity.Sort.NameAscending;
+
+                        TextViewCompat.setTextAppearance(sortRank, R.style.SearchTextAppearanceN);
+                        TextViewCompat.setTextAppearance(sortName, R.style.SearchTextAppearanceS);
+                        break;
+
+                    case NameAscending:
+                        Collections.reverse(sortList);
+
+                        adapter = new PRepListAdapter(
+                                getActivity(),
+                                PRepListAdapter.Type.VOTE,
+                                sortList);
+
+                        list.setAdapter(adapter);
+                        sortType = PRepListActivity.Sort.NameDescending;
+                        break;
+
+                    case NameDescending:
+                        if (sortList != null) {
+                            sortList = new ArrayList<>();
+                            sortList.addAll(prepList);
+                        } else {
+                            sortList.addAll(prepList);
+                        }
+
+                        adapter = new PRepListAdapter(
+                                getActivity(),
+                                PRepListAdapter.Type.VOTE,
+                                sortList);
+
+                        list.setAdapter(adapter);
+                        sortType = RankAscending;
+
+                        TextViewCompat.setTextAppearance(sortRank, R.style.SearchTextAppearanceS);
+                        TextViewCompat.setTextAppearance(sortName, R.style.SearchTextAppearanceN);
+                        sortRank.setText(getString(R.string.rankDecending));
+                        break;
+                }
+            }
+        });
     }
 
     public interface OnVotePRepListListener {

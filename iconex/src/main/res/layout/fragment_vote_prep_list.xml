@@ -25,28 +25,41 @@
                 android:paddingEnd="20dp"
                 android:paddingBottom="10dp">
 
-                <TextView
+                <LinearLayout
                     android:id="@+id/sort"
-                    style="@style/TextView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/noto_sans_light"
-                    android:text="Rank ↓ / Name"
+                    android:clickable="true"
+                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/votes"
-                    style="@style/TextView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/noto_sans_light"
-                    android:text="Total votes"
-                    android:textColor="@color/darkB3"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/sort_rank"
+                        style="@style/TextView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:text="@string/rankDecending" />
+
+                    <TextView
+                        style="@style/TextView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:text="\\" />
+
+                    <TextView
+                        android:id="@+id/sort_name"
+                        style="@style/TextView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:text="@string/prepName" />
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
