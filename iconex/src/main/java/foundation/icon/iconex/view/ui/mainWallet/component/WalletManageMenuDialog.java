@@ -105,6 +105,7 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                             return false;
                         } if (s.trim().isEmpty()) {
                             editText2Dialog.setText("");
+                            return false;
                         } else if (s.charAt(0) == ' ') {
                             editText2Dialog.setText(beforeStr[0]);
                             editText2Dialog.setSelection(beforeStr[0].length());
