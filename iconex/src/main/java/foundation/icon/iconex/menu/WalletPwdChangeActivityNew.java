@@ -1,9 +1,9 @@
 package foundation.icon.iconex.menu;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.wallet.Wallet;
@@ -81,26 +80,17 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         });
 
         // ---- input  layout event ----
-        TTextInputLayout.OnKeyPreIme onKeyPreIme = new TTextInputLayout.OnKeyPreIme() {
-            @Override
-            public void onDone() {
-                setChangeEnable(editOldPwd.getText(), editPwd.getText(), editCheck.getText());
-            }
-        };
-
-        TTextInputLayout.OnEditorAction onEditorAction = new TTextInputLayout.OnEditorAction() {
-            @Override
-            public void onDone() {
-                setChangeEnable(editOldPwd.getText(), editPwd.getText(), editCheck.getText());
-            }
-        };
-
         editOldPwd.setPastable(false);
         editPwd.setPastable(false);
         editCheck.setPastable(false);
 
         // ================= init current password
-        editOldPwd.setOnKeyPreImeListener(onKeyPreIme);
+        editOldPwd.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                validateAll(true, false, false);
+            }
+        });
         editOldPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
@@ -109,29 +99,30 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
             @Override
             public void onReleased() {
-                if (!editOldPwd.getText().isEmpty()) {
-                    boolean result = validateCurrentPwd(editOldPwd.getText());
-                    if (!result) {
-                        editOldPwd.setError(true, getString(R.string.errPassword));
-                    } else {
-                        editOldPwd.setError(false, null);
-                    }
-                }
+                validateAll(true, false, false);
             }
         });
         editOldPwd.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {
-                if (s.length() <= 0) {
-                    editOldPwd.setError(false, null);
-                    btnChange.setEnabled(false);
-                }
+                Log.d(TAG, "onChanged() called with: s = [" + s.length() + "]");
+                if (s.length() == 0) validateAll(false, false, false);
             }
         });
-        editOldPwd.setOnEditorActionListener(onEditorAction);
+        editOldPwd.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
+            @Override
+            public void onDone() {
+                validateAll(true, false, false);
+            }
+        });
 
         // ==================== init new password
-        editPwd.setOnKeyPreImeListener(onKeyPreIme);
+        editPwd.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                validateAll(false, true, false);
+            }
+        });
         editPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
@@ -140,34 +131,7 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
             @Override
             public void onReleased() {
-                int result = PasswordValidator.validatePassword(editPwd.getText().toString());
-                switch (result) {
-                    case PasswordValidator.LEAST_8:
-                        editPwd.setError(true, getString(R.string.errAtLeast));
-                        break;
-
-                    case PasswordValidator.NOT_MATCH_PATTERN:
-                        editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
-                        break;
-
-                    case PasswordValidator.HAS_WHITE_SPACE:
-                        editPwd.setError(true, getString(R.string.errWhiteSpace));
-                        break;
-
-                    case PasswordValidator.SERIAL_CHAR:
-                        editPwd.setError(true, getString(R.string.errSerialChar));
-                        break;
-
-                    default:
-                        // if new password == old password
-                        if (editOldPwd.getText().equals(editPwd.getText())) {
-                            editPwd.setError(true, getString(R.string.msgNewPasswordSame));
-                        } else {
-                            editPwd.setError(false, null);
-                        }
-                        break;
-                }
-
+                validateAll(false, true, false);
             }
         });
         editPwd.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -184,15 +148,24 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
                     } else
                         beforePwd = s.toString();
                 } else {
-                    editPwd.setError(false, null);
-                    btnChange.setEnabled(false);
+                    validateAll(false, false, false);
                 }
             }
         });
-        editPwd.setOnEditorActionListener(onEditorAction);
+        editPwd.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
+            @Override
+            public void onDone() {
+                validateAll(false, true, false);
+            }
+        });
 
         // ====================== init check password
-        editCheck.setOnKeyPreImeListener(onKeyPreIme);
+        editCheck.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
+            @Override
+            public void onDone() {
+                validateAll(false, false, true);
+            }
+        });
         editCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
@@ -201,30 +174,21 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
             @Override
             public void onReleased() {
-                if (!editCheck.getText().toString().isEmpty()) {
-                    if (editPwd.getText().toString().isEmpty()) {
-                        editCheck.setError(true, getString(R.string.errPasswordNotMatched));
-                    } else {
-                        boolean result = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(), editCheck.getText().toString());
-                        if (!result) {
-                            editCheck.setError(true, getString(R.string.errPasswordNotMatched));
-                        } else {
-                            editCheck.setError(false, null);
-                        }
-                    }
-                }
+                validateAll(false, false, true);
             }
         });
         editCheck.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {
-                if (s.length() == 0) {
-                    editCheck.setError(false, null);
-                    btnChange.setEnabled(false);
-                }
+                if (s.length() == 0) validateAll(false, false, false);
             }
         });
-        editCheck.setOnEditorActionListener(onEditorAction);
+        editCheck.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {
+            @Override
+            public void onDone() {
+                validateAll(false, false, true);
+            }
+        });
 
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,7 +220,15 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         }, 100);
     }
 
-    private boolean validateCurrentPwd(String pwd) {
+    private boolean validateOldPwd(boolean showErr) {
+        String pwd = editOldPwd.getText();
+        Log.d(TAG, "validateOldPwd() called with: showErr = [" + pwd + "]");
+
+        if (pwd.isEmpty()) {
+            editOldPwd.setError(false, null);
+            return false;
+        }
+
         JsonObject keyStore = new Gson().fromJson(mWallet.getKeyStore(), JsonObject.class);
 
         JsonObject crypto;
@@ -273,62 +245,77 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         }
 
         if (privKey == null) {
+            if (showErr) editOldPwd.setError(true, getString(R.string.errPassword));
             return false;
         } else {
             mPrivateKey = privKey;
+            editOldPwd.setError(false, null);
             return true;
         }
     }
 
-    private void setChangeEnable(String old, String pwd, String checkPwd) {
-        boolean curResult = validateCurrentPwd(old);
-        if (curResult) {
-            editOldPwd.setError(false, null);
-        } else {
-            editOldPwd.setError(true, getString(R.string.errPassword));
-        }
-
+    private boolean validateNewPwd(boolean showErr) {
+        String pwd = editPwd.getText();
         int pwdResult = PasswordValidator.validatePassword(pwd);
         switch (pwdResult) {
             case PasswordValidator.EMPTY:
-                editPwd.setError(true, getString(R.string.errPwdEmpty));
-                break;
+                // if (showErr) editPwd.setError(true, getString(R.string.errPwdEmpty));
+                editPwd.setError(false, null);
+                return false;
 
             case PasswordValidator.LEAST_8:
-                editPwd.setError(true, getString(R.string.errAtLeast));
-                break;
+                if (showErr) editPwd.setError(true, getString(R.string.errAtLeast));
+                return false;
 
             case PasswordValidator.NOT_MATCH_PATTERN:
-                editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
-                break;
+                if (showErr) editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
+                return false;
 
             case PasswordValidator.HAS_WHITE_SPACE:
-                editPwd.setError(true, getString(R.string.errWhiteSpace));
-                break;
+                if (showErr) editPwd.setError(true, getString(R.string.errWhiteSpace));
+                return false;
 
             case PasswordValidator.SERIAL_CHAR:
-                editPwd.setError(true, getString(R.string.errSerialChar));
-                break;
+                if (showErr) editPwd.setError(true, getString(R.string.errSerialChar));
+                return false;
 
             default:
                 // if new password == old password
                 if (editOldPwd.getText().equals(editPwd.getText())) {
-                    editPwd.setError(true, getString(R.string.msgNewPasswordSame));
+                    if (showErr) editPwd.setError(true, getString(R.string.msgNewPasswordSame));
+                    return false;
                 } else {
                     editPwd.setError(false, null);
+                    return true;
                 }
+        }
+    }
+
+    private boolean validateCheckPwd(boolean errCheckPwd) {
+        String pwd = editPwd.getText();
+        String checkPwd = editCheck.getText();
+
+        if (checkPwd.isEmpty()) {
+            // editCheck.setError(false, null);
+            editCheck.setError(false, null);
+            return false;
         }
 
         boolean checkResult = PasswordValidator.checkPasswordMatch(pwd, checkPwd);
         if (!checkResult) {
-            editCheck.setError(true, getString(R.string.errPasswordNotMatched));
+            if (errCheckPwd) editCheck.setError(true, getString(R.string.errPasswordNotMatched));
+            return false;
         } else {
             editCheck.setError(false, null);
+            return true;
         }
+    }
 
-        if (curResult && checkResult && (pwdResult == PasswordValidator.OK) && !editOldPwd.getText().equals(editPwd.getText()))
-            btnChange.setEnabled(true);
-        else
-            btnChange.setEnabled(false);
+    private void validateAll(boolean showErrOldPwd, boolean showErrNewPwd, boolean showErrCheckPwd) {
+        boolean oldPwd = validateOldPwd(showErrOldPwd);
+        boolean newPwd = validateNewPwd(showErrNewPwd);
+        boolean checkPwd = validateCheckPwd(showErrCheckPwd);
+
+        btnChange.setEnabled(oldPwd && newPwd && checkPwd);
     }
 }
