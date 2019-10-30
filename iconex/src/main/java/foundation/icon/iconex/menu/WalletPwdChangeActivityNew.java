@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.util.PasswordValidator;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomActionBar;
+import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
@@ -233,18 +235,9 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
                     try {
                         RealmUtil.modWalletPassword(mWallet.getAddress(), newKeyStore);
                         mWallet.setKeyStore(newKeyStore);
-
-                        MessageDialog messageDialog = new MessageDialog(WalletPwdChangeActivityNew.this);
-                        messageDialog.setTitleText(getString(R.string.doneChangeWalletPwd));
-                        messageDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                setResult(RESULT_CODE, new Intent().putExtra("result", (Serializable) mWallet));
-                                finish();
-                            }
-                        });
-                        messageDialog.show();
-
+                        CustomToast.makeText(WalletPwdChangeActivityNew.this, getString(R.string.doneChangeWalletPwd), Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_CODE, new Intent().putExtra("result", (Serializable) mWallet));
+                        finish();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
