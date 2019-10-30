@@ -15,6 +15,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
@@ -28,7 +31,8 @@ public class SelectTokenDialog extends BottomSheetDialog {
     private RecyclerView recycler;
 
     private RecyclerView.Adapter adapter;
-    private Wallet wallet;
+    //private Wallet wallet;
+    private List<WalletEntry> entries;
 
     public interface OnSelectWalletEntryListener {
         void onSelectWalletEntry(WalletEntry walletEntry);
@@ -39,7 +43,10 @@ public class SelectTokenDialog extends BottomSheetDialog {
     public SelectTokenDialog(@NonNull Context context, Wallet wallet, OnSelectWalletEntryListener listener) {
         super(context);
         setContentView(R.layout.dialog_select_token);
-        this.wallet = wallet;
+        entries = new ArrayList<>(wallet.getWalletEntries());
+        WalletEntry coin = entries.remove(0);
+        Collections.reverse(entries);
+        entries.add(0, coin);
         mOnSelectWalletEntryListener = listener;
         initView();
     }
@@ -66,7 +73,7 @@ public class SelectTokenDialog extends BottomSheetDialog {
                     @Override
                     public void onClick(View v) {
                         int position = viewHolder.getAdapterPosition();
-                        WalletEntry entry = wallet.getWalletEntries().get(position);
+                        WalletEntry entry = entries.get(position);
                         if (mOnSelectWalletEntryListener != null)
                             mOnSelectWalletEntryListener.onSelectWalletEntry(entry);
                         dismiss();
@@ -78,7 +85,7 @@ public class SelectTokenDialog extends BottomSheetDialog {
 
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-                WalletEntry entry = wallet.getWalletEntries().get(position);
+                WalletEntry entry = entries.get(position);
                 WalletViewHolder walletViewHolder = (WalletViewHolder) holder;
 
                 walletViewHolder.txtSymbol.setText(entry.getSymbol());
@@ -107,7 +114,7 @@ public class SelectTokenDialog extends BottomSheetDialog {
 
             @Override
             public int getItemCount() {
-                return wallet.getWalletEntries().size();
+                return entries.size();
             }
         };
         recycler.setAdapter(adapter);

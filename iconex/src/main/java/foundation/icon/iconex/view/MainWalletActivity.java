@@ -241,8 +241,8 @@ public class MainWalletActivity extends AppCompatActivity implements
         totalAssetsVD = new TotalAssetsViewData();
 
         Map<String, List<EntryViewData>> mapTokenListEntries = new HashMap<>();
-        TokenWalletItem.TokenColor tokenColor = new TokenWalletItem.TokenColor(); // token background color
         for(Wallet wallet : ICONexApp.wallets) {
+            TokenWalletItem.TokenColor tokenColor = new TokenWalletItem.TokenColor(); // token background color
             List<EntryViewData> walletListEntries = new ArrayList<>();
             for (WalletEntry entry : wallet.getWalletEntries()) {
                 EntryViewData entryVD = new EntryViewData(wallet, entry);
