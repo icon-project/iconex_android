@@ -57,6 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/stake"
+                android:fontFamily="@font/noto_sans_regular"
                 android:textColor="@color/dark4D" />
 
             <foundation.icon.iconex.widgets.StakeGraph
@@ -236,6 +237,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
                         android:text="- (-%)"
+                        android:fontFamily="@font/noto_sans_light"
                         android:textColor="@color/primary" />
                 </LinearLayout>
 
@@ -257,6 +259,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/min"
                             android:textColor="@color/dark4D"
+                            android:fontFamily="@font/noto_sans_light"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -265,6 +268,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="@string/max"
+                            android:fontFamily="@font/noto_sans_light"
                             android:textColor="@color/dark4D"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />

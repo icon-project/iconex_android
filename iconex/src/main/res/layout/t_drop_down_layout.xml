@@ -27,6 +27,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/txt_btn_outline_01"
+                android:fontFamily="@font/noto_sans_regular"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/arrow"
                 app:layout_constraintStart_toStartOf="parent"
@@ -54,6 +55,7 @@
             android:background="@drawable/bg_floating_drop_down"
             android:text="helper"
             android:textColor="@color/txt_default"
+            android:fontFamily="@font/noto_sans_regular"
             app:layout_constraintBottom_toTopOf="@id/layout"
             app:layout_constraintStart_toStartOf="@id/layout"
             app:layout_constraintTop_toTopOf="@id/layout" />

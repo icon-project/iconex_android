@@ -93,6 +93,7 @@
                         style="@style/TextView12"
                         android:layout_width="match_parent"
 
+                        android:fontFamily="@font/noto_sans_light"
                         android:layout_height="wrap_content"
                         android:lineHeight="20dp"
                         android:textAlignment="center"

@@ -54,6 +54,7 @@
                 android:id="@+id/txt_current"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_light"
 
                 android:text="@string/currentVersion"/>
 
@@ -122,6 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/openSource"
+            android:fontFamily="@font/noto_sans_regular"
             android:layout_weight="1"/>
 
         <ImageView
@@ -153,6 +155,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:fontFamily="@font/noto_sans_regular"
             android:text="@string/modeDeveloper" />
 
         <ImageView
