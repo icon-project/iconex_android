@@ -5,19 +5,18 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.view.View;
 
 import com.google.gson.JsonObject;
 
 import foundation.icon.ICONexApp;
-import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.service.response.VSResponse;
+import kotlin.jvm.functions.Function1;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static foundation.icon.ICONexApp.network;
 
 /**
  * Created by js on 2018. 5. 29..
@@ -44,21 +43,6 @@ public class VersionCheck extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-//            String url = null;
-//            switch (network) {
-//                case MyConstants.NETWORK_MAIN:
-//                    url = ServiceConstants.URL_VERSION_MAIN;
-//                    break;
-//
-//                case MyConstants.NETWORK_TEST:
-//                    url = ServiceConstants.URL_VERSION_TEST;
-//                    break;
-//
-//                case MyConstants.NETWORK_DEV:
-//                    url = ServiceConstants.DEV_TRACKER;
-//                    break;
-//            }
-
             RESTClient client = new RESTClient(ICONexApp.NETWORK.getTracker());
             Call<VSResponse> response = client.sendVersionCheck();
             response.enqueue(new Callback<VSResponse>() {
@@ -85,11 +69,15 @@ public class VersionCheck extends AsyncTask {
 
                         boolean vsResult = validateVersion(version, necessary);
                         if (!vsResult) {
-                            Basic2ButtonDialog dialog = new Basic2ButtonDialog(mActivity);
-                            dialog.setCancelable(false);
-                            dialog.setCanceledOnTouchOutside(false);
+                            MessageDialog dialog = new MessageDialog(mActivity);
                             dialog.setMessage(mActivity.getString(R.string.updateNecessary));
-                            dialog.setOnDialogListener(mListener);
+                            dialog.setOnConfirmClick(mListener);
+                            dialog.setOnCancelClick(new Function1<View, Boolean>() {
+                                @Override
+                                public Boolean invoke(View view) {
+                                    return null;
+                                }
+                            });
                             dialog.show();
 
                             if (mCallback != null)
@@ -107,8 +95,6 @@ public class VersionCheck extends AsyncTask {
 
                 @Override
                 public void onFailure(Call<VSResponse> call, Throwable t) {
-//                    t.printStackTrace();
-//                    return;
                     mActivity.startActivity(new Intent(mActivity, NetworkErrorActivity.class)
                             .putExtra(NetworkErrorActivity.PARAM_TARGET_SPLASH, true)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
@@ -121,16 +107,19 @@ public class VersionCheck extends AsyncTask {
         return null;
     }
 
-    private Basic2ButtonDialog.OnDialogListener mListener = new Basic2ButtonDialog.OnDialogListener() {
+    private Function1<View, Boolean> mListener = new Function1<View, Boolean>() {
         @Override
-        public void onOk() {
-            mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ServiceConstants.URL_STORE)));
-            mActivity.finishAffinity();
-        }
-
-        @Override
-        public void onCancel() {
-            mActivity.finishAffinity();
+        public Boolean invoke(View view) {
+            switch (view.getId()) {
+                case R.id.btn_confirm: {
+                    mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ServiceConstants.URL_STORE)));
+                    mActivity.finishAffinity();
+                } break;
+                case R.id.btn_cancel: {
+                    mActivity.finishAffinity();
+                } break;
+            }
+            return true;
         }
     };
 
