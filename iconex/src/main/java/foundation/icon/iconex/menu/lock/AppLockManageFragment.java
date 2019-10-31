@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.PreferenceUtil;
 
 public class AppLockManageFragment extends Fragment implements View.OnClickListener {
@@ -143,19 +144,20 @@ public class AppLockManageFragment extends Fragment implements View.OnClickListe
     }
 
     private void checkEnrolledFingerprint() {
-        BasicDialog dialog = new BasicDialog(getActivity());
+        //BasicDialog dialog = new BasicDialog(getActivity());
+        MessageDialog messageDialog = new MessageDialog(getContext());
 
         KeyguardManager keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
         if (!keyguardManager.isKeyguardSecure()) {
-            dialog.setMessage(getString(R.string.errNoKeyguard));
-            dialog.show();
+            messageDialog.setTitleText(getString(R.string.errNoKeyguard));
+            messageDialog.show();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             FingerprintManager fm = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
             if (fm.hasEnrolledFingerprints())
                 mListener.onUnlockFinger();
             else {
-                dialog.setMessage(getString(R.string.errNoEnrolledFingerprint));
-                dialog.show();
+                messageDialog.setTitleText(getString(R.string.errNoEnrolledFingerprint));
+                messageDialog.show();
             }
         }
     }
