@@ -78,8 +78,8 @@
     <string name="noBackupKeyStoreFileConfirm">지갑 백업 파일을 다운로드 하지 않고\n다음 단계로 진행하시겠습니까?</string>
     <string name="keyStoreDownloadAccomplished">파일이 \'%s\'에 다운로드 되었습니다.</string>
     <string name="step4Header">개인 키(Private Key)는 지갑의 고유 정보이며,\n비밀번호가 설정되어 있지 않습니다.</string>
-    <string name="step4Sub1">개인 키만 알고 있으면 지갑 실행 및 복구가 가능하므로 타인에게 노출되지 않도록 각별한 관리가 필요합니다.</string>
-    <string name="step4Sub2">지갑을 만든 후 ‘지갑 백업’에서도 확인할 수 있습니다.</string>
+    <string name="step4Sub1">・ 개인 키만 알고 있으면 지갑 실행 및 복구가 가능하므로 타인에게 노출되지 않도록 각별한 관리가 필요합니다.</string>
+    <string name="step4Sub2">・ 지갑을 만든 후 ‘지갑 백업’에서도 확인할 수 있습니다.</string>
     <string name="privateKey">개인 키</string>
     <string name="copyPrivateKey">개인 키 복사</string>
     <string name="viewWalletInfo">지갑 정보 보기</string>
@@ -96,7 +96,7 @@
     <string name="loadByPrivateKey">Private Key</string>
     <string name="selectKeyStore">지갑 백업 파일 선택</string>
     <string name="loadKeystoreHeader">지갑 백업 파일 선택 후 비밀번호를 입력해주세요.</string>
-    <string name="loadKeystoreSub">다른 기기에 지갑 백업 파일이 저장되어 있는 경우, 백업 파일을 이 기기로 옮기거나 클라우드 서비스에 업로드한 다음 백업 파일을 선택해주세요.</string>
+    <string name="loadKeystoreSub">・ 다른 기기에 지갑 백업 파일이 저장되어 있는 경우, 백업 파일을 이 기기로 옮기거나 클라우드 서비스에 업로드한 다음 백업 파일을 선택해주세요.</string>
     <string name="loadKeystore">지갑 백업 파일(Keystore파일) 선택</string>
     <string name="invalidKeyStoreFile">올바른 지갑 파일 형식이 아닙니다.</string>
     <string name="errPassword">비밀번호를 다시 확인해주세요.</string>
@@ -114,7 +114,7 @@
     <string name="loadBundleDetailed">새로 추가되는 지갑들의 비밀번호는 묶음 지갑 비밀번호와 동일합니다.</string>
     <string name="loadBundleTotal">총 %d개의 지갑 중</string>
     <string name="loadBundleRegistered">이미 등록된 지갑은 %d개 입니다.</string>
-    <string name="registeredWallet">등록된 지갑</string>
+    <string name="registeredWallet">등록된 지갑 %s</string>
 
     <string name="msgLoadBundle">묶음 지갑을 가져왔습니다. 각 지갑들의 비밀번호는 묶음 지갑의 비밀번호와 동일하며, 지갑 메뉴에서 변경 가능합니다.</string>
 
