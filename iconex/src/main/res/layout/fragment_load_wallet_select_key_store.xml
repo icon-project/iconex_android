@@ -148,9 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/noto_sans_light"
-                android:text="· If your Keystore file id stored on another device, move the
-   Keystore file to this device or upload it to cloud service and
-   select the Keystore file."
+                android:text="@string/loadKeystoreSub"
                 android:textColor="@color/primary00" />
         </LinearLayout>
     </ScrollView>

@@ -3,6 +3,7 @@ package foundation.icon.iconex.view.ui.prep.vote;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -229,18 +230,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             btnManage.setOnClickListener(this);
 
             layoutGraph = v.findViewById(R.id.layout_graph);
-            layoutGraph.getViewTreeObserver().addOnWindowAttachListener(new ViewTreeObserver.OnWindowAttachListener() {
-                @Override
-                public void onWindowAttached() {
-                    seekbar.setProgress(seekbar.getProgress());
-                }
-
-                @Override
-                public void onWindowDetached() {
-
-                }
-            });
             editDelegation = v.findViewById(R.id.edit_value);
+            editDelegation.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             editDelegation.addTextChangedListener(textWatcher);
             txtPercent = v.findViewById(R.id.txt_percentage);
             txtMax = v.findViewById(R.id.txt_max);
@@ -285,9 +276,9 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                         layoutGraph.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                seekbar.setProgress(seekbar.getProgress());
+                                seekbar.updateProgressbarView();
                             }
-                        }, 300);
+                        }, 50);
                     } else {
                         layoutGraph.setVisibility(View.GONE);
                         layoutMyVotes.setVisibility(View.VISIBLE);

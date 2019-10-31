@@ -3,6 +3,7 @@ package foundation.icon.iconex.view.ui.prep.stake;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -164,6 +165,7 @@ public class StakeFragment extends Fragment {
         txtUnstaked = v.findViewById(R.id.unstake_icx);
 
         editStaked = v.findViewById(R.id.edit_value);
+        editStaked.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editStaked.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

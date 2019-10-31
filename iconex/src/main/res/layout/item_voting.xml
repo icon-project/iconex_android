@@ -203,7 +203,6 @@
                     android:digits="0123456789."
                     android:fontFamily="@font/nanum_square_regular"
                     android:gravity="end|center_vertical"
-                    android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:textSize="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"

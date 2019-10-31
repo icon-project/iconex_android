@@ -85,7 +85,7 @@ public class CustomSeekbar extends FrameLayout {
         });
     }
 
-    private void updateProgressbarView() {
+    public void updateProgressbarView() {
         int width = getWidth();
         int progressWidth = width - (2 * dp2px(15));
         double percentPosition = (double)mProgress / (double)mMax;
