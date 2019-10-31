@@ -11,10 +11,7 @@ import android.util.TypedValue
 import android.view.*
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import foundation.icon.iconex.R
 
 
@@ -69,6 +66,18 @@ class TTextInputLayout : LinearLayout {
 
         val typedArray = getContext().obtainStyledAttributes(attrs, DEF_STYLEABLE, defStyleAttr, 0)
         setTypedArray(typedArray)
+    }
+
+    fun syncTopHeight(targetContainer: RelativeLayout) {
+        viewTreeObserver.addOnGlobalLayoutListener() {
+            var l = if (layoutFile.visibility == View.VISIBLE) layoutFile else layout
+            var layoutParam = targetContainer.layoutParams as MarginLayoutParams
+            layoutParam.height = l.height
+            layoutParam.topMargin = l.top
+            targetContainer.layoutParams = layoutParam
+
+            Log.d(TAG, "syncing... height: ${l.height}, top: ${l.top}")
+        }
     }
 
     private fun initView() {

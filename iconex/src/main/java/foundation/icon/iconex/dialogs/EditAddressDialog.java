@@ -67,6 +67,7 @@ public class EditAddressDialog extends MessageDialog implements View.OnClickList
         editName = content.findViewById(R.id.edit_name);
         editAddress = content.findViewById(R.id.edit_address);
         btnScan = content.findViewById(R.id.btn_scan);
+        editAddress.syncTopHeight(content.findViewById(R.id.con_sync));
 
         // set Button
         setSingleButton(false);

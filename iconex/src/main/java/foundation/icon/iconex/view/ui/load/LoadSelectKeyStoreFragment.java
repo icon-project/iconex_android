@@ -113,6 +113,7 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
 
     private void initView(View v) {
         inputFileName = v.findViewById(R.id.input_file);
+        inputFileName.syncTopHeight(v.findViewById(R.id.con_sync));
 
         inputPwd = v.findViewById(R.id.input_password);
         inputPwd.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {

@@ -136,6 +136,7 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
         dropDown.setText(coinList.get(0));
 
         inputPrivateKey = v.findViewById(R.id.input_private_key);
+        inputPrivateKey.syncTopHeight(v.findViewById(R.id.con_sync));
         inputPrivateKey.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {

@@ -119,22 +119,28 @@
                     app:hint="@string/privateKey"
                     app:inputType="text"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_qr_scan"
+                    app:layout_constraintEnd_toStartOf="@+id/con_sync"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageButton
-                    android:id="@+id/btn_qr_scan"
+                <RelativeLayout
+                    android:id="@+id/con_sync"
                     android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/bg_btn_outline_01"
-                    android:src="@drawable/ic_qr_scan"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/input_private_key"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/btn_qr_scan"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerInParent="true"
+
+                        android:background="@drawable/bg_btn_outline_01"
+                        android:src="@drawable/ic_qr_scan" />
+                </RelativeLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
