@@ -7,15 +7,16 @@ import android.content.DialogInterface;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.FingerprintAuthBuilder;
 import foundation.icon.iconex.util.FingerprintAuthHelper;
 
@@ -34,7 +35,7 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
     private FingerprintAuthBuilder fab;
     private FingerprintAuthHelper helper;
 
-    private BasicDialog dialog;
+    private MessageDialog dialog;
 
     public AuthFingerprintFragment() {
         // Required empty public constructor
@@ -75,11 +76,11 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
         super.onResume();
 
         if (dialog == null)
-            dialog = new BasicDialog(getActivity());
+            dialog = new MessageDialog(getActivity());
 
         if (!keyguardManager.isKeyguardSecure()) {
             if (!dialog.isShowing()) {
-                dialog = new BasicDialog(getActivity());
+                dialog = new MessageDialog(getActivity());
                 dialog.setMessage(getString(R.string.errNoKeyguard));
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
