@@ -97,6 +97,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
 
     private void initView(View v) {
         inputAlias = v.findViewById(R.id.input_alias);
+        inputAlias.setPastable(false);
         inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
