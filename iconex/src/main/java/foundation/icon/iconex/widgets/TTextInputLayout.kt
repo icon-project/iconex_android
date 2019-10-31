@@ -97,23 +97,15 @@ class TTextInputLayout : LinearLayout {
                     layout.background = resources.getDrawable(BG_LAYOUT_F, null)
                     tvHint.background = resources.getDrawable(BG_FLOATING_LABEL_F, null)
                     tvHint.setTextColor(resources.getColor(R.color.primary00))
-                    tvHint.visibility = View.VISIBLE
 
                     if (tvError.visibility == View.VISIBLE)
                         tvError.visibility = View.INVISIBLE
-
-                    edit.hint = ""
 
                     mOnMyFocusChangedListenerListener?.onFocused()
                 } else {
                     layout.background = resources.getDrawable(BG_LAYOUT_N, null)
                     tvHint.background = resources.getDrawable(BG_FLOATING_LABEL_N, null)
                     tvHint.setTextColor(resources.getColor(R.color.dark4D))
-
-                    if (edit.text!!.isEmpty()) {
-                        tvHint.visibility = View.INVISIBLE
-                        edit.hint = hint
-                    }
 
                     mOnMyFocusChangedListenerListener?.onReleased()
                 }
@@ -137,12 +129,9 @@ class TTextInputLayout : LinearLayout {
                         btnClear.visibility = View.VISIBLE
                 } else {
                     btnClear.visibility = View.INVISIBLE
-
-                    if (!edit.isFocused) {
-                        tvHint.visibility = View.INVISIBLE
-                        edit.hint = hint
-                    }
                 }
+
+                tvHint.visibility = if (s.isNotEmpty()) View.VISIBLE else View.INVISIBLE
 
                 if (isDetectPaste) Log.d(TAG, "detecting paste...")
                 if (isDetectPaste && s.length - prevString.length > 1) {
