@@ -10,11 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.PreferenceUtil;
 
@@ -149,14 +147,14 @@ public class AppLockManageFragment extends Fragment implements View.OnClickListe
 
         KeyguardManager keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
         if (!keyguardManager.isKeyguardSecure()) {
-            messageDialog.setTitleText(getString(R.string.errNoKeyguard));
+            messageDialog.setMessage(getString(R.string.errNoKeyguard));
             messageDialog.show();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             FingerprintManager fm = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
             if (fm.hasEnrolledFingerprints())
                 mListener.onUnlockFinger();
             else {
-                messageDialog.setTitleText(getString(R.string.errNoEnrolledFingerprint));
+                messageDialog.setMessage(getString(R.string.errNoEnrolledFingerprint));
                 messageDialog.show();
             }
         }

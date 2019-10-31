@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
@@ -196,14 +195,14 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
             });
 
             if (modFragment != null && modFragment.isEdited()) {
-                messageDialog.setTitleText(getString(R.string.msgTokenCancelMod));
+                messageDialog.setMessage(getString(R.string.msgTokenCancelMod));
                 messageDialog.show();
             } else if (addFragment != null && !addFragment.isEmpty()) {
                 if (tokenType == TOKEN_TYPE.IRC && fragmentManager.getBackStackEntryCount() == 1) {
                     onClose();
                     return;
                 }
-                messageDialog.setTitleText(getString(R.string.msgTokenCancelAdd));
+                messageDialog.setMessage(getString(R.string.msgTokenCancelAdd));
                 messageDialog.show();
             } else {
                 onClose();

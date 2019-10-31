@@ -11,7 +11,6 @@ import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -22,7 +21,6 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -633,7 +631,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
                 if (feeError) {
                     MessageDialog messageDialog = new MessageDialog(EtherTransferActivity.this);
-                    messageDialog.setTitleText(getString(R.string.errETHFee));
+                    messageDialog.setMessage(getString(R.string.errETHFee));
                     messageDialog.show();
                     return;
                 }

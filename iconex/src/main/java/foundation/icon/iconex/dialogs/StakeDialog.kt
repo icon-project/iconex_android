@@ -26,10 +26,6 @@ class StakeDialog(context: Context) : MessageDialog(context) {
         isSingleButton = false
     }
 
-    fun setTitle(title: String) {
-        headText = title
-    }
-
     var timeRequired: String
         get() = mTxtTimeRequired.text.toString()
         set(value) { mTxtTimeRequired.text = value }

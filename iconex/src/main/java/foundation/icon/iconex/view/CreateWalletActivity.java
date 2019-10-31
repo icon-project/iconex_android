@@ -36,7 +36,7 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     MessageDialog dialog = new MessageDialog(CreateWalletActivity.this);
                     dialog.setSingleButton(false);
-                    dialog.setTitleText(getString(R.string.cancelCreateWallet));
+                    dialog.setMessage(getString(R.string.cancelCreateWallet));
                     dialog.setConfirmButtonText(getString(R.string.yes));
                     dialog.setCancelButtonText(getString(R.string.no));
                     dialog.setOnConfirmClick(new Function1<View, Boolean>() {
@@ -113,7 +113,7 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MessageDialog dialog = new MessageDialog(CreateWalletActivity.this);
             dialog.setSingleButton(false);
-            dialog.setTitleText(getString(R.string.cancelCreateWallet));
+            dialog.setMessage(getString(R.string.cancelCreateWallet));
             dialog.setConfirmButtonText(getString(R.string.yes));
             dialog.setCancelButtonText(getString(R.string.no));
             dialog.setOnConfirmClick(new Function1<View, Boolean>() {

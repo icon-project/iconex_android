@@ -172,7 +172,7 @@ public class PRepVoteFragment extends Fragment {
                 if (delegations.size() > 0) {
                     MessageDialog messageDialog = new MessageDialog(getContext());
                     messageDialog.setSingleButton(false);
-                    messageDialog.setTitleText(getString(R.string.voteReset));
+                    messageDialog.setMessage(getString(R.string.voteReset));
                     messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
                         public Boolean invoke(View view) {

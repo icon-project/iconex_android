@@ -22,7 +22,6 @@ import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.Contacts;
 import foundation.icon.iconex.dialogs.EditAddressDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.ContactsDialog;
 import foundation.icon.iconex.realm.RealmUtil;
 import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
@@ -187,7 +186,7 @@ public class MyContactsFragment extends Fragment {
         public void onDelete(int position) {
             final int pos = position;
             MessageDialog messageDialog = new MessageDialog(getContext());
-            messageDialog.setTitleText(getString(R.string.msgDeleteContact));
+            messageDialog.setMessage(getString(R.string.msgDeleteContact));
             messageDialog.setSingleButton(false);
             messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override

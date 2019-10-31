@@ -536,9 +536,9 @@ public class StakeFragment extends Fragment {
                         MessageDialog messageDialog = new MessageDialog(getContext());
                         BigDecimal value = new BigDecimal(new BigDecimal(editStaked.getText().toString()).scaleByPowerOfTen(18).toBigInteger());
                         if (value.compareTo(staked) < 0) {
-                            messageDialog.setTitleText(getString(R.string.unstakeDone));
+                            messageDialog.setMessage(getString(R.string.unstakeDone));
                         } else {
-                            messageDialog.setTitleText(getString(R.string.stakeDone));
+                            messageDialog.setMessage(getString(R.string.stakeDone));
                         }
                         messageDialog.setSingleButton(true);
                         messageDialog.setOnSingleClick(new Function1<View, Boolean>() {

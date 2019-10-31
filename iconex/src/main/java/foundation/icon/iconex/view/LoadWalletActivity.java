@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.view.ui.load.LoadBundleFragment;
 import foundation.icon.iconex.view.ui.load.LoadInputPrivateKeyFragment;
@@ -47,7 +46,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
                     dialog.setSingleButton(false);
                     dialog.setConfirmButtonText(getString(R.string.yes));
                     dialog.setCancelButtonText(getString(R.string.no));
-                    dialog.setTitleText(getString(R.string.cancelLoadWallet));
+                    dialog.setMessage(getString(R.string.cancelLoadWallet));
                     dialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
                         public Boolean invoke(View view) {
@@ -146,7 +145,7 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
             dialog.setSingleButton(false);
             dialog.setConfirmButtonText(getString(R.string.yes));
             dialog.setCancelButtonText(getString(R.string.no));
-            dialog.setTitleText(getString(R.string.cancelLoadWallet));
+            dialog.setMessage(getString(R.string.cancelLoadWallet));
             dialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
                 public Boolean invoke(View view) {

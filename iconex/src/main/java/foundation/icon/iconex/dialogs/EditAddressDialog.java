@@ -57,7 +57,7 @@ public class EditAddressDialog extends MessageDialog implements View.OnClickList
 
     private void buildDialog() {
         // set title
-        setHeadText(getContext().getString(address2edit == null ? R.string.addContacts : R.string.modContacts));
+        setTitle(getContext().getString(address2edit == null ? R.string.addContacts : R.string.modContacts));
 
         // set Content
         View content = View.inflate(getContext(), R.layout.dlg_add_address, null);

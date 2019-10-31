@@ -234,7 +234,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
     public void deleteToken() {
         MessageDialog messageDialog = new MessageDialog(getContext());
-        messageDialog.setTitleText(String.format(Locale.getDefault(), getString(R.string.msgTokenDelete),
+        messageDialog.setMessage(String.format(Locale.getDefault(), getString(R.string.msgTokenDelete),
                 mToken.getUserName()));
         messageDialog.setSingleButton(false);
         messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {

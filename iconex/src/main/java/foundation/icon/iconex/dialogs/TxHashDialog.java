@@ -20,8 +20,6 @@ import foundation.icon.iconex.widgets.CustomToast;
 import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.ICONexApp.network;
-
 public class TxHashDialog extends MessageDialog {
 
     private TextView mTxHash;
@@ -39,7 +37,7 @@ public class TxHashDialog extends MessageDialog {
 
     private void buildDialog() {
         // set Head
-        setHeadText(getContext().getString(R.string.dialogHeadTextTxHash));
+        setTitle(getContext().getString(R.string.dialogHeadTextTxHash));
 
         // set Content
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dlg_txhash_content, null, false);

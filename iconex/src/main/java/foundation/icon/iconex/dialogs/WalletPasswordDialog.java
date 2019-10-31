@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -45,7 +44,7 @@ public class WalletPasswordDialog extends MessageDialog {
 
     private void buildDialog() {
         // set Head
-        setHeadText(getContext().getString(R.string.enterWalletPassword));
+        setTitle(getContext().getString(R.string.enterWalletPassword));
 
         // set Content
         View content = View.inflate(getContext(), R.layout.layout_password_dialog_content, null);
@@ -64,7 +63,7 @@ public class WalletPasswordDialog extends MessageDialog {
             @Override
             public void onClick(View v) {
                 MessageDialog messageDialog = new MessageDialog(getContext());
-                messageDialog.setTitleText(getContext().getString(R.string.msgForgetPassword));
+                messageDialog.setMessage(getContext().getString(R.string.msgForgetPassword));
                 messageDialog.setSingleButton(false);
                 messageDialog.setConfirmButtonText(getContext().getString(R.string.LoadWallet));
                 messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {

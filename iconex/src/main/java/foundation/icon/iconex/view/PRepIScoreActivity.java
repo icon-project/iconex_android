@@ -113,7 +113,7 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                 if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).compareTo(stepLimit.multiply(stepPrice)) < 0) {
                     MessageDialog messageDialog = new MessageDialog(this);
                     messageDialog.setSingleButton(true);
-                    messageDialog.setTitleText(getString(R.string.errIcxOwnNotEnough));
+                    messageDialog.setMessage(getString(R.string.errIcxOwnNotEnough));
                     messageDialog.show();
 
                     return;

@@ -99,7 +99,7 @@ public class CreateWalletStep3Fragment extends Fragment implements View.OnClickL
                     dialog.setSingleButton(false);
                     dialog.setConfirmButtonText(getString(R.string.yes));
                     dialog.setCancelButtonText(getString(R.string.no));
-                    dialog.setTitleText(getString(R.string.noBackupKeyStoreFileConfirm));
+                    dialog.setMessage(getString(R.string.noBackupKeyStoreFileConfirm));
                     dialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
                         public Boolean invoke(View view) {
@@ -124,7 +124,7 @@ public class CreateWalletStep3Fragment extends Fragment implements View.OnClickL
             dialog.setSingleButton(false);
             dialog.setConfirmButtonText(getString(R.string.yes));
             dialog.setCancelButtonText(getString(R.string.no));
-            dialog.setTitleText(getString(R.string.backupKeyStoreFileConfirm));
+            dialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
             dialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
                 public Boolean invoke(View view) {
@@ -133,7 +133,7 @@ public class CreateWalletStep3Fragment extends Fragment implements View.OnClickL
                     if (isAccomplished) {
                         MessageDialog dialog = new MessageDialog(getActivity());
                         dialog.setSingleButton(true);
-                        dialog.setTitleText(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+                        dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
                         dialog.show();
                     }
                     return true;

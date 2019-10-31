@@ -22,7 +22,7 @@ public class ClaimIScoreDialog extends MessageDialog {
         v = View.inflate(getContext(), R.layout.dialog_claim_iscore, null);
         setContent(v);
 
-        setHeadText(getContext().getString(R.string.IScoreClaim));
+        setTitle(getContext().getString(R.string.IScoreClaim));
     }
 
     public void setData() {

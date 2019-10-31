@@ -22,7 +22,6 @@ import com.google.gson.JsonObject;
 
 import java.io.Serializable;
 
-import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
@@ -31,7 +30,6 @@ import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import kotlin.jvm.functions.Function1;
-import loopchain.icon.wallet.core.Constants;
 
 public class WalletBackupActivityNew extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = WalletBackUpActivity.class.getSimpleName();
@@ -108,7 +106,7 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             MessageDialog messageDialog = new MessageDialog(this);
-            messageDialog.setTitleText(getString(R.string.backupKeyStoreFileConfirm));
+            messageDialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
             messageDialog.setSingleButton(false);
             messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
@@ -116,7 +114,7 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
                     boolean result = downloadKeystore();
                     if (result) {
                         MessageDialog messageDialog = new MessageDialog(WalletBackupActivityNew.this);
-                        messageDialog.setTitleText(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+                        messageDialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
                         messageDialog.show();
                     }
                     return true;
@@ -140,7 +138,7 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     MessageDialog messageDialog = new MessageDialog(this);
-                    messageDialog.setTitleText(getString(R.string.backupKeyStoreFileConfirm));
+                    messageDialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
                     messageDialog.setSingleButton(false);
                     messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
@@ -148,7 +146,7 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
                             boolean result = downloadKeystore();
                             if (result) {
                                 MessageDialog messageDialog = new MessageDialog(WalletBackupActivityNew.this);
-                                messageDialog.setTitleText(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+                                messageDialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
                                 messageDialog.show();
                             }
                             return true;
@@ -158,7 +156,7 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
 
                 } else {
                     MessageDialog messageDialog = new MessageDialog(this);
-                    messageDialog.setTitleText(getString(R.string.permissionStorageDenied));
+                    messageDialog.setMessage(getString(R.string.permissionStorageDenied));
                     messageDialog.show();
                 }
                 return;
