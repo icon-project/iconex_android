@@ -2,20 +2,17 @@ package foundation.icon.iconex.view.ui.wallet;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.menu.WalletInfoViewPager;
 import foundation.icon.iconex.wallet.Wallet;
 
@@ -77,7 +74,7 @@ public class ViewWalletInfoActivity extends AppCompatActivity {
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
 
                     if (!wasShown) {
-                        BasicDialog dialog = new BasicDialog(ViewWalletInfoActivity.this);
+                        MessageDialog dialog = new MessageDialog(ViewWalletInfoActivity.this);
                         dialog.setMessage(getString(R.string.warningPrivateKey));
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override

@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
@@ -86,8 +87,8 @@ public class QRPrivateKeyFragment extends Fragment {
     private Bitmap generateQRcode() {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Bitmap qrCode = null;
-        int size = (int) getResources().getDimension(R.dimen.QRCodeSize);
         try {
+            int size = (int) getResources().getDimension(R.dimen.QRCodeSize);
             qrCode = toBitmap(qrCodeWriter.encode(mPrivateKey, BarcodeFormat.QR_CODE, size, size));
         } catch (Exception e) {
             e.printStackTrace();
