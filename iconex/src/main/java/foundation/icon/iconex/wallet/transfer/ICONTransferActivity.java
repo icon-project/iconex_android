@@ -111,6 +111,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     private ViewGroup layoutData;
     private TTextInputLayout editData;
     private Button btnViewData;
+    private View btnData;
 
     // Fee UI
     private TextView labelStepLimit;
@@ -335,6 +336,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         layoutData = findViewById(R.id.layout_data);
         editData = findViewById(R.id.edit_data);
         btnViewData = findViewById(R.id.btn_view_data);
+        btnData = findViewById(R.id.btnData);
 
         // load Fee UI
         labelStepLimit = findViewById(R.id.lb_step_limit);
@@ -472,7 +474,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             }
         });
         editData.setInputEnabled(false);
-        editData.setOnClickListener(new View.OnClickListener() {
+        btnData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (data == null) {

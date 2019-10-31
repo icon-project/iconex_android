@@ -95,6 +95,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private ViewGroup layoutDataInfo;
     private TTextInputLayout editData;
     private Button btnViewData;
+    private View btnData;
 
     // Fee UI
     private TextView lbEstimatedMaxFee;
@@ -238,6 +239,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         layoutDataInfo = findViewById(R.id.layout_data_info);
         editData = findViewById(R.id.edit_data);
         btnViewData = findViewById(R.id.btn_view_data);
+        btnData = findViewById(R.id.btnData);
 
         // load Fee UI
         lbEstimatedMaxFee = findViewById(R.id.lb_estimated_max_fee);
@@ -446,7 +448,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         // edit Data
         editData.setInputEnabled(false);
         btnViewData.setVisibility(View.GONE);
-        editData.setOnClickListener(new View.OnClickListener() {
+        btnData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editData.getText().length() <= 0) {
