@@ -20,6 +20,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
 import foundation.icon.iconex.control.Contacts;
+import foundation.icon.iconex.dialogs.EditAddressDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.ContactsDialog;
 import foundation.icon.iconex.realm.RealmUtil;
@@ -82,8 +83,9 @@ public class MyContactsFragment extends Fragment {
         btnAddContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactsDialog = new ContactsDialog(getActivity(), mType, ContactsDialog.MODE.ADD, null, onClickListener);
-                contactsDialog.show();
+                boolean isICX = Constants.KS_COINTYPE_ICX.equals(mType);
+                editAddressDialog = new EditAddressDialog(getContext(), isICX, addressDialogListener);
+                editAddressDialog.show();
             }
         });
 
@@ -121,11 +123,12 @@ public class MyContactsFragment extends Fragment {
         mListener = null;
     }
 
-    private ContactsDialog contactsDialog;
-    private ContactsDialog.OnClickListener onClickListener = new ContactsDialog.OnClickListener() {
+    private EditAddressDialog editAddressDialog;
+    private EditAddressDialog.OnCompleteEditListener addressDialogListener = new EditAddressDialog.OnCompleteEditListener() {
+
         @Override
-        public void onConfirm(ContactsDialog.MODE mode, String name, String address) {
-            if (mode == ContactsDialog.MODE.ADD) {
+        public void onCompleteEdit(boolean isAddMode, String name, String address) {
+            if (isAddMode) {
                 if (mType.equals(Constants.KS_COINTYPE_ICX)) {
                     RealmUtil.addContacts(MyConstants.Coin.ICX, name, address);
                     RealmUtil.loadContacts();
@@ -167,7 +170,7 @@ public class MyContactsFragment extends Fragment {
         }
 
         @Override
-        public void scanQRCode() {
+        public void onQRCodeScan() {
             startActivityForResult(new Intent(getActivity(), BarcodeCaptureActivity.class)
                     .putExtra(BarcodeCaptureActivity.AutoFocus, true)
                     .putExtra(BarcodeCaptureActivity.UseFlash, false)
@@ -223,8 +226,9 @@ public class MyContactsFragment extends Fragment {
                 address = ICONexApp.ETHContacts.get(position).getAddress();
             }
 
-            contactsDialog = new ContactsDialog(getActivity(), mType, ContactsDialog.MODE.MOD, address, onClickListener);
-            contactsDialog.show();
+            boolean isICX = Constants.KS_COINTYPE_ICX.equals(mType);
+            editAddressDialog = new EditAddressDialog(getContext(), isICX, address, addressDialogListener);
+            editAddressDialog.show();
         }
 
         @Override
@@ -245,8 +249,8 @@ public class MyContactsFragment extends Fragment {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                    if (contactsDialog != null)
-                        contactsDialog.setAddress(barcode.displayValue);
+                    if (editAddressDialog != null)
+                        editAddressDialog.setAddress(barcode.displayValue);
                 } else {
                 }
             }
