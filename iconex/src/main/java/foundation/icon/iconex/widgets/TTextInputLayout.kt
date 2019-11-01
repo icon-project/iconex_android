@@ -74,8 +74,6 @@ class TTextInputLayout : LinearLayout {
             layoutParam.height = layout.height
             layoutParam.topMargin = layout.top
             targetContainer.layoutParams = layoutParam
-
-            Log.d(TAG, "syncing... height: ${layout.height}, top: ${layout.top}")
         }
     }
 

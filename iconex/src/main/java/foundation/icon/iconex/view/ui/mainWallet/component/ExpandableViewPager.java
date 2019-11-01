@@ -3,6 +3,7 @@ package foundation.icon.iconex.view.ui.mainWallet.component;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -142,13 +143,19 @@ public class ExpandableViewPager extends ViewPager {
     public int getCollapseHeight () { return mCollapseHeight; }
 
     public void setExpandedHeight (int expandedHeight) {
-        mExpandedHeight = expandedHeight;
-        updateHeight(mState);
+        if (mExpandedHeight != expandedHeight) {
+            Log.d(TAG, "setExpandedHeight() called with: expandedHeight = [" + expandedHeight + "]");
+            mExpandedHeight = expandedHeight;
+            updateHeight(mState);
+        }
     }
 
     public void setCollapseHeight (int collapseHeight) {
-        mCollapseHeight = collapseHeight;
-        updateHeight(mState);
+        if (mCollapseHeight != collapseHeight) {
+            Log.d(TAG, "setCollapseHeight() called with: collapseHeight = [" + collapseHeight + "]");
+            mCollapseHeight = collapseHeight;
+            updateHeight(mState);
+        }
     }
 
     public boolean getExpanable() {
