@@ -33,7 +33,7 @@ import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.WalletDetailActivity;
-import foundation.icon.iconex.view.WalletPageAdapter;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletPageAdapter;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpandableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.FloatingRRepsMenu;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;

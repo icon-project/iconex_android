@@ -70,13 +70,12 @@ class TTextInputLayout : LinearLayout {
 
     fun syncTopHeight(targetContainer: RelativeLayout) {
         viewTreeObserver.addOnGlobalLayoutListener() {
-            var l = if (layoutFile.visibility == View.VISIBLE) layoutFile else layout
             var layoutParam = targetContainer.layoutParams as MarginLayoutParams
-            layoutParam.height = l.height
-            layoutParam.topMargin = l.top
+            layoutParam.height = layout.height
+            layoutParam.topMargin = layout.top
             targetContainer.layoutParams = layoutParam
 
-            Log.d(TAG, "syncing... height: ${l.height}, top: ${l.top}")
+            Log.d(TAG, "syncing... height: ${layout.height}, top: ${layout.top}")
         }
     }
 
