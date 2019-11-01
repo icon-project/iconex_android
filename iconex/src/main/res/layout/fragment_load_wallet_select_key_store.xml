@@ -117,7 +117,7 @@
 
                 <RelativeLayout
                     android:id="@+id/con_sync"
-                    android:layout_width="48dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
