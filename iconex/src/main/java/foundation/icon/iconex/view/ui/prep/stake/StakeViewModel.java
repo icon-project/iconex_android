@@ -16,6 +16,8 @@ public class StakeViewModel extends ViewModel {
 
     private MutableLiveData<BigInteger> stepLimit, stepPrice;
 
+    private MutableLiveData<Integer> isEdit;
+
     public MutableLiveData<Wallet> getWallet() {
         if (wallet == null)
             wallet = new MutableLiveData<>();
@@ -153,5 +155,18 @@ public class StakeViewModel extends ViewModel {
 
     public void setStepPrice(BigInteger stepPrice) {
         getStepPrice().setValue(stepPrice);
+    }
+
+    public MutableLiveData<Integer> isEdit() {
+        if (isEdit == null) {
+            isEdit = new MutableLiveData<>();
+            isEdit.setValue(0);
+        }
+
+        return isEdit;
+    }
+
+    public void isEdit(int isEdit) {
+        isEdit().setValue(isEdit);
     }
 }

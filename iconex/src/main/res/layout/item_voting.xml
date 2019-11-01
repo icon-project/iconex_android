@@ -88,7 +88,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:fontFamily="@font/noto_sans_light"
-                    android:text="Total Votes (VP)"
+                    android:text="Total Votes (%)"
                     android:textColor="@color/dark80"
                     android:textSize="10dp" />
 
@@ -118,7 +118,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:fontFamily="@font/noto_sans_light"
-                    android:text="My Votes (VP)"
+                    android:text="My Votes (%)"
                     android:textColor="@color/dark80"
                     android:textSize="10dp" />
 

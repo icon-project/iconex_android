@@ -253,7 +253,7 @@ class TTextInputLayout : LinearLayout {
                 tvError.text = msg
                 tvError.visibility = View.VISIBLE
 
-                layoutParams.setMargins(0, 0, 0, 0)
+                layoutParams.setMargins(0, 0, 0, (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10.0f, context.resources.displayMetrics).toInt()))
                 root.layoutParams = layoutParams
             }
 

@@ -466,9 +466,6 @@ public class MainWalletFragment extends Fragment {
                     add(new AboutActivity.AboutItem(
                             AboutActivity.AboutItem.TYPE_PARAGRAPH,
                             getString(R.string.mainWalletInfo31)));
-                    add(new AboutActivity.AboutItem(
-                            AboutActivity.AboutItem.TYPE_PARAGRAPH,
-                            getString(R.string.mainWalletInfo32)));
 
                     add(new AboutActivity.AboutItem(
                             AboutActivity.AboutItem.TYPE_HEAD,

@@ -207,7 +207,12 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View view) {
-            PRep prep = preps.get(getAdapterPosition());
+            PRep prep;
+            try {
+                prep = preps.get(getAdapterPosition());
+            } catch (Exception e) {
+                return;
+            }
 
             switch (view.getId()) {
                 case R.id.layout_info:
@@ -281,8 +286,8 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     private void showDetailDialog(PRep prep) {
         PRepDetailDialog dialog = new PRepDetailDialog(mContext);
         dialog.setPrepName(prep.getName());
-        dialog.setLocation(String.format(Locale.getDefault(), "Server: %s / %s",
-                prep.getCity(), prep.getCountry()));
+        dialog.setLocation(String.format(Locale.getDefault(), "Server: %s",
+                prep.getCity()));
         dialog.setWebsite(prep.getWebsite());
         dialog.setData();
         dialog.setSingleButton(true);

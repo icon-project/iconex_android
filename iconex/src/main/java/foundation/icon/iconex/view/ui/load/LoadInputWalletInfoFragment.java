@@ -335,7 +335,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                     inputAlias.setError(false, null);
             }
         } else {
-            inputAlias.setError(true, getString(R.string.errAliasEmpty));
+            aliasValidate = ALIAS_EMPTY;
             btnComplete.setEnabled(false);
             return;
         }
@@ -363,7 +363,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                 }
             }
         } else {
-            inputPwd.setError(true, getString(R.string.errPwdEmpty));
+            pwdValidate = PasswordValidator.EMPTY;
             btnComplete.setEnabled(false);
             return;
         }

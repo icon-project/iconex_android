@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.io.InterruptedIOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -223,6 +225,8 @@ public class StakeFragment extends Fragment {
                     return;
                 }
 
+                TextInputLayout dd = new TextInputLayout(getContext());
+
                 if (editStaked.getTag() == null) {
                     if (input.compareTo(maxStake) > 0) {
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", 100.0f));
@@ -317,7 +321,7 @@ public class StakeFragment extends Fragment {
             stakeSeekBar.setEnabled(false);
             txtStakedPer.setTextColor(getResources().getColor(R.color.darkE6));
         } else {
-            if (!delegated.equals(BigInteger.ZERO)) {
+            if (!delegated.equals(BigDecimal.ZERO)) {
                 stakeGraph.setDelegation(delegated);
                 delegatedPercent = calculatePercentage(total, delegated);
                 txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
@@ -446,8 +450,10 @@ public class StakeFragment extends Fragment {
                                     calendar.get(Calendar.HOUR),
                                     calendar.get(Calendar.MINUTE),
                                     calendar.get(Calendar.SECOND)));
+                            vm.isEdit(2);
                         } else if (stakeValue.compareTo(staked) > 0) {
                             txtTimeRequired.setText(getString(R.string.stakeTimeRquired));
+                            vm.isEdit(1);
                         } else {
                             txtTimeRequired.setText("-");
                         }
