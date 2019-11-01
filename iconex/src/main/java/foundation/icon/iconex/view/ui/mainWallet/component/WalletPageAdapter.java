@@ -1,4 +1,4 @@
-package foundation.icon.iconex.view;
+package foundation.icon.iconex.view.ui.mainWallet.component;
 
 import android.util.SparseArray;
 import android.view.View;
@@ -11,7 +11,6 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
 
@@ -122,7 +121,9 @@ public class WalletPageAdapter extends PagerAdapter {
 
     private void updateVisiblePage() {
         int pos = mViewPager.getCurrentItem();
-        for (int i = pos -1; pos >= i; i++) {
+        int min = pos -1;
+        int max = pos +1;
+        for (int i = min; max >= i; i++) {
             if (i < 0 || walletVDs.size() <= i || isUpdated(i)) continue;
             WalletViewData walletVD = walletVDs.get(i);
             WalletCardView walletView = mWalletViews.get(i);
