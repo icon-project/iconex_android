@@ -148,7 +148,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                     if (isEdited) {
                         MessageDialog messageDialog = new MessageDialog(PRepVoteActivity.this);
                         messageDialog.setSingleButton(false);
-                        messageDialog.setTitleText(getString(R.string.voteNotExecute));
+                        messageDialog.setMessage(getString(R.string.voteNotExecute));
                         messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                             @Override
                             public Boolean invoke(View view) {
@@ -188,7 +188,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                 if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).compareTo(fee) < 0) {
                     MessageDialog messageDialog = new MessageDialog(PRepVoteActivity.this);
                     messageDialog.setSingleButton(true);
-                    messageDialog.setTitleText(getString(R.string.errIcxOwnNotEnough));
+                    messageDialog.setMessage(getString(R.string.errIcxOwnNotEnough));
                     messageDialog.show();
 
                     return;
@@ -566,7 +566,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             if (isEdited) {
                 MessageDialog messageDialog = new MessageDialog(PRepVoteActivity.this);
                 messageDialog.setSingleButton(false);
-                messageDialog.setTitleText(getString(R.string.voteNotExecute));
+                messageDialog.setMessage(getString(R.string.voteNotExecute));
                 messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                     @Override
                     public Boolean invoke(View view) {

@@ -6,15 +6,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,19 +19,16 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.widget.TextViewCompat;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -111,6 +105,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     private ViewGroup layoutData;
     private TTextInputLayout editData;
     private Button btnViewData;
+    private View btnData;
 
     // Fee UI
     private TextView labelStepLimit;
@@ -335,6 +330,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         layoutData = findViewById(R.id.layout_data);
         editData = findViewById(R.id.edit_data);
         btnViewData = findViewById(R.id.btn_view_data);
+        btnData = findViewById(R.id.btnData);
 
         // load Fee UI
         labelStepLimit = findViewById(R.id.lb_step_limit);
@@ -472,7 +468,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             }
         });
         editData.setInputEnabled(false);
-        editData.setOnClickListener(new View.OnClickListener() {
+        btnData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (data == null) {
@@ -1017,7 +1013,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
             if (canICX.compareTo(BigInteger.ZERO) < 0) {
                 MessageDialog messageDialog = new MessageDialog(this);
-                messageDialog.setTitleText(getString(R.string.errICXFee));
+                messageDialog.setMessage(getString(R.string.errICXFee));
                 messageDialog.show();
                 return;
             }
@@ -1028,7 +1024,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
             if (canICX.compareTo(BigInteger.ZERO) < 0) {
                 MessageDialog messageDialog = new MessageDialog(this);
-                messageDialog.setTitleText(getString(R.string.errICXFee));
+                messageDialog.setMessage(getString(R.string.errICXFee));
                 messageDialog.show();
 
                 return;

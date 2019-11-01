@@ -1,10 +1,7 @@
 package foundation.icon.iconex.dialogs;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +18,7 @@ public class EditText2Dialog extends MessageDialog{
     public EditText2Dialog(@NotNull Context context, String title) {
         super(context);
 
-        setHeadText(title);
+        setTitle(title);
 
         buildDialog();
     }

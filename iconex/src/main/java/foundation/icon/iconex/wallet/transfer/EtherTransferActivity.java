@@ -11,7 +11,6 @@ import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -22,7 +21,6 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -95,6 +93,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private ViewGroup layoutDataInfo;
     private TTextInputLayout editData;
     private Button btnViewData;
+    private View btnData;
 
     // Fee UI
     private TextView lbEstimatedMaxFee;
@@ -238,6 +237,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         layoutDataInfo = findViewById(R.id.layout_data_info);
         editData = findViewById(R.id.edit_data);
         btnViewData = findViewById(R.id.btn_view_data);
+        btnData = findViewById(R.id.btnData);
 
         // load Fee UI
         lbEstimatedMaxFee = findViewById(R.id.lb_estimated_max_fee);
@@ -446,7 +446,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         // edit Data
         editData.setInputEnabled(false);
         btnViewData.setVisibility(View.GONE);
-        editData.setOnClickListener(new View.OnClickListener() {
+        btnData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editData.getText().length() <= 0) {
@@ -631,7 +631,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
                 if (feeError) {
                     MessageDialog messageDialog = new MessageDialog(EtherTransferActivity.this);
-                    messageDialog.setTitleText(getString(R.string.errETHFee));
+                    messageDialog.setMessage(getString(R.string.errETHFee));
                     messageDialog.show();
                     return;
                 }

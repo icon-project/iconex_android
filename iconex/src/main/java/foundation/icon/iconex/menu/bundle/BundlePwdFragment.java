@@ -276,7 +276,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             MessageDialog messageDialog = new MessageDialog(getContext());
-            messageDialog.setTitleText(getString(R.string.backupKeyStoreFileConfirm));
+            messageDialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
             messageDialog.setSingleButton(false);
             messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override

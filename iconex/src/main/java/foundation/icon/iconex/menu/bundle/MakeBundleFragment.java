@@ -9,9 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
@@ -73,7 +70,7 @@ public class MakeBundleFragment extends Fragment {
             public void onClick(View v) {
                 MessageDialog messageDialog = new MessageDialog(getContext());
                 messageDialog.setSingleButton(false);
-                messageDialog.setTitleText(getString(R.string.msgBundleNotice));
+                messageDialog.setMessage(getString(R.string.msgBundleNotice));
                 messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                     @Override
                     public Boolean invoke(View view) {

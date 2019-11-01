@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -138,7 +137,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
             e.printStackTrace();
         }
         MessageDialog messageDialog = new MessageDialog(this);
-        messageDialog.setTitleText(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+        messageDialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
         messageDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -158,7 +157,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
                     MessageDialog messageDialog = new MessageDialog(ExportWalletBundleActivity.this);
-                    messageDialog.setTitleText(getString(R.string.permissionStorageDenied));
+                    messageDialog.setMessage(getString(R.string.permissionStorageDenied));
                     messageDialog.show();
                 }
                 return;

@@ -16,7 +16,6 @@
 package foundation.icon.iconex.barcode;
 
 import android.Manifest;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -29,11 +28,6 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewPropertyAnimatorCompat;
-
 import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -41,17 +35,18 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -64,14 +59,12 @@ import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigInteger;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
-import foundation.icon.iconex.widgets.CustomToast;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
@@ -336,7 +329,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             createCameraSource(autoFocus, useFlash);
 //            return;
         } else {
-            BasicDialog dialog = new BasicDialog(BarcodeCaptureActivity.this);
+            MessageDialog dialog = new MessageDialog(BarcodeCaptureActivity.this);
             dialog.setMessage(getString(R.string.permissionCameraDenied));
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override

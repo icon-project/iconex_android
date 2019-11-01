@@ -47,6 +47,7 @@
         android:textSize="12dp"
         android:lineHeight="20dp"
         android:textColor="@color/dark80"
+        android:fontFamily="@font/noto_sans_light"
 
         android:text="@string/fingerprintLockDetailed0"/>
 

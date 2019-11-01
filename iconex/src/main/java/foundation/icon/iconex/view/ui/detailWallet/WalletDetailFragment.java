@@ -263,7 +263,7 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 MessageDialog messageDialog = new MessageDialog(getContext());
-                messageDialog.setTitleText(getString(R.string.infoTx));
+                messageDialog.setMessage(getString(R.string.infoTx));
                 messageDialog.show();
             }
         };

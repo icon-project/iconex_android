@@ -124,7 +124,7 @@ public class EtherDataEnterFragment extends Fragment {
                 } else {
                     // btn_option.getText() == Delete
                     MessageDialog messageDialog = new MessageDialog(getActivity());
-                    messageDialog.setTitleText(getString(R.string.msgDeleteData));
+                    messageDialog.setMessage(getString(R.string.msgDeleteData));
                     messageDialog.setSingleButton(false);
                     messageDialog.setConfirmButtonText(getString(R.string.yes));
                     messageDialog.setCancelButtonText(getString(R.string.no));
@@ -146,7 +146,7 @@ public class EtherDataEnterFragment extends Fragment {
             public void onClick(View v) {
                 if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
                     MessageDialog messageDialog = new MessageDialog(getActivity());
-                    messageDialog.setTitleText(getString(R.string.errInvalidData));
+                    messageDialog.setMessage(getString(R.string.errInvalidData));
                     messageDialog.show();
                     return;
                 }
@@ -156,7 +156,7 @@ public class EtherDataEnterFragment extends Fragment {
                         mListener.onSetData(Utils.checkPrefix(editData.getText().toString()));
                 } catch (Exception e) {
                     MessageDialog messageDialog = new MessageDialog(getActivity());
-                    messageDialog.setTitleText(getString(R.string.errInvalidData));
+                    messageDialog.setMessage(getString(R.string.errInvalidData));
                     messageDialog.show();
                 }
 
@@ -184,7 +184,7 @@ public class EtherDataEnterFragment extends Fragment {
         if (!edit.equals(data)) {
             MessageDialog messageDialog = new MessageDialog(getActivity());
             messageDialog.setSingleButton(false);
-            messageDialog.setTitleText(getString(R.string.cancelEnterData));
+            messageDialog.setMessage(getString(R.string.cancelEnterData));
             messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
                 public Boolean invoke(View view) {

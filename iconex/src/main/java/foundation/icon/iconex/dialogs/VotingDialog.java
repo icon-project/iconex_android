@@ -23,7 +23,7 @@ public class VotingDialog extends MessageDialog {
         View v = View.inflate(getContext(), R.layout.dialog_voting, null);
         setContent(v);
 
-        setHeadText(getContext().getString(R.string.vote));
+        setTitle(getContext().getString(R.string.vote));
 
         txtVoteCount = v.findViewById(R.id.txt_vote_count);
         txtLimitNPrice = v.findViewById(R.id.txt_limit_price);

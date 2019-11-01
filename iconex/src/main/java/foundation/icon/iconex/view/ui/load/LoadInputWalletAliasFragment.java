@@ -73,6 +73,7 @@ public class LoadInputWalletAliasFragment extends Fragment implements View.OnCli
 
     private void initView(View v) {
         inputAlias = v.findViewById(R.id.input_alias);
+        inputAlias.setPastable(false);
         inputAlias.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {

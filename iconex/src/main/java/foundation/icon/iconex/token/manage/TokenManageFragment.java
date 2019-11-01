@@ -147,6 +147,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         editName = v.findViewById(R.id.edit_name);
         editSym = v.findViewById(R.id.edit_symbol);
         editDec = v.findViewById(R.id.edit_decimals);
+        editAddr.syncTopHeight(v.findViewById(R.id.con_sync));
 
         editSym.setInputEnabled(false);
         editDec.setInputEnabled(false);
@@ -234,7 +235,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
     public void deleteToken() {
         MessageDialog messageDialog = new MessageDialog(getContext());
-        messageDialog.setTitleText(String.format(Locale.getDefault(), getString(R.string.msgTokenDelete),
+        messageDialog.setMessage(String.format(Locale.getDefault(), getString(R.string.msgTokenDelete),
                 mToken.getUserName()));
         messageDialog.setSingleButton(false);
         messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {

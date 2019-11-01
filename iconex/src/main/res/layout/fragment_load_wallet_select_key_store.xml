@@ -111,22 +111,28 @@
                     app:hint="@string/selectKeyStore"
                     app:inputType="file"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_select_keystore"
+                    app:layout_constraintEnd_toStartOf="@+id/con_sync"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageButton
-                    android:id="@+id/btn_select_keystore"
+                <RelativeLayout
+                    android:id="@+id/con_sync"
                     android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="@drawable/bg_btn_outline_01"
-                    android:src="@drawable/ic_upload"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/input_file"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/btn_select_keystore"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/bg_btn_outline_01"
+                        android:src="@drawable/ic_upload" />
+
+                </RelativeLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <foundation.icon.iconex.widgets.TTextInputLayout

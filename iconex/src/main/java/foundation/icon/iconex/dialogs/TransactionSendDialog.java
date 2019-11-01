@@ -74,7 +74,7 @@ public class TransactionSendDialog extends MessageDialog {
 
     private void buildDialog() {
         // set head
-        setHeadText(getContext().getString(R.string.transfer));
+        setTitle(getContext().getString(R.string.transfer));
         // set content
         View content = View.inflate(getContext(), R.layout.layout_send_transaction_dialog_content, null);
         setContent(content);

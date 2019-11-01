@@ -81,20 +81,26 @@
                 android:layout_weight="1"
                 app:hint="@string/hintRequestSend"/>
 
-            <Button
-                android:id="@+id/btn_request_send"
+            <RelativeLayout
+                android:id="@+id/con_sync"
                 android:layout_width="95dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="6dp"
                 android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btn_request_send"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
 
-                android:fontFamily="@font/noto_sans_light"
-                android:textSize="10dp"
-                android:textColor="@color/txt_btn_outline_01"
-                android:background="@drawable/bg_btn_outline_01"
-                android:textAllCaps="false"
+                    android:fontFamily="@font/noto_sans_light"
+                    android:textSize="10dp"
+                    android:textColor="@color/txt_btn_outline_01"
+                    android:background="@drawable/bg_btn_outline_01"
+                    android:textAllCaps="false"
 
-                android:text="@string/generateQRcode"/>
+                    android:text="@string/generateQRcode"/>
+            </RelativeLayout>
+
         </LinearLayout>
 
         <TextView

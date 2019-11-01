@@ -120,6 +120,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
 
         qr_loading = findViewById(R.id.qr_loading);
 
+        editSendAmount.syncTopHeight(findViewById(R.id.con_sync));
         editSendAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         btnRequestSend.setOnClickListener(new OnClickListener() {
             @Override

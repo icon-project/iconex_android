@@ -2,10 +2,7 @@ package foundation.icon.iconex.dialogs
 
 import android.app.Dialog
 import android.content.Context
-import android.inputmethodservice.InputMethodService
-import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import foundation.icon.iconex.R
 
@@ -66,8 +63,8 @@ open class MessageDialog: Dialog {
             if (b == null || b) { this.dismiss() }
         }
 
-        headText = null
-        subText = null
+        title = null
+        description = null
         isSingleButton = true
         progressVisible = false
     }
@@ -99,7 +96,7 @@ open class MessageDialog: Dialog {
             mWrap2Button.visibility = if (b) View.GONE else View.VISIBLE
         }
 
-    var headText: String?
+    var title: String?
         get() = if (mTextHead.visibility == View.GONE) null else mTextHead.text.toString()
         set(s) {
             mTextHead.visibility = if (s == null) View.GONE else View.VISIBLE
@@ -107,12 +104,12 @@ open class MessageDialog: Dialog {
             s.let { mTextHead.text = it }
         }
 
-    var titleText: String
+    var message: String
         get() = mTextTitle.text.toString()
         set(s) = mTextTitle.setText(s)
 
 
-    var subText: String?
+    var description: String?
         get() = if (mTextSub.visibility == View.GONE) null else mTextSub.text.toString()
         set(s) {
             mTextSub.visibility = if (s == null || s == "") View.GONE else View.VISIBLE

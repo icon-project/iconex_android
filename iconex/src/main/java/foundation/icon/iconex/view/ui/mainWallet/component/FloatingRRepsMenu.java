@@ -208,7 +208,7 @@ public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListen
                     BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
                     if (balance.compareTo(new BigInteger("1")) < 0) {
                         messageDialog = new MessageDialog(getContext());
-                        messageDialog.setTitleText(getContext().getString(R.string.notEnoughForStaking));
+                        messageDialog.setMessage(getContext().getString(R.string.notEnoughForStaking));
                         messageDialog.show();
                     } else {
                         passwordDialog.show();
@@ -232,7 +232,7 @@ public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListen
                     BigInteger voted = wallet.getStaked();
                     if (voted.compareTo(BigInteger.ZERO) == 0) {
                         messageDialog = new MessageDialog(getContext());
-                        messageDialog.setTitleText(getContext().getString(R.string.hasNoVotingPower));
+                        messageDialog.setMessage(getContext().getString(R.string.hasNoVotingPower));
                         messageDialog.show();
                     } else {
                         passwordDialog.show();

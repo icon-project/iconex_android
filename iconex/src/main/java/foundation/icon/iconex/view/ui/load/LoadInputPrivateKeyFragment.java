@@ -138,6 +138,7 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
 
         inputPrivateKey = v.findViewById(R.id.input_private_key);
         inputPrivateKey.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        inputPrivateKey.syncTopHeight(v.findViewById(R.id.con_sync));
         inputPrivateKey.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {

@@ -3,8 +3,6 @@ package foundation.icon.iconex.wallet.transfer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,6 +13,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.gson.JsonObject;
 
@@ -28,7 +28,6 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.OnKeyPreImeListener;
 import foundation.icon.iconex.dialogs.MessageDialog;
-import foundation.icon.iconex.dialogs.BasicDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
@@ -116,7 +115,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     String dataStr = s.toString();
-                    BasicDialog dialog = new BasicDialog(getActivity());
+                    MessageDialog dialog = new MessageDialog(getActivity());
                     dialog.setMessage(String.format(Locale.getDefault(), getString(R.string.errOverByteLimit), maxSize));
                     dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -237,7 +236,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                 } else {
                     // btn_option.getText() == Delete
                     MessageDialog messageDialog = new MessageDialog(getActivity());
-                    messageDialog.setTitleText(getString(R.string.msgDeleteData));
+                    messageDialog.setMessage(getString(R.string.msgDeleteData));
                     messageDialog.setSingleButton(false);
                     messageDialog.setConfirmButtonText(getString(R.string.yes));
                     messageDialog.setCancelButtonText(getString(R.string.no));
@@ -257,7 +256,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                 if (data.getDataType() == DataType.HEX) {
                     if (!editData.getText().toString().startsWith(MyConstants.PREFIX_HEX)) {
                         MessageDialog messageDialog = new MessageDialog(getActivity());
-                        messageDialog.setTitleText(getString(R.string.errInvalidData));
+                        messageDialog.setMessage(getString(R.string.errInvalidData));
                         messageDialog.show();
                         break;
                     }
@@ -267,7 +266,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                         getStepCost();
                     } catch (Exception e) {
                         MessageDialog messageDialog = new MessageDialog(getActivity());
-                        messageDialog.setTitleText(getString(R.string.errInvalidData));
+                        messageDialog.setMessage(getString(R.string.errInvalidData));
                         messageDialog.show();
                     }
                 } else {
@@ -288,7 +287,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
         if (!edit.equals(_data)) {
             MessageDialog messageDialog = new MessageDialog(getActivity());
             messageDialog.setSingleButton(false);
-            messageDialog.setTitleText(getString(R.string.cancelEnterData));
+            messageDialog.setMessage(getString(R.string.cancelEnterData));
             messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
                 public Boolean invoke(View view) {
@@ -363,7 +362,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                                 mListener.onSetData(data);
                         } else {
                             MessageDialog messageDialog = new MessageDialog(getActivity());
-                            messageDialog.setTitleText(getString(R.string.errIcxOwnNotEnough));
+                            messageDialog.setMessage(getString(R.string.errIcxOwnNotEnough));
                             messageDialog.show();
 
                             data.setData(null);

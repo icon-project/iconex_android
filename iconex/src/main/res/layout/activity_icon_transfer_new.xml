@@ -306,11 +306,22 @@
                 android:orientation="vertical"
                 android:layout_marginTop="30dp">
 
-                <foundation.icon.iconex.widgets.TTextInputLayout
-                    android:id="@+id/edit_data"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hint="@string/ethData" />
+                    android:layout_height="wrap_content">
+
+                    <foundation.icon.iconex.widgets.TTextInputLayout
+                        android:id="@+id/edit_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hint="@string/ethData" />
+
+                    <View
+                        android:id="@+id/btnData"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"/>
+                </FrameLayout>
 
                 <Button
                     android:id="@+id/btn_view_data"
