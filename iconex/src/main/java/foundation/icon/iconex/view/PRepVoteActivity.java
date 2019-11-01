@@ -175,8 +175,9 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(PRepVoteActivity.this, PRepSearchActivity.class)
-                                .putExtra("preps", (Serializable) vm.getPreps().getValue()),
-                        1000);
+                                .putExtra("preps", (Serializable) vm.getPreps().getValue())
+                                .putExtra("delegations", (Serializable) vm.getDelegations().getValue()),
+                        333);
             }
         });
 
@@ -548,9 +549,9 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 1000) {
-
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 333) {
+            prepsFragment.updatePRepList((List<Delegation>) data.getSerializableExtra("delegations"));
         } else
             super.onActivityResult(requestCode, resultCode, data);
     }

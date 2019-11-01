@@ -118,7 +118,8 @@ public class LoadBundleFragment extends Fragment implements View.OnClickListener
                 try {
                     saveWallets();
                     startActivity(new Intent(getActivity(), MainWalletActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .putExtra("bundleDone", true));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

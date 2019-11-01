@@ -19,6 +19,8 @@ import java.util.Map;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
+import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkErrorActivity;
@@ -120,7 +122,10 @@ public class MainWalletActivity extends AppCompatActivity implements
 
                     boolean _loadCompleteAll;
                     do {
-                        try { Thread.sleep(500); } catch (InterruptedException e) { }
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                        }
                         Log.d(TAG, "flusher wake");
 
                         if (mFragment == null) break;
@@ -156,7 +161,8 @@ public class MainWalletActivity extends AppCompatActivity implements
                                     @Override
                                     public void run() {
                                         MainWalletFragment fragment = findFragment();
-                                        if(fragment != null)fragment.updateWallet(_wallets, _tokens);
+                                        if (fragment != null)
+                                            fragment.updateWallet(_wallets, _tokens);
                                         Log.d(TAG, "run() called with: updateWalletViews " + _wallets + ", _tokens" + _tokens + "fragment: " + fragment);
                                     }
                                 });
@@ -169,8 +175,10 @@ public class MainWalletActivity extends AppCompatActivity implements
             }).start();
         }
     }
+
     private UIupdater uiUpdater = null;
-    public boolean isAvailablleUIupdater () {
+
+    public boolean isAvailablleUIupdater() {
         if (uiUpdater == null) return false;
 
         synchronized (uiUpdater) {
@@ -207,7 +215,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
     }
 
-    void internalUpdateEntryView(int wallet, int entry){
+    void internalUpdateEntryView(int wallet, int entry) {
         Log.d(TAG, "internalUpdateEntryView() called with: wallet = [" + wallet + "], entry = [" + entry + "]");
         EntryViewData entryVD = walletVDs.get(wallet).getEntryVDs().get(entry);
         Integer intWallet = new Integer(wallet);
@@ -225,8 +233,12 @@ public class MainWalletActivity extends AppCompatActivity implements
                 @Override
                 public void run() {
                     findFragment().updateWallet(
-                            new ArrayList<Integer>() {{ add(intWallet); }},
-                            new ArrayList<Integer>() {{ add(intToken); }}
+                            new ArrayList<Integer>() {{
+                                add(intWallet);
+                            }},
+                            new ArrayList<Integer>() {{
+                                add(intToken);
+                            }}
                     );
                 }
             });
@@ -241,7 +253,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         totalAssetsVD = new TotalAssetsViewData();
 
         Map<String, List<EntryViewData>> mapTokenListEntries = new HashMap<>();
-        for(Wallet wallet : ICONexApp.wallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             TokenWalletItem.TokenColor tokenColor = new TokenWalletItem.TokenColor(); // token background color
             List<EntryViewData> walletListEntries = new ArrayList<>();
             for (WalletEntry entry : wallet.getWalletEntries()) {
@@ -271,14 +283,15 @@ public class MainWalletActivity extends AppCompatActivity implements
             WalletViewData tokenListVD = new WalletViewData(null, tokenListEntries);
             if (key.equals(Constants.KS_COINTYPE_ICX)) {
                 icxWallet = tokenListVD;
-            } else if(key.equals(Constants.KS_COINTYPE_ETH)) {
+            } else if (key.equals(Constants.KS_COINTYPE_ETH)) {
                 ethWallet = tokenListVD;
             } else {
                 tokenListVDs.add(tokenListVD);
             }
         }
         if (icxWallet != null) tokenListVDs.add(0, icxWallet);
-        if (ethWallet != null) tokenListVDs.add(tokenListVDs.size() > 0 && icxWallet != null ? 1 : 0, ethWallet);
+        if (ethWallet != null)
+            tokenListVDs.add(tokenListVDs.size() > 0 && icxWallet != null ? 1 : 0, ethWallet);
 
         for (int i = 0; tokenListVDs.size() > i; i++) {
             WalletViewData walletVD = tokenListVDs.get(i);
@@ -323,6 +336,16 @@ public class MainWalletActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent() != null) {
+            boolean bundleDone = getIntent().getBooleanExtra("bundleDone", false);
+            if (bundleDone) {
+                MessageDialog messageDialog = new MessageDialog(this);
+                messageDialog.setSingleButton(true);
+                messageDialog.setMessage(getString(R.string.msgLoadBundle));
+                messageDialog.show();
+            }
+        }
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -463,7 +486,8 @@ public class MainWalletActivity extends AppCompatActivity implements
                     BigInteger stakedSum = wallet.getStaked().add(totalStaked);
                     totalVoting = votingSum;
                     totalStaked = stakedSum;
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
             }
         }
 
@@ -483,7 +507,7 @@ public class MainWalletActivity extends AppCompatActivity implements
     public void onLoadCompleteAll() {
         Log.d(TAG, "onLoadCompleteAll() called");
         combineTopToken();
-        if(isAvailablleUIupdater()) uiUpdater.setLoadCompleteAll(true);
+        if (isAvailablleUIupdater()) uiUpdater.setLoadCompleteAll(true);
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -517,7 +541,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         }
         totalAssetsVD.setTotalAsset(totalBalance, currentUnit);
         totalAssetsVD.loadingTotalAssets = false;
-        if(!patchingData) internalUpdateAssetsView();
+        if (!patchingData) internalUpdateAssetsView();
     }
 
     private void combineTopToken() {
@@ -533,7 +557,8 @@ public class MainWalletActivity extends AppCompatActivity implements
                     EntryViewData entryVD = entryVDs.get(i);
                     BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entryVD.getEntry().getBalance()), entryVD.getEntry().getDefaultDec()));
                     totalBalance = balance.add(totalBalance == null ? BigDecimal.ZERO : totalBalance);
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
             }
 
             topTokenVD.setTxtAmount(totalBalance == null ? MyConstants.NO_BALANCE : DecimalFomatter.format(totalBalance));
@@ -545,7 +570,8 @@ public class MainWalletActivity extends AppCompatActivity implements
                 String strExchanger = ICONexApp.EXCHANGE_TABLE.get(exchangeKey);
                 BigDecimal deciExchanger = new BigDecimal(strExchanger);
                 exchanged = totalBalance.multiply(deciExchanger);
-            } catch (Exception e) { }
+            } catch (Exception e) {
+            }
             topTokenVD.setExchanged(exchanged, currentUnit);
             topTokenVD.exchageLoading = false;
         }
@@ -614,7 +640,8 @@ public class MainWalletActivity extends AppCompatActivity implements
 
         if (isAvailablleUIupdater()) {
             uiUpdater.setFragment(null);
-        } uiUpdater = null;
+        }
+        uiUpdater = null;
     }
 
     @Override

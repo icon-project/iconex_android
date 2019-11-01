@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -15,32 +14,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InterruptedIOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.service.PRepService;
-import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.view.PRepListActivity;
 import foundation.icon.iconex.view.ui.prep.Delegation;
 import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.view.ui.prep.PRepListAdapter;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.DividerItemDecorator;
-import foundation.icon.icx.transport.jsonrpc.RpcItem;
-import foundation.icon.icx.transport.jsonrpc.RpcObject;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 import static foundation.icon.iconex.view.PRepListActivity.Sort.RankAscending;
 
@@ -220,6 +206,14 @@ public class VotePRepListFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public void updatePRepList(List<Delegation> delegations) {
+        this.delegations = delegations;
+        adapter.setDelegations(this.delegations);
+        adapter.notifyDataSetChanged();
+
+        vm.setDelegations(this.delegations);
     }
 
     public interface OnVotePRepListListener {

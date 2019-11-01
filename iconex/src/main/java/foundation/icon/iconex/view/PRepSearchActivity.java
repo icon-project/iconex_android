@@ -1,6 +1,7 @@
 package foundation.icon.iconex.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,6 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
 
     private List<PRep> pReps = new ArrayList<>();
     private List<Delegation> delegations;
-    private Activity root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,6 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
             pReps = (List<PRep>) getIntent().getSerializableExtra("preps");
             delegations = (List<Delegation>) getIntent().getSerializableExtra("delegations");
         }
-
 
         initView();
     }
@@ -103,10 +103,16 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        if (root == null)
+        if (delegations == null)
             adapter = new PRepListAdapter(this, PRepListAdapter.Type.NORMAL, new ArrayList<>());
         else
-            adapter = new PRepListAdapter(this, PRepListAdapter.Type.VOTE, new ArrayList<>(), this);
+            adapter = new PRepListAdapter(this, PRepListAdapter.Type.SEARCH, new ArrayList<>(), delegations, this,
+                    new PRepListAdapter.OnAddPRepListener() {
+                        @Override
+                        public void onAdd(List<Delegation> delegations) {
+                            PRepSearchActivity.this.delegations = delegations;
+                        }
+                    });
 
         list.setAdapter(adapter);
 
@@ -121,6 +127,8 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.btn_cancel:
+                setResult(444,
+                        new Intent().putExtra("delegations", (Serializable) delegations));
                 finish();
                 break;
         }
@@ -136,5 +144,12 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
         }
 
         return result;
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(444,
+                new Intent().putExtra("delegations", (Serializable) delegations));
+        finish();
     }
 }

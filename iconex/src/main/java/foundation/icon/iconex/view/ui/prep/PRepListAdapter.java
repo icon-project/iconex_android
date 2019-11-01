@@ -45,6 +45,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
     private final Type mType;
     private List<PRep> preps;
     private List<Delegation> delegations;
+    private OnAddPRepListener mListener;
 
     private Activity root;
     private VoteViewModel vm;
@@ -67,6 +68,16 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
         vm = ViewModelProviders.of((AppCompatActivity) root).get(VoteViewModel.class);
         delegations = vm.getDelegations().getValue();
+
+        loading = new LoadingDialog(mContext, R.style.DialogActivity);
+    }
+
+    public PRepListAdapter(Context context, Type type, List<PRep> preps, List<Delegation> delegations, Activity root, OnAddPRepListener listener) {
+        mContext = context;
+        mType = type;
+        this.preps = preps;
+        this.delegations = delegations;
+        mListener = listener;
 
         loading = new LoadingDialog(mContext, R.style.DialogActivity);
     }
@@ -113,6 +124,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                 break;
 
             case VOTE:
+            case SEARCH:
                 try {
                     for (Delegation d : delegations) {
                         if (prep.getAddress().equals(d.getPrep().getAddress())) {
@@ -249,11 +261,15 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                                     .build();
                             delegation.isNew(true);
                             delegations.add(delegation);
-                            vm.setDelegations(delegations);
 
                             toast.makeText(mContext, String.format(Locale.getDefault(), mContext.getString(R.string.addMyVote), delegations.size()), Toast.LENGTH_SHORT).show();
-
                             notifyItemChanged(getAdapterPosition());
+
+                            if (mType == Type.VOTE) {
+                                vm.setDelegations(delegations);
+                            } else {
+                                mListener.onAdd(delegations);
+                            }
                         }
                     }
                     break;
@@ -281,8 +297,13 @@ public class PRepListAdapter extends RecyclerView.Adapter {
         this.delegations = delegations;
     }
 
+    public interface OnAddPRepListener {
+        void onAdd(List<Delegation> delegations);
+    }
+
     public enum Type {
         NORMAL,
-        VOTE
+        VOTE,
+        SEARCH
     }
 }
