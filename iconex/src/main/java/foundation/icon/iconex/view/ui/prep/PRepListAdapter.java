@@ -78,6 +78,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
         this.preps = preps;
         this.delegations = delegations;
         mListener = listener;
+        this.root = root;
 
         loading = new LoadingDialog(mContext, R.style.DialogActivity);
     }

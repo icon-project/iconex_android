@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -137,9 +138,9 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
     private List<PRep> searchPReps(String search) {
         List<PRep> result = new ArrayList<>();
 
+        Log.wtf(TAG, "!!! searchPRep=" + search);
         for (PRep p : pReps) {
-            if (p.getName().contains(search.toUpperCase())
-                    || p.getName().contains(search.toLowerCase()))
+            if (p.getName().toUpperCase().contains(search.toUpperCase()))
                 result.add(p);
         }
 
