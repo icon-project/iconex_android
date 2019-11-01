@@ -545,7 +545,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                                 startActivity(new Intent(this, ICONTransferActivity.class)
                                         .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
                                         .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
-                                        .putExtra("privateKey", getIntent().getStringExtra("privateKKey"))
+                                        .putExtra("privateKey", getIntent().getStringExtra("privateKey"))
                                         .putExtra("address", address)
                                         .putExtra("amount", amount)
                                 );
@@ -562,7 +562,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                             startActivity(new Intent(this, ICONTransferActivity.class)
                                     .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
                                     .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
-                                    .putExtra("privateKey", getIntent().getStringExtra("privateKKey"))
+                                    .putExtra("privateKey", getIntent().getStringExtra("privateKey"))
                                     .putExtra("address", barcode.displayValue)
                             );
 
