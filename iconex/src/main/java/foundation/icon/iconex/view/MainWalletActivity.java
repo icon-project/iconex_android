@@ -373,7 +373,7 @@ public class MainWalletActivity extends AppCompatActivity implements
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         try {
             BigInteger intIScore = wallet.getiScore();
-            String strIScore = ConvertUtil.getValue(intIScore, 18);
+            String strIScore = ConvertUtil.getValue(intIScore, 21);
             String deciIScore = DecimalFomatter.format(new BigDecimal(strIScore));
             entryVD.setTxtIScore(deciIScore);
         } catch (Exception e) {
