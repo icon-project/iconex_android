@@ -523,7 +523,7 @@
     <string name="createWalletStep1Detailed1">・ Selected coin wallet will created after the completion of creating wallet.</string>
     <string name="createWalletStep1Detailed2">・ After creating wallet, token that is based on according coin can be added.</string>
 
-    <string name="createWalletStep2Notice">It is users responsible to manage password; There is no way to find it.</string>
+    <string name="createWalletStep2Notice">It is users responsible to manage password. There is no way to find it.</string>
     <string name="createWalletStep2Detailed1">・ In order to restore wallet by Keystore file, it requires password to send transaction.</string>
 
     <string name="createWalletStep3Detailed1">・ With wallet Keystore file and password, wallet can be install in different device and restore deleted wallet.</string>
@@ -601,7 +601,7 @@
     <string name="mainWalletInfo22">Voting power will created with 1 to 1 ratio with Staked ICX amount.</string>
 
     <string name="mainWalletInfo30">Voting Power</string>
-    <string name="mainWalletInfo31">Voting Power를 이용하여 P-Rep 후보자에게 투표할 수 있습니다.</string>
+    <string name="mainWalletInfo31">Usiung Voting Power you can delegate to P-Rep candidates.</string>
     <string name="mainWalletInfo32">Usiung Voting Power you can delegate to P-Rep candidates.</string>
 
     <string name="mainWalletInfo40">I-Score</string>

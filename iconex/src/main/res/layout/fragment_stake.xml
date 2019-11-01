@@ -56,6 +56,7 @@
                 style="@style/TextView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/stake"
                 android:textColor="@color/dark4D" />
 
@@ -234,6 +235,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
+                        android:fontFamily="@font/nanum_square_regular"
                         android:text="- (-%)"
                         android:textColor="@color/primary" />
                 </LinearLayout>
@@ -254,6 +256,7 @@
                             style="@style/TextView10"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_sans_light"
                             android:text="@string/min"
                             android:textColor="@color/dark4D"
                             app:layout_constraintStart_toStartOf="parent"
@@ -263,6 +266,7 @@
                             style="@style/TextView10"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_sans_light"
                             android:text="@string/max"
                             android:textColor="@color/dark4D"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -287,7 +291,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
                 android:fontFamily="@font/noto_sans_light"
-                android:text="· Stake되어 있는 수량 중, 이미 투표에 사용된 수량은 Unstake 할 수 없습니다."
+                android:text="@string/stakeNotice01"
                 android:textColor="@color/dark80" />
 
             <TextView
@@ -298,7 +302,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="10dp"
                 android:fontFamily="@font/noto_sans_light"
-                android:text="· Unstaked 최소 수량은 3 ICX 입니다. 최소 수량이 확보되어야 추후 Voting 등의 수수료를 지불할 수 있습니다."
+                android:text="@string/stakeNotice02"
                 android:textColor="@color/dark80" />
 
             <LinearLayout

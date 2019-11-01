@@ -51,8 +51,9 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         return new CreateWalletStep2Fragment();
     }
 
-    private ScrollView scroll;
+//    private ScrollView scroll;
     private TTextInputLayout inputAlias, inputPwd, inputCheck;
+    private ViewGroup layoutButtons;
     private Button btnBack, btnNext;
     private ProgressBar progress;
 
@@ -100,13 +101,19 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     }
 
     private void initView(View v) {
-        scroll = v.findViewById(R.id.scroll);
+//        scroll = v.findViewById(R.id.scroll);
+        layoutButtons = v.findViewById(R.id.layout_buttons);
         inputAlias = v.findViewById(R.id.input_alias);
         inputAlias.disableCopyPaste();
         inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-
+                layoutButtons.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        layoutButtons.setVisibility(View.GONE);
+                    }
+                }, 15);
             }
 
             @Override
@@ -145,17 +152,19 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-
+                layoutButtons.setVisibility(View.VISIBLE);
+                layoutButtons.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        layoutButtons.setVisibility(View.GONE);
+                    }
+                }, 15);
             }
 
             @Override
             public void onReleased() {
                 int result = PasswordValidator.validatePassword(inputPwd.getText());
                 switch (result) {
-                    case PasswordValidator.EMPTY:
-                        inputPwd.setError(true, getString(R.string.errPwdEmpty));
-                        break;
-
                     case PasswordValidator.LEAST_8:
                         inputPwd.setError(true, getString(R.string.errAtLeast));
                         break;
@@ -198,12 +207,19 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-                scroll.post(new Runnable() {
+//                scroll.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        scroll.scrollTo(0, scroll.getScrollY() + 50);
+//                    }
+//                });
+//                layoutButtons.setVisibility(View.VISIBLE);
+                layoutButtons.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scroll.scrollTo(0, scroll.getScrollY() + 50);
+                        layoutButtons.setVisibility(View.GONE);
                     }
-                });
+                }, 15);
             }
 
             @Override
@@ -342,10 +358,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         if (!inputAlias.toString().isEmpty()) {
             aliasValidate = checkAlias(alias);
             switch (aliasValidate) {
-                case ALIAS_EMPTY:
-                    inputAlias.setError(true, getString(R.string.errAliasEmpty));
-                    break;
-
                 case ALIAS_DUP:
                     inputAlias.setError(true, getString(R.string.duplicateWalletAlias));
                     break;
@@ -362,10 +374,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             pwdValidate = PasswordValidator.validatePassword(pwd);
             if (pwdValidate != 0) {
                 switch (pwdValidate) {
-                    case PasswordValidator.EMPTY:
-                        inputPwd.setError(true, getString(R.string.errPwdEmpty));
-                        break;
-
                     case PasswordValidator.LEAST_8:
                         inputPwd.setError(true, getString(R.string.errAtLeast));
                         break;
@@ -420,6 +428,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     private TTextInputLayout.OnKeyPreIme onKeyPreIme = new TTextInputLayout.OnKeyPreIme() {
         @Override
         public void onDone() {
+            layoutButtons.setVisibility(View.VISIBLE);
             setNextEnable(inputAlias.getText(), inputPwd.getText(), inputCheck.getText());
         }
     };

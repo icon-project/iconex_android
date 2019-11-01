@@ -23,7 +23,7 @@
                 android:layout_alignParentLeft="true"
 
                 android:fontFamily="@font/noto_sans_light"
-                android:text="@string/dialogLabelTimeRequired"
+                android:text="@string/timeRequired"
                 android:textColor="@color/dark80"
 
                 android:textSize="10dp" />
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
 
                 android:fontFamily="@font/noto_sans_light"
-                android:text="@string/dialogLabelStepLimit"
+                android:text="@string/stepLimit_Price"
                 android:textColor="@color/dark80"
 
                 android:textSize="10dp" />
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
 
                 android:fontFamily="@font/noto_sans_light"
-                android:text="@string/dialogLabelEstimatedMaxFee"
+                android:text="@string/estimatedMaximumFee"
                 android:textColor="@color/dark80"
 
                 android:textSize="10dp" />

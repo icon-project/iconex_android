@@ -87,6 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:fontFamily="@font/noto_sans_light"
                     android:text="Total Votes (VP)"
                     android:textColor="@color/dark80"
                     android:textSize="10dp" />
@@ -116,6 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:fontFamily="@font/noto_sans_light"
                     android:text="My Votes (VP)"
                     android:textColor="@color/dark80"
                     android:textSize="10dp" />
@@ -236,6 +238,7 @@
                         style="@style/TextView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans_light"
                         android:text="@string/max"
                         android:textColor="@color/dark4D" />
 
@@ -245,6 +248,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:fontFamily="@font/noto_sans_light"
                         android:text="-%"
                         android:textColor="@color/dark4D" />
                 </LinearLayout>

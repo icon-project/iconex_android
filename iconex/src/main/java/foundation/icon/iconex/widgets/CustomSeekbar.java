@@ -97,6 +97,10 @@ public class CustomSeekbar extends FrameLayout {
         seekActive.setLayoutParams(seekActiveLayoutParams);
     }
 
+    public void setEnabled(boolean enable) {
+        seekBar.setEnabled(enable);
+    }
+
     private int dp2px (int dp) {
         return (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, dp,

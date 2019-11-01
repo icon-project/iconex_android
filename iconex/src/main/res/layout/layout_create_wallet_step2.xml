@@ -98,26 +98,32 @@
                 android:text="@string/enterInfoHeader"
                 android:textColor="@color/dark4D" />
 
-            <foundation.icon.iconex.widgets.TTextInputLayout
-                android:id="@+id/input_alias"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                app:hint="@string/hintWalletAlias" />
+                android:orientation="vertical">
 
-            <foundation.icon.iconex.widgets.TTextInputLayout
-                android:id="@+id/input_pwd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hintWalletPassword"
-                app:inputType="password" />
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/input_alias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    app:hint="@string/hintWalletAlias" />
 
-            <foundation.icon.iconex.widgets.TTextInputLayout
-                android:id="@+id/input_pwd_check"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hintWalletPasswordConfirm"
-                app:inputType="password" />
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/input_pwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/hintWalletPassword"
+                    app:inputType="password" />
+
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/input_pwd_check"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/hintWalletPasswordConfirm"
+                    app:inputType="password" />
+            </LinearLayout>
 
             <TextView
                 style="@style/TextView10"

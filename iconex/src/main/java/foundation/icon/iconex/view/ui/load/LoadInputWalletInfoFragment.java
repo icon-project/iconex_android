@@ -327,10 +327,6 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         if (!inputAlias.toString().isEmpty()) {
             aliasValidate = checkAlias(alias);
             switch (aliasValidate) {
-                case ALIAS_EMPTY:
-                    inputAlias.setError(true, getString(R.string.errAliasEmpty));
-                    break;
-
                 case ALIAS_DUP:
                     inputAlias.setError(true, getString(R.string.duplicateWalletAlias));
                     break;
@@ -347,10 +343,6 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             pwdValidate = PasswordValidator.validatePassword(pwd);
             if (pwdValidate != 0) {
                 switch (pwdValidate) {
-                    case PasswordValidator.EMPTY:
-                        inputPwd.setError(true, getString(R.string.errPwdEmpty));
-                        break;
-
                     case PasswordValidator.LEAST_8:
                         inputPwd.setError(true, getString(R.string.errAtLeast));
                         break;

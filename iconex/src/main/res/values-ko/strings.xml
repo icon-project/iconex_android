@@ -54,7 +54,7 @@
     <string name="cancelCreateWallet">지갑 만들기를 취소하시겠습니까?</string>
     <string name="selectCoin">코인 선택</string>
     <string name="information">정보 입력</string>
-    <string name="stepDownload">백업 파\n다운로드</string>
+    <string name="stepDownload">백업 파일\n다운로드</string>
     <string name="savePrivateKey">개인 키\n저장</string>
     <string name="step1Header">선택한 코인의 지갑이 생성됩니다.</string>
     <string name="step1Sub">지갑 생성 후, 해당 코인 기반의 토큰을 추가하실 수 있습니다.</string>
@@ -63,7 +63,7 @@
     <string name="coin_eth">Ethereum (ETH)</string>
     <string name="step2Header">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
     <string name="step2Sub">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
-    <string name="enterInfoHeader">새 지갑 이름과 비밀번호를 생성해주세요.</string>
+    <string name="enterInfoHeader">새 지갑 이름과 비밀번호를 입력해 주세요.</string>
     <string name="hintWalletAlias">지갑 이름 입력 (8자)</string>
     <string name="hintCreateWalletPassword">비밀번호 입력 (영문, 숫자, 특수문자 혼용 8자 이상)</string>
     <string name="hintWalletPasswordConfirm">비밀번호 확인</string>
@@ -452,7 +452,7 @@
     <string name="dialogTxHashCopyTxHash">복사</string>
     <string name="forgot_passwword"><u>비밀번호를 잊으셨나요?</u></string>
 
-    <string name="dialogLabelTimeRequired">Time Required</string>
+    <string name="dialogLabelTimeRequired">예상 완료 시간</string>
     <string name="dialogLabelStepLimit">Step Limit / Price (ICX)</string>
     <string name="dialogLabelEstimatedMaxFee">Estimated Maximum Fee (ICX)</string>
 
@@ -500,7 +500,7 @@
     <string name="myVoteReset">투표 수량 초기화</string>
     <string name="preps">P-Reps</string>
     <string name="myVotesEmptyGuide">P-Reps 탭에서 투표할 리스트 선택 후,\nVoting Power를 분배해 주세요.</string>
-    <string name="myVotesEmptyNotice">Voting Power를 사용한 ICX는 언제든지 돌려받을 수 있으며,\nNetwork 발전 기여에 대한 보상으로 I-Score를 지급해 드립니다.</string>
+    <string name="myVotesEmptyNotice">Voting Power로 사용한 ICX는 언제든지 돌려받을 수 있으며,\nNetwork 발전 기여에 대한 보상으로 I-Score를 지급해 드립니다.</string>
     <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>
     <string name="tipPRepMax">Vote 가능한 리스트는 최대 10개 입니다.</string>
     <string name="tipHasDelegation">이미 투표가 반영된 P-Rep은 삭제가 불가능합니다.\nVoting Power를 0으로 설정 후, Vote 버튼을 누르세요.</string>
@@ -599,7 +599,7 @@
     <string name="mainWalletInfo02">평가금액은 참고용으로만 활용해주세요.</string>
 
     <string name="mainWalletInfo10">P-Rep</string>
-    <string name="mainWalletInfo11">P-Rep 이란...</string>
+    <string name="mainWalletInfo11">ICON Network는 대표자(Public Representative, 이하 P-Rep)에 의해 운영되는 블록체인 네트워크로, 사용자(ICONist)들은 양질의 P-Rep을 선별하여 투표해야 합니다. 각 대표자들은 ICON Network 전체 보상량에 영향을 주는 대표자 월간 보상 변수(i_rep) 값을 제출할 수 있으며, 사용자들은 각 대표자들이 제출한 값을 살펴볼 수 있습니다. 아울러, 투표에 참여한 사용자들은 대표자 위임 연간 보상률(r_rep)에 의해 투표에 대한 보상을 받습니다.</string>
 
     <string name="mainWalletInfo20">Stake</string>
     <string name="mainWalletInfo21">원하는 수량 만큼 ICX를 잠금 상태로 전환하는 기능입니다.</string>

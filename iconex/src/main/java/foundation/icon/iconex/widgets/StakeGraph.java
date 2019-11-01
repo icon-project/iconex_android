@@ -95,9 +95,6 @@ public class StakeGraph extends ConstraintLayout {
             totalDelegationPer = 0.0f;
         }
 
-        Log.wtf(TAG, "stake=" + stake.toString());
-        Log.wtf(TAG, "delegation=" + delegation.toString());
-
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone((ConstraintLayout) findViewById(R.id.constraint_stake));
         constraintSet.setHorizontalWeight(R.id.stake, stakePer);

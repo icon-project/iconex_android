@@ -139,7 +139,7 @@ public class StakeFragment extends Fragment {
                     } else if (i == stakeSeekBar.getMax()) {
                         Log.w(TAG, "progress=" + i + ", max=" + stakeSeekBar.getMax());
                         editStaked.setTag("seekbar");
-                        editStaked.setText(total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
+                        editStaked.setText(maxStake.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                         editStaked.setSelection(editStaked.getText().toString().length());
                         editStaked.setTag(null);
                     } else {
@@ -224,27 +224,30 @@ public class StakeFragment extends Fragment {
                 }
 
                 if (editStaked.getTag() == null) {
-                    if (input.compareTo(total) > 0) {
+                    if (input.compareTo(maxStake) > 0) {
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", 100.0f));
                         stakeSeekBar.setProgress(100);
-                        stakeGraph.updateGraph(total);
+                        stakeGraph.updateGraph(maxStake);
                     } else if (input.compareTo(delegated) <= 0) {
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", delegatedPercent));
                         stakeSeekBar.setProgress(0);
                         stakeGraph.updateGraph(delegated);
                     } else {
-                        double percent = calculatePercentage(total, input);
-                        Log.d(TAG, "edittext campreMin percent=" + percent + ", delegationPercent=" + delegatedPercent);
-                        stakeSeekBar.setProgress((int) (percent - delegatedPercent));
-                        Log.d(TAG, "Seek bar progress=" + (int) (percent - delegatedPercent));
-                        txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
+                        double totalPercent = calculatePercentage(total, input);
+                        double maxPercent = calculatePercentage(maxStake, input);
+                        Log.d(TAG, "edittext campreMin percent=" + totalPercent + ", delegationPercent=" + delegatedPercent);
+                        Log.d(TAG, "Seek bar progress=" + (int) (maxPercent - delegatedPercent));
+                        stakeSeekBar.setProgress((int) (maxPercent - delegatedPercent));
+                        txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", totalPercent));
                         stakeGraph.updateGraph(input);
                     }
                 } else {
-                    double percent = calculatePercentage(total, input);
-                    Log.d(TAG, "edittext campreMin percent=" + percent + ", delegationPercent=" + delegatedPercent);
-                    Log.d(TAG, "Seek bar progress=" + (int) (percent - delegatedPercent));
-                    txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
+                    double totalPercent = calculatePercentage(total, input);
+                    double maxPercent = calculatePercentage(maxStake, input);
+                    Log.d(TAG, "edittext campreMin percent=" + totalPercent + ", delegationPercent=" + delegatedPercent);
+                    Log.d(TAG, "Seek bar progress=" + (int) (maxPercent - delegatedPercent));
+                    stakeSeekBar.setProgress((int) (maxPercent - delegatedPercent));
+                    txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", totalPercent));
                     stakeGraph.updateGraph(input);
                 }
 
@@ -270,12 +273,12 @@ public class StakeFragment extends Fragment {
                     toast = new CustomToast();
                     toast.makeText(getContext(), String.format(Locale.getDefault(), getString(R.string.minLimit),
                             delegated.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()), Toast.LENGTH_SHORT).show();
-                } else if (value.compareTo(total) > 0) {
-                    editStaked.setText(total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
+                } else if (value.compareTo(maxStake) > 0) {
+                    editStaked.setText(maxStake.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                     stakeSeekBar.setProgress(100);
                     toast = new CustomToast();
                     toast.makeText(getContext(), String.format(Locale.getDefault(), getString(R.string.maxLimit),
-                            total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()), Toast.LENGTH_SHORT).show();
+                            maxStake.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -297,28 +300,41 @@ public class StakeFragment extends Fragment {
 
     private void setData() {
         BigDecimal ONE_ICX = new BigDecimal("1").scaleByPowerOfTen(18);
-        total = new BigDecimal(vm.getTotal().getValue()).subtract(ONE_ICX);
+        total = new BigDecimal(vm.getTotal().getValue());
         staked = new BigDecimal(vm.getStaked().getValue());
         unstaked = new BigDecimal(vm.getUnstaked().getValue());
         delegated = new BigDecimal(vm.getDelegation().getValue());
+        maxStake = total.subtract(ONE_ICX);
 
-        txtBalance.setText(total.add(ONE_ICX).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
+        txtBalance.setText(total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
         txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
 
         stakeGraph.setTotal(total);
         stakeGraph.setStake(staked);
 
-        if (!delegated.equals(BigInteger.ZERO)) {
-            stakeGraph.setDelegation(delegated);
-            delegatedPercent = calculatePercentage(total, delegated);
-            txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
-                    delegated.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString(),
-                    delegatedPercent));
-
-            stakeSeekBar.setMax(100 - ((int) delegatedPercent));
+        if (maxStake.equals(BigDecimal.ZERO)) {
+            editStaked.setEnabled(false);
+            stakeSeekBar.setEnabled(false);
+            txtStakedPer.setTextColor(getResources().getColor(R.color.darkE6));
         } else {
-            txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
-                    new BigDecimal("0").scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR), 0.0f));
+            if (!delegated.equals(BigInteger.ZERO)) {
+                stakeGraph.setDelegation(delegated);
+                delegatedPercent = calculatePercentage(total, delegated);
+                txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                        delegated.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString(),
+                        delegatedPercent));
+
+                stakeSeekBar.setMax(100 - ((int) delegatedPercent));
+
+                if (delegated.equals(staked)) {
+                    editStaked.setEnabled(false);
+                    stakeSeekBar.setEnabled(false);
+                    txtStakedPer.setTextColor(getResources().getColor(R.color.darkE6));
+                }
+            } else {
+                txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                        new BigDecimal("0").scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR), 0.0f));
+            }
         }
 
         stakeGraph.updateGraph();
@@ -337,10 +353,10 @@ public class StakeFragment extends Fragment {
         if (percentage == 0) {
             return delegated;
         } else if (percentage == stakeSeekBar.getMax()) {
-            return total;
+            return maxStake;
         } else {
             BigDecimal percent = new BigDecimal(Integer.toString(percentage));
-            BigDecimal multiply = total.multiply(percent);
+            BigDecimal multiply = maxStake.multiply(percent);
             Log.d(TAG, "calculateIcx=" + multiply.divide(ONE_HUNDRED).add(delegated).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
             return multiply.divide(ONE_HUNDRED).add(delegated).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR);
         }

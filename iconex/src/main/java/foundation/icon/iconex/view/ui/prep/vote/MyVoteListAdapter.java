@@ -271,7 +271,15 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                         txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", votePercent));
 
                         float maxPercent = available.scaleByPowerOfTen(-18).divide(getTotalVoted().add(available).subtract(voted).scaleByPowerOfTen(-18), RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
-                        txtMax.setText(String.format(Locale.getDefault(), "%.1f%%", maxPercent));
+                        if (maxPercent == 0) {
+                            txtMax.setText(String.format(Locale.getDefault(), "%.1f%%", 0.0f));
+                            seekbar.setEnabled(false);
+                            editDelegation.setEnabled(false);
+                        } else {
+                            txtMax.setText(String.format(Locale.getDefault(), "%.1f%%", maxPercent));
+                            seekbar.setEnabled(true);
+                            editDelegation.setEnabled(true);
+                        }
 
                         layoutGraph.postDelayed(new Runnable() {
                             @Override
@@ -298,6 +306,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     } else {
                         delegations.remove(getAdapterPosition());
                         vm.setDelegations(delegations);
+                        currentManage = -1;
                         notifyDataSetChanged();
                     }
                     break;
@@ -328,6 +337,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     d.isNew(isNew);
                     delegations.set(getAdapterPosition(), d);
                     mListener.onVoted(delegations);
+                    seekbar.setProgress(0);
                     return;
                 }
 

@@ -256,6 +256,7 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                     public void onComplete() {
                         CustomToast toast = new CustomToast();
                         toast.makeText(PRepIScoreActivity.this, getString(R.string.claimDone), Toast.LENGTH_SHORT).show();
+                        finish();
                     }
 
                     @Override
