@@ -77,6 +77,7 @@
         android:fontFamily="@font/noto_sans_light"
         android:background="@android:color/transparent"
         android:text="@string/settingLock"
+        android:textAllCaps="false"
         android:textColor="@android:color/white" />
 
     <Button

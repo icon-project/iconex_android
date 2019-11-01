@@ -65,7 +65,7 @@ public class ICXcoinWalletItem extends WalletItem{
         // It's OK, If you don't
         // imgSymbol.setImageResource(data.getDrawableSymbolresId());
         // txtSymbol.setText(data.getSymbol());
-        // txtName.setText(data.getName());
+        txtName.setText(data.getName());
 
         txtAmount.setText(data.getTxtAmount());
         txtExchanged.setText(data.getTxtExchanged());

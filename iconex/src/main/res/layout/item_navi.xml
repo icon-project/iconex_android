@@ -23,6 +23,8 @@
         app:layout_constraintEnd_toStartOf="@id/btn_arrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="List Text" />
 
 

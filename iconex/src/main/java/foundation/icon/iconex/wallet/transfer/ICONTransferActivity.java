@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.text.InputType;
@@ -223,6 +224,13 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             BigInteger amount = (BigInteger) getIntent().getSerializableExtra("amount");
             requestAmount = ConvertUtil.getValue(amount, 18);
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setSendEnable();
+            }
+        }, 300);
     }
     String requestAmount = null;
 

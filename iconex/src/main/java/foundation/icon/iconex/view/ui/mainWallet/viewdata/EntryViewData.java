@@ -1,12 +1,9 @@
 package foundation.icon.iconex.view.ui.mainWallet.viewdata;
 
-import android.util.Log;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import foundation.icon.MyConstants;
-import foundation.icon.iconex.R;
 import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
@@ -44,7 +41,7 @@ public class EntryViewData {
         this.entry = entry;
 
         symbol = entry.getSymbol();
-        name = entry.getName();
+        name = entry.getUserName();
         txtAmount = MyConstants.NO_BALANCE;
         txtExchanged = MyConstants.NO_BALANCE;
 

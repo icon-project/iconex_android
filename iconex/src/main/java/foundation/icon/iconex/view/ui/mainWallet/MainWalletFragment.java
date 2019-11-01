@@ -33,7 +33,6 @@ import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.view.WalletDetailActivity;
-import foundation.icon.iconex.view.ui.mainWallet.component.WalletPageAdapter;
 import foundation.icon.iconex.view.ui.mainWallet.component.ExpandableViewPager;
 import foundation.icon.iconex.view.ui.mainWallet.component.FloatingRRepsMenu;
 import foundation.icon.iconex.view.ui.mainWallet.component.RefreshLoadingView;
@@ -43,6 +42,7 @@ import foundation.icon.iconex.view.ui.mainWallet.component.WalletAddressCardView
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletCardView;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletIndicator;
 import foundation.icon.iconex.view.ui.mainWallet.component.WalletManageMenuDialog;
+import foundation.icon.iconex.view.ui.mainWallet.component.WalletPageAdapter;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
@@ -348,8 +348,6 @@ public class MainWalletFragment extends Fragment {
         content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
                 Rect pagerBound = new Rect();
                 Rect infoBound = new Rect();
                 walletViewPager.getGlobalVisibleRect(pagerBound);
