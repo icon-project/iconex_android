@@ -344,7 +344,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
     // ============================= init View
     private void initView() {
-        editAddr.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        editAddr.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_VARIATION_URI);
         editAddr.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
@@ -385,6 +385,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
             }
         });
 
+        editName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         editName.setOnKeyPreImeListener(new TTextInputLayout.OnKeyPreIme() {
             @Override
             public void onDone() {
