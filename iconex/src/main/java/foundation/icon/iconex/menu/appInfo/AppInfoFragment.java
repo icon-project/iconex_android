@@ -145,9 +145,6 @@ public class AppInfoFragment extends Fragment implements View.OnClickListener {
             }
         });
         versionCheck.execute();
-
-        // set dev mode
-        layoutDevelop.setVisibility(ICONexApp.isDeveloper ? View.VISIBLE : View.GONE);
     }
 
     @Override

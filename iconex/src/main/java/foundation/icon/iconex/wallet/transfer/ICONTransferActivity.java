@@ -42,7 +42,6 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.barcode.BarcodeCaptureActivity;
-import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.DataTypeDialog;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.TransactionSendDialog;
@@ -80,11 +79,6 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
     // appbar UI
     private CustomActionBar appbar;
-
-    // Select Network UI
-    private ViewGroup layoutNetwork;
-    private ViewGroup btnNetwork;
-    private TextView txtNetwork;
 
     // available UI
     private TextView labelBalance;
@@ -256,20 +250,6 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     public void onResume() {
         super.onResume();
 
-        if (ICONexApp.isDeveloper) {
-            layoutNetwork.setVisibility(View.VISIBLE);
-            switch (ICONexApp.NETWORK.getNid().intValue()) {
-                case MyConstants.NETWORK_MAIN:
-                    txtNetwork.setText(getString(R.string.networkMain));
-                    break;
-
-                case MyConstants.NETWORK_TEST:
-                    txtNetwork.setText(getString(R.string.networkTest));
-                    break;
-            }
-        } else
-            layoutNetwork.setVisibility(View.GONE);
-
         try {
             balance = new BigInteger(entry.getBalance());
         } catch (Exception e) {
@@ -310,11 +290,6 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     private void loadView() {
         // load appbar UI
         appbar = findViewById(R.id.appbar);
-
-        // load select network UI
-        layoutNetwork = findViewById(R.id.layout_network);
-        btnNetwork = findViewById(R.id.btn_network);
-        txtNetwork = findViewById(R.id.txt_network);
 
         // load available UI
         labelBalance = findViewById(R.id.lb_balance);
@@ -367,58 +342,6 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                         showInfo();
                         break;
                 }
-            }
-        });
-
-        // init network layout
-        btnNetwork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomSheetMenuDialog networkDialog = new BottomSheetMenuDialog(
-                        ICONTransferActivity.this,
-                        getString(R.string.selectNetwork),
-                        BottomSheetMenuDialog.SHEET_TYPE.BASIC);
-
-                List<String> networks = new ArrayList<>();
-                networks.add(getString(R.string.networkMain));
-                networks.add(getString(R.string.networkTest));
-
-                networkDialog.setBasicData(networks);
-                networkDialog.setOnItemClickListener(new BottomSheetMenuDialog.OnItemClickListener() {
-                    @Override
-                    public void onBasicItem(String item) {
-                        txtNetwork.setText(item);
-                        PreferenceUtil preferenceUtil = new PreferenceUtil(ICONTransferActivity.this);
-                        if (item.equals(getString(R.string.networkMain))) {
-                            ICONexApp.network = MyConstants.NETWORK_MAIN;
-                            preferenceUtil.setNetwork(ICONexApp.network);
-
-                        } else {
-                            ICONexApp.network = MyConstants.NETWORK_TEST;
-                            preferenceUtil.setNetwork(ICONexApp.network);
-                        }
-
-                        if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-                            IcxGetBalance icxGetBalance = new IcxGetBalance();
-                            icxGetBalance.execute();
-                        } else {
-                            TokenGetBalance tokenGetBalance = new TokenGetBalance();
-                            tokenGetBalance.execute();
-                        }
-                    }
-
-                    @Override
-                    public void onCoinItem(int position) {
-
-                    }
-
-                    @Override
-                    public void onMenuItem(String tag) {
-
-                    }
-                });
-
-                networkDialog.show();
             }
         });
 
