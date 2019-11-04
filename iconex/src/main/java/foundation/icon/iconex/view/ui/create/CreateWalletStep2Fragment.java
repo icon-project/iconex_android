@@ -2,11 +2,14 @@ package foundation.icon.iconex.view.ui.create;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,6 +53,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         return new CreateWalletStep2Fragment();
     }
 
+    private ScrollView scroll;
     private TTextInputLayout inputAlias, inputPwd, inputCheck;
     private ViewGroup layoutButtons;
     private Button btnBack, btnNext;
@@ -99,19 +103,14 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     }
 
     private void initView(View v) {
-//        scroll = v.findViewById(R.id.scroll);
+        scroll = v.findViewById(R.id.scroll);
         layoutButtons = v.findViewById(R.id.layout_buttons);
         inputAlias = v.findViewById(R.id.input_alias);
         inputAlias.disableCopyPaste();
         inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-                layoutButtons.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        layoutButtons.setVisibility(View.GONE);
-                    }
-                }, 15);
+                layoutButtons.setVisibility(View.GONE);
             }
 
             @Override
@@ -150,13 +149,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-                layoutButtons.setVisibility(View.VISIBLE);
-                layoutButtons.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        layoutButtons.setVisibility(View.GONE);
-                    }
-                }, 15);
+                layoutButtons.setVisibility(View.GONE);
             }
 
             @Override
@@ -205,12 +198,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-                layoutButtons.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        layoutButtons.setVisibility(View.GONE);
-                    }
-                }, 15);
+                layoutButtons.setVisibility(View.GONE);
             }
 
             @Override
@@ -346,7 +334,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                     inputAlias.setError(false, null);
             }
         } else {
-            inputAlias.setError(true, getString(R.string.errAliasEmpty));
+            aliasValidate = ALIAS_EMPTY;
             btnNext.setEnabled(false);
             return;
         }
@@ -374,7 +362,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                 }
             }
         } else {
-            inputPwd.setError(true, getString(R.string.errPwdEmpty));
+            pwdValidate = PasswordValidator.EMPTY;
             btnNext.setEnabled(false);
             return;
         }

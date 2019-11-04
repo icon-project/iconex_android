@@ -449,7 +449,7 @@
     <!-- Dialogs -->
     <string name="dialogHeadTextTxHash">Tx Hash</string>
     <string name="dialogTxHashTrackerLink_ICON"><u>Check in ICON Tracker</u></string>
-    <string name="dialogTxHashTrackerLink_ETHER"><u>Ether Scan으로 이동</u></string>
+    <string name="dialogTxHashTrackerLink_ETHER"><u>Check in Ether Scan</u></string>
     <string name="dialogTxHashCopyTxHash">Copy</string>
     <string name="forgot_passwword"><u>Forget Password?</u></string>
 
@@ -492,6 +492,8 @@
     <string name="unstakeTimeRequired">72시간 후 unstake</string>
     <string name="stakeDone">Stake Operation completed.</string>
     <string name="unstakeDone">Unstake Operation completed.</string>
+    <string name="stakeSubmitNoticeMsg">Do you want to leave without changing anything?</string>
+    <string name="stakeSubmitNoticeDesc">By prssing Submit button you can change the %sㄸ requested amount.</string>
 
     <!-- Vote -->
     <string name="vote">Vote</string>
@@ -571,7 +573,7 @@
     <string name="icxBalance">ICX Balance</string>
     <string name="liquidICX">Liquid ICX</string>
     <string name="stakeICX">Staked ICX (Voting Power)</string>
-    <string name="deposit_list">입금 내역</string>
+    <string name="deposit_list">Deposit history</string>
 
     <!-- New - Transfer -->
     <string name="availableBalance">Available balance</string>
@@ -607,10 +609,10 @@
     <string name="mainWalletInfo40">I-Score</string>
     <string name="mainWalletInfo41">This Score is Contribution score for delegating P-Rep; 1,000 I-Score can be claim to 1 ICX.</string>
 
-    <string name="complete_transfer">전송완료</string>
-    <string name="fail_transfer">전송실패</string>
-    <string name="complete_deposit">입금완료</string>
-    <string name="fail_deposit">입금실패</string>
+    <string name="complete_transfer">Transfer Completed</string>
+    <string name="fail_transfer">Transfer Failed</string>
+    <string name="complete_deposit">Deposit Completed</string>
+    <string name="fail_deposit">Deposit Completed</string>
 
     <string name="msgNewPasswordSame">This password is same as current password. Please enter new password</string>
     <string name="totalWalletCount">A total of %d wallets</string>

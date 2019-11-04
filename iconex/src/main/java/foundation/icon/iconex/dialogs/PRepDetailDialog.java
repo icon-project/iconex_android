@@ -40,6 +40,8 @@ public class PRepDetailDialog extends MessageDialog {
             }
         });
 
+        setTitle("Detail");
+        setSingleButtonText(getContext().getString(R.string.close));
         setContent(v);
     }
 

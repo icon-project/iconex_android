@@ -182,7 +182,7 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                             txtEstimatedIcx.setText("0");
                         } else {
                             txtCurrentIScore.setText(Utils.formatFloating(
-                                    ConvertUtil.getValue(currentIScore, 15), 15));
+                                    ConvertUtil.getValue(currentIScore, 21), 15));
                             txtEstimatedIcx.setText(Utils.formatFloating(
                                     ConvertUtil.getValue(estimatedIcx, 18), 8));
                         }

@@ -15,10 +15,12 @@ import com.google.gson.JsonObject;
 
 import java.io.InterruptedIOException;
 import java.math.BigInteger;
+import java.util.Locale;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.LoadingDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.service.IconService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.service.ServiceConstants;
@@ -39,6 +41,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.response.TRResponse;
 import loopchain.icon.wallet.service.LoopChainClient;
 import retrofit2.Response;
@@ -112,7 +115,28 @@ public class PRepStakeActivity extends AppCompatActivity implements UnstakeFragm
         findViewById(R.id.btn_start_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                int isEdit = vm.isEdit().getValue();
+                if (isEdit > 0) {
+                    MessageDialog messageDialog = new MessageDialog(PRepStakeActivity.this);
+                    messageDialog.setSingleButton(false);
+                    messageDialog.setConfirmButtonText(getString(R.string.yes));
+                    messageDialog.setCancelButtonText(getString(R.string.no));
+                    messageDialog.setMessage(getString(R.string.stakeSubmitNoticeMsg));
+                    if (isEdit == 1)
+                        messageDialog.setDescription(String.format(Locale.getDefault(), getString(R.string.stakeSubmitNoticeDesc), "Stake"));
+                    else
+                        messageDialog.setDescription(String.format(Locale.getDefault(), getString(R.string.stakeSubmitNoticeDesc), "Unstake"));
+                    messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                        @Override
+                        public Boolean invoke(View view) {
+                            finish();
+                            return true;
+                        }
+                    });
+                    messageDialog.show();
+                } else {
+                    finish();
+                }
             }
         });
     }
@@ -219,5 +243,31 @@ public class PRepStakeActivity extends AppCompatActivity implements UnstakeFragm
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, StakeFragment.newInstance())
                 .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        int isEdit = vm.isEdit().getValue();
+        if (isEdit > 0) {
+            MessageDialog messageDialog = new MessageDialog(this);
+            messageDialog.setSingleButton(false);
+            messageDialog.setConfirmButtonText(getString(R.string.yes));
+            messageDialog.setCancelButtonText(getString(R.string.no));
+            messageDialog.setMessage(getString(R.string.stakeSubmitNoticeMsg));
+            if (isEdit == 1)
+                messageDialog.setDescription(String.format(Locale.getDefault(), getString(R.string.stakeSubmitNoticeDesc), "Stake"));
+            else
+                messageDialog.setDescription(String.format(Locale.getDefault(), getString(R.string.stakeSubmitNoticeDesc), "Unstake"));
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    finish();
+                    return true;
+                }
+            });
+            messageDialog.show();
+        } else {
+            finish();
+        }
     }
 }
