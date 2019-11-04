@@ -194,6 +194,8 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 MessageDialog messageDialog = new MessageDialog(getContext());
                 messageDialog.setMessage(getString(isRemain ? R.string.warningRemoveWallet : R.string.removeWallet));
                 messageDialog.setSingleButton(false);
+                messageDialog.setConfirmButtonText(getString(R.string.yes));
+                messageDialog.setConfirmButtonText(getString(R.string.no));
                 messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                     @Override
                     public Boolean invoke(View view) {

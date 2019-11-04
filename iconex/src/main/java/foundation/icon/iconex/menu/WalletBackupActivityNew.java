@@ -108,6 +108,8 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
             MessageDialog messageDialog = new MessageDialog(this);
             messageDialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
             messageDialog.setSingleButton(false);
+            messageDialog.setConfirmButtonText(getString(R.string.yes));
+            messageDialog.setCancelButtonText(getString(R.string.no));
             messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
                 public Boolean invoke(View view) {
@@ -140,6 +142,8 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
                     MessageDialog messageDialog = new MessageDialog(this);
                     messageDialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
                     messageDialog.setSingleButton(false);
+                    messageDialog.setConfirmButtonText(getString(R.string.yes));
+                    messageDialog.setCancelButtonText(getString(R.string.no));
                     messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
                         public Boolean invoke(View view) {

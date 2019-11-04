@@ -3,12 +3,13 @@ package foundation.icon.iconex.wallet.contacts;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -188,6 +189,8 @@ public class MyContactsFragment extends Fragment {
             MessageDialog messageDialog = new MessageDialog(getContext());
             messageDialog.setMessage(getString(R.string.msgDeleteContact));
             messageDialog.setSingleButton(false);
+            messageDialog.setCancelButtonText(getContext().getString(R.string.no));
+            messageDialog.setConfirmButtonText(getContext().getString(R.string.yes));
             messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
                 public Boolean invoke(View view) {
