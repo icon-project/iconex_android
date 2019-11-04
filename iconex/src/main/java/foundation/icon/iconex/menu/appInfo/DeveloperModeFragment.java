@@ -68,7 +68,7 @@ public class DeveloperModeFragment extends Fragment {
                 if (!isDev) {
                     selectNetwork.setText(getString(R.string.networkMain));
                     ICONexApp.NETWORK = Urls.Network.MainNet;
-                    preferenceUtil.setNetwork(ICONexApp.network);
+                    preferenceUtil.setNetwork(ICONexApp.NETWORK.getNid().intValue());
                 }
 
             }
