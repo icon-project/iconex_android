@@ -36,65 +36,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp">
 
-            <!-- Network -->
-            <LinearLayout
-                android:id="@+id/layout_network"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingEnd="24dp"
-                android:paddingStart="24dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/noto_sans_regular"
-                    android:text="@string/selectNetwork"
-                    android:textColor="@color/colorText"
-                    android:textSize="14dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="62dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:id="@+id/btn_network"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="10dp"
-                        android:paddingStart="10dp">
-
-                        <TextView
-                            android:id="@+id/txt_network"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:fontFamily="@font/noto_sans_medium"
-                            android:text="Mainnet"
-                            android:textColor="@color/colorText"
-                            android:textSize="14dp" />
-
-                        <ImageView
-                            android:id="@+id/network_arrow"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/ic_arrow_down" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorText" />
-                </LinearLayout>
-            </LinearLayout>
-
             <!-- Available Balance -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

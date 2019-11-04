@@ -287,6 +287,8 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
         if (!edit.equals(_data)) {
             MessageDialog messageDialog = new MessageDialog(getActivity());
             messageDialog.setSingleButton(false);
+            messageDialog.setCancelButtonText(getString(R.string.no));
+            messageDialog.setConfirmButtonText(getString(R.string.yes));
             messageDialog.setMessage(getString(R.string.cancelEnterData));
             messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import foundation.icon.iconex.R
 
 class TDropdownLayout : LinearLayout {
@@ -47,6 +48,7 @@ class TDropdownLayout : LinearLayout {
 
         dropDown = v.findViewById(R.id.layout)
         dropDown.setOnClickListener {
+            if (mOnClickListener == null) return@setOnClickListener
             dropDown.setBackgroundResource(R.drawable.bg_drop_down_f)
             arrow.isActivated = true
             mOnClickListener?.onClick()
@@ -77,8 +79,21 @@ class TDropdownLayout : LinearLayout {
         arrow.isActivated = false
     }
 
+    fun setEnable(isEnable: Boolean) {
+        if (isEnable) {
+            text.setTextColor(ContextCompat.getColor(context, R.color.dark4D))
+            arrow.setBackgroundResource(R.drawable.ic_input_drop_enabled)
+        } else {
+            text.setTextColor(ContextCompat.getColor(context, R.color.darkD9))
+            dropDown.setBackgroundResource(R.drawable.bg_drop_down_n)
+            arrow.setBackgroundResource(R.drawable.ic_input_drop_disabled)
+        }
+
+        dropDown.isEnabled = isEnabled
+    }
+
     var mOnClickListener: OnDropDownClickListener? = null
-    fun setOnClickListener(listener: OnDropDownClickListener) {
+    fun setOnClickListener(listener: OnDropDownClickListener?) {
         mOnClickListener = listener
     }
 

@@ -59,7 +59,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     private Button btnBack, btnNext;
     private ProgressBar progress;
 
-    private String beforeStr, beforePwd, beforeCheck;
+    private String beforeStr, beforePwd;
 
     private final int OK = 0;
     private final int ALIAS_DUP = 1;
@@ -220,17 +220,7 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputCheck.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {
-                if (s.length() > 0) {
-                    if (s.charAt(s.length() - 1) == ' ') {
-                        inputCheck.setText(s.subSequence(0, s.length() - 1).toString());
-                    } else if (s.toString().contains(" ")) {
-                        inputCheck.setText(beforeCheck);
-                    } else {
-                        beforeCheck = s.toString();
-                    }
-                } else {
-                    btnNext.setEnabled(false);
-                }
+                if (s.length() == 0) btnNext.setEnabled(false);
             }
         });
         inputCheck.setOnEditorActionListener(new TTextInputLayout.OnEditorAction() {

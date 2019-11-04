@@ -55,6 +55,7 @@ public class TxHashDialog extends MessageDialog {
         // set button
         setSingleButton(false);
         setConfirmButtonText(getContext().getString(R.string.dialogTxHashCopyTxHash));
+        setCancelButtonText(getContext().getString(R.string.close));
 
         // add button event
         mLnkTacker.setOnClickListener(new View.OnClickListener() {
