@@ -30,8 +30,8 @@
                 style="@style/TextView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/stake"
                 android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/stake"
                 android:textColor="@color/dark4D" />
 
             <foundation.icon.iconex.widgets.UnstakeGraph
@@ -152,6 +152,7 @@
                 android:layout_height="30dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/bg_white_stroke_e6"
+                android:fontFamily="@font/noto_sans_regular"
                 android:text="@string/adjust_stake"
                 android:textColor="@color/dark80"
                 android:textSize="10dp" />

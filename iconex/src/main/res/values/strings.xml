@@ -479,8 +479,8 @@
     <string name="adjust_stake">Change request amount</string>
     <string name="minLimit">Enter more than %s</string>
     <string name="maxLimit">Enter less than %s</string>
-    <string name="votedIcx">Voted ICX</string>
-    <string name="availableIcx">Available ICX</string>
+    <string name="votedIcx">Voted (ICX)</string>
+    <string name="availableIcx">Available (ICX)</string>
     <string name="min">Min</string>
     <string name="max">Max</string>
     <string name="stakeNotice01">・ You cannot unstake the amount that is already delegated.</string>
@@ -520,7 +520,7 @@
     <string name="claimDone">Claim operation completed.</string>
 
     <!-- P-Rep List -->
-
+    <string name="searchPrep">Searching P-Rep Name</string>
     <string name="prepName">Name</string>
     <string name="createWalletStep1Detailed1">・ Selected coin wallet will created after the completion of creating wallet.</string>
     <string name="createWalletStep1Detailed2">・ After creating wallet, token that is based on according coin can be added.</string>
@@ -602,7 +602,7 @@
     <string name="mainWalletInfo21">This function is to set ICX to staked ICX. By operating Stake, ICX will changed to locked state, and it will take days to unlock it.</string>
     <string name="mainWalletInfo22">Voting power will created with 1 to 1 ratio with Staked ICX amount.</string>
 
-    <string name="mainWalletInfo30">Voting Power</string>
+    <string name="mainWalletInfo30">Vote</string>
     <string name="mainWalletInfo31">Usiung Voting Power you can delegate to P-Rep candidates.</string>
     <string name="mainWalletInfo32">Usiung Voting Power you can delegate to P-Rep candidates.</string>
 

@@ -46,6 +46,7 @@ class TTextInputLayout : LinearLayout {
     private var hint = ""
     private var isError = false
 
+    private var type = Type.NORMAL
     private var isDetectPaste = false
     private var isDisabledPaste = false
     private var prevString = ""
@@ -137,7 +138,13 @@ class TTextInputLayout : LinearLayout {
                     btnClear.visibility = View.INVISIBLE
                 }
 
-                tvHint.visibility = if (s.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+                if (s.isNotEmpty()) {
+                    if (type != Type.DISABLED)
+                        tvHint.visibility = View.VISIBLE
+                    else
+                        tvHint.visibility = View.INVISIBLE
+                } else
+                    tvHint.visibility = View.INVISIBLE
 
                 if (isDetectPaste) Log.d(TAG, "detecting paste...")
                 if (isDetectPaste && s.length - prevString.length > 1) {
@@ -281,17 +288,28 @@ class TTextInputLayout : LinearLayout {
     fun setFile(fileName: String) {
         isError = false
 
-        layout.setBackgroundResource(BG_LAYOUT_F)
-        tvHint.setBackgroundResource(BG_FLOATING_LABEL_F)
-        tvHint.setTextColor(resources.getColor(R.color.primary00))
-        tvHint.visibility = View.VISIBLE
+        if (fileName.isNotEmpty()) {
+            layout.setBackgroundResource(BG_LAYOUT_F)
+            tvHint.setBackgroundResource(BG_FLOATING_LABEL_F)
+            tvHint.setTextColor(resources.getColor(R.color.primary00))
+            tvHint.visibility = View.VISIBLE
 
-        imgFile.setBackgroundResource(R.drawable.ic_keystorefile_load)
-        imgFile.visibility = View.VISIBLE
-        tvFileName.setTextColor(resources.getColor(R.color.primary00))
-        tvFileName.text = fileName
+            imgFile.setBackgroundResource(R.drawable.ic_keystorefile_load)
+            imgFile.visibility = View.VISIBLE
+            tvFileName.setTextColor(resources.getColor(R.color.primary00))
+            tvFileName.text = fileName
 
-        tvError.visibility = View.INVISIBLE
+            tvError.visibility = View.INVISIBLE
+        } else {
+            layout.setBackgroundResource(BG_LAYOUT_N)
+            tvHint.visibility = View.INVISIBLE
+
+            imgFile.visibility = View.GONE
+            tvFileName.setTextColor(resources.getColor(R.color.darkB3))
+            tvFileName.text = context.getString(R.string.selectKeyStore)
+
+            tvError.visibility = View.INVISIBLE
+        }
     }
 
     fun setHint(hint: String) {
@@ -320,12 +338,20 @@ class TTextInputLayout : LinearLayout {
     fun setInputEnabled(enabled: Boolean) {
         if (enabled) {
             edit.isFocusableInTouchMode = enabled
+            type = Type.NORMAL
         } else {
             btnClear.visibility = View.INVISIBLE
+            type = Type.DISABLED
         }
 
         edit.isEnabled = enabled
         edit.isFocusable = enabled
+    }
+
+    fun setReadOnly() {
+        type = Type.READ_ONLY
+        edit.isEnabled = false
+        edit.isFocusable = false
     }
 
     fun setSelection(index: Int) {
@@ -352,7 +378,7 @@ class TTextInputLayout : LinearLayout {
         Log.d(TAG, "Set isDisabledPaste: $isDisabledPaste!")
     }
 
-    fun setFocus(isFocus : Boolean) {
+    fun setFocus(isFocus: Boolean) {
         if (isFocus)
             edit.requestFocus()
         else
@@ -415,5 +441,11 @@ class TTextInputLayout : LinearLayout {
 
         override fun onDestroyActionMode(mode: ActionMode?) {
         }
+    }
+
+    enum class Type {
+        NORMAL,
+        DISABLED,
+        READ_ONLY
     }
 }

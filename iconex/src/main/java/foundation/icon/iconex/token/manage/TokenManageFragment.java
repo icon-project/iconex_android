@@ -427,18 +427,18 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
     private void setReadOnly() {
         isEditable = false;
 
-        editAddr.setInputEnabled(false);
+        editAddr.setReadOnly();
         editAddr.setText(mToken.getContractAddress());
 
         btnScan.setVisibility(View.GONE);
 
-        editName.setInputEnabled(false);
+        editName.setReadOnly();
         editName.setText(mToken.getUserName());
 
-        editSym.setInputEnabled(false);
+        editSym.setReadOnly();
         editSym.setText(mToken.getSymbol());
 
-        editDec.setInputEnabled(false);
+        editDec.setReadOnly();
         editDec.setText(String.valueOf(mToken.getDefaultDec()));
 
         layoutAdd.setVisibility(View.GONE);

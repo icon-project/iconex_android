@@ -2,6 +2,7 @@ package foundation.icon.iconex.view;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,11 +75,14 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
                     .add(R.id.container, fragmentSelectKeystore)
                     .addToBackStack("keystore")
                     .commit();
-        else
+        else {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragmentInputPrivateKey)
                     .addToBackStack("privateKey")
                     .commit();
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        }
     }
 
     @Override
@@ -118,6 +122,8 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     public void onPrivateKeyBack() {
         fragmentInputPrivateKey.clear(true);
         getSupportFragmentManager().popBackStack();
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
