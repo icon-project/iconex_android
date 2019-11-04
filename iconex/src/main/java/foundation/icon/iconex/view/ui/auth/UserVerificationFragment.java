@@ -2,22 +2,19 @@ package foundation.icon.iconex.view.ui.auth;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.dialogs.EditTextDialog;
-import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
 
 public class UserVerificationFragment extends Fragment implements WalletListAdapter.OnWalletClickListener {
 
@@ -49,7 +46,11 @@ public class UserVerificationFragment extends Fragment implements WalletListAdap
 
         txtWalletCount.setText(String.format(getString(R.string.totalWalletCount), ICONexApp.wallets.size()));
 
-        v.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+        Button btnClose = v.findViewById(R.id.btn_close);
+        btnClose.setBackgroundResource(R.drawable.ic_arrow_right);
+        btnClose.setRotation(180f);
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onVerificationBack();
