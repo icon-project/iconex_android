@@ -389,7 +389,7 @@
     <string name="errNoEnrolledFingerprint">휴대폰의 설정화면에서 지문 등록 후 \"지문으로 잠금 해제\" 기능을 사용할 수 있습니다.</string>
     <string name="errCheckLockNum">잠금 번호가 일치하지 않습니다.\n현재 잠금 번호 입력부터 다시 시도해주세요.</string>
     <string name="errCurrentLockNum">잠금 번호가 일치 하지 않습니다.</string>
-    <string name="errRetryLockNum">잠금 번호를 다시 확인해주세요.</string>
+    <string name="errRetryLockNum">잠금 번호가 올바르지 않습니다.</string>
     <string name="errInvalidatedByBiometricEnrollment">등록되어 있는 지문 정보가 변경되어 지문 인증을 사용할 수 없습니다. 잠금 번호로 로그인 후, 지문 사용 여부를 다시 설정해주세요.</string>
 
     <string name="errFingerprintLockOut">Fingerprint scan is currently locked. You can reactivate the fingerprint scan by entering your mobile</string>
