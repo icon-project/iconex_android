@@ -289,7 +289,7 @@
     <string name="errICXFee">Insufficient ICX balance for transaction fee</string>
     <string name="errETHFee">Insufficient ETH balance for transaction fee</string>
 
-    <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
+    <string name="msgDoneRequestTransfer">Transfer Request Complete.</string>
     <string name="errTransferFailed">Error occurred.\nPlease try again.</string>
 
     <!-- Contacts -->

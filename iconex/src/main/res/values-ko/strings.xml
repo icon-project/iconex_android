@@ -288,7 +288,7 @@
     <string name="errICXFee">수수료를 지불할 ICX가 부족합니다</string>
     <string name="errETHFee">수수료를 지불할 ETH가 부족합니다</string>
 
-    <string name="msgDoneRequestTransfer">송금 요청이 완료되었습니다.</string>
+    <string name="msgDoneRequestTransfer">전송 요청이 완료되었습니다.</string>
     <string name="errTransferFailed">오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
     <!-- Contacts -->
