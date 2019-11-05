@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:start_icon="back"
-        app:text="@string/appInfo"/>
+        app:text="@string/versionInfo"/>
 
     <LinearLayout
         android:layout_width="wrap_content"

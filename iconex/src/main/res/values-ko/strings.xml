@@ -142,6 +142,7 @@
     <string name="settingLock">잠금 설정</string>
     <string name="settingLanguage">언어</string>
     <string name="appInfo">앱 정보</string>
+    <string name="versionInfo">버전 정보</string>
     <string name="ICONexDisclaimers">ICONex 이용 면책 조항</string>
 
     <string name="currentVersion">현재 버전</string>
