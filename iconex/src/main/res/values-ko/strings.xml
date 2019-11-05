@@ -275,10 +275,10 @@
     <string name="msgStepPrice">Step 한 단위 당 지불하는 가격입니다.\n\nStep 가격은 loop로 지불하며 1 loop는 0.000000000000000001(10-18) ICX로 고정되어 있습니다. ICON 거래 수수료는 스마트 컨트랙트 기능 사용 횟수, 블록체인 데이터베이스 사용량, 거래 데이터 크기 등에 따라 부과됩니다.</string>
     <string name="msgICXEstimateFee">Transaction 실행 시 발생할 수 있는 최대 수수료로서, Step 한도와 Step 가격을 곱한 값입니다.</string>
     <string name="msgIcxData">사용자가 원하는 데이터를 입력하여 송금할 수 있습니다. 입력한 데이터의 크기에 따라 수수료가 부과됩니다.</string>
-    <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할\n용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
-    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서\n1 Gwei = 0.000000001 ETH로\n고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
-    <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로\n가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
-    <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 송금할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 송금이 불가하며 수수료만\n차감될 수 있습니다.</string>
+    <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할 용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
+    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서 1 Gwei = 0.000000001 ETH로 고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
+    <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로 가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
+    <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 전송할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 전송이 불가하며 수수료만\n차감될 수 있습니다.</string>
     <string name="msgDeleteData">입력된 데이터를 삭제하시겠습니까?</string>
 
     <string name="errNoSendAmount">송금할 수량을 입력해주세요.</string>
