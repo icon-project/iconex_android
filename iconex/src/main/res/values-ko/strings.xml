@@ -121,7 +121,7 @@
 
     <string name="enterWalletAliasAndPassword">새 지갑의 이름과 비밀번호를 입력해주세요.</string>
     <string name="walletPasswordGuide1">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
-    <string name="walletPasswordGuide2">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
+    <string name="walletPasswordGuide2">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 전송 시 비밀번호를 입력해야 합니다.</string>
 
     <!-- Warning -->
     <string name="duplicateWalletAlias">같은 이름의 지갑이 이미 존재합니다.</string>

@@ -121,7 +121,7 @@
 
     <string name="enterWalletAliasAndPassword">Please enter the new wallet name and the password.</string>
     <string name="walletPasswordGuide1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
-    <string name="walletPasswordGuide2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
+    <string name="walletPasswordGuide2">In order to restore wallet by Keystore file, it requires password to send transaction.</string>
 
     <!-- Warning -->
     <string name="duplicateWalletAlias">This wallet name already exists.</string>
