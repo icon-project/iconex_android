@@ -428,8 +428,8 @@
 
     <!-- Permission notice -->
     <string name="noticeTitle">앱 접근 권한 안내</string>
-    <string name="requiredPermission">[ 필수 접근 권한 ]</string>
-    <string name="optionalPermission">[ 선택 접근 권한 ]</string>
+    <string name="requiredPermission">필수 접근 권한</string>
+    <string name="optionalPermission">선택 접근 권한</string>
     <string name="permissionCamera">지갑 주소 또는 Private Key의 QR 코드를 읽기 위해 사용합니다.</string>
     <string name="permissionStorage">지갑 백업 파일(Keystore 파일)을 저장하고 불러오기 위해 사용합니다.</string>
     <string name="permissionDetailed1">선택 접근 권한에 동의하지 않아도 서비스 이용이 가능하나, 일부 기능 이용은 제한될 수 있습니다.</string>
@@ -562,7 +562,7 @@
     <string name="iscore">I-Score</string>
     <string name="icon_voting">ICON Voting</string>
     <string name="requestSend">Request transfer</string>
-    <string name="msgRequestSend">・ After submittng request amount, QR code will changed to cointained one.</string>
+    <string name="msgRequestSend">・ 전송 요청 수량 입력 시, 입력한 수량 정보가 포함된 QR 코드로 변경됩니다.</string>
     <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
     <string name="generateQRcode">QR 코드 생성</string>
 

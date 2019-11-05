@@ -429,8 +429,8 @@
 
     <!-- Permission notice -->
     <string name="noticeTitle">App Permissions</string>
-    <string name="requiredPermission">[ Required ]</string>
-    <string name="optionalPermission">[ Optional ]</string>
+    <string name="requiredPermission">Required</string>
+    <string name="optionalPermission">Optional</string>
     <string name="permissionCamera">Read QR codes of wallet addresses or private keys.</string>
     <string name="permissionStorage">Store and restore Keystore files of your wallets.</string>
     <string name="permissionDetailed1">If you deny these permissions, you may no longer use some features of your device.</string>
