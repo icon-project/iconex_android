@@ -371,11 +371,9 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
             } else {
                 inputCheck.setError(false, null);
             }
-        } else {
-            inputCheck.setError(true, getString(R.string.errCheckEmpty));
-            btnNext.setEnabled(false);
-            return;
-        }
+        } else
+            matched = false;
+
 
         if (aliasValidate == OK && matched && (pwdValidate == PasswordValidator.OK))
             btnNext.setEnabled(true);

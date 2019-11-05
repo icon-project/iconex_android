@@ -505,7 +505,7 @@
     <string name="myVotesEmptyNotice">Voting Power로 사용한 ICX는 언제든지 돌려받을 수 있으며,\nNetwork 발전 기여에 대한 보상으로 I-Score를 지급해 드립니다.</string>
     <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>
     <string name="tipPRepMax">Vote 가능한 리스트는 최대 10개 입니다.</string>
-    <string name="tipHasDelegation">이미 투표가 반영된 P-Rep은 삭제가 불가능합니다.\nVoting Power를 0으로 설정 후, Vote 버튼을 누르세요.</string>
+    <string name="tipHasDelegation">이미 투표가 반영된 P-Rep은 삭제가 불가능합니다.\nVoting Power를 0으로 설정 후, Vote 버튼을 눌러주세요.</string>
     <string name="voteNotExecute">Vote 버튼을 눌러야 설정한 수량이 실제 반영됩니다.\nVote 실행을 하지 않고 나가시겠습니까?</string>
     <string name="voteReset">투표에 사용한 Voting Power를 모두 0으로 되돌리겠습니까?</string>
 
