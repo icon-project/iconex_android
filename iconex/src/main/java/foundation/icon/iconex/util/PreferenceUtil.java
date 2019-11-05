@@ -161,6 +161,6 @@ public class PreferenceUtil {
         ICONexApp.isLocked = getLocked();
         ICONexApp.useFingerprint = getUseFingerprint();
         ICONexApp.NETWORK = Urls.Network.fromNid(getNetwork());
-        ICONexApp.isDeveloper = true;
+        ICONexApp.isDeveloper = isDeveloper();
     }
 }
