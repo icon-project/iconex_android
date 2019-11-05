@@ -103,7 +103,7 @@
     <string name="errPassword">Please check your password.</string>
     <string name="enterWalletAliasHeader">Please enter a new wallet name</string>
     <string name="errNoKeystoreFile">Please select keystore file.</string>
-    <string name="errPrivateKey">Incorrect private key. Please check again.</string>
+    <string name="errPrivateKey">Private key format is incorrect.</string>
     <string name="hintEnterWalletAlias">Enter wallet name</string>
 
     <string name="loadByPrivateKeyHeader">Select a coin and enter your private key</string>

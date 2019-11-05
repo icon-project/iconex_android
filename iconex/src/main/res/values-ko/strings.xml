@@ -103,7 +103,7 @@
     <string name="errPassword">비밀번호를 다시 확인해주세요.</string>
     <string name="enterWalletAliasHeader">새 지갑의 이름을 입력해주세요.</string>
     <string name="errNoKeystoreFile">지갑 백업 파일을 선택해주세요.</string>
-    <string name="errPrivateKey">개인 키를 다시 확인해주세요.</string>
+    <string name="errPrivateKey">개인 키를 확인해주세요.</string>
     <string name="hintEnterWalletAlias">지갑 이름 입력 (8자)</string>
 
     <string name="loadByPrivateKeyHeader">개인 키를 입력해주세요.</string>
