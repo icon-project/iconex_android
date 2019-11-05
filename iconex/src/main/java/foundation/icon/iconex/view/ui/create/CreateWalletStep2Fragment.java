@@ -110,7 +110,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputAlias.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-                layoutButtons.setVisibility(View.GONE);
             }
 
             @Override
@@ -149,7 +148,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-                layoutButtons.setVisibility(View.GONE);
             }
 
             @Override
@@ -198,7 +196,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
         inputCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
-                layoutButtons.setVisibility(View.GONE);
             }
 
             @Override
@@ -397,7 +394,6 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
     private TTextInputLayout.OnKeyPreIme onKeyPreIme = new TTextInputLayout.OnKeyPreIme() {
         @Override
         public void onDone() {
-            layoutButtons.setVisibility(View.VISIBLE);
             setNextEnable(inputAlias.getText(), inputPwd.getText(), inputCheck.getText());
         }
     };

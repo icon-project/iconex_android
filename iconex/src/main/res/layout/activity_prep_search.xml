@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:optionText="@string/cancel"
-        app:searchHint="P-Rep 이름 검색"
+        app:searchHint="@string/searchPrep"
         app:type="search" />
 
     <androidx.recyclerview.widget.RecyclerView

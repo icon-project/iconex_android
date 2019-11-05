@@ -478,8 +478,8 @@
     <string name="adjust_stake">요청 수량 수정</string>
     <string name="minLimit">%s 이상으로 입력해주세요.</string>
     <string name="maxLimit">%s 이하로 입력해주세요.</string>
-    <string name="votedIcx">Voted ICX</string>
-    <string name="availableIcx">Available ICX</string>
+    <string name="votedIcx">Voted (ICX)</string>
+    <string name="availableIcx">Available (ICX)</string>
     <string name="min">Min</string>
     <string name="max">Max</string>
     <string name="stakeNotice01">・ Stake 되어 있는 수량 중, 이미 투표에 사용된 수량은 Unstake 할 수 없습니다.</string>
@@ -519,7 +519,7 @@
     <string name="claimDone">Claim 실행이 완료되었습니다.</string>
 
     <!-- P-Rep List -->
-
+    <string name="searchPrep">P-Rep 이름 검색</string>
     <string name="prepName">Name</string>
     <string name="createWalletStep1Detailed1">· 지갑 만들기 완료 시 선택한 코인의 지갑이 생성됩니다.</string>
     <string name="createWalletStep1Detailed2">· 지갑 생성 후, 해당 코인 기반의 토큰을 추가하실 수 있습니다.</string>
@@ -606,7 +606,7 @@
     <string name="mainWalletInfo21">원하는 수량 만큼 ICX를 잠금 상태로 전환하는 기능입니다.</string>
     <string name="mainWalletInfo22">Stake를 실행하면, Voting Power가 1:1 비율로 생성됩니다.</string>
 
-    <string name="mainWalletInfo30">Voting Power</string>
+    <string name="mainWalletInfo30">Vote</string>
     <string name="mainWalletInfo31">Voting Power를 이용하여 P-Rep 후보자에게 투표할 수 있습니다.</string>
     <string name="mainWalletInfo32">후보자가 P-Rep으로 선출되면 위임한 지분의 X.XX %에 대한 보상을 I-Score로 받을 수 있습니다.</string>
 

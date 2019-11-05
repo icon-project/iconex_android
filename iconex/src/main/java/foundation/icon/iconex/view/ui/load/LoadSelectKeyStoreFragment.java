@@ -211,7 +211,12 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
             try {
                 fileName = cursor.getString(
                         cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                return fileName;
+                if (fileName == null) {
+                    fileName = cursor.getString(cursor.getColumnIndex("_data"));
+                    return fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
+                } else {
+                    return fileName;
+                }
             } finally {
                 cursor.close();
             }
@@ -286,10 +291,11 @@ public class LoadSelectKeyStoreFragment extends Fragment implements View.OnClick
     }
 
     public void clear(boolean inputEnabled) {
-        inputFileName.setText("");
+        inputFileName.setFile("");
         inputPwd.setText("");
         inputPwd.setInputEnabled(inputEnabled);
         isSelect = false;
+        btnNext.setEnabled(false);
     }
 
     @Override
