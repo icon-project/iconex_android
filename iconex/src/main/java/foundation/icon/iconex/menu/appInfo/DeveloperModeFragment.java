@@ -70,7 +70,6 @@ public class DeveloperModeFragment extends Fragment {
                     ICONexApp.NETWORK = Urls.Network.MainNet;
                     preferenceUtil.setNetwork(ICONexApp.NETWORK.getNid().intValue());
                 }
-
             }
         });
 
