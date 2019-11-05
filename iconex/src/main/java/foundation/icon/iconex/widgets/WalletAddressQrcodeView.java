@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Base64;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +121,7 @@ public class WalletAddressQrcodeView extends FrameLayout {
 
         qr_loading = findViewById(R.id.qr_loading);
 
-        editSendAmount.getEditView().setTextSize(10);
+        editSendAmount.getEditView().setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
         editSendAmount.syncTopHeight(findViewById(R.id.con_sync));
         editSendAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         btnRequestSend.setOnClickListener(new OnClickListener() {
