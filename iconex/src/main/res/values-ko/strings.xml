@@ -339,7 +339,7 @@
 
     <!-- Export bundle -->
     <string name="titleExportBundle">지갑 묶어서 내보내기</string>
-    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요. 선택한 지갑마다 지갑별 비밀번호 확인이 필요합니다.</string>
+    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요.\n선택 시 비밀번호 확인이 필요합니다.</string>
     <string name="exportBundleDetailed1">지갑 묶어서 내보내기는 선택한 지갑 파일을 묶어서 하나의 파일로 백업하는 기능입니다.</string>
     <string name="exportBundleEdtailed2">지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 경우 지갑 백업파일이 필요합니다.</string>
     <string name="countSelectedWallet">개 지갑 선택</string>

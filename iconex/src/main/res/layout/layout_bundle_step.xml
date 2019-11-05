@@ -64,6 +64,6 @@
         android:textColor="@color/dark80"
         android:textSize="9dp"
 
-        android:text="@string/information"/>
+        android:text="@string/stepDownload"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
