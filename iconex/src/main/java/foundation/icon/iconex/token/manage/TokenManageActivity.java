@@ -1,10 +1,11 @@
 package foundation.icon.iconex.token.manage;
 
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
@@ -145,16 +146,16 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
             ircFragment = IrcListFragment.newInstance(mWallet.getAddress());
             transaction.add(R.id.container, ircFragment);
             transaction.addToBackStack(TAG_IRC);
+            appbar.setTitle(getString(R.string.addToken));
         } else {
             addFragment = TokenManageFragment.newInstance(mWallet.getAddress(), MyConstants.MODE_TOKEN.ADD,
                     TOKEN_TYPE.ERC, null);
             transaction.add(R.id.container, addFragment);
             transaction.addToBackStack(TAG_ADD);
+            appbar.setTitle(getString(R.string.enterTokenInfo));
         }
 
         transaction.commit();
-
-        appbar.setTitle(getString(R.string.addToken));
     }
 
     @Override
@@ -164,7 +165,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
                 TOKEN_TYPE.IRC, null);
         transaction.add(R.id.container, addFragment);
         transaction.addToBackStack(TAG_ADD);
-
+        appbar.setTitle(getString(R.string.enterTokenInfo));
         transaction.commit();
     }
 
