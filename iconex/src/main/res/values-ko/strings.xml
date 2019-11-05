@@ -415,7 +415,7 @@
     <string name="permissionCameraDenied">카메라에 대한 권한을 허용하지 않으면\nQR 코드 스캔을 사용 할 수 없습니다.\n(휴대폰의 설정 > 앱 권한 설정에서 카메라 권한을 허용할 수 있습니다.)</string>
 
     <!-- Message -->
-    <string name="warningPrivateKey">개인 키 만으로 지갑 실행, 송금이 가능하므로 어떠한 경우에도 외부 공유가 되어서는 안됩니다.</string>
+    <string name="warningPrivateKey">개인 키 만으로 지갑 실행, 전송이 가능하므로 어떠한 경우에도 외부 공유가 되어서는 안됩니다.</string>
 
     <!-- Network -->
     <string name="networkNotWorking">네트워크에 접속 할 수 없습니다.</string>

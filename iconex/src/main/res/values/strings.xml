@@ -416,7 +416,7 @@
     <string name="permissionCameraDenied">If camera is not authorized, QR code scan function cannot be activated.\n(Camera can be authorized\nvia App settings.)</string>
 
     <!-- Message -->
-    <string name="warningPrivateKey">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
+    <string name="warningPrivateKey">Private Key should not be shared since it can operate by itself.</string>
 
     <!-- Network -->
     <string name="networkNotWorking">No internet connection</string>
