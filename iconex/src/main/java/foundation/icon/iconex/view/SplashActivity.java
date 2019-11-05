@@ -80,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void checkPermissionConfirm() {
-        PermissionConfirmDialog dialog = new PermissionConfirmDialog(this, R.style.AppTheme);
+        PermissionConfirmDialog dialog = new PermissionConfirmDialog(this);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

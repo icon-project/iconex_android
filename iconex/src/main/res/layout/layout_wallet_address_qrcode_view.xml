@@ -121,7 +121,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="14dp"
         android:textSize="10dp"
         android:fontFamily="@font/noto_sans_light"
         android:text="@string/msgRequestSend"
