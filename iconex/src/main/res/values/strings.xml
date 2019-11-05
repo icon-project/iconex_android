@@ -48,6 +48,7 @@
     <string name="createWallet">Create Wallet</string>
     <string name="LoadWallet">Load Wallet</string>
     <string name="hintWalletPassword">Enter wallet password</string>
+    <string name="password">Enter the password</string>
 
     <!-- Create Wallet -->
     <string name="titleCreateWallet">Create Wallet</string>
@@ -349,7 +350,7 @@
     <string name="bundlePwdDetailed1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
     <string name="bundlePwdDetailed2">The Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
     <string name="bundlePwd">Wallet Bundle Password</string>
-    <string name="bundleDownload">Download</string>
+    <string name="bundleDownload">Download Keystore files</string>
 
     <string name="msgBundleNotice">If you back up your wallets using the ‘Wallet bundle’ function, the password of each wallet will be changed into\nthe wallet bundle password.\nAre you sure you want to proceed?</string>
 

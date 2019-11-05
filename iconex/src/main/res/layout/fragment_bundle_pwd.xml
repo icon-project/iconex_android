@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            app:hint="@string/hintWalletPassword"
+            app:hint="@string/password"
             app:inputType="password" />
 
         <foundation.icon.iconex.widgets.TTextInputLayout
