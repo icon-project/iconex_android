@@ -1,23 +1,24 @@
 package foundation.icon.iconex.wallet.contacts;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.TimeZone;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.RecentSendInfo;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.util.ConvertUtil;
 
 /**
  * Created by js on 2018. 3. 19..
@@ -38,6 +39,39 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mData = data;
         mCoinType = coinType;
+        try {
+            ArrayList<Wallet> wallets = new ArrayList<>();
+            for (int i = 0; data.size() > i; i++) {
+                Wallet wallet = ((Wallet) data.get(i));
+                wallets.add(wallet);
+            }
+
+            Collections.sort(wallets, new Comparator<Wallet>() {
+                @Override
+                public int compare(Wallet o1, Wallet o2) {
+                    String s1 = o1.getAlias();
+                    String s2 = o2.getAlias();
+
+                    int compare = getPriority(s1).compareTo(getPriority(s2));
+                    if (compare == 0) compare = s1.compareTo(s2);
+
+                    return compare;
+                }
+
+                private Integer getPriority(String s) {
+                    char c = s.charAt(0);
+                    if ('0' <= c && c <= '9') {
+                        return 2;
+                    } else if ('A' <= c && c <= 'z') {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
+            mData = wallets;
+        } catch (Exception e) { }
         mAddress = address;
     }
 
