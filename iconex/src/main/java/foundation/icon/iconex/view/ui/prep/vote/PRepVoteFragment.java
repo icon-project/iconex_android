@@ -231,6 +231,11 @@ public class PRepVoteFragment extends Fragment {
         }
     }
 
+    public void clearCurrentManage() {
+        if (adapter != null)
+            adapter.clearCurrentManage();
+    }
+
     private OnVoteFragmentListener mListener;
 
     public interface OnVoteFragmentListener {

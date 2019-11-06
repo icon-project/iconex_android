@@ -416,7 +416,7 @@
             android:fontFamily="@font/nanum_square_regular"
             android:text="@string/transfer"
             android:textAllCaps="false"
-            android:textColor="@color/primary"
+            android:textColor="@color/txt_btn_rounded_01_light"
             android:textSize="14dp" />
 
     </RelativeLayout>

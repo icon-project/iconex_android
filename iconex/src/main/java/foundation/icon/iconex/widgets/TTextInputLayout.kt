@@ -2,6 +2,7 @@ package foundation.icon.iconex.widgets
 
 import android.content.Context
 import android.content.res.TypedArray
+import android.graphics.Typeface
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import android.view.*
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.core.content.res.ResourcesCompat
 import foundation.icon.iconex.R
 
 
@@ -33,6 +35,7 @@ class TTextInputLayout : LinearLayout {
     private lateinit var imgFile: ImageView
     private lateinit var tvFileName: TextView
 
+    private var DEF_STYLE: Int
     private val DEF_STYLEABLE = R.styleable.TTextInputLayout
 
     private val BG_LAYOUT_N = R.drawable.bg_text_input_layout_n
@@ -53,11 +56,13 @@ class TTextInputLayout : LinearLayout {
 
     constructor(context: Context) : super(context) {
         initView()
+
+        DEF_STYLE = 0
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView()
-
+        DEF_STYLE = 0
         val typedArray = getContext().obtainStyledAttributes(attrs, DEF_STYLEABLE)
         setTypedArray(typedArray)
     }
@@ -65,6 +70,7 @@ class TTextInputLayout : LinearLayout {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         initView()
 
+        DEF_STYLE = defStyleAttr
         val typedArray = getContext().obtainStyledAttributes(attrs, DEF_STYLEABLE, defStyleAttr, 0)
         setTypedArray(typedArray)
     }
@@ -189,10 +195,12 @@ class TTextInputLayout : LinearLayout {
             0 -> { // text
                 layoutInput.visibility = View.VISIBLE
                 edit.inputType = InputType.TYPE_CLASS_TEXT
+                edit.typeface = ResourcesCompat.getFont(context, R.font.noto_sans_regular)
             }
             1 -> { // password
                 layoutInput.visibility = View.VISIBLE
                 edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                edit.typeface = ResourcesCompat.getFont(context, R.font.noto_sans_regular)
             }
             2 -> { // readOnly
                 layoutInput.visibility = View.VISIBLE

@@ -3,7 +3,6 @@ package foundation.icon.iconex.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import foundation.icon.iconex.R;
 public class CustomSeekbar extends FrameLayout {
 
     private ImageView seekActive;
+    private ImageView seekDisabled;
     private SeekBar seekBar;
     private int mProgress = 50;
     private int mMax = 100;
@@ -49,10 +49,11 @@ public class CustomSeekbar extends FrameLayout {
         }
     }
 
-    private void initView () {
-        LayoutInflater.from(getContext()).inflate(R.layout.layout_custom_seekbar,this, true);
+    private void initView() {
+        LayoutInflater.from(getContext()).inflate(R.layout.layout_custom_seekbar, this, true);
 
         seekActive = findViewById(R.id.seek_active);
+        seekDisabled = findViewById(R.id.seek_disabled);
         seekBar = findViewById(R.id.seekBar);
         seekBar.setMax(mMax);
         seekBar.setProgress(mProgress);
@@ -63,17 +64,20 @@ public class CustomSeekbar extends FrameLayout {
                 mProgress = progress;
                 updateProgressbarView();
                 seekActive.setVisibility(progress == 0 ? INVISIBLE : VISIBLE);
-                if (onSeekBarChangeListener != null) onSeekBarChangeListener.onProgressChanged(seekBar, progress, fromUser);
+                if (onSeekBarChangeListener != null)
+                    onSeekBarChangeListener.onProgressChanged(seekBar, progress, fromUser);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if (onSeekBarChangeListener != null) onSeekBarChangeListener.onStartTrackingTouch(seekBar);
+                if (onSeekBarChangeListener != null)
+                    onSeekBarChangeListener.onStartTrackingTouch(seekBar);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (onSeekBarChangeListener != null) onSeekBarChangeListener.onStopTrackingTouch(seekBar);
+                if (onSeekBarChangeListener != null)
+                    onSeekBarChangeListener.onStopTrackingTouch(seekBar);
             }
         });
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -88,8 +92,8 @@ public class CustomSeekbar extends FrameLayout {
     public void updateProgressbarView() {
         int width = getWidth();
         int progressWidth = width - (2 * dp2px(15));
-        double percentPosition = (double)mProgress / (double)mMax;
-        int position = (int)(progressWidth * percentPosition);
+        double percentPosition = (double) mProgress / (double) mMax;
+        int position = (int) (progressWidth * percentPosition);
         position -= dp2px(1);
 
         ViewGroup.LayoutParams seekActiveLayoutParams = seekActive.getLayoutParams();
@@ -99,9 +103,16 @@ public class CustomSeekbar extends FrameLayout {
 
     public void setEnabled(boolean enable) {
         seekBar.setEnabled(enable);
+        if (enable) {
+            seekBar.getThumb().mutate().setAlpha(255);
+            seekDisabled.setVisibility(GONE);
+        } else {
+            seekBar.getThumb().mutate().setAlpha(0);
+            seekDisabled.setVisibility(VISIBLE);
+        }
     }
 
-    private int dp2px (int dp) {
+    private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, dp,
                 getContext().getResources().getDisplayMetrics());

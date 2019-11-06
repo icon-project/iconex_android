@@ -90,7 +90,7 @@ public class StakeFragment extends Fragment {
 
     private PRepService pRepService;
     private BigDecimal ONE_HUNDRED = new BigDecimal("100");
-    private BigDecimal total, staked, unstaked, delegated, votingPower, maxStake, remainingBlocks;
+    private BigDecimal total, staked, unstaked, delegated, maxStake, available, remainingBlocks;
 
     private StakeViewModel vm;
 
@@ -250,7 +250,6 @@ public class StakeFragment extends Fragment {
                     double maxPercent = calculatePercentage(maxStake, input);
                     Log.d(TAG, "edittext campreMin percent=" + totalPercent + ", delegationPercent=" + delegatedPercent);
                     Log.d(TAG, "Seek bar progress=" + (int) (maxPercent - delegatedPercent));
-                    stakeSeekBar.setProgress((int) (maxPercent - delegatedPercent));
                     txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", totalPercent));
                     stakeGraph.updateGraph(input);
                 }
@@ -309,6 +308,7 @@ public class StakeFragment extends Fragment {
         unstaked = new BigDecimal(vm.getUnstaked().getValue());
         delegated = new BigDecimal(vm.getDelegation().getValue());
         maxStake = total.subtract(ONE_ICX);
+        available = total.subtract(delegated);
 
         txtBalance.setText(total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
         txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
@@ -316,29 +316,18 @@ public class StakeFragment extends Fragment {
         stakeGraph.setTotal(total);
         stakeGraph.setStake(staked);
 
-        if (maxStake.equals(BigDecimal.ZERO)) {
-            editStaked.setEnabled(false);
-            stakeSeekBar.setEnabled(false);
-            txtStakedPer.setTextColor(getResources().getColor(R.color.darkE6));
+        if (!delegated.equals(BigDecimal.ZERO)) {
+            stakeGraph.setDelegation(delegated);
+            delegatedPercent = calculatePercentage(total, delegated);
+            txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                    delegated.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString(),
+                    delegatedPercent));
+
+            stakeSeekBar.setMax(100 - ((int) delegatedPercent));
+            Log.d(TAG, "seekbar max=" + stakeSeekBar.getMax());
         } else {
-            if (!delegated.equals(BigDecimal.ZERO)) {
-                stakeGraph.setDelegation(delegated);
-                delegatedPercent = calculatePercentage(total, delegated);
-                txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
-                        delegated.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString(),
-                        delegatedPercent));
-
-                stakeSeekBar.setMax(100 - ((int) delegatedPercent));
-
-                if (delegated.equals(staked)) {
-                    editStaked.setEnabled(false);
-                    stakeSeekBar.setEnabled(false);
-                    txtStakedPer.setTextColor(getResources().getColor(R.color.darkE6));
-                }
-            } else {
-                txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
-                        new BigDecimal("0").scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR), 0.0f));
-            }
+            txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                    new BigDecimal("0").scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR), 0.0f));
         }
 
         stakeGraph.updateGraph();
@@ -348,6 +337,16 @@ public class StakeFragment extends Fragment {
         editStaked.setText(staked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)",
                 stakePercentage));
+
+        if (maxStake.compareTo(BigDecimal.ZERO) <= 0) {
+            editStaked.setEnabled(false);
+            stakeSeekBar.setEnabled(false);
+            txtStakedPer.setTextColor(getResources().getColor(R.color.darkB3));
+        } else if (available.subtract(ONE_ICX).compareTo(BigDecimal.ZERO) <= 0) {
+            editStaked.setEnabled(false);
+            stakeSeekBar.setEnabled(false);
+            txtStakedPer.setTextColor(getResources().getColor(R.color.darkB3));
+        }
 
         stepLimit = vm.getStepLimit().getValue();
         stepPrice = vm.getStepPrice().getValue();

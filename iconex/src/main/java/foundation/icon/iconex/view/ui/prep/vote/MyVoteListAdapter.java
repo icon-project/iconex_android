@@ -141,7 +141,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     votePercent));
 
             h.btnManage.setImageResource(R.drawable.bg_btn_prep_delete);
-            if (!delegation.isNew() && !delegation.getValue().equals(BigInteger.ZERO)) {
+            if (!delegation.isNew()) {
                 Log.d(TAG, "isNew=" + delegation.isNew());
                 h.btnManage.setSelected(true);
                 h.btnManage.setImageResource(R.drawable.ic_delete_list_disabled);
@@ -275,10 +275,12 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                             txtMax.setText(String.format(Locale.getDefault(), "%.1f%%", 0.0f));
                             seekbar.setEnabled(false);
                             editDelegation.setEnabled(false);
+                            txtPercent.setTextColor(context.getResources().getColor(R.color.darkB3));
                         } else {
                             txtMax.setText(String.format(Locale.getDefault(), "%.1f%%", maxPercent));
                             seekbar.setEnabled(true);
                             editDelegation.setEnabled(true);
+                            txtPercent.setTextColor(context.getResources().getColor(R.color.dark4D));
                         }
 
                         layoutGraph.postDelayed(new Runnable() {
@@ -299,7 +301,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
                 case R.id.btn_prep_manage:
                     ToolTip toolTip = new ToolTip(context);
-                    if (!delegation.isNew() && delegation.getValue().compareTo(BigInteger.ZERO) > 0) {
+                    if (!delegation.isNew()) {
                         toolTip.setText(context.getString(R.string.tipHasDelegation));
                         toolTip.setPosition(root, btnManage);
                         toolTip.show();
@@ -380,15 +382,25 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                 }
 
                 if (editDelegation.getTag() == null) {
+                    Log.i(TAG, "input=" + input);
+                    Log.i(TAG, "available=" + available);
+
                     if (input.compareTo(available) > 0) {
                         editDelegation.setText(available.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
+                        input = new BigDecimal(new BigDecimal(editDelegation.getText().toString()).scaleByPowerOfTen(18).toBigInteger());
+                        boolean isNew = delegations.get(getAdapterPosition()).isNew();
+                        Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(input.toBigInteger()).build();
+                        d.isEdited(true);
+                        d.isNew(isNew);
+                        delegations.set(getAdapterPosition(), d);
+                        mListener.onVoted(delegations);
                         seekbar.setProgress(100);
                     } else {
-//                        int percent = input.divide(available, RoundingMode.FLOOR).multiply(new BigDecimal("100")).intValue();
+//                        int seekProgress = Integer.parseInt(input.divide(available, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).toString());
                         float percent = (input.floatValue() / available.floatValue()) * 100;
-                        Log.i(TAG, "Voting percent=" + percent + "input=" + input.toString() + ", available=" + available.toString());
+                        Log.i(TAG, "Voting percent=" + percent + "input=" + input.toString() + ", available=" + available.toString() + "seekProgress=" + Math.round(percent));
                         txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
-                        seekbar.setProgress((int) percent);
+                        seekbar.setProgress(Math.round(percent));
                     }
                 } else {
                     float percent = (input.floatValue() / available.floatValue()) * 100;
@@ -477,6 +489,10 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
     public void setMax(int max) {
 
+    }
+
+    public void clearCurrentManage() {
+        currentManage = -1;
     }
 
     private OnVoteChangedListener mListener = null;

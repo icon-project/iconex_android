@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -11,21 +10,21 @@
         android:id="@+id/appbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:end_icon="info"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:start_icon="back"
-        app:end_icon="info"
-        app:text="지갑명"/>
+        app:text="지갑명" />
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         app:layout_constraintTop_toBottomOf="@id/appbar">
 
         <LinearLayout
@@ -77,10 +76,10 @@
                     android:layout_width="0dp"
                     android:layout_height="25dp"
                     android:layout_marginTop="12dp"
-                    android:fontFamily="@font/nanum_square_regular"
-                    android:text="9,000,000.00000008"
-                    android:gravity="right"
                     android:autoSizeTextType="uniform"
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:gravity="right"
+                    android:text="9,000,000.00000008"
 
                     android:textColor="@color/primary"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -115,26 +114,27 @@
                     android:id="@+id/edit_send_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:hint="@string/sendBalance"/>
+                    app:hint="@string/sendBalance" />
 
                 <TextView
                     android:id="@id/txt_trans_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginStart="14dp"
+                    android:layout_marginTop="8dp"
 
                     android:fontFamily="@font/nanum_square_regular"
-                    android:textSize="10dp"
+                    android:text="$ 0.00"
                     android:textColor="@color/darkB3"
 
-                    android:text="$ 0.00"/>
+                    android:textSize="10dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="6dp">
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
                     <Button
                         android:id="@+id/btn_plus_10"
                         android:layout_width="0dp"
@@ -143,53 +143,53 @@
 
                         android:background="@drawable/bg_btn_outline_01"
                         android:fontFamily="@font/noto_sans_light"
-                        android:textSize="10dp"
+                        android:text="+10"
                         android:textColor="@color/dark80"
 
-                        android:text="+10"/>
+                        android:textSize="10dp" />
 
                     <Button
                         android:id="@+id/btn_plus_100"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:layout_marginStart="6dp"
+                        android:layout_weight="1"
 
                         android:background="@drawable/bg_btn_outline_01"
                         android:fontFamily="@font/noto_sans_light"
-                        android:textSize="10dp"
+                        android:text="+100"
                         android:textColor="@color/dark80"
 
-                        android:text="+100"/>
+                        android:textSize="10dp" />
 
                     <Button
                         android:id="@+id/btn_plus_1000"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:layout_marginStart="6dp"
+                        android:layout_weight="1"
 
                         android:background="@drawable/bg_btn_outline_01"
                         android:fontFamily="@font/noto_sans_light"
-                        android:textSize="10dp"
+                        android:text="+1000"
                         android:textColor="@color/dark80"
 
-                        android:text="+1000"/>
+                        android:textSize="10dp" />
 
                     <Button
                         android:id="@+id/btn_plus_all"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:layout_marginStart="6dp"
+                        android:layout_weight="1"
 
                         android:background="@drawable/bg_btn_outline_01"
                         android:fontFamily="@font/noto_sans_light"
-                        android:textSize="10dp"
-                        android:textColor="@color/dark80"
-
+                        android:text="@string/maxBalance"
                         android:textAllCaps="false"
-                        android:text="@string/maxBalance"/>
+
+                        android:textColor="@color/dark80"
+                        android:textSize="10dp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -197,14 +197,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="40dp">
+                android:layout_marginTop="40dp"
+                android:orientation="vertical">
 
                 <foundation.icon.iconex.widgets.TTextInputLayout
                     android:id="@+id/edit_to_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:hint="@string/receivingAddress"/>
+                    app:hint="@string/receivingAddress" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -219,26 +219,26 @@
 
                         android:background="@drawable/bg_btn_outline_01"
                         android:fontFamily="@font/noto_sans_light"
-                        android:textSize="10dp"
-                        android:textColor="@color/dark80"
-
+                        android:text="@string/selectAddress"
                         android:textAllCaps="false"
-                        android:text="@string/selectAddress"/>
+
+                        android:textColor="@color/dark80"
+                        android:textSize="10dp" />
 
                     <Button
                         android:id="@+id/btn_qr_scan"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:layout_marginStart="6dp"
+                        android:layout_weight="1"
 
                         android:background="@drawable/bg_btn_outline_01"
                         android:fontFamily="@font/noto_sans_light"
-                        android:textSize="10dp"
-                        android:textColor="@color/dark80"
-
+                        android:text="@string/scanTheQRCode"
                         android:textAllCaps="false"
-                        android:text="@string/scanTheQRCode"/>
+
+                        android:textColor="@color/dark80"
+                        android:textSize="10dp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -261,84 +261,84 @@
                     android:id="@+id/lb_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="24dp"
-
                     android:fontFamily="@font/noto_sans_regular"
-                    android:textSize="12dp"
-                    android:textColor="@color/dark4D"
+                    android:text="@string/gasPrice"
 
-                    android:text="@string/gasPrice"/>
+                    android:textColor="@color/dark4D"
+                    android:textSize="12dp"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/txt_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_price"
-                    app:layout_constraintRight_toLeftOf="@id/unit_price"
                     android:layout_marginEnd="3dp"
-
                     android:fontFamily="@font/nanum_square_bold"
-                    android:textSize="12dp"
-                    android:textColor="@color/primary"
+                    android:text="53"
 
-                    android:text="53"/>
+                    android:textColor="@color/primary"
+                    android:textSize="12dp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_price"
+
+                    app:layout_constraintRight_toLeftOf="@id/unit_price" />
 
                 <TextView
                     android:id="@+id/unit_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_price"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="20dp"
-
                     android:fontFamily="@font/nanum_square_bold"
-                    android:textSize="12dp"
-                    android:textColor="@color/primary"
+                    android:text="Gwei"
 
-                    android:text="Gwei"/>
+                    android:textColor="@color/primary"
+                    android:textSize="12dp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_price"
+
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <TextView
                     android:id="@+id/lb_slow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/lb_price"
-                    app:layout_constraintStart_toStartOf="@+id/lb_price"
                     android:layout_marginTop="19dp"
                     android:fontFamily="@font/noto_sans_light"
-
-                    android:textSize="10dp"
+                    android:text="1 (느림)"
                     android:textColor="@color/dark4D"
 
-                    android:text="1 (느림)"/>
+                    android:textSize="10dp"
+                    app:layout_constraintStart_toStartOf="@+id/lb_price"
+
+                    app:layout_constraintTop_toBottomOf="@+id/lb_price" />
 
                 <TextView
                     android:id="@+id/lb_fast"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_slow"
-                    app:layout_constraintEnd_toEndOf="@+id/unit_price"
-
                     android:fontFamily="@font/noto_sans_light"
-                    android:textSize="10dp"
-                    android:textColor="@color/dark4D"
+                    android:text="(빠름) 99"
 
-                    android:text="(빠름) 99"/>
+                    android:textColor="@color/dark4D"
+                    android:textSize="10dp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/lb_slow"
+
+                    app:layout_constraintEnd_toEndOf="@+id/unit_price" />
 
                 <foundation.icon.iconex.widgets.CustomSeekbar
                     android:id="@+id/seek_price"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lb_slow"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
                     app:max="98"
-                    app:progress="53"/>
+                    app:progress="53" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -348,22 +348,24 @@
                 android:id="@+id/layout_data_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <foundation.icon.iconex.widgets.TTextInputLayout
                         android:id="@+id/edit_data"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:hint="@string/ethData"/>
+                        app:hint="@string/ethData" />
+
                     <View
                         android:id="@+id/btnData"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent" />
                 </FrameLayout>
 
                 <Button
@@ -373,13 +375,13 @@
 
                     android:background="@drawable/bg_btn_outline_01"
                     android:fontFamily="@font/noto_sans_light"
-                    android:textSize="10dp"
-                    android:textColor="@color/dark80"
-
+                    android:text="@string/viewData"
                     android:textAllCaps="false"
-                    android:text="@string/viewData"/>
+
+                    android:textColor="@color/dark80"
+                    android:textSize="10dp" />
             </LinearLayout>
-            
+
             <!-- ETH Fee -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -387,62 +389,63 @@
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="40dp"
                 android:background="@drawable/bg_outline_box_darkfc">
+
                 <TextView
                     android:id="@+id/lb_estimated_max_fee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="30dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-
                     android:fontFamily="@font/noto_sans_light"
-                    android:textSize="10dp"
-                    android:textColor="@color/dark80"
+                    android:text="@string/estimateFee"
 
-                    android:text="@string/estimateFee"/>
+                    android:textColor="@color/dark80"
+                    android:textSize="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/symbol_estimated_max_fee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    app:layout_constraintLeft_toRightOf="@id/lb_estimated_max_fee"
+                    android:fontFamily="@font/noto_sans_light"
+                    android:text="(ETH)"
+
+                    android:textColor="@color/dark80"
+                    android:textSize="10dp"
                     app:layout_constraintBaseline_toBaselineOf="@id/lb_estimated_max_fee"
 
-                    android:fontFamily="@font/noto_sans_light"
-                    android:textSize="10dp"
-                    android:textColor="@color/dark80"
-
-                    android:text="(ETH)"/>
+                    app:layout_constraintLeft_toRightOf="@id/lb_estimated_max_fee" />
 
                 <TextView
                     android:id="@+id/txt_fee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    app:layout_constraintBaseline_toBaselineOf="@id/lb_estimated_max_fee"
-                    app:layout_constraintEnd_toEndOf="parent"
-
                     android:fontFamily="@font/nanum_square_regular"
-                    android:textSize="12dp"
-                    android:textColor="@color/dark4D"
+                    android:text="0.00000008"
 
-                    android:text="0.00000008"/>
+                    android:textColor="@color/dark4D"
+                    android:textSize="12dp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/lb_estimated_max_fee"
+
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <TextView
                     android:id="@+id/txt_trans_fee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    app:layout_constraintEnd_toEndOf="@+id/txt_fee"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_fee"
-
                     android:fontFamily="@font/nanum_square_regular"
-                    android:textSize="10dp"
-                    android:textColor="@color/darkB3"
+                    android:text=" $ 0.001"
 
-                    android:text=" $ 0.001"/>
+                    android:textColor="@color/darkB3"
+                    android:textSize="10dp"
+                    app:layout_constraintEnd_toEndOf="@+id/txt_fee"
+
+                    app:layout_constraintTop_toBottomOf="@+id/txt_fee" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -472,7 +475,7 @@
             android:fontFamily="@font/nanum_square_regular"
             android:text="@string/transfer"
             android:textAllCaps="false"
-            android:textColor="@color/primary"
+            android:textColor="@color/txt_btn_rounded_01_light"
             android:textSize="14dp" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
