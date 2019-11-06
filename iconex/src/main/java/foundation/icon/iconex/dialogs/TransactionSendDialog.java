@@ -106,7 +106,7 @@ public class TransactionSendDialog extends MessageDialog {
             ErcTxInfo txInfo = (ErcTxInfo) mTxInfo;
             symbolSendBalance.setText("(" + txInfo.getSymbol() + ")");
             groupLimitPrice.setVisibility(View.GONE);
-            symbolFee.setText("(" + SYMBOL_ETH);
+            symbolFee.setText("(" + SYMBOL_ETH + ")");
         } else if (mTxInfo instanceof EthTxInfo) {
             symbolSendBalance.setText("(" + SYMBOL_ETH + ")");
             groupLimitPrice.setVisibility(View.GONE);
@@ -210,17 +210,19 @@ public class TransactionSendDialog extends MessageDialog {
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
 
-            BasicDialog dialog;
+            MessageDialog dialog;
             switch (result) {
                 case NOT_ENOUGH:
-                    dialog = new BasicDialog(getContext());
+                    dialog = new MessageDialog(getContext());
+                    dialog.setSingleButton(false);
                     dialog.setMessage(getContext().getString(R.string.errNeedFee));
                     dialog.show();
                     dismiss();
                     break;
 
                 case EXCEPTION:
-                    dialog = new BasicDialog(getContext());
+                    dialog = new MessageDialog(getContext());
+                    dialog.setSingleButton(false);
                     dialog.show();
                     dismiss();
                     break;
