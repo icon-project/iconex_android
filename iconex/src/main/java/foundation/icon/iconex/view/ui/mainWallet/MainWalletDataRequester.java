@@ -1,7 +1,5 @@
 package foundation.icon.iconex.view.ui.mainWallet;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -40,23 +38,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class MainWalletDataRequester {
-    private static String TAG = MainWalletDataRequester.class.getSimpleName();
-
-    private String LogWallet(Wallet wallet, boolean wrapping) {
-        if (wrapping) {
-            return " wallet = [" + wallet.getAlias() + ", " + wallet.getAddress() + "]";
-        } else {
-            return wallet.getAlias() + ", " + wallet.getAddress();
-        }
-    }
-
-    private String LogEntry(WalletEntry entry, boolean wrapping) {
-        if (wrapping) {
-            return " entry = [" + entry.getSymbol() + ", " + entry.getAddress() + "]";
-        } else {
-            return entry.getSymbol() + ", " + entry.getAddress();
-        }
-    }
 
     private Hashtable<String, Integer> completeChecker = new Hashtable<>();
     private Set<String> nextChecker = new HashSet<>();
@@ -103,7 +84,6 @@ public class MainWalletDataRequester {
     }
 
     public void requestAllData() {
-        Log.d(TAG, "requestAllData() called");
 
         new Thread(new Runnable() {
             @Override
@@ -185,7 +165,6 @@ public class MainWalletDataRequester {
     }
 
     private void requestBalance() {
-        Log.d(TAG, "requestBalance() called");
 
         int szWallets = ICONexApp.wallets.size();
         for (int i = 0; szWallets > i; i++) {
@@ -212,7 +191,6 @@ public class MainWalletDataRequester {
     }
 
     private void getIcxCoinBalance(WalletEntry entry, int walletPosition, int entryPosition) {
-        Log.d(TAG, "getIcxCoinBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         completeChecking(KEY_BALANCE, true);
         int entryId = entry.getId();
         String address = entry.getAddress();
@@ -230,12 +208,10 @@ public class MainWalletDataRequester {
 
             @Override
             public void onOtherError(Throwable e) {
-                Log.d(TAG, "onOtherError() called with: e = [" + e.getMessage() + "]," + LogEntry(entry, true));
             }
         }, new SimpleObserver() {
             @Override
             void onDone() {
-                Log.d(TAG, "onDone() called in getIcxCoinBalance with: balance = [" + balance[0] + "], " + LogEntry(entry, true));
                 entry.setBalance(balance[0] == null ? MyConstants.NO_BALANCE : balance[0]);
 
                 synchronized (MainWalletDataRequester.this) {
@@ -247,7 +223,6 @@ public class MainWalletDataRequester {
     }
 
     private void getIcxTokenBalance(WalletEntry entry, int walletPosition, int entryPosition) {
-        Log.d(TAG, "getIcxTokenBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         completeChecking(KEY_BALANCE, true);
         int entryId = entry.getId();
         String address = entry.getAddress();
@@ -266,12 +241,10 @@ public class MainWalletDataRequester {
 
             @Override
             public void onOtherError(Throwable e) {
-                Log.d(TAG, "onOtherError() called in getIcxTokenBalance with: e = [" + e.getMessage() + "], " + LogEntry(entry, true));
             }
         }, new SimpleObserver() {
             @Override
             void onDone() {
-                Log.d(TAG, "onDone() called in getIcxTokenBalance() with: balance = [" + balance[0] + "], " + LogEntry(entry, true));
                 entry.setBalance(balance[0] == null ? MyConstants.NO_BALANCE : balance[0]);
                 synchronized (MainWalletDataRequester.this) {
                     nextChecking(KEY_BALANCE + "," + walletPosition + "," + entryPosition);
@@ -282,7 +255,6 @@ public class MainWalletDataRequester {
     }
 
     private void getEthCoinBalance(WalletEntry entry, int walletPosition, int entryPosition) {
-        Log.d(TAG, "getEthCoinBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         completeChecking(KEY_BALANCE, true);
         String address = entry.getAddress();
         final String[] balance = {null};
@@ -299,12 +271,10 @@ public class MainWalletDataRequester {
 
             @Override
             public void onOtherError(Throwable e) {
-                Log.d(TAG, "onOtherError() called int getEthCoinBalance with: e = [" + e.getMessage() + "], " + LogEntry(entry, true));
             }
         }, new SimpleObserver() {
             @Override
             void onDone() {
-                Log.d(TAG, "onDone() called in getEthCoinBalance with: balance = [" + balance[0] + "], " + LogEntry(entry, true));
                 entry.setBalance(balance[0] == null ? MyConstants.NO_BALANCE : balance[0]);
                 synchronized (MainWalletDataRequester.this) {
                     nextChecking(KEY_BALANCE + "," + walletPosition + "," + entryPosition);
@@ -315,7 +285,6 @@ public class MainWalletDataRequester {
     }
 
     private void getEthTokenBalance(WalletEntry entry, int walletPosition, int entryPosition) {
-        Log.d(TAG, "getEthTokenBalance() called with: entry = [" + LogEntry(entry, false) + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         completeChecking(KEY_BALANCE, true);
         String address = entry.getAddress();
         String contractAddress = entry.getContractAddress();
@@ -332,12 +301,10 @@ public class MainWalletDataRequester {
 
             @Override
             public void onOtherError(Throwable e) {
-                Log.d(TAG, "onOtherError() called with: e = [" + e.getMessage() + "], " + LogEntry(entry, true));
             }
         }, new SimpleObserver() {
             @Override
             void onDone() {
-                Log.d(TAG, "onDone() called in getEthTokenBalance with: balance =[" + balance[0] + "], " + LogEntry(entry, true));
                 entry.setBalance(balance[0] == null ? MyConstants.NO_BALANCE : balance[0]);
                 synchronized (MainWalletDataRequester.this) {
                     nextChecking(KEY_BALANCE + "," + walletPosition + "," + entryPosition);
@@ -348,7 +315,6 @@ public class MainWalletDataRequester {
     }
 
     private void requestExchangeTable() {
-        Log.d(TAG, "requestExchangeTable() called");
         completeChecking(KEY_EXCHANGE, true);
         HashMap<String, String> exchangeTable = new HashMap<>();
 
@@ -376,12 +342,10 @@ public class MainWalletDataRequester {
 
             @Override
             public void onOtherError(Throwable e) {
-                Log.d(TAG, "onOtherError() called in requestExchangeTable  with: e = [" + e.getMessage() + "]");
             }
         }, new SimpleObserver() {
             @Override
             public void onDone() {
-                Log.d(TAG, "onDone() called in requestExchangeTable with: exchageTable = [" + exchangeTable + "]");
                 ICONexApp.EXCHANGE_TABLE = exchangeTable;
                 synchronized (MainWalletDataRequester.this) {
                     completeChecking(KEY_EXCHANGE, false);
@@ -391,7 +355,6 @@ public class MainWalletDataRequester {
     }
 
     private void requestRReps() {
-        Log.d(TAG, "requestRReps() called");
         int size = ICONexApp.wallets.size();
         for (int i = 0; size > i; i++) {
             Wallet wallet = ICONexApp.wallets.get(i);
@@ -404,7 +367,6 @@ public class MainWalletDataRequester {
     }
 
     private void getIScore(Wallet wallet, int walletPosition) {
-        Log.d(TAG, "getIScore() called with: wallet = [" + LogWallet(wallet, false) + "], walletPosition = [" + walletPosition + "]");
         completeChecking(KEY_ISCORE, true);
         String address = wallet.getAddress();
         String url = ICONexApp.NETWORK.getUrl();
@@ -420,12 +382,10 @@ public class MainWalletDataRequester {
 
             @Override
             public void onOtherError(Throwable e) {
-                Log.d(TAG, "onOtherError() in getIScore called with: e = [" + e.getMessage() + "]," + LogWallet(wallet, true));
             }
         }, new SimpleObserver() {
             @Override
             public void onDone() {
-                Log.d(TAG, "onDone() called in getIScore with: wallet: = [" + LogWallet(wallet, false) + "], iscore = [" + iscore[0] + "]");
                 wallet.setiScore(iscore[0]);
                 synchronized (MainWalletDataRequester.this) {
                     nextChecking(KEY_ISCORE + "," + walletPosition);
@@ -436,7 +396,6 @@ public class MainWalletDataRequester {
     }
 
     private void getStake(Wallet wallet, int walletPosition) {
-        Log.d(TAG, "getStake() called with: wallet = [" + LogWallet(wallet, false) + "], walletPosition = [" + walletPosition + "]");
         completeChecking(KEY_STAKE, true);
         String address = wallet.getAddress();
         String url = ICONexApp.NETWORK.getUrl();
@@ -456,12 +415,10 @@ public class MainWalletDataRequester {
 
             @Override
             public void onOtherError(Throwable e) {
-                Log.d(TAG, "onOtherError() int getStake called with: e = [" + e.getMessage() + "], " + LogWallet(wallet, true));
             }
         }, new SimpleObserver() {
             @Override
             void onDone() {
-                Log.d(TAG, "onDone() called");
                 wallet.setStaked(stake[0]);
                 synchronized (MainWalletDataRequester.this) {
                     nextChecking(KEY_STAKE + "," + walletPosition + "," + (unstake[0] == null ? "0" : unstake[0]));
@@ -472,7 +429,6 @@ public class MainWalletDataRequester {
     }
 
     private void getDelegation(Wallet wallet, int walletPosition) {
-        Log.d(TAG, "getDelegation() called with: wallet = [" + LogWallet(wallet, false) + "], walletPosition = [" + walletPosition + "]");
         completeChecking(KEY_DELEGATION, true);
         String address = wallet.getAddress();
         String url = ICONexApp.NETWORK.getUrl();
@@ -488,12 +444,10 @@ public class MainWalletDataRequester {
 
             @Override
             public void onOtherError(Throwable e) {
-                Log.d(TAG, "onOtherError() in getDelegation called with: e = [" + e.getMessage() + "]," + LogWallet(wallet, true));
             }
         }, new SimpleObserver() {
             @Override
             public void onDone() {
-                Log.d(TAG, "onDone() called in getDelegation with = [" + LogWallet(wallet, false) + "], votingpower=(" + votingPower[0] + ")");
                 wallet.setVotingPower(votingPower[0]);
                 synchronized (MainWalletDataRequester.this) {
                     nextChecking(KEY_DELEGATION + "," + walletPosition);
