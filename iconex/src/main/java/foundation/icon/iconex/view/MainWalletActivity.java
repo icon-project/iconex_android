@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
+import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkErrorActivity;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -36,6 +38,7 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
 public class MainWalletActivity extends AppCompatActivity implements
@@ -52,6 +55,8 @@ public class MainWalletActivity extends AppCompatActivity implements
     private boolean patchingData = false;
     private String currentUnit = "USD";
     private Handler handler = new Handler();
+
+    boolean isFingerprintInvalidated = false;
 
     public class UIupdater {
         private boolean loadCompleteBalance = false;
@@ -347,6 +352,8 @@ public class MainWalletActivity extends AppCompatActivity implements
                 messageDialog.setMessage(getString(R.string.msgLoadBundle));
                 messageDialog.show();
             }
+
+            isFingerprintInvalidated = getIntent().getBooleanExtra(AuthActivity.EXTRA_INVALIDATED, false);
         }
 
         getSupportFragmentManager()
@@ -669,6 +676,36 @@ public class MainWalletActivity extends AppCompatActivity implements
         combineExchanges(-1, -1);
         combineTopToken();
         combineTotalAssets();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (isFingerprintInvalidated) {
+            MessageDialog dialog = new MessageDialog(this);
+            dialog.setSingleButton(false);
+            dialog.setConfirmButtonText(getString(R.string.yes));
+            dialog.setCancelButtonText(getString(R.string.no));
+            dialog.setMessage(getString(R.string.authMsgRecoverFingerprintAuth));
+            dialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    startActivity(new Intent(MainWalletActivity.this, SettingLockActivity.class)
+                            .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.RECOVER));
+                    isFingerprintInvalidated = false;
+                    return true;
+                }
+            });
+            dialog.setOnCancelClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    isFingerprintInvalidated = false;
+                    return null;
+                }
+            });
+            dialog.show();
+        }
     }
 
     @Override
