@@ -58,6 +58,7 @@ import foundation.icon.iconex.wallet.contacts.ContactsActivity;
 import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 import foundation.icon.iconex.widgets.CustomActionBar;
+import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import foundation.icon.icx.IconService;
 import foundation.icon.icx.data.Address;
@@ -1165,7 +1166,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         @Override
         public void onReceiveTransactionResult(String id, String txHash) {
 
-            Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
             finish();
         }
 

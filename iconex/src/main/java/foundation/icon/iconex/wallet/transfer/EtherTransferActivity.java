@@ -55,6 +55,7 @@ import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
 import foundation.icon.iconex.widgets.CustomActionBar;
 import foundation.icon.iconex.widgets.CustomSeekbar;
+import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import loopchain.icon.wallet.core.Constants;
 
@@ -650,7 +651,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                                     Integer.toString(mWalletEntry.getDefaultDec()), privKey);
                         }
                         timestamp = getTimeStamp();
-                        Toast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });

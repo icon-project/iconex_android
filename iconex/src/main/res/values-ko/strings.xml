@@ -48,6 +48,7 @@
     <string name="createWallet">지갑 만들기</string>
     <string name="LoadWallet">지갑 가져오기</string>
     <string name="hintWalletPassword">비밀번호 입력</string>
+    <string name="password">비밀번호</string>
 
     <!-- Create Wallet -->
     <string name="titleCreateWallet">지갑 만들기</string>
@@ -102,7 +103,7 @@
     <string name="errPassword">비밀번호를 다시 확인해주세요.</string>
     <string name="enterWalletAliasHeader">새 지갑의 이름을 입력해주세요.</string>
     <string name="errNoKeystoreFile">지갑 백업 파일을 선택해주세요.</string>
-    <string name="errPrivateKey">개인 키를 다시 확인해주세요.</string>
+    <string name="errPrivateKey">개인 키를 확인해주세요.</string>
     <string name="hintEnterWalletAlias">지갑 이름 입력 (8자)</string>
 
     <string name="loadByPrivateKeyHeader">개인 키를 입력해주세요.</string>
@@ -120,7 +121,7 @@
 
     <string name="enterWalletAliasAndPassword">새 지갑의 이름과 비밀번호를 입력해주세요.</string>
     <string name="walletPasswordGuide1">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
-    <string name="walletPasswordGuide2">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
+    <string name="walletPasswordGuide2">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 전송 시 비밀번호를 입력해야 합니다.</string>
 
     <!-- Warning -->
     <string name="duplicateWalletAlias">같은 이름의 지갑이 이미 존재합니다.</string>
@@ -142,6 +143,7 @@
     <string name="settingLock">잠금 설정</string>
     <string name="settingLanguage">언어</string>
     <string name="appInfo">앱 정보</string>
+    <string name="versionInfo">버전 정보</string>
     <string name="ICONexDisclaimers">ICONex 이용 면책 조항</string>
 
     <string name="currentVersion">현재 버전</string>
@@ -273,10 +275,10 @@
     <string name="msgStepPrice">Step 한 단위 당 지불하는 가격입니다.\n\nStep 가격은 loop로 지불하며 1 loop는 0.000000000000000001(10-18) ICX로 고정되어 있습니다. ICON 거래 수수료는 스마트 컨트랙트 기능 사용 횟수, 블록체인 데이터베이스 사용량, 거래 데이터 크기 등에 따라 부과됩니다.</string>
     <string name="msgICXEstimateFee">Transaction 실행 시 발생할 수 있는 최대 수수료로서, Step 한도와 Step 가격을 곱한 값입니다.</string>
     <string name="msgIcxData">사용자가 원하는 데이터를 입력하여 송금할 수 있습니다. 입력한 데이터의 크기에 따라 수수료가 부과됩니다.</string>
-    <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할\n용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
-    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서\n1 Gwei = 0.000000001 ETH로\n고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
-    <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로\n가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
-    <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 송금할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 송금이 불가하며 수수료만\n차감될 수 있습니다.</string>
+    <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할 용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
+    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서 1 Gwei = 0.000000001 ETH로 고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
+    <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로 가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
+    <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 전송할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 전송이 불가하며 수수료만\n차감될 수 있습니다.</string>
     <string name="msgDeleteData">입력된 데이터를 삭제하시겠습니까?</string>
 
     <string name="errNoSendAmount">송금할 수량을 입력해주세요.</string>
@@ -287,7 +289,7 @@
     <string name="errICXFee">수수료를 지불할 ICX가 부족합니다</string>
     <string name="errETHFee">수수료를 지불할 ETH가 부족합니다</string>
 
-    <string name="msgDoneRequestTransfer">송금 요청이 완료되었습니다.</string>
+    <string name="msgDoneRequestTransfer">전송 요청이 완료되었습니다.</string>
     <string name="errTransferFailed">오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
     <!-- Contacts -->
@@ -338,7 +340,7 @@
 
     <!-- Export bundle -->
     <string name="titleExportBundle">지갑 묶어서 내보내기</string>
-    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요. 선택한 지갑마다 지갑별 비밀번호 확인이 필요합니다.</string>
+    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요.\n선택 시 비밀번호 확인이 필요합니다.</string>
     <string name="exportBundleDetailed1">지갑 묶어서 내보내기는 선택한 지갑 파일을 묶어서 하나의 파일로 백업하는 기능입니다.</string>
     <string name="exportBundleEdtailed2">지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 경우 지갑 백업파일이 필요합니다.</string>
     <string name="countSelectedWallet">개 지갑 선택</string>
@@ -347,7 +349,7 @@
     <string name="bundlePwdDetailed1">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
     <string name="bundlePwdDetailed2">지갑 백업 파일(Keystore\)은 지갑의 고유 정보인 개인 키(Private Key)를 담고 있는 파일이며, 사용을 위해서는 설정한 비밀번호를 입력해야 합니다.</string>
     <string name="bundlePwd">묶음 지갑 비밀번호</string>
-    <string name="bundleDownload">묶음 지갑 백업 파일 다운로드</string>
+    <string name="bundleDownload">백업 파일 다운로드</string>
 
     <string name="msgBundleNotice">묶어서 내보낼 때, 묶음 지갑 비밀번호를\n새로 만들어야 합니다. 기존 지갑들의 비밀번호는 묶음 지갑의 비밀번호로 바뀝니다. 계속 진행하시겠습니까?</string>
 
@@ -389,7 +391,7 @@
     <string name="errNoEnrolledFingerprint">휴대폰의 설정화면에서 지문 등록 후 \"지문으로 잠금 해제\" 기능을 사용할 수 있습니다.</string>
     <string name="errCheckLockNum">잠금 번호가 일치하지 않습니다.\n현재 잠금 번호 입력부터 다시 시도해주세요.</string>
     <string name="errCurrentLockNum">잠금 번호가 일치 하지 않습니다.</string>
-    <string name="errRetryLockNum">잠금 번호를 다시 확인해주세요.</string>
+    <string name="errRetryLockNum">잠금 번호가 올바르지 않습니다.</string>
     <string name="errInvalidatedByBiometricEnrollment">등록되어 있는 지문 정보가 변경되어 지문 인증을 사용할 수 없습니다. 잠금 번호로 로그인 후, 지문 사용 여부를 다시 설정해주세요.</string>
 
     <string name="errFingerprintLockOut">Fingerprint scan is currently locked. You can reactivate the fingerprint scan by entering your mobile</string>
@@ -414,7 +416,7 @@
     <string name="permissionCameraDenied">카메라에 대한 권한을 허용하지 않으면\nQR 코드 스캔을 사용 할 수 없습니다.\n(휴대폰의 설정 > 앱 권한 설정에서 카메라 권한을 허용할 수 있습니다.)</string>
 
     <!-- Message -->
-    <string name="warningPrivateKey">개인 키 만으로 지갑 실행, 송금이 가능하므로 어떠한 경우에도 외부 공유가 되어서는 안됩니다.</string>
+    <string name="warningPrivateKey">개인 키 만으로 지갑 실행, 전송이 가능하므로 어떠한 경우에도 외부 공유가 되어서는 안됩니다.</string>
 
     <!-- Network -->
     <string name="networkNotWorking">네트워크에 접속 할 수 없습니다.</string>

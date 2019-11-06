@@ -48,6 +48,7 @@
     <string name="createWallet">Create Wallet</string>
     <string name="LoadWallet">Load Wallet</string>
     <string name="hintWalletPassword">Enter wallet password</string>
+    <string name="password">Enter the password</string>
 
     <!-- Create Wallet -->
     <string name="titleCreateWallet">Create Wallet</string>
@@ -102,7 +103,7 @@
     <string name="errPassword">Please check your password.</string>
     <string name="enterWalletAliasHeader">Please enter a new wallet name</string>
     <string name="errNoKeystoreFile">Please select keystore file.</string>
-    <string name="errPrivateKey">Incorrect private key. Please check again.</string>
+    <string name="errPrivateKey">Private key format is incorrect.</string>
     <string name="hintEnterWalletAlias">Enter wallet name</string>
 
     <string name="loadByPrivateKeyHeader">Select a coin and enter your private key</string>
@@ -120,7 +121,7 @@
 
     <string name="enterWalletAliasAndPassword">Please enter the new wallet name and the password.</string>
     <string name="walletPasswordGuide1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
-    <string name="walletPasswordGuide2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
+    <string name="walletPasswordGuide2">In order to restore wallet by Keystore file, it requires password to send transaction.</string>
 
     <!-- Warning -->
     <string name="duplicateWalletAlias">This wallet name already exists.</string>
@@ -142,6 +143,7 @@
     <string name="settingLock">Screen Lock</string>
     <string name="settingLanguage">Language</string>
     <string name="appInfo">App Info</string>
+    <string name="versionInfo">Version</string>
     <string name="ICONexDisclaimers">ICONex Disclaimer</string>
 
     <string name="currentVersion">Current Version</string>
@@ -288,7 +290,7 @@
     <string name="errICXFee">Insufficient ICX balance for transaction fee</string>
     <string name="errETHFee">Insufficient ETH balance for transaction fee</string>
 
-    <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
+    <string name="msgDoneRequestTransfer">Transfer Request Complete.</string>
     <string name="errTransferFailed">Error occurred.\nPlease try again.</string>
 
     <!-- Contacts -->
@@ -339,7 +341,7 @@
 
     <!-- Export bundle -->
     <string name="titleExportBundle">Export Wallet Bundle</string>
-    <string name="headerExportBundle">Select the wallets to bundle. Passwords are required.</string>
+    <string name="headerExportBundle">Select wallets that export in bundle.\nEach selected wallet requires password confirmation.</string>
     <string name="exportBundleDetailed1">Wallet bundle backs up your wallets in one file. You can easily manage different wallets at once.</string>
     <string name="exportBundleEdtailed2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
     <string name="countSelectedWallet">Selected Wallets</string>
@@ -348,7 +350,7 @@
     <string name="bundlePwdDetailed1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
     <string name="bundlePwdDetailed2">The Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
     <string name="bundlePwd">Wallet Bundle Password</string>
-    <string name="bundleDownload">Download</string>
+    <string name="bundleDownload">Download Keystore files</string>
 
     <string name="msgBundleNotice">If you back up your wallets using the ‘Wallet bundle’ function, the password of each wallet will be changed into\nthe wallet bundle password.\nAre you sure you want to proceed?</string>
 
@@ -415,7 +417,7 @@
     <string name="permissionCameraDenied">If camera is not authorized, QR code scan function cannot be activated.\n(Camera can be authorized\nvia App settings.)</string>
 
     <!-- Message -->
-    <string name="warningPrivateKey">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
+    <string name="warningPrivateKey">Private Key should not be shared since it can operate by itself.</string>
 
     <!-- Network -->
     <string name="networkNotWorking">No internet connection</string>

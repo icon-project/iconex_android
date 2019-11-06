@@ -99,7 +99,7 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
         dropDown.setOnClickListener(new TDropdownLayout.OnDropDownClickListener() {
             @Override
             public void onClick() {
-                BottomSheetMenuDialog dialog = new BottomSheetMenuDialog(getActivity(), getString(R.string.selectCoinNToken),
+                BottomSheetMenuDialog dialog = new BottomSheetMenuDialog(getActivity(), getString(R.string.selectCoin),
                         BottomSheetMenuDialog.SHEET_TYPE.BASIC);
                 dialog.setBasicData(coinList);
                 dialog.setOnItemClickListener(new BottomSheetMenuDialog.OnItemClickListener() {
