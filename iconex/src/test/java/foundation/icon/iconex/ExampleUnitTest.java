@@ -3,7 +3,9 @@ package foundation.icon.iconex;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +34,12 @@ public class ExampleUnitTest {
 
     @Test
     public void getPrep() {
-        PRepService pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
-
-        try {
-            BigInteger remainingBlocks = pRepService.estimateUnstakeLockPeriod();
-            System.out.print("RemainingBlocks=" + remainingBlocks);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BigDecimal iscore = new BigDecimal("523856579194203546917");
+        System.out.println("-21=" + iscore.scaleByPowerOfTen(-21).toString());
+        System.out.println("15자리=" + iscore.scaleByPowerOfTen(-21).setScale(15, RoundingMode.FLOOR).toString());
+        System.out.println("estimatedIcx=" + iscore.divide(new BigDecimal("1000"), RoundingMode.FLOOR).scaleByPowerOfTen(-18).setScale(8, RoundingMode.FLOOR).toString());
+        BigDecimal icx = new BigDecimal("523856579194203546");
+        System.out.println("-18=" + icx.scaleByPowerOfTen(-18).toString());
+        System.out.println("8자리=" + icx.scaleByPowerOfTen(-18).setScale(8, RoundingMode.FLOOR).toString());
     }
 }

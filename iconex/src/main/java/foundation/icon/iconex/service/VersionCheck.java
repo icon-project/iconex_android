@@ -71,11 +71,12 @@ public class VersionCheck extends AsyncTask {
                         if (!vsResult) {
                             MessageDialog dialog = new MessageDialog(mActivity);
                             dialog.setMessage(mActivity.getString(R.string.updateNecessary));
-                            dialog.setOnConfirmClick(mListener);
-                            dialog.setOnCancelClick(new Function1<View, Boolean>() {
+                            dialog.setOnSingleClick(new Function1<View, Boolean>() {
                                 @Override
                                 public Boolean invoke(View view) {
-                                    return null;
+                                    mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ServiceConstants.URL_STORE)));
+                                    mActivity.finishAffinity();
+                                    return true;
                                 }
                             });
                             dialog.show();
@@ -112,8 +113,7 @@ public class VersionCheck extends AsyncTask {
         public Boolean invoke(View view) {
             switch (view.getId()) {
                 case R.id.btn_confirm: {
-                    mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ServiceConstants.URL_STORE)));
-                    mActivity.finishAffinity();
+
                 } break;
                 case R.id.btn_cancel: {
                     mActivity.finishAffinity();

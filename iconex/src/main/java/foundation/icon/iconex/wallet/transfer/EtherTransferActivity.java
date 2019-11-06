@@ -194,7 +194,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         setContentView(R.layout.activity_ether_transfer_new);
 
         if (getIntent() != null) {

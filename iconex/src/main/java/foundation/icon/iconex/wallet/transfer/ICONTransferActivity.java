@@ -158,7 +158,6 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         setContentView(R.layout.activity_icon_transfer_new);
 
         // activity field init

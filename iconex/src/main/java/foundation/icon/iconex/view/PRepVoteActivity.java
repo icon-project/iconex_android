@@ -186,6 +186,8 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "fee=" + fee);
+                Log.d(TAG, "balance=" + new BigInteger(wallet.getWalletEntries().get(0).getBalance()));
                 if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).compareTo(fee) < 0) {
                     MessageDialog messageDialog = new MessageDialog(PRepVoteActivity.this);
                     messageDialog.setSingleButton(true);
@@ -235,6 +237,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                         if (fragmentManager.findFragmentByTag("vote") == null) {
                             fragmentManager.beginTransaction().add(R.id.container, voteFragment, "vote").commit();
                         } else {
+                            ((PRepVoteFragment) fragmentManager.findFragmentByTag("vote")).clearCurrentManage();
                             fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("vote")).commit();
                         }
                         if (fragmentManager.findFragmentByTag("list") != null)
@@ -453,6 +456,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private Runnable estimateLimitTask = new Runnable() {
         @Override
         public void run() {
+            btnSubmit.setEnabled(false);
             estimateLimit();
         }
     };
@@ -511,6 +515,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                     @Override
                     public void onComplete() {
                         vm.setStepLimit(stepLimit);
+                        btnSubmit.setEnabled(true);
                     }
                 });
     }
@@ -522,9 +527,9 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
             return;
         }
 
-        if (!btnSubmit.isEnabled())
-            btnSubmit.setEnabled(true);
-
+//        if (!btnSubmit.isEnabled())
+//            btnSubmit.setEnabled(true);
+        btnSubmit.setEnabled(false);
         this.delegations = delegations;
 
         try {

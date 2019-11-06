@@ -148,11 +148,8 @@ public class ICONexApp extends Application {
                 boolean beingLock = locktime != null && locktime + MyConstants.LOCK_TIME_LIMIT  <= System.currentTimeMillis();
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
-                    if (activity.getLocalClassName().equals("wallet.transfer.ICONTransferActivity")
-                            || activity.getLocalClassName().equals("wallet.transfer.EtherTransferActivity")) {
-                        VersionCheck versionCheck = new VersionCheck(activity);
-                        versionCheck.execute();
-                    }
+                    VersionCheck versionCheck = new VersionCheck(activity);
+                    versionCheck.execute();
 
                     if (isLocked && beingLock) {
                         if (!(activity instanceof AuthActivity)) {

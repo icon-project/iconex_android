@@ -82,8 +82,6 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         View v = inflater.inflate(R.layout.fragment_enter_data, container, false);
 
         v.findViewById(R.id.btn_close).setOnClickListener(this);

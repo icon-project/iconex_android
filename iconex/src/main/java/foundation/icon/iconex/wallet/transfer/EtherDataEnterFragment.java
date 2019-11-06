@@ -65,8 +65,6 @@ public class EtherDataEnterFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         View v = inflater.inflate(R.layout.fragment_enter_data_ether, container, false);
 
         btnClose = v.findViewById(R.id.btn_close);
