@@ -5,10 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
-
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +107,7 @@ public class WalletDetailViewModel extends ViewModel {
             BigDecimal stake = stakes[0];
             BigDecimal unstake = stakes[1];
             if (stake.compareTo(BigDecimal.ZERO) == 0) return;
-            BigDecimal[] result = {unstake.add(amount), amount, stake};
+            BigDecimal[] result = {unstake.add(amount).add(stake), amount, stake};
             loadingSatke.setValue(false);
             stakeViewData.setValue(result);
         }
