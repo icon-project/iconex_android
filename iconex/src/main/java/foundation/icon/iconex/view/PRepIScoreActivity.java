@@ -177,12 +177,12 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        if (currentIScore.equals(BigInteger.ZERO)) {
+                        if (currentIScore.compareTo(new BigInteger("1000")) <= 0) {
                             txtCurrentIScore.setText("0");
                             txtEstimatedIcx.setText("0");
                         } else {
                             txtCurrentIScore.setText(Utils.formatFloating(
-                                    ConvertUtil.getValue(currentIScore, 21), 15));
+                                    ConvertUtil.getValue(currentIScore, 18), 15));
                             txtEstimatedIcx.setText(Utils.formatFloating(
                                     ConvertUtil.getValue(estimatedIcx, 18), 8));
                         }
@@ -200,7 +200,7 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                         txtFeeUsd.setText(String.format(Locale.getDefault(), "$ %,.2f",
                                 Double.parseDouble(fee) * Double.parseDouble(exPrice)));
 
-                        if (!currentIScore.equals(BigInteger.ZERO))
+                        if (currentIScore.compareTo(new BigInteger("1000")) > 0)
                             btnClaim.setEnabled(true);
                     }
 

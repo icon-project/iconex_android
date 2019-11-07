@@ -227,7 +227,7 @@ public class PRepVoteFragment extends Fragment {
             voteGraph.updateGraph();
 
             txtVotedIcx.setText(String.format(Locale.getDefault(), "%s", voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
-            txtAvailableIcx.setText(String.format(Locale.getDefault(), "%s", total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
+            txtAvailableIcx.setText(String.format(Locale.getDefault(), "%s", total.subtract(voted).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
         }
     }
 
