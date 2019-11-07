@@ -55,7 +55,6 @@ import loopchain.icon.wallet.core.Constants;
 import static foundation.icon.iconex.barcode.BarcodeCaptureActivity.PARAM_SCANTYPE;
 
 public class MainWalletFragment extends Fragment {
-    public static final String TAG = MainWalletFragment.class.getSimpleName();
 
     public static final int REQ_DETAIL = 10405;
 
@@ -244,7 +243,6 @@ public class MainWalletFragment extends Fragment {
         walletViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                Log.d(TAG, "onPageSelected() called with: position = [" + position + "]");
                 walletIndicator.setIndex(position);
                 updateCollapsable();
                 updateShowPRepsMenu();
@@ -399,7 +397,6 @@ public class MainWalletFragment extends Fragment {
     }
 
     private void updateWalletView() {
-        Log.d(TAG, "updateWalletView() called");
         adapter.walletVDs.clear();
         switch (viewMode) {
             case walletView: {

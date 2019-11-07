@@ -3,7 +3,7 @@ package foundation.icon.iconex.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -23,6 +23,7 @@ import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.menu.WalletPwdChangeActivityNew;
+import foundation.icon.iconex.menu.lock.SettingLockActivity;
 import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkErrorActivity;
 import foundation.icon.iconex.util.ConvertUtil;
@@ -36,12 +37,12 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.TotalAssetsViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
 public class MainWalletActivity extends AppCompatActivity implements
         MainWalletDataRequester.OnLoadListener,
         MainWalletFragment.RequestActivity {
-    private static String TAG = MainWalletActivity.class.getSimpleName();
 
     private static String MAIN_WALLET_FRAGMENT_TAG = "main wallet fragment";
 
@@ -52,6 +53,8 @@ public class MainWalletActivity extends AppCompatActivity implements
     private boolean patchingData = false;
     private String currentUnit = "USD";
     private Handler handler = new Handler();
+
+    boolean isFingerprintInvalidated = false;
 
     public class UIupdater {
         private boolean loadCompleteBalance = false;
@@ -119,7 +122,6 @@ public class MainWalletActivity extends AppCompatActivity implements
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "flusher start");
 
                     boolean _loadCompleteAll;
                     do {
@@ -127,7 +129,6 @@ public class MainWalletActivity extends AppCompatActivity implements
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
                         }
-                        Log.d(TAG, "flusher wake");
 
                         if (mFragment == null) break;
 
@@ -164,14 +165,12 @@ public class MainWalletActivity extends AppCompatActivity implements
                                         MainWalletFragment fragment = findFragment();
                                         if (fragment != null)
                                             fragment.updateWallet(_wallets, _tokens);
-                                        Log.d(TAG, "run() called with: updateWalletViews " + _wallets + ", _tokens" + _tokens + "fragment: " + fragment);
                                     }
                                 });
                             }
 
                         }
                     } while (!_loadCompleteAll);
-                    Log.d(TAG, "flusher died");
                 }
             }).start();
         }
@@ -189,7 +188,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
 
     void internalUpdateAssetsView() {
-        Log.d(TAG, "internalUpdateAssetsView() called isAvailablleUIupdater()=" + isAvailablleUIupdater());
         if (isAvailablleUIupdater())
             uiUpdater.setUpdateAssetsView(true);
         else {
@@ -203,7 +201,6 @@ public class MainWalletActivity extends AppCompatActivity implements
     }
 
     void internalUpdateAllView() {
-        Log.d(TAG, "internalUpdateAllView() called isAvailablleUIupdater()=" + isAvailablleUIupdater());
         if (isAvailablleUIupdater())
             uiUpdater.setUpdateAllView(true);
         else {
@@ -217,7 +214,6 @@ public class MainWalletActivity extends AppCompatActivity implements
     }
 
     void internalUpdateEntryView(int wallet, int entry) {
-        Log.d(TAG, "internalUpdateEntryView() called with: wallet = [" + wallet + "], entry = [" + entry + "]");
         EntryViewData entryVD = walletVDs.get(wallet).getEntryVDs().get(entry);
         Integer intWallet = new Integer(wallet);
         Integer intToken = new Integer(entryVD.pos0);
@@ -248,7 +244,6 @@ public class MainWalletActivity extends AppCompatActivity implements
     }
 
     private void loadViewData() {
-        Log.d(TAG, "loadViewData() called");
         walletVDs.clear();
         tokenListVDs.clear();
         totalAssetsVD = new TotalAssetsViewData();
@@ -307,7 +302,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void patchViewData() {
-        Log.d(TAG, "patchViewData() called");
         loadViewData();
         patchingData = true;
 
@@ -347,6 +341,8 @@ public class MainWalletActivity extends AppCompatActivity implements
                 messageDialog.setMessage(getString(R.string.msgLoadBundle));
                 messageDialog.show();
             }
+
+            isFingerprintInvalidated = getIntent().getBooleanExtra(AuthActivity.EXTRA_INVALIDATED, false);
         }
 
         getSupportFragmentManager()
@@ -362,7 +358,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadNextBalance(WalletEntry entry, int walletPosition, int entryPosition) {
-        Log.d(TAG, "onLoadNextBalance() called with: entry = [" + entry + "], walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(entryPosition);
         try {
             BigInteger intBalance = new BigInteger(entry.getBalance());
@@ -379,14 +374,12 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadCompleteBalance() {
-        Log.d(TAG, "onLoadCompleteBalance() called");
         if (isAvailablleUIupdater()) uiUpdater.setLoadCompleteBalance(true);
         combineTotalAssets();
     }
 
     @Override
     public void onLoadCompleteExchangeTable() {
-        Log.d(TAG, "onLoadCompleteExchangeTable() called");
         if (isAvailablleUIupdater()) uiUpdater.setLoadCompleteExchange(true);
         combineExchanges(-1, -1);
         combineTotalAssets();
@@ -394,7 +387,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadNextiScore(Wallet wallet, int walletPosition) {
-        Log.d(TAG, "onLoadNextiScore() called with: wallet = [" + wallet + "], walletPosition = [" + walletPosition + "]");
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         try {
             BigInteger intIScore = wallet.getiScore();
@@ -410,7 +402,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadNextStake(Wallet wallet, int walletPosition, BigInteger unstake) {
-        Log.d(TAG, "onLoadNextStake() called with: wallet = [" + wallet + "], walletPosition = [" + walletPosition + "], unstake = [" + unstake + "]");
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         entryVD.unstake = unstake;
         combineStake(entryVD, walletPosition);
@@ -418,14 +409,12 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadNextDelegation(Wallet wallet, int walletPosition) {
-        Log.d(TAG, "onLoadNextDelegation() called with: wallet = [" + wallet + "], walletPosition = [" + walletPosition + "]");
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         entryVD.prepsLoading = false;
         combineStake(entryVD, walletPosition);
     }
 
     private void combineStake(EntryViewData entryVD, int walletPosition) {
-        Log.d(TAG, "combineStake() called with: entryVD = [" + entryVD + "], walletPosition = [" + walletPosition + "]");
         Wallet wallet = entryVD.getWallet();
         WalletEntry entry = entryVD.getEntry();
         if (entryVD.amountLoading || entryVD.prepsLoading || entryVD.unstake == null) return;
@@ -452,7 +441,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadCompletePReps() {
-        Log.d(TAG, "onLoadCompletePReps() called");
         // update preps data
         for (WalletViewData walletVD : walletVDs) {
             Wallet wallet = walletVD.getWallet();
@@ -507,7 +495,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadCompleteAll() {
-        Log.d(TAG, "onLoadCompleteAll() called");
         combineTopToken();
         if (isAvailablleUIupdater()) uiUpdater.setLoadCompleteAll(true);
         handler.post(new Runnable() {
@@ -522,13 +509,11 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void onNetworkError() {
-        Log.d(TAG, "onNetworkError() called");
         clearListening();
         startActivity(new Intent(this, NetworkErrorActivity.class));
     }
 
     private void combineTotalAssets() {
-        Log.d(TAG, "combineTotalAssets() called");
         if (!patchingData && isAvailablleUIupdater() &&
                 (!uiUpdater.isLoadCompleteExchange() || !uiUpdater.isLoadCompleteBalance())) return;
 
@@ -547,7 +532,6 @@ public class MainWalletActivity extends AppCompatActivity implements
     }
 
     private void combineTopToken() {
-        Log.d(TAG, "combineTopToken() called");
         for (WalletViewData walletVD : tokenListVDs) {
 
             List<EntryViewData> entryVDs = walletVD.getEntryVDs();
@@ -582,7 +566,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     // -1, -1 -> totally refresh
     private void combineExchanges(int walletPosition, int entryPosition) {
-        Log.d(TAG, "combineExchanges() called with: walletPosition = [" + walletPosition + "], entryPosition = [" + entryPosition + "]");
         boolean isTotally = walletPosition == -1 || entryPosition == -1;
 
         if (patchingData || !isAvailablleUIupdater() || isAvailablleUIupdater() && uiUpdater.isLoadCompleteExchange()) {
@@ -634,7 +617,6 @@ public class MainWalletActivity extends AppCompatActivity implements
     private MainWalletDataRequester requester = null;
 
     private void clearListening() {
-        Log.d(TAG, "clearListening() called");
         if (requester != null) {
             requester.setListener(null);
             requester = null;
@@ -648,7 +630,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void refreshViewData() {
-        Log.d(TAG, "refreshViewData() called");
         clearListening();
 
         loadViewData();
@@ -664,7 +645,6 @@ public class MainWalletActivity extends AppCompatActivity implements
 
     @Override
     public void changeExchangeUnit(String unit) {
-        Log.d(TAG, "changeExchangeUnit() called with: unit = [" + unit + "]");
         currentUnit = unit;
         combineExchanges(-1, -1);
         combineTopToken();
@@ -672,21 +652,48 @@ public class MainWalletActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (isFingerprintInvalidated) {
+            MessageDialog dialog = new MessageDialog(this);
+            dialog.setSingleButton(false);
+            dialog.setConfirmButtonText(getString(R.string.yes));
+            dialog.setCancelButtonText(getString(R.string.no));
+            dialog.setMessage(getString(R.string.authMsgRecoverFingerprintAuth));
+            dialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    startActivity(new Intent(MainWalletActivity.this, SettingLockActivity.class)
+                            .putExtra(SettingLockActivity.ARG_TYPE, MyConstants.TypeLock.RECOVER));
+                    isFingerprintInvalidated = false;
+                    return true;
+                }
+            });
+            dialog.setOnCancelClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    isFingerprintInvalidated = false;
+                    return null;
+                }
+            });
+            dialog.show();
+        }
+    }
+
+    @Override
     public void fragmentResume() {
-        Log.d(TAG, "fragmentResume() called");
         refreshViewData();
     }
 
     @Override
     public void fragmentStop() {
-        Log.d(TAG, "fragmentStop() called");
         clearListening();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         switch (requestCode) {
             case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
                 WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {

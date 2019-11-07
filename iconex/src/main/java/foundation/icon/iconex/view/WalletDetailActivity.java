@@ -96,6 +96,7 @@ public class WalletDetailActivity extends AppCompatActivity {
                     serviceHelper.requestBalance();
 
                     if (walletEntry.getType().equals(MyConstants.TYPE_TOKEN)) {
+                        viewModel.stake.setValue(null);
                         viewModel.stakeViewData.setValue(null);
                     }
                 }
