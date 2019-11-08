@@ -1086,31 +1086,21 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 .putExtra(AboutActivity.PARAM_ABOUT_TITLE, getString(R.string.guidance))
                 .putExtra(AboutActivity.PARAM_ABOUT_ITEM_LIST, new ArrayList<Parcelable>() {{
                     add(getHeadText(R.string.data));
-                    addAll(getParagraph(R.string.msgEthData));
+                    add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, getString(R.string.msgEthData)));
 
                     add(getHeadText(R.string.gasLimit));
-                    addAll(getParagraph(R.string.msgEthGasLimit));
+                    add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, getString(R.string.msgEthGasLimit)));
 
                     add(getHeadText(R.string.gasPrice));
-                    addAll(getParagraph(R.string.msgEthGasPrice));
+                    add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, getString(R.string.msgEthGasPrice)));
 
                     add(getHeadText(R.string.estimateFee));
-                    addAll(getParagraph(R.string.msgEthEstimateFee));
+                    add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, getString(R.string.msgEthEstimateFee)));
                 }}));
     }
 
     private AboutActivity.AboutItem getHeadText(@StringRes int resId) {
         String headText = getString(resId);
         return new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_HEAD, headText);
-    }
-
-    private List<AboutActivity.AboutItem> getParagraph(@StringRes int resId) {
-        String paragraphText = getString(resId);
-        String[] split = paragraphText.replace("\n", "").split("다\\.");
-        return new ArrayList<AboutActivity.AboutItem>() {{
-            for(String str : split) {
-                add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, str + "다."));
-            }
-        }};
     }
 }

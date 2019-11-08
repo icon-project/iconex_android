@@ -78,14 +78,14 @@
     <string name="backupKeyStoreFileConfirm">DO NOT SHARE YOUR KEYSTORE FILE WITH OTHERS. Do you want to proceed? </string>
     <string name="noBackupKeyStoreFileConfirm">Do you want to proceed without downloading the Keystore file?</string>
     <string name="keyStoreDownloadAccomplished">\"%s\"\nThe file has been downloaded successfully.</string>
-    <string name="step4Header">The private key is unique to your wallet \nprivate key has no password.</string>
+    <string name="step4Header">The private key is unique to your wallet \nPrivate key has no password.</string>
     <string name="step4Sub1">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
     <string name="step4Sub2">You can access to your private key from the \'Backup wallet\' menu later.</string>
     <string name="privateKey">Private Key</string>
     <string name="copyPrivateKey">Copy Private Key</string>
-    <string name="viewWalletInfo">View Wallet Info</string>
+    <string name="viewWalletInfo">View Wallet Info.</string>
 
-    <string name="errAliasEmpty">Please enter new wallet name.</string>
+    <string name="errAliasEmpty">Please enter a new wallet name.</string>
     <string name="errPwdEmpty">Please enter your password.</string>
     <string name="errCheckEmpty">Please confirm your password.</string>
 
@@ -130,7 +130,7 @@
     <string name="errPasswordPatternMatch">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
     <string name="errSerialChar">Password must not have more than 2 consecutive identical characters.</string>
     <string name="errWhiteSpace">Please do not leave blank.</string>
-    <string name="errPasswordNotMatched">Passwords do not match. Please check again.</string>
+    <string name="errPasswordNotMatched">Password does not match. Please check again.</string>
 
     <!-- Main -->
     <string name="appbarSelectorWallets">Wallets</string>
@@ -486,7 +486,7 @@
     <string name="min">Min</string>
     <string name="max">Max</string>
     <string name="stakeNotice01">・ You cannot unstake the amount that is already delegated.</string>
-    <string name="stakeNotice02">・ Minimum Unstaked amount is 1 ICX. It is required to pay transaction fee occured by delegation.</string>
+    <string name="stakeNotice02">・ Minimum Unstaked amount is 1 ICX. It is required to pay transaction fee occurred by delegation.</string>
     <string name="unstakeNotice01">・ Changing in request amount will reset the completion time and transaction fee should be paid again.</string>
     <string name="timeRequired">Time Required</string>
     <string name="immediately">Immediately</string>
@@ -509,7 +509,7 @@
     <string name="tipAddedPRep">Already in the list.</string>
     <string name="tipPRepMax">Maximum number of P-Reps to Vote is 10.</string>
     <string name="tipHasDelegation">Delegated P-Rep is not able to delete in the list.\nSet Voting Power to 0 and press Vote button.</string>
-    <string name="voteNotExecute">By pressing Vote button will apply the change you made. \nVote Would you like to leave without making change?</string>
+    <string name="voteNotExecute">By pressing Vote button will apply the change you made. \nWould you like to leave without making change?</string>
     <string name="voteReset">Do you like to set 0 for all voting power that have delegated?</string>
 
     <!-- I-Score -->
@@ -528,10 +528,10 @@
     <string name="createWalletStep1Detailed2">・ After creating wallet, token that is based on according coin can be added.</string>
 
     <string name="createWalletStep2Notice">It is users responsible to manage password. There is no way to find it.</string>
-    <string name="createWalletStep2Detailed1">・ In order to restore wallet by Keystore file, it requires password to send transaction.</string>
+    <string name="createWalletStep2Detailed1">・ In order to restore wallet by Keystore file, it requires a password to send transaction.</string>
 
     <string name="createWalletStep3Detailed1">・ With wallet Keystore file and password, wallet can be install in different device and restore deleted wallet.</string>
-    <string name="createWalletStep3Detailed2">・ Keystore files can be dowload after creating wallet at \`Wallet Keystore\`.</string>
+    <string name="createWalletStep3Detailed2">・ Keystore files can be download after creating wallet at \`Wallet Keystore\`.</string>
 
     <string name="createWalletStep4Header">Save private key</string>
 
@@ -559,7 +559,7 @@
     <string name="iscore">I-Score</string>
     <string name="icon_voting">ICON Voting</string>
     <string name="requestSend">Request transfer</string>
-    <string name="msgRequestSend">・ After submittng request amount, QR code will changed to cointained one.</string>
+    <string name="msgRequestSend">・ After submitting request amount, QR code will be changed to contained one.</string>
     <string name="hintRequestSend">Transfer request amount (ICX)</string>
     <string name="generateQRcode">Create QR code</string>
 
@@ -594,19 +594,19 @@
     <string name="guidance">Information</string>
 
     <string name="mainWalletInfo00">Total Asset Value</string>
-    <string name="mainWalletInfo01">Token that does not display USD value will excluded from calculating total asset value.</string>
+    <string name="mainWalletInfo01">Token that does not display USD value will be excluded from calculating total asset value.</string>
     <string name="mainWalletInfo02">Please use evaluation amount for your information.</string>
 
     <string name="mainWalletInfo10">P-Rep</string>
     <string name="mainWalletInfo11">ICON Network is a blockchain network operated by Public Representative (P-Rep). Therefore, Users (ICONist) must vote for high qualified P-Reps so that ICON Network to be more stable. Each P-Reps can submit the Monthly Reward Variable for Representative  (i_rep) that affects the total reward amount for the ICON Network. Therefore, users should compare each i_reps submitted by each P-Reps and make right decision. In addition, users who have participated in the vote will receive reward with Annual Delegation Reward Rate for Representative (r_rep).</string>
 
     <string name="mainWalletInfo20">Stake</string>
-    <string name="mainWalletInfo21">This function is to set ICX to staked ICX. By operating Stake, ICX will changed to locked state, and it will take days to unlock it.</string>
+    <string name="mainWalletInfo21">This function is to set ICX to staked ICX. By operating Stake, ICX will be changed to locked state, and it will take days to unlock it.</string>
     <string name="mainWalletInfo22">Voting power will created with 1 to 1 ratio with Staked ICX amount.</string>
 
     <string name="mainWalletInfo30">Vote</string>
-    <string name="mainWalletInfo31">Usiung Voting Power you can delegate to P-Rep candidates.</string>
-    <string name="mainWalletInfo32">Usiung Voting Power you can delegate to P-Rep candidates.</string>
+    <string name="mainWalletInfo31">Using Voting Power you can delegate to P-Rep candidates.</string>
+    <string name="mainWalletInfo32">Using Voting Power you can delegate to P-Rep candidates.</string>
 
     <string name="mainWalletInfo40">I-Score</string>
     <string name="mainWalletInfo41">This Score is contribution score for delegating P-Rep, 1,000 I-Score can be claim to 1 ICX.</string>

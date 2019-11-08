@@ -1221,37 +1221,26 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         setLimitPrice(strLimit, txtStepICX);
     }
 
-
     private void showInfo() {
         startActivity(new Intent(this, AboutActivity.class)
                 .putExtra(AboutActivity.PARAM_ABOUT_TITLE, getString(R.string.guidance))
                 .putExtra(AboutActivity.PARAM_ABOUT_ITEM_LIST, new ArrayList<Parcelable>() {{
                     add(getHeadText(R.string.data));
-                    addAll(getParagraph(R.string.msgIcxData));
+                    add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, getString(R.string.msgIcxData)));
 
                     add(getHeadText(R.string.icxStepLimit));
-                    addAll(getParagraph(R.string.msgStepLimit));
+                    add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, getString(R.string.msgStepLimit)));
 
                     add(getHeadText(R.string.icxStepPrice));
-                    addAll(getParagraph(R.string.msgStepPrice));
+                    add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, getString(R.string.msgStepPrice)));
 
                     add(getHeadText(R.string.estimateFee));
-                    addAll(getParagraph(R.string.msgICXEstimateFee));
+                    add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, getString(R.string.msgICXEstimateFee)));
                 }}));
     }
 
     private AboutActivity.AboutItem getHeadText(@StringRes int resId) {
         String headText = getString(resId);
         return new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_HEAD, headText);
-    }
-
-    private List<AboutActivity.AboutItem> getParagraph(@StringRes int resId) {
-        String paragraphText = getString(resId);
-        String[] split = paragraphText.replace("\n", "").split("다\\.");
-        return new ArrayList<AboutActivity.AboutItem>() {{
-            for(String str : split) {
-                add(new AboutActivity.AboutItem(AboutActivity.AboutItem.TYPE_PARAGRAPH, str + "다."));
-            }
-        }};
     }
 }

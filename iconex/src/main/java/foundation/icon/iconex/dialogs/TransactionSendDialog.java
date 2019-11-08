@@ -214,7 +214,7 @@ public class TransactionSendDialog extends MessageDialog {
             switch (result) {
                 case NOT_ENOUGH:
                     dialog = new MessageDialog(getContext());
-                    dialog.setSingleButton(false);
+                    dialog.setSingleButton(true);
                     dialog.setMessage(getContext().getString(R.string.errNeedFee));
                     dialog.show();
                     dismiss();
@@ -222,7 +222,7 @@ public class TransactionSendDialog extends MessageDialog {
 
                 case EXCEPTION:
                     dialog = new MessageDialog(getContext());
-                    dialog.setSingleButton(false);
+                    dialog.setSingleButton(true);
                     dialog.show();
                     dismiss();
                     break;
@@ -294,7 +294,8 @@ public class TransactionSendDialog extends MessageDialog {
             super.onPostExecute(result);
 
             if (result == NOT_ENOUGH) {
-                BasicDialog dialog = new BasicDialog(getContext());
+                MessageDialog dialog = new MessageDialog(getContext());
+                dialog.setSingleButton(true);
                 dialog.setMessage(getContext().getString(R.string.errNeedFee));
                 dialog.show();
                 dismiss();
