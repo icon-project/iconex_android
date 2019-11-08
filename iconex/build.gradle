@@ -97,4 +97,10 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
 
     implementation "foundation.icon:icon-sdk:$iconSdkVersion"
+
+    //apache common lang3
+    implementation 'org.apache.commons:commons-lang3:3.8.1'
+
+    // Google core libraries for Java
+    api 'com.google.guava:guava:28.0-android'
 }

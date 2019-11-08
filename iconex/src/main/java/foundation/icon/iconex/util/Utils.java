@@ -3,12 +3,17 @@ package foundation.icon.iconex.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 
+import com.google.common.collect.Maps;
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Map;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
@@ -143,6 +148,20 @@ public class Utils {
 
     public static String strip(String target) {
         return target.replaceAll("^\\s++|\\s++$", "");
+    }
+
+    public static Map<String, String> parseQuery(String query) {
+        Map<String, String> querys = Maps.newLinkedHashMap();
+
+        if (!StringUtils.isEmpty(query)) {
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                int idx = pair.indexOf("=");
+                querys.put(pair.substring(0, idx), pair.substring(idx + 1));
+            }
+        }
+
+        return querys;
     }
 
     public enum RES_VERSION {
