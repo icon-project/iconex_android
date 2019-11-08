@@ -56,8 +56,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static foundation.icon.ICONexApp.network;
-
 public class TokenManageFragment extends Fragment implements TTextInputLayout.OnKeyPreIme, View.OnClickListener {
 
     private static final String TAG = TokenManageFragment.class.getSimpleName();
@@ -624,7 +622,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
             String address = params[0];
 
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;

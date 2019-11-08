@@ -495,7 +495,7 @@
     <string name="stakeDone">Stake Operation completed.</string>
     <string name="unstakeDone">Unstake Operation completed.</string>
     <string name="stakeSubmitNoticeMsg">Do you want to leave without changing anything?</string>
-    <string name="stakeSubmitNoticeDesc">By prssing Submit button you can change the %sㄸ requested amount.</string>
+    <string name="stakeSubmitNoticeDesc">By prssing Submit button you can change the %s requested amount.</string>
 
     <!-- Vote -->
     <string name="vote">Vote</string>
@@ -598,7 +598,7 @@
     <string name="mainWalletInfo02">Please use evaluation amount for your information.</string>
 
     <string name="mainWalletInfo10">P-Rep</string>
-    <string name="mainWalletInfo11">ICON Network is blockchain network that run by Public Representative(P-Reps), ICONists should delegate qualified P-Reps. Each representatives can submit i_rep that affects the total reward amount in ICON network and ICONist can evaluate this i_rep. In addition, those who participate in voting will rewarded by Annual Delegation Reward Rate for Representative(r_rep).</string>
+    <string name="mainWalletInfo11">ICON Network is a blockchain network operated by Public Representative (P-Rep). Therefore, Users (ICONist) must vote for high qualified P-Reps so that ICON Network to be more stable. Each P-Reps can submit the Monthly Reward Variable for Representative  (i_rep) that affects the total reward amount for the ICON Network. Therefore, users should compare each i_reps submitted by each P-Reps and make right decision. In addition, users who have participated in the vote will receive reward with Annual Delegation Reward Rate for Representative (r_rep).</string>
 
     <string name="mainWalletInfo20">Stake</string>
     <string name="mainWalletInfo21">This function is to set ICX to staked ICX. By operating Stake, ICX will changed to locked state, and it will take days to unlock it.</string>
@@ -609,7 +609,7 @@
     <string name="mainWalletInfo32">Usiung Voting Power you can delegate to P-Rep candidates.</string>
 
     <string name="mainWalletInfo40">I-Score</string>
-    <string name="mainWalletInfo41">This Score is Contribution score for delegating P-Rep; 1,000 I-Score can be claim to 1 ICX.</string>
+    <string name="mainWalletInfo41">This Score is contribution score for delegating P-Rep, 1,000 I-Score can be claim to 1 ICX.</string>
 
     <string name="complete_transfer">Transfer Completed</string>
     <string name="fail_transfer">Transfer Failed</string>

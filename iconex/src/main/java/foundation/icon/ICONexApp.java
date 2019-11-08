@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import java.security.Security;
 import java.util.ArrayList;
@@ -148,6 +149,7 @@ public class ICONexApp extends Application {
                 boolean beingLock = locktime != null && locktime + MyConstants.LOCK_TIME_LIMIT  <= System.currentTimeMillis();
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
+                    Log.w(TAG, "onActivityStared=" + activity.getLocalClassName());
                     VersionCheck versionCheck = new VersionCheck(activity);
                     versionCheck.execute();
 
