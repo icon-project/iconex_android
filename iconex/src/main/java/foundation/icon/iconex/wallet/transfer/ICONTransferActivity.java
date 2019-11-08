@@ -418,7 +418,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                             data.setDataType(type);
 
                             startActivityForResult(new Intent(
-                                    ICONTransferActivity.this, IconEnterDataActivity.class
+                                            ICONTransferActivity.this, IconEnterDataActivity.class
                                     ).putExtra(IconEnterDataActivity.DATA, data),
                                     RC_DATA
                             );
@@ -435,12 +435,12 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         btnViewData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 if(data != null) {
-                     startActivityForResult(new Intent(
-                                     ICONTransferActivity.this, IconEnterDataActivity.class
-                             ).putExtra(IconEnterDataActivity.DATA, data),
-                             RC_DATA
-                     );
+                if(data != null) {
+                    startActivityForResult(new Intent(
+                                    ICONTransferActivity.this, IconEnterDataActivity.class
+                            ).putExtra(IconEnterDataActivity.DATA, data),
+                            RC_DATA
+                    );
                 }
             }
         });

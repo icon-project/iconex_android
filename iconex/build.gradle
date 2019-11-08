@@ -49,6 +49,11 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
 ext {
     lifecycleVersion = '2.0.0'
     roomVersion = '2.1.0-alpha04'
@@ -109,8 +114,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-}
-repositories {
-    mavenCentral()
-    jcenter()
+
+    //apache common lang3
+    implementation 'org.apache.commons:commons-lang3:3.8.1'
+
+    // Google core libraries for Java
+    api 'com.google.guava:guava:28.0-android'
 }

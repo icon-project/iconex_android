@@ -23,6 +23,7 @@ import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.Sort;
 import loopchain.icon.wallet.core.Constants;
 
 import static foundation.icon.MyConstants.Coin.ICX;
@@ -38,7 +39,7 @@ public class RealmUtil {
         Realm realm = Realm.getDefaultInstance();
         ICONexApp.wallets = new ArrayList<>();
         if (realm.where(foundation.icon.iconex.realm.data.Wallet.class).count() > 0) {
-            for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAll()) {
+            for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAllSorted("id", Sort.DESCENDING)) {
                 Wallet walletInfo = new Wallet();
                 walletInfo.setCoinType(wallet.getCoinType());
                 walletInfo.setAlias(wallet.getAlias());
@@ -47,7 +48,6 @@ public class RealmUtil {
 
                 List<CoinNToken> list = wallet.getCoinNToken();
                 List<WalletEntry> entries = new ArrayList<>();
-                SecureRandom random = new SecureRandom();
                 for (CoinNToken coinNToken : list) {
                     WalletEntry entry = new WalletEntry();
                     entry.setType(coinNToken.getType());
@@ -82,8 +82,6 @@ public class RealmUtil {
                 walletInfo.setCreatedAt(wallet.getCreateAt());
                 ICONexApp.wallets.add(walletInfo);
             }
-
-            Collections.reverse(ICONexApp.wallets);
 
             makeExchanges();
         }
