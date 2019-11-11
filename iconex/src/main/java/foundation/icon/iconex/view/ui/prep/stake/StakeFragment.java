@@ -232,10 +232,12 @@ public class StakeFragment extends Fragment {
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", 100.0f));
                         stakeSeekBar.setProgress(100);
                         stakeGraph.updateGraph(maxStake);
+                        txtUnstaked.setText(total.subtract(maxStake).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).toString());
                     } else if (input.compareTo(delegated) <= 0) {
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", delegatedPercent));
                         stakeSeekBar.setProgress(0);
                         stakeGraph.updateGraph(delegated);
+                        txtUnstaked.setText(available.scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).toString());
                     } else {
                         double totalPercent = calculatePercentage(total, input);
                         double maxPercent = calculatePercentage(maxStake, input);
@@ -244,6 +246,7 @@ public class StakeFragment extends Fragment {
                         stakeSeekBar.setProgress((int) (maxPercent - delegatedPercent));
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", totalPercent));
                         stakeGraph.updateGraph(input);
+                        txtUnstaked.setText(total.subtract(input).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).toString());
                     }
                 } else {
                     double totalPercent = calculatePercentage(total, input);
@@ -252,6 +255,7 @@ public class StakeFragment extends Fragment {
                     Log.d(TAG, "Seek bar progress=" + (int) (maxPercent - delegatedPercent));
                     txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", totalPercent));
                     stakeGraph.updateGraph(input);
+                    txtUnstaked.setText(total.subtract(input).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).toString());
                 }
 
                 localHandler.removeCallbacks(estimatedStepTask);
@@ -460,7 +464,7 @@ public class StakeFragment extends Fragment {
                         if (stakeValue.compareTo(staked) == 0) {
                             txtStepNPrice.setText("- / -");
                             txtFee.setText("-");
-                            txtFeeUsd.setText("-");
+                            txtFeeUsd.setText("$-");
                             btnSubmit.setEnabled(false);
                         } else {
                             txtStepNPrice.setText(String.format(Locale.getDefault(), "%,d / %s",

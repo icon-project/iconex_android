@@ -604,7 +604,7 @@ public class NetworkService extends Service {
             address = params[1];
 
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -642,7 +642,7 @@ public class NetworkService extends Service {
         @Override
         protected String[] doInBackground(String... params) {
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -706,7 +706,7 @@ public class NetworkService extends Service {
             contract = params[2];
 
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -751,7 +751,7 @@ public class NetworkService extends Service {
             String privKey = params[7];
 
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;

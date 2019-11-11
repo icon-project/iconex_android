@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.transfer;
+package foundation.icon.iconex.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import foundation.icon.iconex.wallet.transfer.data.InputData;
+import foundation.icon.iconex.view.ui.transfer.EtherDataEnterFragment;
 
 public class EtherEnterDataActivity extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter {
 

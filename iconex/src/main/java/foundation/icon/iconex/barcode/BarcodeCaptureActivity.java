@@ -64,7 +64,7 @@ import java.math.BigInteger;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.ConvertUtil;
-import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
+import foundation.icon.iconex.view.ICONTransferActivity;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the

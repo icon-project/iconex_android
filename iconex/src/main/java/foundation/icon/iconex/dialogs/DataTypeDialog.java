@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.wallet.transfer.IconEnterDataFragment;
+import foundation.icon.iconex.view.ui.transfer.IconEnterDataFragment;
 
 public class DataTypeDialog extends BottomSheetDialog implements View.OnClickListener {
 

@@ -29,6 +29,7 @@ import foundation.icon.iconex.util.Utils;
 import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import io.realm.Realm;
 import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
@@ -191,6 +192,8 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                             isRemain = true;
                     } catch (Exception e) { }
                 }
+
+                final boolean fIsRemain = isRemain;
                 MessageDialog messageDialog = new MessageDialog(getContext());
                 messageDialog.setMessage(getString(isRemain ? R.string.warningRemoveWallet : R.string.removeWallet));
                 messageDialog.setSingleButton(false);
@@ -199,23 +202,16 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                     @Override
                     public Boolean invoke(View view) {
-                        new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
-                            @Override
-                            public void onPass(byte[] bytePrivateKey) {
-                                RealmUtil.removeWallet(wallet.getAddress());
-                                try {
-                                    RealmUtil.loadWallet();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                        if (fIsRemain) {
+                            new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
+                                @Override
+                                public void onPass(byte[] bytePrivateKey) {
+                                    removeWallet();
                                 }
-                                if (ICONexApp.wallets.size() == 0) {
-                                    getContext().startActivity(new Intent(getContext(), IntroActivity.class)
-                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-                                } else {
-                                    mOnNotifyWalletDataChangeListener.onNotifyWalletDataChange(UpdateDataType.Delete);
-                                }
-                            }
-                        }).show();
+                            }).show();
+                        } else {
+                            removeWallet();
+                        }
                         return true;
                     }
                 });
@@ -223,6 +219,21 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
             } break;
         }
         this.dismiss();
+    }
+
+    private void removeWallet() {
+        RealmUtil.removeWallet(wallet.getAddress());
+        try {
+            RealmUtil.loadWallet();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (ICONexApp.wallets.size() == 0) {
+            getContext().startActivity(new Intent(getContext(), IntroActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+        } else {
+            mOnNotifyWalletDataChangeListener.onNotifyWalletDataChange(UpdateDataType.Delete);
+        }
     }
 
     private String getString(int resString) {

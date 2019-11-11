@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.transfer;
+package foundation.icon.iconex.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import foundation.icon.iconex.view.ui.transfer.IconEnterDataFragment;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 
-public class IconEnterDataActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter{
+public class IconEnterDataActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter {
 
     public static final String DATA = "DATA";
 

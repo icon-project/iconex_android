@@ -3,14 +3,12 @@ package foundation.icon.iconex.view.ui.detailWallet.component;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,17 +16,14 @@ import androidx.annotation.Nullable;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 
-import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.view.DepositActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
-import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
+import foundation.icon.iconex.view.EtherTransferActivity;
+import foundation.icon.iconex.view.ICONTransferActivity;
 import loopchain.icon.wallet.core.Constants;
 
 public class TransactionFloatingMenu extends FrameLayout implements View.OnClickListener {

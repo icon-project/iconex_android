@@ -3,7 +3,7 @@ package foundation.icon.iconex.wallet.transfer.data;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-import foundation.icon.iconex.wallet.transfer.IconEnterDataFragment;
+import foundation.icon.iconex.view.ui.transfer.IconEnterDataFragment;
 
 public class InputData implements Serializable {
 

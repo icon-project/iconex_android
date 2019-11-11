@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.transfer;
+package foundation.icon.iconex.view;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,7 +12,6 @@ import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +33,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -51,10 +49,10 @@ import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.util.Utils;
-import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
+import foundation.icon.iconex.view.ui.transfer.IconEnterDataFragment;
 import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 import foundation.icon.iconex.widgets.CustomActionBar;
@@ -76,7 +74,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ICONTransferActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter{
+public class ICONTransferActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter {
 
     // appbar UI
     private CustomActionBar appbar;

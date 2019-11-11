@@ -1,4 +1,4 @@
-package foundation.icon.iconex.wallet.transfer;
+package foundation.icon.iconex.view;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.os.Parcelable;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -32,7 +31,6 @@ import org.web3j.utils.Convert;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -46,10 +44,10 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
-import foundation.icon.iconex.view.AboutActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
+import foundation.icon.iconex.view.ui.transfer.EtherDataEnterFragment;
 import foundation.icon.iconex.wallet.transfer.data.ErcTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
@@ -59,7 +57,7 @@ import foundation.icon.iconex.widgets.CustomToast;
 import foundation.icon.iconex.widgets.TTextInputLayout;
 import loopchain.icon.wallet.core.Constants;
 
-public class EtherTransferActivity extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter{
+public class EtherTransferActivity extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter {
 
     // appbar UI
     private CustomActionBar appbar;

@@ -45,7 +45,7 @@
             android:theme="@style/DialogActivity" />
 
         <activity
-            android:name=".wallet.transfer.IconEnterDataActivity"
+            android:name=".view.IconEnterDataActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="unspecified"
@@ -53,7 +53,7 @@
             android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:name=".wallet.transfer.EtherEnterDataActivity"
+            android:name=".view.EtherEnterDataActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="unspecified"
@@ -89,12 +89,12 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wallet.transfer.EtherTransferActivity"
+            android:name=".view.EtherTransferActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wallet.transfer.ICONTransferActivity"
+            android:name=".view.ICONTransferActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"

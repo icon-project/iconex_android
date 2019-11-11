@@ -339,6 +339,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/noto_sans_regular"
+                        android:gravity="end|center_vertical"
                         android:text="@string/immediately"
                         android:textColor="@color/dark4D"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -366,6 +367,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nanum_square_regular"
+                        android:gravity="end|center_vertical"
                         android:text="- / -"
                         android:textColor="@color/dark33"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -393,6 +395,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nanum_square_regular"
+                        android:gravity="end|center_vertical"
                         android:text="-"
                         android:textColor="@color/dark33"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -407,6 +410,7 @@
                     android:layout_gravity="end"
                     android:layout_marginTop="6dp"
                     android:fontFamily="@font/nanum_square_regular"
+                    android:gravity="end|center_vertical"
                     android:text="$-"
                     android:textColor="@color/darkB3" />
             </LinearLayout>

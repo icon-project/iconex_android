@@ -49,6 +49,7 @@ import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.view.ui.transfer.IconEnterDataFragment;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
