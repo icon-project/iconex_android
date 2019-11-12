@@ -22,14 +22,13 @@ import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.realm.RealmUtil;
+import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.service.PRepService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
-import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
 import loopchain.icon.wallet.core.Constants;
 
@@ -51,7 +50,10 @@ public class WalletDetailServiceHelper {
     private Vector<String[]> mErrBalance = new Vector<>();
     private int requestCount;
 
-    public interface OnServiceReadyListener { void onReady(); }
+    public interface OnServiceReadyListener {
+        void onReady();
+    }
+
     private OnServiceReadyListener mOnServiceReadyListener = null;
 
     public boolean isBind() {
@@ -99,8 +101,9 @@ public class WalletDetailServiceHelper {
         } else { // ether
             RealmUtil.loadRecents();
             List<TransactionItemViewData> viewDataList = new ArrayList<>();
-            for(RecentSendInfo tx: ICONexApp.ETHSendInfo) {
-                if (walletEntry.getAddress().equals(tx.getAddress()) && walletEntry.getSymbol().equals(tx.getSymbol())) {
+            for (RecentSendInfo tx : ICONexApp.ETHSendInfo) {
+                if (walletEntry.getAddress().equals(tx.getAddress()) && walletEntry.getSymbol().equals(tx.getSymbol())
+                        && ICONexApp.NETWORK.getNid().intValue() == tx.getNid()) {
                     TransactionItemViewData viewData = new TransactionItemViewData();
                     viewData.setState(1);
                     viewData.setDate(tx.getDate());
@@ -167,7 +170,7 @@ public class WalletDetailServiceHelper {
             Wallet wallet = mViewModle.wallet.getValue();
             WalletEntry walletEntry = mViewModle.walletEntry.getValue();
 
-            for (int i = 0; txList.size() > i; i ++) {
+            for (int i = 0; txList.size() > i; i++) {
                 TransactionItemViewData viewData = new TransactionItemViewData();
                 JsonObject tx = txList.get(i).getAsJsonObject();
 
@@ -221,53 +224,53 @@ public class WalletDetailServiceHelper {
     private NetworkService.BalanceCallback mBalanceCallback = new NetworkService.BalanceCallback() {
         @Override
         public void onReceiveICXBalance(String id, String address, String result) {
-            Log.d(TAG,"Receive icx balance: " + result);
-            mIcxBalance.add(new String[] { id, address, result});
-            if(isDoneRequest(true)) completeRequest();
+            Log.d(TAG, "Receive icx balance: " + result);
+            mIcxBalance.add(new String[]{id, address, result});
+            if (isDoneRequest(true)) completeRequest();
         }
 
         @Override
         public void onReceiveETHBalance(String id, String address, String result) {
-            Log.d(TAG,"Receive eth balance: " + result);
+            Log.d(TAG, "Receive eth balance: " + result);
             address = address.substring(2);
-            mEthBalance.add(new String[] { id, address, result });
+            mEthBalance.add(new String[]{id, address, result});
 
-            if(isDoneRequest(true)) completeRequest();
+            if (isDoneRequest(true)) completeRequest();
         }
 
         @Override
         public void onReceiveError(String id, String address, int code) {
-            Log.d(TAG,"Receive balance err code:" + code);
+            Log.d(TAG, "Receive balance err code:" + code);
             if (address.startsWith(MyConstants.PREFIX_HEX)) {
                 address = address.substring(2);
             }
 
-            mErrBalance.add(new String[] { id, address, MyConstants.NO_BALANCE });
+            mErrBalance.add(new String[]{id, address, MyConstants.NO_BALANCE});
 
-            if(isDoneRequest(true)) completeRequest();
+            if (isDoneRequest(true)) completeRequest();
         }
 
         @Override
         public void onReceiveException(String id, String address, String msg) {
-            Log.d(TAG,"Receive balance exception " + msg);
+            Log.d(TAG, "Receive balance exception " + msg);
             if (address.startsWith(MyConstants.PREFIX_HEX)) {
                 address = address.substring(2);
             }
 
-            mErrBalance.add(new String[] { id, address, MyConstants.NO_BALANCE });
+            mErrBalance.add(new String[]{id, address, MyConstants.NO_BALANCE});
 
-            if(isDoneRequest(true)) completeRequest();
+            if (isDoneRequest(true)) completeRequest();
         }
     };
 
-    private void completeRequest () {
+    private void completeRequest() {
         Log.d(TAG, "complete Request!");
         mViewModle.lstBalanceResults.setValue(
                 new ArrayList<String[]>() {{
                     addAll(mIcxBalance);
                     addAll(mEthBalance);
                     addAll(mErrBalance);
-            }});
+                }});
 
         mIcxBalance.clear();
         mEthBalance.clear();
@@ -323,8 +326,9 @@ public class WalletDetailServiceHelper {
                         BigDecimal stake = new BigDecimal(ConvertUtil.getValue(rpcObject.getItem("stake").asInteger(), 18));
                         BigDecimal unstake = rpcObject.getItem("unstake") == null ? BigDecimal.ZERO :
                                 new BigDecimal(ConvertUtil.getValue(rpcObject.getItem("unstake").asInteger(), 18));
-                        mViewModle.stake.postValue(new BigDecimal[] { stake, unstake});
-                    } catch (IOException e) { }
+                        mViewModle.stake.postValue(new BigDecimal[]{stake, unstake});
+                    } catch (IOException e) {
+                    }
                 }
             }).start();
     }

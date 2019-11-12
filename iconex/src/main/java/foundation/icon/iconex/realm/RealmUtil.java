@@ -331,7 +331,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addRecentSend(MyConstants.Coin type, String txHash, String name, String address, String date, String amount, String symbol) {
+    public static void addRecentSend(MyConstants.Coin type, int nid, String txHash, String name, String address, String date, String amount, String symbol) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;
@@ -365,6 +365,7 @@ public class RealmUtil {
 
             realm.beginTransaction();
             RecentETHSend send = realm.createObject(RecentETHSend.class, nextId);
+            send.setNid(nid);
             send.setName(name);
             send.setAddress(address);
             send.setAmount(amount);
@@ -433,6 +434,7 @@ public class RealmUtil {
             ICONexApp.ETHSendInfo = new ArrayList<>();
             for (RecentETHSend send : realm.where(RecentETHSend.class).findAll()) {
                 RecentSendInfo sendInfo = new RecentSendInfo();
+                sendInfo.setNid(send.getNid());
                 sendInfo.setTxHash(send.getTxHash());
                 sendInfo.setName(send.getName());
                 sendInfo.setAddress(send.getAddress());

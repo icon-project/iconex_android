@@ -146,10 +146,6 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
             public void onReleased() {
                 int result = PasswordValidator.validatePassword(inputPwd.getText());
                 switch (result) {
-                    case PasswordValidator.EMPTY:
-                        inputPwd.setError(true, getString(R.string.errPwdEmpty));
-                        break;
-
                     case PasswordValidator.LEAST_8:
                         inputPwd.setError(true, getString(R.string.errAtLeast));
                         break;
@@ -164,6 +160,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                     case PasswordValidator.SERIAL_CHAR:
                         inputPwd.setError(true, getString(R.string.errSerialChar));
                         break;
+
+                    case PasswordValidator.ILLEGAL_CHAR:
+                        inputPwd.setError(true, getString(R.string.errAllowSpecialCharacters));
+                        break;
+
                     default:
                         inputPwd.setError(false, null);
                 }
@@ -358,6 +359,11 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
                     case PasswordValidator.SERIAL_CHAR:
                         inputPwd.setError(true, getString(R.string.errSerialChar));
                         break;
+
+                    case PasswordValidator.ILLEGAL_CHAR:
+                        inputPwd.setError(true, getString(R.string.errAllowSpecialCharacters));
+                        break;
+
                     default:
                         inputPwd.setError(false, null);
                 }

@@ -28,7 +28,7 @@ public class MyConstants {
     public static final String PREFIX_IRC = "cx";
 
     // ======== Realm schema version ========
-    public static final int VERSION_REALM_SCHEMA = 1;
+    public static final int VERSION_REALM_SCHEMA = 2;
 
     // ======== Balance ========
     public static final String NO_BALANCE = "-";

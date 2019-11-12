@@ -2,8 +2,6 @@ package foundation.icon.iconex.view.ui.create;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,6 +166,11 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                     case PasswordValidator.SERIAL_CHAR:
                         inputPwd.setError(true, getString(R.string.errSerialChar));
                         break;
+
+                    case PasswordValidator.ILLEGAL_CHAR:
+                        inputPwd.setError(true, getString(R.string.errAllowSpecialCharacters));
+                        break;
+
                     default:
                         inputPwd.setError(false, null);
                 }
@@ -354,6 +357,11 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
                     case PasswordValidator.SERIAL_CHAR:
                         inputPwd.setError(true, getString(R.string.errSerialChar));
                         break;
+
+                    case PasswordValidator.ILLEGAL_CHAR:
+                        inputPwd.setError(true, getString(R.string.errAllowSpecialCharacters));
+                        break;
+
                     default:
                         inputPwd.setError(false, null);
                 }

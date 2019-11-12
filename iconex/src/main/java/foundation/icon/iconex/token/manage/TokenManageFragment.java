@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -430,6 +431,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
         editAddr.setReadOnly();
         editAddr.setText(mToken.getContractAddress());
+        Log.wtf(TAG, "Score=" + mToken.getContractAddress());
 
         btnScan.setVisibility(View.GONE);
 

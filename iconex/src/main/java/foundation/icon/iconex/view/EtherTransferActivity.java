@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -58,6 +59,7 @@ import foundation.icon.iconex.widgets.TTextInputLayout;
 import loopchain.icon.wallet.core.Constants;
 
 public class EtherTransferActivity extends AppCompatActivity implements EtherDataEnterFragment.OnEnterDataLisnter {
+    private static final String TAG = EtherTransferActivity.class.getSimpleName();
 
     // appbar UI
     private CustomActionBar appbar;
@@ -1029,7 +1031,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         if (contactName == null)
             contactName = "";
 
-        RealmUtil.addRecentSend(MyConstants.Coin.ETH, txHash, contactName,
+        RealmUtil.addRecentSend(MyConstants.Coin.ETH, ICONexApp.NETWORK.getNid().intValue(), txHash, contactName,
                 mWalletEntry.getAddress(), timestamp, editSend.getText(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }

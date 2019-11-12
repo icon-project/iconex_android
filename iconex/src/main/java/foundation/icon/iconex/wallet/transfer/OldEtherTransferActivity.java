@@ -1187,7 +1187,7 @@ public class OldEtherTransferActivity extends AppCompatActivity implements View.
         if (contactName == null)
             contactName = "";
 
-        RealmUtil.addRecentSend(MyConstants.Coin.ETH, "", contactName,
+        RealmUtil.addRecentSend(MyConstants.Coin.ETH, ICONexApp.NETWORK.getNid().intValue(), "", contactName,
                 editAddress.getText().toString(), timestamp, editSend.getText().toString(), mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }

@@ -779,11 +779,11 @@ public class NetworkService extends Service {
         protected void onPostExecute(String[] results) {
             super.onPostExecute(results);
 
-//            if (results != null) {
-//                mTransferCallback.onReceiveTransactionResult(results[0], results[1]);
-//            } else {
-//                mTransferCallback.onReceiveError("TokenTransfer", 8888);
-//            }
+            if (results != null) {
+                mTransferCallback.onReceiveTransactionResult(results[0], results[1]);
+            } else {
+                mTransferCallback.onReceiveError("TokenTransfer", 8888);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ package foundation.icon.iconex.control;
  */
 
 public class RecentSendInfo {
+    private int nid;
     private String name;
     private String address;
     private String date;
@@ -12,6 +13,14 @@ public class RecentSendInfo {
     private String symbol;
     private String txHash;
     private int isDone;
+
+    public int getNid() {
+        return nid;
+    }
+
+    public void setNid(int nid) {
+        this.nid = nid;
+    }
 
     public String getName() {
         return name;

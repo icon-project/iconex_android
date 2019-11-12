@@ -14,7 +14,9 @@ public class PasswordValidator {
     public static final int HAS_WHITE_SPACE = 3;
     public static final int SERIAL_CHAR = 4;
     public static final int LEAST_8 = 5;
+    public static final int ILLEGAL_CHAR = 6;
 
+    private static final String allowSpecialChar = "?!:.,%+-/*<>{}()[]`”‘~_^\\|@#$&";
 
     public static int validatePassword(String pwd) {
         if (pwd.isEmpty())
@@ -26,19 +28,34 @@ public class PasswordValidator {
         if (pwd.contains(" "))
             return HAS_WHITE_SPACE;
 
+        if (!specialCharacterCheck(pwd))
+            return ILLEGAL_CHAR;
+
         if (!pwd.matches(MyConstants.PATTERN_PASSWORD))
             return NOT_MATCH_PATTERN;
 
-        if (pwd.contains(";"))
-            return NOT_MATCH_PATTERN;
-
-        if (pwd.contains("="))
-            return NOT_MATCH_PATTERN;
+//        if (pwd.contains(";"))
+//            return NOT_MATCH_PATTERN;
+//
+//        if (pwd.contains("="))
+//            return NOT_MATCH_PATTERN;
 
         if (!passwordPatternValidate(pwd))
             return SERIAL_CHAR;
 
         return OK;
+    }
+
+    private static boolean specialCharacterCheck(String pwd) {
+        for (char c : pwd.toCharArray()) {
+            if (!Character.isLetter(c)
+                    && !Character.isDigit(c)) {
+                if (!allowSpecialChar.contains(String.valueOf(c))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private static boolean passwordPatternValidate(String pwd) {

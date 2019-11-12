@@ -260,7 +260,7 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         switch (pwdResult) {
             case PasswordValidator.EMPTY:
                 // if (showErr) editPwd.setError(true, getString(R.string.errPwdEmpty));
-                editPwd.setError(false, null);
+//                editPwd.setError(false, null);
                 return false;
 
             case PasswordValidator.LEAST_8:
@@ -277,6 +277,10 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
             case PasswordValidator.SERIAL_CHAR:
                 if (showErr) editPwd.setError(true, getString(R.string.errSerialChar));
+                return false;
+
+            case PasswordValidator.ILLEGAL_CHAR:
+                editPwd.setError(true, getString(R.string.errAllowSpecialCharacters));
                 return false;
 
             default:
