@@ -191,14 +191,14 @@ public class WalletDetailServiceHelper {
                         if ("0".equals(tx.get("txType").getAsString())) {
                             viewData.setTxHash(tx.get("txHash").getAsString());
                             viewData.setDate(tx.get("createDate").getAsString());
-                            viewData.setAmount(tx.get("amount").getAsString());
+                            viewData.setAmount(DecimalFomatter.format(new BigDecimal(tx.get("amount").getAsString())));
                             mCacheTxData.add(viewData);
                         }
                     } else { // if ("TOKEN".equals(walletEntry.getType()))
                         // ICX TOKEN
                         viewData.setTxHash(tx.get("txHash").getAsString());
                         viewData.setDate(tx.get("age").getAsString());
-                        viewData.setAmount(tx.get("quantity").getAsString());
+                        viewData.setAmount(DecimalFomatter.format(new BigDecimal(tx.get("quantity").getAsString())));
                         mCacheTxData.add(viewData);
                     }
                 }
