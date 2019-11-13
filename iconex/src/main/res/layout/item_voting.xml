@@ -38,30 +38,43 @@
             app:layout_constraintTop_toTopOf="@+id/layout_name"
             app:layout_goneMarginStart="0dp" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/layout_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="22dp"
             android:layout_marginEnd="8dp"
-            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/indicator"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/prep_name"
+                android:id="@+id/prep_grade"
                 style="@style/TextView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:ellipsize="end"
+                android:fontFamily="@font/noto_sans_medium"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="(Main P-Rep)"
+                android:textColor="@color/dark4D" />
+
+            <TextView
+                android:id="@+id/prep_name"
+                style="@style/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/prep_grade"
                 android:ellipsize="end"
                 android:fontFamily="@font/noto_sans_medium"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="34. Name Name Name"
                 android:textColor="@color/dark4D" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layout_votes"

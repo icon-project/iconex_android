@@ -118,6 +118,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private Wallet mWallet;
     private WalletEntry mWalletEntry;
     private String privKey;
+    private String amount;
 
     private int decimal = 18;
 
@@ -651,6 +652,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                                     Integer.toString(mWalletEntry.getDefaultDec()), privKey);
                         }
                         timestamp = getTimeStamp();
+                        amount = editSend.getText();
                         CustomToast.makeText(getApplicationContext(), getString(R.string.msgDoneRequestTransfer), Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -1032,7 +1034,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             contactName = "";
 
         RealmUtil.addRecentSend(MyConstants.Coin.ETH, ICONexApp.NETWORK.getNid().intValue(), txHash, contactName,
-                mWalletEntry.getAddress(), timestamp, editSend.getText(), mWalletEntry.getSymbol());
+                mWalletEntry.getAddress(), timestamp, amount, mWalletEntry.getSymbol());
         RealmUtil.loadRecents();
     }
 

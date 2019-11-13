@@ -77,4 +77,14 @@ public class RecentSendInfo {
     public void setIsDone(int isDone) {
         this.isDone = isDone;
     }
+
+    @Override
+    public String toString() {
+        return "RecentSendInfo={ "
+                + "Address=" + address
+                + ", Symbol=" + symbol
+                + ", Amount=" + amount
+                + ", TxHash=" + txHash
+                + " }";
+    }
 }

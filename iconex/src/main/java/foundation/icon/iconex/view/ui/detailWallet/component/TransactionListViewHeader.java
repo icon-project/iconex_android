@@ -38,6 +38,7 @@ public class TransactionListViewHeader extends FrameLayout {
 
         btnInfo = findViewById(R.id.btn_info);
         txtViewOption = findViewById(R.id.txt_view_option);
+        txtViewOption.setText(getContext().getString(R.string.all) + " ▼");
     }
 
     public void setOnClickInfoButton(View.OnClickListener listener) {

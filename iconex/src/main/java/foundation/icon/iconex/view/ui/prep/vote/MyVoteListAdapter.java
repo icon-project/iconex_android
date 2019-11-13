@@ -105,6 +105,9 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             Log.d(TAG, "onBindViewHolder value=" + delegation.getValue());
             PRep pRep = delegation.getPrep();
 
+            h.tvPrepName.setText(String.format(Locale.getDefault(), "%s",
+                    String.format(Locale.getDefault(), "%d. %s", pRep.getRank(), pRep.getName())));
+
             String voteStatus;
             if (delegation.isEdited()) {
                 if (!delegation.isNew())
@@ -112,18 +115,14 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                 else
                     voteStatus = String.format(Locale.getDefault(), "(%s / Edited)", pRep.getGrade().getLabel());
 
-                h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                        String.format(Locale.getDefault(), "%d. %s", pRep.getRank(), pRep.getName()),
-                        voteStatus));
+                h.tvPrepGrade.setText(String.format(Locale.getDefault(), "%s", voteStatus));
             } else {
                 if (!delegation.isNew())
                     voteStatus = String.format(Locale.getDefault(), "(%s / Voted)", pRep.getGrade().getLabel());
                 else
                     voteStatus = String.format(Locale.getDefault(), "(%s)", pRep.getGrade().getLabel());
 
-                h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                        String.format(Locale.getDefault(), "%d. %s", pRep.getRank(), pRep.getName()),
-                        voteStatus));
+                h.tvPrepGrade.setText(String.format(Locale.getDefault(), "%s", voteStatus));
             }
 
             h.tvTotalVotes.setText(String.format(Locale.getDefault(), "%s (%s%%)",
@@ -219,6 +218,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             v.findViewById(R.id.layout_info).setOnClickListener(this);
 
             tvPrepName = v.findViewById(R.id.prep_name);
+            tvPrepGrade = v.findViewById(R.id.prep_grade);
 
             layoutVotes = v.findViewById(R.id.layout_votes);
             layoutTotalVotes = v.findViewById(R.id.layout_total_votes);

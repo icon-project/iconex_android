@@ -115,9 +115,9 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                         layoutParams.getMarginEnd(),
                         (int) mContext.getResources().getDimension(R.dimen.dp25));
                 h.layoutVotes.setLayoutParams(layoutParams);
-                h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                        String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName()),
-                        String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
+                h.tvPrepName.setText(String.format(Locale.getDefault(), "%s",
+                        String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName())));
+                h.tvPrepGrade.setText(String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel()));
                 h.tvTotalVotes.setText(String.format(Locale.getDefault(),
                         "%s(%s%%)",
                         Utils.formatFloating(ConvertUtil.getValue(prep.getDelegated(), 18), 4),
@@ -153,18 +153,19 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                     }
 
                     if (isNew) {
-                        h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                                String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName()),
-                                String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
+                        h.tvPrepName.setText(String.format(Locale.getDefault(), "%s",
+                                String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName())));
+                        h.tvPrepGrade.setText(String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel()));
                     } else {
-                        h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                                String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName()),
-                                String.format(Locale.getDefault(), "(%s / Voted)", prep.getGrade().getLabel())));
+                        h.tvPrepName.setText(String.format(Locale.getDefault(), "%s",
+                                String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName())));
+                        h.tvPrepGrade.setText(String.format(Locale.getDefault(), "(%s / Voted)", prep.getGrade().getLabel()));
                     }
-                } else
-                    h.tvPrepName.setText(String.format(Locale.getDefault(), "%s%s",
-                            String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName()),
-                            String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel())));
+                } else {
+                    h.tvPrepName.setText(String.format(Locale.getDefault(), "%s",
+                            String.format(Locale.getDefault(), "%d. %s", prep.getRank(), prep.getName())));
+                    h.tvPrepGrade.setText(String.format(Locale.getDefault(), "(%s)", prep.getGrade().getLabel()));
+                }
 
                 h.tvTotalVotes.setText(String.format(Locale.getDefault(),
 
@@ -182,7 +183,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
 
     class ItemVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvPrepName;
+        private TextView tvPrepName, tvPrepGrade;
         private ViewGroup layoutInfo, layoutVotes, layoutTotalVotes, layoutMyVotes;
         private TextView tvTotalVotes, tvMyVotes;
         private ImageButton btnManage;
@@ -191,6 +192,7 @@ public class PRepListAdapter extends RecyclerView.Adapter {
             super(v);
 
             tvPrepName = v.findViewById(R.id.prep_name);
+            tvPrepGrade = v.findViewById(R.id.prep_grade);
             layoutInfo = v.findViewById(R.id.layout_info);
             layoutInfo.setOnClickListener(this);
             layoutVotes = v.findViewById(R.id.layout_votes);

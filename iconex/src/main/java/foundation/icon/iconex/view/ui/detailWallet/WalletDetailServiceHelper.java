@@ -83,7 +83,6 @@ public class WalletDetailServiceHelper {
     }
 
     public void loadTxList() {
-        Log.d(TAG, "Load ICX Tx List");
         mCacheTxData = new ArrayList<>();
         Wallet wallet = mViewModle.wallet.getValue();
         WalletEntry walletEntry = mViewModle.walletEntry.getValue();
@@ -99,17 +98,24 @@ public class WalletDetailServiceHelper {
                         walletEntry.getContractAddress(), 1);
             }
         } else { // ether
+            Log.i(TAG, "Load Ether transfer history");
             RealmUtil.loadRecents();
             List<TransactionItemViewData> viewDataList = new ArrayList<>();
             for (RecentSendInfo tx : ICONexApp.ETHSendInfo) {
+                Log.w(TAG, tx.toString());
                 if (walletEntry.getAddress().equals(tx.getAddress()) && walletEntry.getSymbol().equals(tx.getSymbol())
                         && ICONexApp.NETWORK.getNid().intValue() == tx.getNid()) {
+                    Log.wtf(TAG, "=== Target history\n" + tx.toString());
                     TransactionItemViewData viewData = new TransactionItemViewData();
                     viewData.setState(1);
                     viewData.setDate(tx.getDate());
                     viewData.setFrom(tx.getAddress());
                     viewData.setTxHash(tx.getTxHash());
-                    viewData.setAmount(DecimalFomatter.format(new BigDecimal(tx.getAmount())));
+                    try {
+                        viewData.setAmount(DecimalFomatter.format(new BigDecimal(tx.getAmount())));
+                    } catch (Exception e) {
+                        viewData.setAmount("-");
+                    }
                     viewDataList.add(viewData);
                 }
             }

@@ -27,12 +27,12 @@ import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.dialogs.TxHashDialog;
 import foundation.icon.iconex.service.ServiceConstants;
 import foundation.icon.iconex.view.WalletDetailActivity;
+import foundation.icon.iconex.view.ui.detailWallet.component.NoDataView;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectTokenDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.SelectType;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionFloatingMenu;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemView;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionItemViewData;
-import foundation.icon.iconex.view.ui.detailWallet.component.NoDataView;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionListViewHeader;
 import foundation.icon.iconex.view.ui.detailWallet.component.TransactionViewOptionDialog;
 import foundation.icon.iconex.view.ui.detailWallet.component.WalletDetailInfoView;
@@ -67,7 +67,8 @@ public class WalletDetailFragment extends Fragment {
     private RecyclerView.Adapter adapter = null;
     private List<TransactionItemViewData> lstViewData = new ArrayList<>();
 
-    public WalletDetailFragment() { }
+    public WalletDetailFragment() {
+    }
 
     @Nullable
     @Override
@@ -115,6 +116,8 @@ public class WalletDetailFragment extends Fragment {
             }
         });
 
+        fixedListHeaderView.setTextViewOption(getString(R.string.all) + " ▼");
+
         return v;
     }
 
@@ -130,15 +133,16 @@ public class WalletDetailFragment extends Fragment {
                         RecyclerView.LayoutParams.WRAP_CONTENT
                 ));
 
-                RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) { };
-                    v.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            int position = holder.getAdapterPosition();
-                            TransactionItemViewData viewData = lstViewData.get(position);
-                            new TxHashDialog(getContext(), viewData.getTxHash(), viewModel.wallet.getValue().getCoinType()).show();
-                        }
-                    });
+                RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) {
+                };
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = holder.getAdapterPosition();
+                        TransactionItemViewData viewData = lstViewData.get(position);
+                        new TxHashDialog(getContext(), viewData.getTxHash(), viewModel.wallet.getValue().getCoinType()).show();
+                    }
+                });
 
                 return holder;
             }
@@ -160,23 +164,26 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onClickAction(CustomActionBar.ClickAction action) {
                 switch (action) {
-                    case btnStart: getActivity().finish(); break;
+                    case btnStart:
+                        getActivity().finish();
+                        break;
                     case btnEnd:
                         new WalletManageMenuDialog(getActivity(), viewModel.wallet.getValue(),
-                            new WalletManageMenuDialog.OnNotifyWalletDataChangeListener() {
-                                @Override
-                                public void onNotifyWalletDataChange(WalletManageMenuDialog.UpdateDataType updateDataType) {
-                                    switch (updateDataType) {
-                                        case Rename: {
-                                            viewModel.name.setValue(viewModel.wallet.getValue().getAlias());
-                                        } break;
-                                        case Delete: {
-                                            getActivity().setResult(WalletDetailActivity.RESULT_WALLET_DELETED);
-                                            getActivity().finish();
+                                new WalletManageMenuDialog.OnNotifyWalletDataChangeListener() {
+                                    @Override
+                                    public void onNotifyWalletDataChange(WalletManageMenuDialog.UpdateDataType updateDataType) {
+                                        switch (updateDataType) {
+                                            case Rename: {
+                                                viewModel.name.setValue(viewModel.wallet.getValue().getAlias());
+                                            }
+                                            break;
+                                            case Delete: {
+                                                getActivity().setResult(WalletDetailActivity.RESULT_WALLET_DELETED);
+                                                getActivity().finish();
+                                            }
                                         }
                                     }
-                                }
-                            }).show();
+                                }).show();
                         break;
                 }
             }
@@ -203,9 +210,13 @@ public class WalletDetailFragment extends Fragment {
         });
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() { viewModel.isRefreshing.setValue(true); }
+            public void onRefresh() {
+                viewModel.isRefreshing.setValue(true);
+            }
+
             @Override
-            public void onLoadMore() { }
+            public void onLoadMore() {
+            }
         });
         refresh.setRefreshEnable(true);
 
@@ -216,12 +227,12 @@ public class WalletDetailFragment extends Fragment {
                 boolean isExpanded = scrollY >= infoView.getHeight();
                 fixedListHeaderView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
-                if(v.getChildAt(v.getChildCount() - 1) != null) {
+                if (v.getChildAt(v.getChildCount() - 1) != null) {
                     if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
                             scrollY > oldScrollY) {
                         Boolean refresh = viewModel.isRefreshing.getValue();
                         Boolean loadMore = viewModel.isLoadMore.getValue();
-                        Boolean isNoLoadMore= viewModel.isNoLoadMore.getValue();
+                        Boolean isNoLoadMore = viewModel.isNoLoadMore.getValue();
 
                         Log.d(TAG, "onScrollBottom() called");
                         if (!refresh && !loadMore && !isNoLoadMore && moreLoadable)
@@ -243,9 +254,15 @@ public class WalletDetailFragment extends Fragment {
                         String s;
                         switch (selectType) {
                             default:
-                            case All: s = getString(R.string.all); break;
-                            case Send: s = getString(R.string.transfer); break;
-                            case Deposit: s = getString(R.string.deposit); break;
+                            case All:
+                                s = getString(R.string.all) + " ▼";
+                                break;
+                            case Send:
+                                s = getString(R.string.transfer) + " ▼";
+                                break;
+                            case Deposit:
+                                s = getString(R.string.deposit) + " ▼";
+                                break;
                         }
                         fixedListHeaderView.setTextViewOption(s);
                         listHeaderView.setTextViewOption(s);
@@ -348,7 +365,7 @@ public class WalletDetailFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 Log.d(TAG, "onChanged() called with: aBoolean = [" + aBoolean + "]");
-                if(!aBoolean) refresh.stopRefresh(true);
+                if (!aBoolean) refresh.stopRefresh(true);
             }
         });
 
