@@ -780,10 +780,10 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             }
         } else {
             BigInteger sendAmount = ConvertUtil.valueToBigInteger(value, entry.getDefaultDec());
-            if (sendAmount.equals(BigInteger.ZERO)) {
-                editSend.setError(true, getString(R.string.errNonZero));
-                return false;
-            }
+//            if (sendAmount.equals(BigInteger.ZERO)) {
+//                editSend.setError(true, getString(R.string.errNonZero));
+//                return false;
+//            }
 
             if (balance.compareTo(sendAmount) < 0) {
                 editSend.setError(true, getString(R.string.errNotEnough));

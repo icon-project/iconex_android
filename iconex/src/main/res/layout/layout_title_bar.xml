@@ -32,6 +32,7 @@
             android:paddingBottom="10dp"
             android:text="blank"
             android:textColor="@color/txt_btn_outline_01"
+            android:focusable="false"
             android:textSize="12dp" />
 
         <TextView
