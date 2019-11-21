@@ -79,6 +79,7 @@
     <string name="backupKeyStoreFileConfirm">DO NOT SHARE YOUR KEYSTORE FILE WITH OTHERS. Do you want to proceed? </string>
     <string name="noBackupKeyStoreFileConfirm">Do you want to proceed without downloading the Keystore file?</string>
     <string name="keyStoreDownloadAccomplished">\"%s\"\nThe file has been downloaded successfully.</string>
+    <string name="step4PrivateKeyHeader">Please save private key.</string>
     <string name="step4Header">The private key is unique to your wallet \nPrivate key has no password.</string>
     <string name="step4Sub1">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
     <string name="step4Sub2">You can access to your private key from the \'Backup wallet\' menu later.</string>
