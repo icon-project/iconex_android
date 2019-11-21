@@ -1,6 +1,7 @@
 package foundation.icon.iconex.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -155,6 +156,8 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                         .value(value)
                         .call("claimIScore")
                         .build();
+
+                Log.d(TAG, "[estimatedStep]\n" + transaction.toString());
 
                 stepLimit = IconService.estimateStep(transaction);
                 stepPrice = iconService.getStepPrice().asInteger();

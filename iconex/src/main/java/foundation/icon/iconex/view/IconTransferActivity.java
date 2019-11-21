@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -49,10 +50,11 @@ import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
 import foundation.icon.iconex.util.PreferenceUtil;
 import foundation.icon.iconex.util.Utils;
+import foundation.icon.iconex.view.ui.transfer.IconEnterDataFragment;
+import foundation.icon.iconex.view.ui.transfer.TransferViewModel;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
-import foundation.icon.iconex.view.ui.transfer.IconEnterDataFragment;
 import foundation.icon.iconex.wallet.transfer.data.ICONTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.InputData;
 import foundation.icon.iconex.widgets.CustomActionBar;
@@ -74,7 +76,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ICONTransferActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter {
+public class IconTransferActivity extends AppCompatActivity implements IconEnterDataFragment.OnEnterDataLisnter {
 
     // appbar UI
     private CustomActionBar appbar;
@@ -119,6 +121,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
     private static final int RC_DATA = 9003;
 
     // data field
+    private TransferViewModel vm;
     private Wallet wallet;
     private WalletEntry entry;
     private String privateKey;
@@ -163,6 +166,23 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             wallet = (Wallet) getIntent().getExtras().get("walletInfo");
             entry = (WalletEntry) getIntent().getExtras().get("walletEntry");
             privateKey = getIntent().getStringExtra("privateKey");
+
+            vm = ViewModelProviders.of(this).get(TransferViewModel.class);
+            vm.setWallet(wallet);
+            vm.setEntry(entry);
+            vm.setPrivateKey(privateKey);
+        }
+
+        if (savedInstanceState != null) {
+            wallet = vm.getWallet().getValue();
+            entry = vm.getEntry().getValue();
+            privateKey = vm.getPrivateKey().getValue();
+
+            try {
+                balance = new BigInteger(entry.getBalance());
+            } catch (Exception e) {
+                balance = BigInteger.ZERO;
+            }
         }
 
         loadView();
@@ -201,7 +221,9 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
             try {
                 LCClient = new LoopChainClient(url);
-            } catch (Exception e) { e.printStackTrace(); }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         getStepPrice();
@@ -224,6 +246,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             }
         }, 300);
     }
+
     String requestAmount = null;
 
     @Override
@@ -335,7 +358,9 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             @Override
             public void onClickAction(CustomActionBar.ClickAction action) {
                 switch (action) {
-                    case btnStart: finish(); break;
+                    case btnStart:
+                        finish();
+                        break;
                     case btnEnd:
                         showInfo();
                         break;
@@ -348,9 +373,15 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.btn_plus_10: addPlus(10); break;
-                    case R.id.btn_plus_100: addPlus(100); break;
-                    case R.id.btn_plus_1000: addPlus(1000); break;
+                    case R.id.btn_plus_10:
+                        addPlus(10);
+                        break;
+                    case R.id.btn_plus_100:
+                        addPlus(100);
+                        break;
+                    case R.id.btn_plus_1000:
+                        addPlus(1000);
+                        break;
                     case R.id.btn_plus_all:
                         if (entry.getType().equals(MyConstants.TYPE_COIN)) {
                             if (balance.compareTo(ConvertUtil.valueToBigInteger(fee, 18)) < 0) {
@@ -378,7 +409,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         btnContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(ICONTransferActivity.this, ContactsActivity.class)
+                startActivityForResult(new Intent(IconTransferActivity.this, ContactsActivity.class)
                         .putExtra("coinType", wallet.getCoinType())
                         .putExtra("tokenType", entry.getSymbol())
                         .putExtra("address", wallet.getAddress()), RC_CONTACTS);
@@ -388,7 +419,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         btnQRcodeScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ICONTransferActivity.this, BarcodeCaptureActivity.class);
+                Intent intent = new Intent(IconTransferActivity.this, BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
                 intent.putExtra(BarcodeCaptureActivity.PARAM_SCANTYPE, BarcodeCaptureActivity.ScanType.ICX_Address.name());
@@ -401,7 +432,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
             @Override
             public void onClick(View v) {
                 if (data == null) {
-                    DataTypeDialog typeDialog = new DataTypeDialog(ICONTransferActivity.this);
+                    DataTypeDialog typeDialog = new DataTypeDialog(IconTransferActivity.this);
                     typeDialog.setOnTypeListener(new DataTypeDialog.OnTypeListener() {
                         @Override
                         public void onSelect(IconEnterDataFragment.DataType type) {
@@ -416,7 +447,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                             data.setDataType(type);
 
                             startActivityForResult(new Intent(
-                                            ICONTransferActivity.this, IconEnterDataActivity.class
+                                            IconTransferActivity.this, IconEnterDataActivity.class
                                     ).putExtra(IconEnterDataActivity.DATA, data),
                                     RC_DATA
                             );
@@ -433,9 +464,9 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
         btnViewData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(data != null) {
+                if (data != null) {
                     startActivityForResult(new Intent(
-                                    ICONTransferActivity.this, IconEnterDataActivity.class
+                                    IconTransferActivity.this, IconEnterDataActivity.class
                             ).putExtra(IconEnterDataActivity.DATA, data),
                             RC_DATA
                     );
@@ -865,7 +896,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
                         int input = Integer.decode(response.body().getResult().getAsJsonObject().get("input").getAsString());
                         int contract = Integer.decode(response.body().getResult().getAsJsonObject().get("contractCall").getAsString());
 
-                        ICONTransferActivity.this.defaultLimit = new BigInteger(Integer.toString(defaultLimit));
+                        IconTransferActivity.this.defaultLimit = new BigInteger(Integer.toString(defaultLimit));
                         inputPrice = new BigInteger(Integer.toString(input));
                         contractCall = new BigInteger(Integer.toString(contract));
 
@@ -1198,7 +1229,7 @@ public class ICONTransferActivity extends AppCompatActivity implements IconEnter
 
     @Override
     public void onDataCancel(InputData data) {
-        if (data.getData() == null ) {
+        if (data.getData() == null) {
             this.data = null;
             editData.setText("");
             btnViewData.setVisibility(View.GONE);

@@ -94,7 +94,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.ICONTransferActivity"
+            android:name=".view.IconTransferActivity"
             android:configChanges="fontScale"
             android:exported="false"
             android:screenOrientation="portrait"

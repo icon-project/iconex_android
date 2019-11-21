@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
 import java.security.Security;
@@ -146,21 +145,19 @@ public class ICONexApp extends Application {
                 // app must be returned from background just now (or first launch)
                 mAppStatus = AppStatus.RETURNED_TO_FOREGROUND;
 
-                boolean beingLock = locktime != null && locktime + MyConstants.LOCK_TIME_LIMIT  <= System.currentTimeMillis();
+                boolean beingLock = locktime != null && locktime + MyConstants.LOCK_TIME_LIMIT <= System.currentTimeMillis();
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
                     Log.w(TAG, "onActivityStared=" + activity.getLocalClassName());
                     VersionCheck versionCheck = new VersionCheck(activity);
                     versionCheck.execute();
 
-                    if (isLocked && beingLock) {
-                        if (!(activity instanceof AuthActivity)) {
-                            startActivity(new Intent(getApplicationContext(), AuthActivity.class)
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    .putExtra(AuthActivity.ARG_APP_STATUS, AppStatus.RETURNED_TO_FOREGROUND));
-                        } else {
-                            locktime = null;
-                        }
+                    if (isLocked && beingLock
+                            && !activity.getLocalClassName().equals("view.AuthActivity")) {
+
+                        startActivity(new Intent(getApplicationContext(), AuthActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                .putExtra(AuthActivity.ARG_APP_STATUS, AppStatus.RETURNED_TO_FOREGROUND));
                     } else {
                         locktime = null;
                     }

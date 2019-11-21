@@ -93,25 +93,49 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
         } else {
             fab = new FingerprintAuthBuilder(getActivity());
             fm = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
+            helper = new FingerprintAuthHelper(fm, this);
 
-            try {
-                if (fab.initCipher(fab.defaultCipher, fab.DEFAULT_KEY_NAME)) {
-                    helper = new FingerprintAuthHelper(fm, this);
-                    if (helper.isFingerprintAuthAvailable())
-                        helper.startFingerprintAuthListening(new FingerprintManager.CryptoObject(fab.defaultCipher));
-                    else {
+            if (!helper.isFingerprintAuthAvailable()) {
+                if (!dialog.isShowing()) {
+                    dialog.setMessage(getString(R.string.errNoEnrolledFingerprint));
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            mListener.onByLockNum(MyConstants.FingerprintState.NO_ENROLLED);
+                        }
+                    });
+                    dialog.show();
+                }
+            } else {
+                try {
+                    if (fab.initCipher(fab.defaultCipher, fab.DEFAULT_KEY_NAME)) {
+                        if (helper.isFingerprintAuthAvailable())
+                            helper.startFingerprintAuthListening(new FingerprintManager.CryptoObject(fab.defaultCipher));
+                        else {
+                            if (!dialog.isShowing()) {
+                                dialog.setMessage(getString(R.string.errNoEnrolledFingerprint));
+                                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        mListener.onByLockNum(MyConstants.FingerprintState.NO_ENROLLED);
+                                    }
+                                });
+                                dialog.show();
+                            }
+                        }
+                    } else {
                         if (!dialog.isShowing()) {
-                            dialog.setMessage(getString(R.string.errNoEnrolledFingerprint));
+                            dialog.setMessage(getString(R.string.errInvalidatedByBiometricEnrollment));
                             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
-                                    mListener.onByLockNum(MyConstants.FingerprintState.NO_ENROLLED);
+                                    mListener.onByLockNum(MyConstants.FingerprintState.INVALID);
                                 }
                             });
                             dialog.show();
                         }
                     }
-                } else {
+                } catch (Exception e) {
                     if (!dialog.isShowing()) {
                         dialog.setMessage(getString(R.string.errInvalidatedByBiometricEnrollment));
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -122,17 +146,6 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
                         });
                         dialog.show();
                     }
-                }
-            } catch (Exception e) {
-                if (!dialog.isShowing()) {
-                    dialog.setMessage(getString(R.string.errInvalidatedByBiometricEnrollment));
-                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            mListener.onByLockNum(MyConstants.FingerprintState.INVALID);
-                        }
-                    });
-                    dialog.show();
                 }
             }
         }

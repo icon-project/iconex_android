@@ -64,7 +64,7 @@ import java.math.BigInteger;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.ConvertUtil;
-import foundation.icon.iconex.view.ICONTransferActivity;
+import foundation.icon.iconex.view.IconTransferActivity;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
@@ -542,7 +542,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                             finish();
                         } else {
                             if (!isStartActivity)
-                                startActivity(new Intent(this, ICONTransferActivity.class)
+                                startActivity(new Intent(this, IconTransferActivity.class)
                                         .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
                                         .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
                                         .putExtra("privateKey", getIntent().getStringExtra("privateKey"))
@@ -559,7 +559,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                 } else if (value.startsWith("hx") || value.startsWith("cx")) {
                     if (fromWallet) {
                         if (!isStartActivity)
-                            startActivity(new Intent(this, ICONTransferActivity.class)
+                            startActivity(new Intent(this, IconTransferActivity.class)
                                     .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
                                     .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
                                     .putExtra("privateKey", getIntent().getStringExtra("privateKey"))

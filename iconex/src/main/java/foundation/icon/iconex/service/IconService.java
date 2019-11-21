@@ -47,8 +47,14 @@ public class IconService {
     }
 
     public static BigInteger estimateStep(Transaction transaction) throws IOException {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
         foundation.icon.icx.IconService estimated =
-                new foundation.icon.icx.IconService(new HttpProvider(ICONexApp.NETWORK.getUrlNoEndPoint(), 3));
+                new foundation.icon.icx.IconService(new HttpProvider(httpClient, ICONexApp.NETWORK.getUrlNoEndPoint(), 3));
 
         return estimated.estimateStep(transaction).execute();
     }

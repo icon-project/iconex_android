@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -45,6 +46,7 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
+import foundation.icon.iconex.view.ui.transfer.TransferViewModel;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
@@ -105,6 +107,10 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     // Send Button UI
     private Button btnSend;
 
+    private TransferViewModel vm;
+    private Wallet mWallet;
+    private WalletEntry mWalletEntry;
+    private String privKey;
     private BigInteger balance;
 
     private String CODE_EXCHANGE = "ethusd";
@@ -115,9 +121,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
     private String timestamp = null;
     private String txHash = null;
 
-    private Wallet mWallet;
-    private WalletEntry mWalletEntry;
-    private String privKey;
     private String amount;
 
     private int decimal = 18;
@@ -201,6 +204,23 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             mWallet = (Wallet) getIntent().getExtras().get("walletInfo");
             mWalletEntry = (WalletEntry) getIntent().getExtras().get("walletEntry");
             privKey = getIntent().getStringExtra("privateKey");
+
+            vm = ViewModelProviders.of(this).get(TransferViewModel.class);
+            vm.setWallet(mWallet);
+            vm.setEntry(mWalletEntry);
+            vm.setPrivateKey(privKey);
+        }
+
+        if (savedInstanceState != null) {
+            mWallet = vm.getWallet().getValue();
+            mWalletEntry = vm.getEntry().getValue();
+            privKey = vm.getPrivateKey().getValue();
+
+            try {
+                balance = new BigInteger(mWalletEntry.getBalance());
+            } catch (Exception e) {
+                balance = BigInteger.ZERO;
+            }
         }
 
         EXCHANGE_PRICE = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
