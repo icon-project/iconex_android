@@ -42,6 +42,8 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
     private TTextInputLayout editOldPwd, editPwd, editCheck;
     private Button btnChange;
 
+    private InputMethodManager imm;
+
     public interface OnResultListener {
         void onResult(Wallet wallet);
     }
@@ -210,14 +212,6 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
                 }
             }
         });
-
-        editOldPwd.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(editOldPwd.getEditView(), InputMethodManager.SHOW_FORCED);
-            }
-        }, 100);
     }
 
     private boolean validateOldPwd(boolean showErr) {

@@ -339,6 +339,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     d.isNew(isNew);
                     delegations.set(getAdapterPosition(), d);
                     mListener.onVoted(delegations);
+                    txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", 0.0f));
                     seekbar.setProgress(0);
                     return;
                 }

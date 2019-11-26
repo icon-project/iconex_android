@@ -68,8 +68,8 @@
     <string name="hintWalletAlias">지갑 이름 입력 (8자)</string>
     <string name="hintCreateWalletPassword">비밀번호 입력 (영문, 숫자, 특수문자 혼용 8자 이상)</string>
     <string name="hintWalletPasswordConfirm">비밀번호 확인</string>
-    <string name="createPasswordWarning">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
-    <string name="errAllowSpecialCharacters">사용 가능한 특수문자를 확인해 주세요. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )</string>
+    <string name="createPasswordWarning">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
+    <string name="errAllowSpecialCharacters">사용 가능한 특수문자를 확인해 주세요. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
     <string name="step3Header">지갑 백업 파일(Keystore)은 지갑의 고유 정보인 개인 키(Private Key)를 담고 있는 파일이며, 지갑 백업 파일에는 비밀번호가 설정되어 있습니다.</string>
     <string name="step3Sub1">지갑 백업 파일과 비밀번호가 있으면 지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 수 있습니다.</string>
     <string name="step3Sub2">지갑을 만든 후 ‘지갑 백업’에서도 다운로드할 수 있습니다.</string>

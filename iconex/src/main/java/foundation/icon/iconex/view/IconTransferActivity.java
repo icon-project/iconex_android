@@ -507,9 +507,9 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
 
             @Override
             public void onReleased() {
-                if (editSend.getText().length() > 0) {
-                    validateSendAmount(editSend.getText());
-                }
+//                if (editSend.getText().length() > 0) {
+//                    validateSendAmount(editSend.getText());
+//                }
             }
         });
         editSend.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -711,7 +711,9 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
         else
             fee = BigInteger.ZERO;
         strFee = ConvertUtil.getValue(fee, 18);
-        txtEstimatedMaxFee.setText(DecimalFomatter.format(new BigDecimal(strFee)));
+//        txtEstimatedMaxFee.setText(DecimalFomatter.format(new BigDecimal(strFee)));
+        BigDecimal bigFee = new BigDecimal(fee);
+        txtEstimatedMaxFee.setText(bigFee.stripTrailingZeros().scaleByPowerOfTen(-18).toString());
 
         this.fee = ConvertUtil.getValue(fee, 18);
 
@@ -829,10 +831,10 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void setSendEnable() {
-        boolean amount = validateSendAmount(editSend.getText());
-        boolean address = validateAddress(editAddress.getText());
+//        boolean amount = validateSendAmount(editSend.getText());
+//        boolean address = validateAddress(editAddress.getText());
 
-        btnSend.setEnabled(amount && address);
+        btnSend.setEnabled(validateAddress(editAddress.getText()));
     }
 
     private void getStepPrice() {
@@ -969,9 +971,10 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
     private void onClickSend() {
 
         if (entry.getType().equals(MyConstants.TYPE_COIN)) {
-            BigInteger canICX = balance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+            BigInteger necessaryIcx = ConvertUtil.valueToBigInteger(editSend.getText(), 18)
+                    .add(ConvertUtil.valueToBigInteger(fee, 18));
 
-            if (canICX.compareTo(BigInteger.ZERO) < 0) {
+            if (balance.compareTo(necessaryIcx) < 0) {
                 MessageDialog messageDialog = new MessageDialog(this);
                 messageDialog.setMessage(getString(R.string.errICXFee));
                 messageDialog.show();
@@ -980,9 +983,9 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
         } else {
             WalletEntry own = wallet.getWalletEntries().get(0);
             BigInteger ownBalance = new BigInteger(own.getBalance());
-            BigInteger canICX = ownBalance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
+            BigInteger feeInt = ConvertUtil.valueToBigInteger(fee, 18);
 
-            if (canICX.compareTo(BigInteger.ZERO) < 0) {
+            if (ownBalance.compareTo(feeInt) < 0) {
                 MessageDialog messageDialog = new MessageDialog(this);
                 messageDialog.setMessage(getString(R.string.errICXFee));
                 messageDialog.show();

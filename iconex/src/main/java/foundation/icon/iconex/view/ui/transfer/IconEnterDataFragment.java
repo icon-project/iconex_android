@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +58,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
     private static final String ARG_STATE = "ARG_STATE";
 
     private String beforeStr;
-    private int maxSize;
+    private final int MAX_SIZE = 500;
 
     public IconEnterDataFragment() {
         // Required empty public constructor
@@ -113,7 +114,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                 if (s.length() > 0) {
                     String dataStr = s.toString();
                     MessageDialog dialog = new MessageDialog(getActivity());
-                    dialog.setMessage(String.format(Locale.getDefault(), getString(R.string.errOverByteLimit), maxSize));
+                    dialog.setMessage(String.format(Locale.getDefault(), getString(R.string.errOverByteLimit), MAX_SIZE));
                     dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -132,7 +133,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                     else
                         compareLength = dataStr.getBytes().length / 2;
 
-                    if (compareLength > maxSize * 1024) {
+                    if (compareLength > MAX_SIZE * 1024) {
                         dialog.show();
 
                         if (beforeStr == null)
@@ -165,8 +166,7 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
             ((TextView) v.findViewById(R.id.txt_type)).setText("HEX");
         }
 
-        maxSize = 250;
-        ((TextView) v.findViewById(R.id.txt_max)).setText(String.format(Locale.getDefault(), getString(R.string.dataMaxSize), maxSize));
+        ((TextView) v.findViewById(R.id.txt_max)).setText(String.format(Locale.getDefault(), getString(R.string.dataMaxSize), MAX_SIZE));
 
         if (data.getData() != null && !data.getData().isEmpty()) {
             // view mode
@@ -278,10 +278,14 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
 
     public void showCancel() {
         String _data = data.getData() == null ? "" : data.getData();
-        if (_data.startsWith("0x")) _data = new String(Hex.decode(Utils.remove0x(_data)));
+        String decodeData = "";
+        if (_data.startsWith("0x")) decodeData= new String(Hex.decode(Utils.remove0x(_data)));
         String edit = editData.getText().toString();
 
-        if (!edit.equals(_data)) {
+        if (edit.equals(_data) || edit.equals(decodeData)) {
+            if (mListener != null)
+                mListener.onDataCancel(data);
+        } else {
             MessageDialog messageDialog = new MessageDialog(getActivity());
             messageDialog.setSingleButton(false);
             messageDialog.setCancelButtonText(getString(R.string.no));
@@ -296,9 +300,6 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                 }
             });
             messageDialog.show();
-        } else {
-            if (mListener != null)
-                mListener.onDataCancel(data);
         }
     }
 
@@ -354,20 +355,10 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                         Log.d(TAG, "data=" + (data.getData() + "\"\""));
                         int stepLimit = Integer.decode(result.get("default").getAsString()) + input * dataLength;
 
-                        if (checkBalance(stepLimit)) {
-                            data.setStepCost(stepLimit);
+                        data.setStepCost(stepLimit);
 
-                            if (mListener != null)
-                                mListener.onSetData(data);
-                        } else {
-                            MessageDialog messageDialog = new MessageDialog(getActivity());
-                            messageDialog.setMessage(getString(R.string.errIcxOwnNotEnough));
-                            messageDialog.show();
-
-                            data.setData(null);
-                        }
-                    } else {
-
+                        if (mListener != null)
+                            mListener.onSetData(data);
                     }
                 }
 

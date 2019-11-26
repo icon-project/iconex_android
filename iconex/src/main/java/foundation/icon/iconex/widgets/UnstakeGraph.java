@@ -56,7 +56,7 @@ public class UnstakeGraph extends LinearLayout {
     }
 
     public void updateGraph() {
-        float stakedPer = staked.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).floatValue();
+        float stakedPer = staked.add(unstake).divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).floatValue();
         Log.i(TAG, "stakePer=" + stakedPer + ", Total=" + total + ", Stake=" + staked);
         float unstakePer = unstake.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).floatValue();
         Log.i(TAG, "unstakePer=" + unstakePer + ", Total=" + total + ", Unstake=" + unstake);

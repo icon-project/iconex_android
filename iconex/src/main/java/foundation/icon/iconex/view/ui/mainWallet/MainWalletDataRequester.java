@@ -61,6 +61,7 @@ public class MainWalletDataRequester {
 
         void onNetworkError();
     }
+
     OnLoadListener mListener = null;
 
     private static String KEY_BALANCE = "balance";
@@ -94,7 +95,11 @@ public class MainWalletDataRequester {
 
                 boolean loading = true;
                 do {
-                    try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     synchronized (MainWalletDataRequester.this) {
                         if (mListener == null) break;
                         final OnLoadListener listener = MainWalletDataRequester.this.mListener;
@@ -336,7 +341,8 @@ public class MainWalletDataRequester {
                     JsonObject item = list.get(i).getAsJsonObject();
                     String tradeName = item.get("tradeName").getAsString();
                     String price = item.get("price").getAsString();
-                    exchangeTable.put(tradeName, price);
+                    if (!price.equals("0"))
+                        exchangeTable.put(tradeName, price);
                 }
             }
 

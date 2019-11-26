@@ -271,20 +271,30 @@ public class WalletDetailActivity extends AppCompatActivity {
                 String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
                 BigDecimal balance = new BigDecimal(strDecimal);
 
+                if (entryID.equals(id)) {
+                    viewModel.amount.setValue(balance);
+                }
+            } catch (Exception e) {
+                if (entryID.equals(id)) {
+                    viewModel.amount.setValue(null);
+                }
+            }
+            try {
+                String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
+                BigDecimal balance = new BigDecimal(strDecimal);
+
                 String exchangeKey = entry.getSymbol().toLowerCase() + unit.toLowerCase();
                 BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
                 BigDecimal exchanged = balance.multiply(exchanger);
                 exchages.put(entry.getId(), exchanged);
 
                 if (entryID.equals(id)) {
-                    viewModel.amount.setValue(balance);
                     viewModel.exchange.setValue(exchanged);
                 }
             } catch (Exception e) {
                 exchages.put(entry.getId(), null);
 
                 if (entryID.equals(id)) {
-                    viewModel.amount.setValue(null);
                     viewModel.exchange.setValue(null);
                 }
             }

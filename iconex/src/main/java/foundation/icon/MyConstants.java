@@ -61,9 +61,8 @@ public class MyConstants {
     public static final String ICX_SYM = "ICX";
 
     // ======== App Lock ========
-//    public static final int LOCK_TIME_LIMIT = 5 * 60 * 1000;
+    public static final int LOCK_TIME_LIMIT = 5 * 60 * 1000;
 
-    public static final int LOCK_TIME_LIMIT = 10 * 1000;
     // ======== Network ========
     public static final int NETWORK_MAIN = 1;
     public static final int NETWORK_TEST = 2;

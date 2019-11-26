@@ -136,6 +136,7 @@ public class LoadInputWalletInfoFragment extends Fragment implements View.OnClic
         inputAlias.setOnKeyPreImeListener(onKeyPreIme);
 
         inputPwd = v.findViewById(R.id.input_pwd);
+        inputPwd.disableCopyPaste();
         inputPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {

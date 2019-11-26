@@ -550,13 +550,14 @@ public class MainWalletActivity extends AppCompatActivity implements
             topTokenVD.setTxtAmount(totalBalance == null ? MyConstants.NO_BALANCE : DecimalFomatter.format(totalBalance));
             topTokenVD.amountLoading = false;
 
-            BigDecimal exchanged = null;
+            BigDecimal exchanged;
             try {
                 String exchangeKey = entryVDs.get(1).getEntry().getSymbol().toLowerCase() + currentUnit.toLowerCase();
                 String strExchanger = ICONexApp.EXCHANGE_TABLE.get(exchangeKey);
                 BigDecimal deciExchanger = new BigDecimal(strExchanger);
                 exchanged = totalBalance.multiply(deciExchanger);
             } catch (Exception e) {
+                exchanged = null;
             }
             topTokenVD.setExchanged(exchanged, currentUnit);
             topTokenVD.exchageLoading = false;

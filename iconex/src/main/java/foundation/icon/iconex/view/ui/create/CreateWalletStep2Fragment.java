@@ -294,7 +294,10 @@ public class CreateWalletStep2Fragment extends Fragment implements View.OnClickL
 
                             @Override
                             public void onComplete() {
-                                btnNext.setEnabled(true);
+                                inputAlias.setText("");
+                                inputAlias.requestFocus();
+                                inputPwd.setText("");
+                                inputCheck.setText("");
                                 progress.setVisibility(View.GONE);
                             }
                         });

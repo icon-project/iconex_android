@@ -167,10 +167,8 @@ public class PRepStakeActivity extends AppCompatActivity implements UnstakeFragm
                     votingPower = getDelegationResult.getItem("votingPower").asInteger();
 
                     IconService iconService = new IconService(ICONexApp.NETWORK.getUrl());
-                    if (wallet.getWalletEntries().get(0).getBalance().equals("-")) {
-                        BigInteger balance = iconService.getBalance(wallet.getAddress());
-                        wallet.getWalletEntries().get(0).setBalance(balance.toString());
-                    }
+                    BigInteger balance = iconService.getBalance(wallet.getAddress());
+                    wallet.getWalletEntries().get(0).setBalance(balance.toString());
 
                     stepPrice = iconService.getStepPrice().asInteger();
 

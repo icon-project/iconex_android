@@ -10,12 +10,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import java.math.BigDecimal;
+
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 
 public class ICXcoinWalletItem extends WalletItem{
 
     public ViewGroup layoutWalletItem;
+    private ViewGroup layoutBottom;
 
     public ImageView imgSymbol;
     public TextView txtSymbol;
@@ -41,6 +44,7 @@ public class ICXcoinWalletItem extends WalletItem{
         View v = LayoutInflater.from(getContext()).inflate(R.layout.item_wallet_icx_coin, this, false);
 
         layoutWalletItem = v.findViewById(R.id.wallet_item_layout);
+        layoutBottom = v.findViewById(R.id.layout_bottom);
 
         imgSymbol = v.findViewById(R.id.img_symbol);
         txtSymbol = v.findViewById(R.id.txt_symbol);
@@ -65,6 +69,7 @@ public class ICXcoinWalletItem extends WalletItem{
         // It's OK, If you don't
         // imgSymbol.setImageResource(data.getDrawableSymbolresId());
         // txtSymbol.setText(data.getSymbol());
+
         txtName.setText(data.getName());
 
         txtAmount.setText(data.getTxtAmount());

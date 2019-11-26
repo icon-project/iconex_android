@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/noto_sans_light"
-            android:text="@string/unstake"
+            android:text="@string/unstaked"
             android:textColor="@color/dark4D" />
 
         <TextView

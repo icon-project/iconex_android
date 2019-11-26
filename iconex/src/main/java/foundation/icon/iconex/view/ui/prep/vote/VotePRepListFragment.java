@@ -131,12 +131,8 @@ public class VotePRepListFragment extends Fragment {
                         sortList.addAll(prepList);
 
                         Collections.reverse(sortList);
-                        adapter = new PRepListAdapter(
-                                getActivity(),
-                                PRepListAdapter.Type.VOTE,
-                                sortList);
-
-                        list.setAdapter(adapter);
+                        adapter.setData(sortList);
+                        adapter.notifyDataSetChanged();
                         sortType = PRepListActivity.Sort.RankDescending;
                         sortRank.setText(getString(R.string.rankAscending));
                         break;
@@ -159,12 +155,8 @@ public class VotePRepListFragment extends Fragment {
                             }
                         });
 
-                        adapter = new PRepListAdapter(
-                                getActivity(),
-                                PRepListAdapter.Type.VOTE,
-                                sortList);
-
-                        list.setAdapter(adapter);
+                        adapter.setData(sortList);
+                        adapter.notifyDataSetChanged();
                         sortType = PRepListActivity.Sort.NameAscending;
 
                         TextViewCompat.setTextAppearance(sortRank, R.style.SearchTextAppearanceN);
@@ -174,12 +166,8 @@ public class VotePRepListFragment extends Fragment {
                     case NameAscending:
                         Collections.reverse(sortList);
 
-                        adapter = new PRepListAdapter(
-                                getActivity(),
-                                PRepListAdapter.Type.VOTE,
-                                sortList);
-
-                        list.setAdapter(adapter);
+                        adapter.setData(sortList);
+                        adapter.notifyDataSetChanged();
                         sortType = PRepListActivity.Sort.NameDescending;
                         break;
 
@@ -191,12 +179,8 @@ public class VotePRepListFragment extends Fragment {
                             sortList.addAll(prepList);
                         }
 
-                        adapter = new PRepListAdapter(
-                                getActivity(),
-                                PRepListAdapter.Type.VOTE,
-                                sortList);
-
-                        list.setAdapter(adapter);
+                        adapter.setData(sortList);
+                        adapter.notifyDataSetChanged();
                         sortType = RankAscending;
 
                         TextViewCompat.setTextAppearance(sortRank, R.style.SearchTextAppearanceS);

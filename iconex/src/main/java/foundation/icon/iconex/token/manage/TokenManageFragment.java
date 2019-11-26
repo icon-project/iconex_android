@@ -6,11 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -91,7 +93,9 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
     public interface OnTokenManageListener {
         void onClose();
+
         void onDoneEditToken(String name);
+
         void onDoneAddToken();
     }
 
@@ -143,6 +147,7 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         layoutLoading = v.findViewById(R.id.layout_loading);
 
         editAddr = v.findViewById(R.id.edit_address);
+        editAddr.setMaxLine(2);
         editName = v.findViewById(R.id.edit_name);
         editSym = v.findViewById(R.id.edit_symbol);
         editDec = v.findViewById(R.id.edit_decimals);
@@ -501,13 +506,16 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
         String address = editAddr.getText().toString();
 
         if (mMode == MyConstants.MODE_TOKEN.ADD) {
-            resultAddr = validateAddress(address,showAddressErr);
+            resultAddr = validateAddress(address, showAddressErr);
+            Log.wtf(TAG, "resultAddr=" + resultAddr);
         }
 
         resultName = !editName.getText().isEmpty();
 
         if (mMode == MyConstants.MODE_TOKEN.ADD) {
             btnAdd.setEnabled(resultAddr && resultName);
+            if (!btnAdd.isEnabled())
+                return false;
         } else {
             btnComplete.setEnabled(resultName);
         }

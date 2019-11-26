@@ -17,6 +17,7 @@ import org.web3j.protocol.http.HttpService;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -51,6 +52,7 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
     private Context mContext;
     private LayoutInflater mInflater;
     private List<Boolean> balanceLoaded;
+    private List<Wallet> wallets = new ArrayList<>();
 
     public WalletListAdapter(Context context) {
         mContext = context;
@@ -61,6 +63,8 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
                add(false);
            }
         }};
+        wallets.addAll(ICONexApp.wallets);
+        Collections.reverse(wallets);
         loadBalance();
     }
 
@@ -72,14 +76,14 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Wallet wallet = ICONexApp.wallets.get(position);
+        Wallet wallet = wallets.get(position);
         Boolean loaded = balanceLoaded.get(position);
         holder.bind(wallet, loaded == null ? true : loaded);
     }
 
     @Override
     public int getItemCount() {
-        return ICONexApp.wallets.size();
+        return wallets.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -100,7 +104,7 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
         @Override
         public void onClick(View v) {
             if (mListener != null)
-                mListener.onWalletClick(ICONexApp.wallets.get(getAdapterPosition()));
+                mListener.onWalletClick(wallets.get(getAdapterPosition()));
         }
 
         public void bind(Wallet wallet, boolean loaded) {
@@ -135,8 +139,8 @@ public class WalletListAdapter extends RecyclerView.Adapter<WalletListAdapter.Vi
     }
 
     public void loadBalance() {
-        for (int position = 0 ; ICONexApp.wallets.size() > position; position++) {
-            Wallet wallet = ICONexApp.wallets.get(position);
+        for (int position = 0 ; wallets.size() > position; position++) {
+            Wallet wallet = wallets.get(position);
             WalletEntry coinEntry = wallet.getWalletEntries().get(0);
             if(wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) { // icx wallet
                 getIcxCoinBalance(coinEntry, position); // ICX Coin

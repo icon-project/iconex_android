@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import foundation.icon.iconex.R;
@@ -205,8 +206,10 @@ public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListen
                         });
 
                 try {
-                    BigInteger balance = new BigInteger(wallet.getWalletEntries().get(0).getBalance());
-                    if (balance.compareTo(new BigInteger("1")) < 0) {
+                    BigDecimal balance = new BigDecimal(wallet.getWalletEntries().get(0).getBalance())
+                            .add(new BigDecimal(wallet.getStaked())).add(new BigDecimal(wallet.getUnstake()))
+                            .scaleByPowerOfTen(-18);
+                    if (balance.compareTo(BigDecimal.ONE) < 0) {
                         messageDialog = new MessageDialog(getContext());
                         messageDialog.setMessage(getContext().getString(R.string.notEnoughForStaking));
                         messageDialog.show();

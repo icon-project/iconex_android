@@ -100,7 +100,7 @@
                         android:textSize="12dp"
                         android:textColor="@color/dark4D"
 
-                        android:text="@string/none"/>
+                        android:text="@string/camera"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -148,7 +148,7 @@
                         android:textSize="12dp"
                         android:textColor="@color/dark4D"
 
-                        android:text="@string/none"/>
+                        android:text="@string/storage"/>
                 </LinearLayout>
 
                 <LinearLayout

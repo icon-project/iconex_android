@@ -68,8 +68,8 @@
     <string name="hintWalletAlias">Enter wallet name</string>
     <string name="hintCreateWalletPassword">At least 8 characters including letters, numbers, and special characters.</string>
     <string name="hintWalletPasswordConfirm">Confirm password</string>
-    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )</string>
-    <string name="errAllowSpecialCharacters">Please check the available special character. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )</string>
+    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
+    <string name="errAllowSpecialCharacters">Please check the available special character. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
     <string name="step3Header">This Keystore file contains the encrypted private key\nrequires the wallet password to access it.</string>
     <string name="step3Sub1">Use this Keystore file to load your wallet from other devices.</string>
     <string name="step3Sub2">You can download your Keystore file from the \"Backup wallet\" menu later.</string>

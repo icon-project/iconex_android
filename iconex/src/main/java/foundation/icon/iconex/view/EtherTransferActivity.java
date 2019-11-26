@@ -445,12 +445,13 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                     if (s.toString().startsWith(".")) {
                         editSend.setText("");
                     } else {
-                        ((TextView) findViewById(R.id.txt_fee)).setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
+                        txtFee.setText(calculateFee());
                         setRemain(calculateFee());
                     }
                 } else {
                     editLimit.setError(false, null);
-                    txtFee.setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
+//                    BigDecimal bigFee = new BigDecimal(calculateFee());
+                    txtFee.setText(calculateFee());
                     setRemain(calculateFee());
                     setSendEnable(false);
                 }
@@ -558,7 +559,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 seekPrice.setProgress(progress);
                 txtPrice.setText(String.valueOf(progress));
 
-                txtFee.setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
+//                BigDecimal bigFee = new BigDecimal(calculateFee());
+                txtFee.setText(calculateFee());
                 setRemain(calculateFee());
             }
 
@@ -633,13 +635,14 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                BigInteger calcAmount;
                 BigInteger fee = ConvertUtil.valueToBigInteger(calculateFee(), 18);
                 boolean feeError = false;
 
                 if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
-                    BigInteger canICX = balance.subtract(fee);
-                    if (canICX.compareTo(BigInteger.ZERO) < 0) {
+                    calcAmount = ConvertUtil.valueToBigInteger(editSend.getText().toString(), 18);
+                    BigInteger canETH = balance.subtract(calcAmount).subtract(fee);
+                    if (canETH.compareTo(BigInteger.ZERO) < 0) {
                         feeError = true;
                     }
                 } else {
@@ -722,7 +725,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
         ((TextView) findViewById(R.id.txt_balance)).setText(DecimalFomatter.format(decimalBalance, mWalletEntry.getDefaultDec()));
         TextViewCompat.setAutoSizeTextTypeWithDefaults(findViewById(R.id.txt_balance), TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-        ((TextView) findViewById(R.id.txt_fee)).setText(DecimalFomatter.format(new BigDecimal(calculateFee())));
+        txtFee.setText(calculateFee());
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
         if (strPrice != null) {
             if (strPrice.equals(MyConstants.NO_EXCHANGE)) {

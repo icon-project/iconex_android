@@ -2,7 +2,6 @@ package foundation.icon.iconex.widgets
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.Typeface
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -137,6 +136,7 @@ class TTextInputLayout : LinearLayout {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                Log.w(TAG, "nowString=$s")
                 if (s.isNotEmpty()) {
                     if (edit.isEnabled)
                         btnClear.visibility = View.VISIBLE
@@ -152,9 +152,8 @@ class TTextInputLayout : LinearLayout {
                 } else
                     tvHint.visibility = View.INVISIBLE
 
-                if (isDetectPaste) Log.d(TAG, "detecting paste...")
                 if (isDetectPaste && s.length - prevString.length > 1) {
-                    Log.d(TAG, "detect paste!")
+                    Log.wtf(TAG, "detect paste!// \ns=$s, s.length=${s.length}\nprevString=$prevString, prevString.length=${prevString.length}")
                     setText(prevString)
                 } else {
                     mOnTextChangedListener?.onChanged(s)
@@ -391,6 +390,18 @@ class TTextInputLayout : LinearLayout {
             edit.requestFocus()
         else
             edit.clearFocus()
+    }
+
+    fun setMaxLine(max: Int) {
+        edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+        edit.maxLines = max
+
+        edit.setOnKeyListener { v, keyCode, event ->
+            if ((event.action == KeyEvent.ACTION_DOWN
+                            && event.keyCode == KeyEvent.KEYCODE_ENTER)) {
+                false
+            } else false
+        }
     }
 
     fun getEditView(): MyEditText {
