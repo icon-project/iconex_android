@@ -188,18 +188,6 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                         } else {
                             txtCurrentIScore.setText(Utils.formatFloating(
                                     ConvertUtil.getValue(currentIScore, 18), 15));
-                            txtCurrentIScore.setText("1,235,234,234,234.123456789012345678");
-//                            if (txtCurrentIScore.getLineCount() > 1) {
-//                                txtCurrentIScore.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtCurrentIScore.getTextSize() - 10);
-//                                txtCurrentIScore.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        if (txtCurrentIScore.getLineCount() > 1)
-//                                            txtCurrentIScore.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtCurrentIScore.getTextSize() - 10);
-//                                    }
-//                                }, 100);
-//                            }
-
                             txtEstimatedIcx.setText(Utils.formatFloating(
                                     ConvertUtil.getValue(estimatedIcx, 18), 8));
                         }
