@@ -196,7 +196,7 @@
             android:exported="false"
             android:screenOrientation="unspecified"
             android:theme="@style/DialogActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".wallet.transfer.OldEtherTransferActivity"
             android:configChanges="fontScale"
