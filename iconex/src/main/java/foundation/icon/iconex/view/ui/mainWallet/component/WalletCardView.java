@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,10 +155,16 @@ public class WalletCardView extends FrameLayout {
                 walletItem.bind(data);
 
                 if (holder.getItemViewType() == 0) {
-                    if (walletViewData.getWallet().getStaked().add(walletViewData.getWallet().getUnstake())
-                            .equals(BigInteger.ZERO)) {
-                        ICXcoinWalletItem icxItem = (ICXcoinWalletItem) holder.itemView;
-                        icxItem.layoutBottom.setVisibility(GONE);
+                    ICXcoinWalletItem icxItem = (ICXcoinWalletItem) holder.itemView;
+                    try {
+                        if (walletViewData.getWallet().getStaked().add(walletViewData.getWallet().getUnstake())
+                                .equals(BigInteger.ZERO)) {
+                            icxItem.layoutBottom.setVisibility(GONE);
+                        } else {
+                            icxItem.layoutBottom.setVisibility(VISIBLE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

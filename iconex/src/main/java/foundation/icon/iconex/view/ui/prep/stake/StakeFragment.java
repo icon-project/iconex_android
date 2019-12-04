@@ -484,7 +484,7 @@ public class StakeFragment extends Fragment {
     private StakeDialog dialog;
 
     private void showDialog() {
-        if (fee.compareTo(new BigInteger(wallet.getWalletEntries().get(0).getBalance())) < 0) {
+        if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).compareTo(fee) < 0) {
             MessageDialog messageDialog = new MessageDialog(getContext());
             messageDialog.setSingleButton(true);
             messageDialog.setMessage(getString(R.string.errIcxOwnNotEnough));
