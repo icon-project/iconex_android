@@ -80,8 +80,6 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
                     .add(R.id.container, fragmentInputPrivateKey)
                     .addToBackStack("privateKey")
                     .commit();
-
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         }
     }
 
@@ -122,8 +120,6 @@ public class LoadWalletActivity extends AppCompatActivity implements LoadSelectM
     public void onPrivateKeyBack() {
         fragmentInputPrivateKey.clear(true);
         getSupportFragmentManager().popBackStack();
-
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override

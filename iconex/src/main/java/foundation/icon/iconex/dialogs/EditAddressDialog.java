@@ -35,7 +35,6 @@ public class EditAddressDialog extends MessageDialog implements View.OnClickList
 
 
     public void setAddress(String address) {
-        Log.d(TAG, "setAddress() called with: address = [" + address + "]");
         editAddress.setText(address);
         validateAddress();
     }
@@ -213,7 +212,6 @@ public class EditAddressDialog extends MessageDialog implements View.OnClickList
 
     private boolean validateAddress() {
         String address = editAddress.getText();
-        Log.d(TAG, "validateAddress() called with: address = [\" + address + \"]");
 
         if (address.isEmpty()) {
             return false;

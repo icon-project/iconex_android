@@ -142,7 +142,6 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
                     boolean isEdited = false;
                     for (Delegation d : delegations) {
                         isEdited = isEdited || d.isEdited();
-                        Log.d(TAG, "Delegations is edited=" + isEdited);
                     }
 
                     if (isEdited) {
@@ -186,8 +185,6 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "fee=" + fee);
-                Log.d(TAG, "balance=" + new BigInteger(wallet.getWalletEntries().get(0).getBalance()));
                 if (new BigInteger(wallet.getWalletEntries().get(0).getBalance()).compareTo(fee) < 0) {
                     MessageDialog messageDialog = new MessageDialog(PRepVoteActivity.this);
                     messageDialog.setSingleButton(true);

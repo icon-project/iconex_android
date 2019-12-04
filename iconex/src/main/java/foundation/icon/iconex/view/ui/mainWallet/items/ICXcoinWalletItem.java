@@ -18,7 +18,7 @@ import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
 public class ICXcoinWalletItem extends WalletItem{
 
     public ViewGroup layoutWalletItem;
-    private ViewGroup layoutBottom;
+    public ViewGroup layoutBottom;
 
     public ImageView imgSymbol;
     public TextView txtSymbol;

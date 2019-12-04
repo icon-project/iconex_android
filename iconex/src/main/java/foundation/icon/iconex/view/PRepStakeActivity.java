@@ -187,11 +187,6 @@ public class PRepStakeActivity extends AppCompatActivity implements UnstakeFragm
                         ICONexApp.EXCHANGE_TABLE.put(tradeName, price);
                     }
 
-                    Log.d(TAG, "totalBalance=" + ConvertUtil.getValue(totalBalance, 18)
-                            + "\nStake=" + ConvertUtil.getValue(staked, 18)
-                            + "\nDelegation=" + ConvertUtil.getValue(delegated, 18)
-                            + "\nAvailable=" + ConvertUtil.getValue(availableStake, 18));
-
                     emitter.onComplete();
                 } catch (InterruptedIOException e) {
                     e.printStackTrace();

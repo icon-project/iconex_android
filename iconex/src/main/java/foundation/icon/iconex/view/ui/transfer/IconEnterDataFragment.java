@@ -352,7 +352,6 @@ public class IconEnterDataFragment extends Fragment implements View.OnClickListe
                         JsonObject result = response.body().getResult().getAsJsonObject();
                         int input = Integer.decode(result.get("input").getAsString());
                         int dataLength = (data.getData() + "\"\"").getBytes().length;
-                        Log.d(TAG, "data=" + (data.getData() + "\"\""));
                         int stepLimit = Integer.decode(result.get("default").getAsString()) + input * dataLength;
 
                         data.setStepCost(stepLimit);

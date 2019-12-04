@@ -469,6 +469,7 @@
     <string name="unstake">Unstake</string>
     <string name="unstaked">Unstaked</string>
     <string name="under_voted">┗ Voted</string>
+    <string name="under_voted_icx">┗ Voted (ICX)</string>
     <string name="under_unstake">┗ Unstake 요청</string>
     <string name="voted">Voted</string>
     <string name="available">Available</string>

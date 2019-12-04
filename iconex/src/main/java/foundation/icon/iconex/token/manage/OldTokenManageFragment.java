@@ -660,7 +660,6 @@ public class OldTokenManageFragment extends Fragment implements View.OnClickList
                     editAddr.setText(barcode.displayValue);
                     editAddr.setSelection(editAddr.getText().toString().length());
                 } else {
-//                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
             }
         }

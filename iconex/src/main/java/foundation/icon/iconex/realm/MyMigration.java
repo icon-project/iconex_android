@@ -19,7 +19,6 @@ public class MyMigration implements RealmMigration {
 
     @Override
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-        Log.wtf(TAG, "oldVersion=" + oldVersion);
         RealmSchema schema = realm.getSchema();
 
         if (oldVersion == 0) {

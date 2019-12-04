@@ -126,7 +126,6 @@ public class MainActivity extends Activity {
         String base64Encoded = null;
         try {
             String jsonObject = mapper.writeValueAsString(request);
-            Log.d(TAG, "RequestJsonObject=" + jsonObject);
             base64Encoded = Base64.encodeToString(jsonObject.getBytes(), Base64.NO_WRAP);
 
         } catch (JsonProcessingException e) {
@@ -209,7 +208,6 @@ public class MainActivity extends Activity {
             String requestData = makeRequestData(transaction);
 
             String request = CMD_TX + requestData;
-            Log.d(TAG, "Request=" + request);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(request));
             startActivityForResult(intent, 3000);
         }
@@ -224,8 +222,6 @@ public class MainActivity extends Activity {
                     .put("_to", new RpcValue(to))
                     .put("_value", new RpcValue(v))
                     .build();
-
-            Log.d(TAG, "from=" + SampleApp.from);
 
             // make a raw transaction without the stepLimit
             Transaction transaction = TransactionBuilder.newBuilder()

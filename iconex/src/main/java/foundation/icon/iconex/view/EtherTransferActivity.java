@@ -752,6 +752,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         BigInteger bigSend;
 
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
+        String feePrice = ICONexApp.EXCHANGE_TABLE.get("ethusd");
 
         boolean isNegative = false;
 
@@ -830,12 +831,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                     txtRemain = remainValue;
                     txtTransRemain = String.format("$ %s", strRemainUSD);
                 }
-
-                Double feeUSD = Double.parseDouble(calculateFee())
-                        * Double.parseDouble(strPrice);
-                String strFeeUSD = String.format(Locale.getDefault(), "%,.2f", feeUSD);
-                ((TextView) findViewById(R.id.txt_trans_fee))
-                        .setText(String.format("$ %s", strFeeUSD));
             }
         } else {
             if (isNegative)
@@ -845,6 +840,12 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
 
             txtTransRemain = String.format("$ %s", MyConstants.NO_BALANCE);
         }
+
+        Double feeUSD = Double.parseDouble(calculateFee())
+                * Double.parseDouble(feePrice);
+        String strFeeUSD = String.format(Locale.getDefault(), "%,.2f", feeUSD);
+        ((TextView) findViewById(R.id.txt_trans_fee))
+                .setText(String.format("$ %s", strFeeUSD));
     }
 
     private void addPlus(int plus) {

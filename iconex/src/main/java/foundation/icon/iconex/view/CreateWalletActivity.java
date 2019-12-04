@@ -64,8 +64,6 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
                 .add(R.id.container, CreateWalletStep2Fragment.newInstance())
                 .addToBackStack("step2")
                 .commit();
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
@@ -74,8 +72,6 @@ public class CreateWalletActivity extends FragmentActivity implements CreateWall
                 .add(R.id.container, CreateWalletStep3Fragment.newInstance())
                 .addToBackStack("step3")
                 .commit();
-
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override

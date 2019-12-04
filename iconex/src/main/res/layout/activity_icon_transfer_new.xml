@@ -99,7 +99,7 @@
                     android:textSize="10dp"
                     android:textColor="@color/darkB3"
 
-                    android:text=" $ 9,000,000.003"/>
+                    android:text="$ -"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Send Amount -->

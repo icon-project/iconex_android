@@ -48,7 +48,6 @@ public class WalletBackupActivityNew extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_wallet_backup_new);
 
         // get intente

@@ -67,11 +67,9 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
         vm.getStepLimit().observe((FragmentActivity) root, new Observer<BigInteger>() {
             @Override
             public void onChanged(BigInteger stepLimit) {
-                Log.d(TAG, "StepLimit onChanged");
                 stepPrice = vm.getStepPrice().getValue();
                 if (!stepLimit.equals(BigInteger.ZERO)
                         && !stepPrice.equals(BigInteger.ZERO)) {
-                    Log.d(TAG, "notifyItemChanged=" + (MyVoteListAdapter.this.getItemCount() - 1));
                     MyVoteListAdapter.this.stepLimit = stepLimit;
                     notifyItemChanged(MyVoteListAdapter.this.getItemCount() - 1);
                 }
@@ -99,10 +97,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
-            Log.d(TAG, "ItemViewHolder, position=" + position);
             ItemViewHolder h = (ItemViewHolder) holder;
             Delegation delegation = delegations.get(position);
-            Log.d(TAG, "onBindViewHolder value=" + delegation.getValue());
             PRep pRep = delegation.getPrep();
 
             h.tvPrepName.setText(String.format(Locale.getDefault(), "%s",
@@ -141,7 +137,6 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
             h.btnManage.setImageResource(R.drawable.bg_btn_prep_delete);
             if (!delegation.isNew()) {
-                Log.d(TAG, "isNew=" + delegation.isNew());
                 h.btnManage.setSelected(true);
                 h.btnManage.setImageResource(R.drawable.ic_delete_list_disabled);
             } else {
@@ -151,7 +146,6 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             h.layoutGraph.setVisibility(View.GONE);
             h.layoutMyVotes.setVisibility(View.VISIBLE);
         } else if (holder instanceof FooterViewHolder) {
-            Log.d(TAG, "FooterViewHolder, position=" + position);
             if (!stepLimit.equals(BigInteger.ZERO)) {
                 FooterViewHolder h = (FooterViewHolder) holder;
                 String icx = ConvertUtil.getValue(stepPrice, 18);
@@ -383,9 +377,6 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                 }
 
                 if (editDelegation.getTag() == null) {
-                    Log.i(TAG, "input=" + input);
-                    Log.i(TAG, "available=" + available);
-
                     if (input.compareTo(available) > 0) {
                         editDelegation.setText(available.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                         input = new BigDecimal(new BigDecimal(editDelegation.getText().toString()).scaleByPowerOfTen(18).toBigInteger());
@@ -399,13 +390,11 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     } else {
 //                        int seekProgress = Integer.parseInt(input.divide(available, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).toString());
                         float percent = (input.floatValue() / available.floatValue()) * 100;
-                        Log.i(TAG, "Voting percent=" + percent + "input=" + input.toString() + ", available=" + available.toString() + "seekProgress=" + Math.round(percent));
                         txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
                         seekbar.setProgress(Math.round(percent));
                     }
                 } else {
                     float percent = (input.floatValue() / available.floatValue()) * 100;
-                    Log.i(TAG, "Voting percent=" + percent + "input=" + input.toString() + ", available=" + available.toString());
                     txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
                 }
 

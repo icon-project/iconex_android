@@ -98,14 +98,11 @@ public class WalletDetailServiceHelper {
                         walletEntry.getContractAddress(), 1);
             }
         } else { // ether
-            Log.i(TAG, "Load Ether transfer history");
             RealmUtil.loadRecents();
             List<TransactionItemViewData> viewDataList = new ArrayList<>();
             for (RecentSendInfo tx : ICONexApp.ETHSendInfo) {
-                Log.w(TAG, tx.toString());
                 if (walletEntry.getAddress().equals(tx.getAddress()) && walletEntry.getSymbol().equals(tx.getSymbol())
                         && ICONexApp.NETWORK.getNid().intValue() == tx.getNid()) {
-                    Log.wtf(TAG, "=== Target history\n" + tx.toString());
                     TransactionItemViewData viewData = new TransactionItemViewData();
                     viewData.setState(1);
                     viewData.setDate(tx.getDate());
@@ -129,7 +126,6 @@ public class WalletDetailServiceHelper {
     public void loadMoreIcxTxList() {
         mViewModle.isNoLoadMore.setValue(mCacheTxData.size() >= mCountTxData);
         if (mCacheTxData.size() < mCountTxData) {
-            Log.d(TAG, "load more");
             Wallet wallet = mViewModle.wallet.getValue();
             WalletEntry walletEntry = mViewModle.walletEntry.getValue();
 
@@ -149,7 +145,6 @@ public class WalletDetailServiceHelper {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "ready!");
             NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
             mService = binder.getService();
             mService.registerBalanceCallback(mBalanceCallback);
@@ -171,7 +166,6 @@ public class WalletDetailServiceHelper {
     private NetworkService.TxListCallback mIcxTxCallback = new NetworkService.TxListCallback() {
         @Override
         public void onReceiveTransactionList(int totalData, JsonArray txList) {
-            Log.d(TAG, "receive list");
             mCountTxData = totalData;
             Wallet wallet = mViewModle.wallet.getValue();
             WalletEntry walletEntry = mViewModle.walletEntry.getValue();
@@ -215,7 +209,6 @@ public class WalletDetailServiceHelper {
 
         @Override
         public void onReceiveError(String resCode) {
-            Log.d(TAG, "error: " + resCode);
             mLoadCursor--;
             mViewModle.lstTxData.postValue(mCacheTxData);
         }
@@ -230,14 +223,12 @@ public class WalletDetailServiceHelper {
     private NetworkService.BalanceCallback mBalanceCallback = new NetworkService.BalanceCallback() {
         @Override
         public void onReceiveICXBalance(String id, String address, String result) {
-            Log.d(TAG, "Receive icx balance: " + result);
             mIcxBalance.add(new String[]{id, address, result});
             if (isDoneRequest(true)) completeRequest();
         }
 
         @Override
         public void onReceiveETHBalance(String id, String address, String result) {
-            Log.d(TAG, "Receive eth balance: " + result);
             address = address.substring(2);
             mEthBalance.add(new String[]{id, address, result});
 
@@ -246,7 +237,6 @@ public class WalletDetailServiceHelper {
 
         @Override
         public void onReceiveError(String id, String address, int code) {
-            Log.d(TAG, "Receive balance err code:" + code);
             if (address.startsWith(MyConstants.PREFIX_HEX)) {
                 address = address.substring(2);
             }
@@ -258,7 +248,6 @@ public class WalletDetailServiceHelper {
 
         @Override
         public void onReceiveException(String id, String address, String msg) {
-            Log.d(TAG, "Receive balance exception " + msg);
             if (address.startsWith(MyConstants.PREFIX_HEX)) {
                 address = address.substring(2);
             }
@@ -270,7 +259,6 @@ public class WalletDetailServiceHelper {
     };
 
     private void completeRequest() {
-        Log.d(TAG, "complete Request!");
         mViewModle.lstBalanceResults.setValue(
                 new ArrayList<String[]>() {{
                     addAll(mIcxBalance);
@@ -288,13 +276,11 @@ public class WalletDetailServiceHelper {
             requestCount--;
         }
 
-        Log.d(TAG, "remain count: " + requestCount);
         return requestCount == 0;
     }
 
     private void cancleRequest() {
         if (!isDoneRequest(true)) {
-            Log.d(TAG, "cancle request");
             mService.stopGetBalance();
             mIcxBalance.clear();
             mIcxBalance.clear();
@@ -306,7 +292,6 @@ public class WalletDetailServiceHelper {
 
         mViewModle.loadingBalance.setValue(true);
         mViewModle.loadingSatke.setValue(true);
-        Log.d(TAG, "request remote data");
         Object[] balanceList = makeGetBalanceList();
         HashMap<String, String> icxList = (HashMap<String, String>) balanceList[0];
         HashMap<String, String[]> ircList = (HashMap<String, String[]>) balanceList[1];

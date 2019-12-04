@@ -94,9 +94,7 @@ public class UnstakeFragment extends Fragment {
         txtBlockHeight.setText(String.format(Locale.getDefault(), "%,d",
                 vm.getBlockHeight().getValue().longValue()));
 
-        Log.i(TAG, "Estimated Block=" + vm.getRemainingBlock().getValue());
         long estimatedSec = vm.getRemainingBlock().getValue().multiply(new BigInteger("2")).intValue();
-        Log.i(TAG, "Estimated Time=" + estimatedSec);
         long hour = estimatedSec / 3600;
         long min = (estimatedSec % 3600) / 60;
         txtEstimatedTime.setText(String.format(Locale.getDefault(), getString(R.string.unstake_required_time),

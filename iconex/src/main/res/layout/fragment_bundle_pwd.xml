@@ -4,76 +4,81 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingTop="40dp"
-        android:paddingEnd="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center_horizontal"
-            android:lineHeight="24dp"
-            android:text="@string/bundlePwdHeader"
-            android:textColor="@color/dark4D"
-            android:textSize="14dp" />
-
-
-        <foundation.icon.iconex.widgets.TTextInputLayout
-            android:id="@+id/edit_pwd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:hint="@string/password"
-            app:inputType="password" />
-
-        <foundation.icon.iconex.widgets.TTextInputLayout
-            android:id="@+id/edit_check"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/hintWalletPasswordConfirm"
-            app:inputType="password" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_outline_box_cyan"
-            android:fontFamily="@font/noto_sans_regular"
-            android:lineHeight="18dp"
-            android:padding="20dp"
-            android:text="@string/bundlePwdDetailed1"
-            android:textColor="@color/primary"
-            android:textSize="10dp" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <View
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/dot_primary" />
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="40dp"
+            android:paddingEnd="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:fontFamily="@font/noto_sans_light"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center_horizontal"
+                android:lineHeight="24dp"
+                android:text="@string/bundlePwdHeader"
+                android:textColor="@color/dark4D"
+                android:textSize="14dp" />
+
+
+            <foundation.icon.iconex.widgets.TTextInputLayout
+                android:id="@+id/edit_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:hint="@string/password"
+                app:inputType="password" />
+
+            <foundation.icon.iconex.widgets.TTextInputLayout
+                android:id="@+id/edit_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/hintWalletPasswordConfirm"
+                app:inputType="password" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_outline_box_cyan"
+                android:fontFamily="@font/noto_sans_regular"
                 android:lineHeight="18dp"
-                android:text="@string/bundlePwdDetailed2"
+                android:padding="20dp"
+                android:text="@string/bundlePwdDetailed1"
                 android:textColor="@color/primary"
                 android:textSize="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/dot_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/noto_sans_light"
+                    android:lineHeight="18dp"
+                    android:text="@string/bundlePwdDetailed2"
+                    android:textColor="@color/primary"
+                    android:textSize="10dp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/layout_change"

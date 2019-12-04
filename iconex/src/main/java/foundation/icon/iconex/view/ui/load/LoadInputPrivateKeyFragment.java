@@ -167,7 +167,6 @@ public class LoadInputPrivateKeyFragment extends Fragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        Log.d(TAG, "onClick:" + v.getId() + "//" + R.id.drop_down);
         switch (v.getId()) {
             case R.id.drop_down:
 

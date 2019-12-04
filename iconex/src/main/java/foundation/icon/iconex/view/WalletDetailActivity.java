@@ -52,7 +52,6 @@ public class WalletDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "create");
 
         viewModel = ViewModelProviders.of(this).get(WalletDetailViewModel.class);
 
@@ -139,7 +138,6 @@ public class WalletDetailActivity extends AppCompatActivity {
                 for (TransactionItemViewData viewData: viewDataes) {
                     viewData.setTxtAddress(viewData.getTxHash());
 
-                    Log.d(TAG, viewData.getDate());
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                     try {
@@ -250,7 +248,6 @@ public class WalletDetailActivity extends AppCompatActivity {
         viewModel.isNoLoadMore.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isNoLoadMore) {
-                Log.d(TAG, "onChanged() called with: isNoLoadMore = [" + isNoLoadMore + "]");
             }
         });
     }
@@ -317,7 +314,6 @@ public class WalletDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         switch (requestCode) {
             case WalletManageMenuDialog.REQ_PASSWORD_CHANGE: {
                 WalletPwdChangeActivityNew.getActivityResult(resultCode, data, new WalletPwdChangeActivityNew.OnResultListener() {

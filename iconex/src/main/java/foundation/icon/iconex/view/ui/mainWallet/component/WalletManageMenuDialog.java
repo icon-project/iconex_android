@@ -3,6 +3,7 @@ package foundation.icon.iconex.view.ui.mainWallet.component;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -34,6 +35,7 @@ import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
 public class WalletManageMenuDialog extends BottomSheetDialog implements View.OnClickListener {
+    private static final String TAG = WalletManageMenuDialog.class.getSimpleName();
 
     private ImageButton btnClose;
     private Button btnRename;
@@ -188,7 +190,10 @@ public class WalletManageMenuDialog extends BottomSheetDialog implements View.On
                 boolean isRemain = false;
                 for (WalletEntry entry : wallet.getWalletEntries()) {
                     try {
-                        if (new BigInteger(entry.getBalance()).compareTo(BigInteger.ZERO) != 0)
+                        if (new BigInteger(entry.getBalance())
+                                .add(wallet.getStaked()
+                                        .add(wallet.getUnstake())
+                                .add(wallet.getiScore())).compareTo(BigInteger.ZERO) != 0)
                             isRemain = true;
                     } catch (Exception e) { }
                 }

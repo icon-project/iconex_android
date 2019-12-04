@@ -60,7 +60,6 @@ public class ICONexConnectActivity extends AppCompatActivity
 
             txString = new String(Base64.decode(requestData, Base64.NO_WRAP));
             JsonObject jsonObject = new Gson().fromJson(txString, JsonObject.class);
-            Log.d(TAG, txString);
 
             JsonObject params = jsonObject.get("params").getAsJsonObject();
             ObjectMapper mapper = new ObjectMapper();

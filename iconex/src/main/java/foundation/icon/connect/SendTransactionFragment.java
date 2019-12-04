@@ -353,7 +353,6 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
 
                                 @Override
                                 public void onNext(Bytes bytes) {
-                                    Log.d(TAG, "txhash=" + bytes);
                                     mListener.sendTransaction(bytes);
                                 }
 
@@ -434,7 +433,6 @@ public class SendTransactionFragment extends Fragment implements View.OnClickLis
 
     private void parseTransaction(String txString) {
         JsonObject jsonObject = new Gson().fromJson(txString, JsonObject.class);
-        Log.d(TAG, txString);
 
         JsonObject params = jsonObject.get("params").getAsJsonObject();
         ObjectMapper mapper = new ObjectMapper();

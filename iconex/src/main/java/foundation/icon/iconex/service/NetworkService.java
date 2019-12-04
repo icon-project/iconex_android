@@ -668,9 +668,7 @@ public class NetworkService extends Service {
                         data,
                         LoopChainClient.valueToBigInteger(value));
                 if (tx.hasError()) {
-//                    Log.d(TAG, "Has error = " + tx.getError().getMessage());
                 }
-//                Log.d(TAG, "txHash=" + tx.getTransactionHash());
 
                 return new String[]{id, tx.getTransactionHash()};
 

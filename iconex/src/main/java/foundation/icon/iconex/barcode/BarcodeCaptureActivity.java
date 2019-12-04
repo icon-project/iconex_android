@@ -242,7 +242,6 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
             if (hasLowStorage) {
 //                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
-//                Log.w(TAG, getString(R.string.low_storage_error));
             }
         }
 
@@ -500,13 +499,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
     boolean isStartActivity = false;
     private void validate(Barcode barcode) {
-        Log.d(TAG, "validate() called with: barcode = [" + barcode.displayValue + "]");
         String value = barcode.displayValue;
 
         
         switch (scanType) {
             case PrivateKey: {
-                Log.d(TAG, "validate: privatekey");
                 try {
                     Hex.decode(value);
                     Intent data = new Intent();
@@ -515,18 +512,15 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                     finish();
                 } catch (Exception e) {
                     showToast(getString(R.string.errScanPrivateKey));
-                    Log.d(TAG, "validate: err private key");
                 }
             } break;
 
             case ICX_Address: {
-                Log.d(TAG, "validate: icx address");
                 boolean fromWallet = getIntent().getSerializableExtra("wallet") != null &&
                         getIntent().getSerializableExtra("entry") != null &&
                         getIntent().getStringExtra("privateKey") != null;
 
                 if (value.startsWith("iconex://pay")) {
-                    Log.d(TAG, "validate: iconex://pay");
                     try {
                         String base64Encoded = value.split("data=")[1];
                         JSONObject jsonObject = new JSONObject(new String(Base64.decode(base64Encoded, Base64.NO_WRAP)));
@@ -534,7 +528,6 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                         BigInteger amount = ConvertUtil.hexStringToBigInt(jsonObject.getString("amount"), 18);
 
                         if (!fromWallet) {
-                            Log.d(TAG, "validate: fr");
                             Intent data = new Intent();
                             barcode.displayValue = address;
                             data.putExtra(BarcodeObject, barcode);
@@ -553,7 +546,6 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                             finish();
                         }
                     } catch (Exception e) {
-                        Log.d(TAG, "validate: err icon address");
                         showToast(getString(R.string.errIncorrectICXAddr));
                     }
                 } else if (value.startsWith("hx") || value.startsWith("cx")) {
@@ -575,29 +567,23 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                         finish();
                     }
                 } else {
-                    Log.d(TAG, "validate: err icon address");
                     showToast(getString(R.string.errIncorrectICXAddr));
                 }
             } break;
             case ETH_Address: {
-                Log.d(TAG, "validate: eth address");
                 if (value.startsWith("0x") && value.length() == 42 && !value.contains(" ")) {
-                    Log.d(TAG, "validate: eth success");
                     Intent data = new Intent();
                     data.putExtra(BarcodeObject, barcode);
                     setResult(CommonStatusCodes.SUCCESS, data);
                     finish();
                 } else {
                     showToast(getString(R.string.errIncorrectETHAddr));
-                    Log.d(TAG, "validate: err ether address");
                 }
             } break;
         }
     }
 
     public float scaleX(float horizontal) {
-//            Log.d(TAG, "ScaleX horizontal=" + horizontal);
-//            Log.d(TAG, "ScaleX return=" + horizontal * mOverlay.mWidthScaleFactor);
         return horizontal * mGraphicOverlay.getWidthScaleFactor();
     }
 
@@ -605,8 +591,6 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
      * Adjusts a vertical value of the supplied value from the preview scale to the view scale.
      */
     public float scaleY(float vertical) {
-//            Log.d(TAG, "ScaleY vertical=" + vertical);
-//            Log.d(TAG, "ScaleY return=" + vertical * mOverlay.mHeightScaleFactor);
         return vertical * mGraphicOverlay.getHeightScaleFactor();
     }
 

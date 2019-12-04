@@ -109,6 +109,7 @@ public class SetLockNumFragment extends Fragment implements View.OnClickListener
                                         txtGuide.setText(getString(R.string.errCheckLockNum));
                                         step1 = "";
                                         editNum.setText("");
+                                        isCorrect = false;
                                     }
                                 }
                             } else {

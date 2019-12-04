@@ -219,7 +219,6 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                     editAddr.setText(barcode.displayValue);
                     editAddr.setSelection(editAddr.getText().toString().length());
                 } else {
-//                    Log.d(TAG, "No barcode captured, intent data is null");
                 }
             }
         }
@@ -436,7 +435,6 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
         editAddr.setReadOnly();
         editAddr.setText(mToken.getContractAddress());
-        Log.wtf(TAG, "Score=" + mToken.getContractAddress());
 
         btnScan.setVisibility(View.GONE);
 
@@ -507,7 +505,6 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
 
         if (mMode == MyConstants.MODE_TOKEN.ADD) {
             resultAddr = validateAddress(address, showAddressErr);
-            Log.wtf(TAG, "resultAddr=" + resultAddr);
         }
 
         resultName = !editName.getText().isEmpty();

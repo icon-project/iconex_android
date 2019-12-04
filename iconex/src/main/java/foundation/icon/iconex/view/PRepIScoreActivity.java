@@ -2,12 +2,14 @@ package foundation.icon.iconex.view;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.TextViewCompat;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,6 +39,7 @@ import foundation.icon.icx.data.Bytes;
 import foundation.icon.icx.data.IconAmount;
 import foundation.icon.icx.transport.jsonrpc.RpcItem;
 import foundation.icon.icx.transport.jsonrpc.RpcObject;
+import foundation.icon.icx.transport.jsonrpc.RpcValue;
 import io.reactivex.Completable;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
@@ -94,6 +97,7 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
 
     private void initView() {
         txtCurrentIScore = findViewById(R.id.txt_current_iscore);
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(txtCurrentIScore, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         txtEstimatedIcx = findViewById(R.id.txt_estimated_icx);
         txtLimitPrice = findViewById(R.id.txt_limit_price);
         txtFee = findViewById(R.id.txt_fee);
@@ -157,8 +161,6 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                         .call("claimIScore")
                         .build();
 
-                Log.d(TAG, "[estimatedStep]\n" + transaction.toString());
-
                 stepLimit = IconService.estimateStep(transaction);
                 stepPrice = iconService.getStepPrice().asInteger();
 
@@ -186,6 +188,18 @@ public class PRepIScoreActivity extends AppCompatActivity implements View.OnClic
                         } else {
                             txtCurrentIScore.setText(Utils.formatFloating(
                                     ConvertUtil.getValue(currentIScore, 18), 15));
+                            txtCurrentIScore.setText("1,235,234,234,234.123456789012345678");
+//                            if (txtCurrentIScore.getLineCount() > 1) {
+//                                txtCurrentIScore.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtCurrentIScore.getTextSize() - 10);
+//                                txtCurrentIScore.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if (txtCurrentIScore.getLineCount() > 1)
+//                                            txtCurrentIScore.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtCurrentIScore.getTextSize() - 10);
+//                                    }
+//                                }, 100);
+//                            }
+
                             txtEstimatedIcx.setText(Utils.formatFloating(
                                     ConvertUtil.getValue(estimatedIcx, 18), 8));
                         }

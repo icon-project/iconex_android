@@ -148,7 +148,6 @@ public class ICONexApp extends Application {
                 boolean beingLock = locktime != null && locktime + MyConstants.LOCK_TIME_LIMIT <= System.currentTimeMillis();
 
                 if (!activity.getLocalClassName().equals("SplashActivity")) {
-                    Log.w(TAG, "onActivityStared=" + activity.getLocalClassName());
                     VersionCheck versionCheck = new VersionCheck(activity);
                     versionCheck.execute();
 

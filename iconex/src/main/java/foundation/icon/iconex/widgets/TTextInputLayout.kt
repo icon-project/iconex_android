@@ -132,11 +132,9 @@ class TTextInputLayout : LinearLayout {
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 prevString = p0!!.toString()
-                Log.d(TAG, "prevString: $prevString")
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Log.w(TAG, "nowString=$s")
                 if (s.isNotEmpty()) {
                     if (edit.isEnabled)
                         btnClear.visibility = View.VISIBLE
@@ -153,7 +151,6 @@ class TTextInputLayout : LinearLayout {
                     tvHint.visibility = View.INVISIBLE
 
                 if (isDetectPaste && s.length - prevString.length > 1) {
-                    Log.wtf(TAG, "detect paste!// \ns=$s, s.length=${s.length}\nprevString=$prevString, prevString.length=${prevString.length}")
                     setText(prevString)
                 } else {
                     mOnTextChangedListener?.onChanged(s)
@@ -235,7 +232,6 @@ class TTextInputLayout : LinearLayout {
     fun setText(text: String) {
         if (isDisabledPaste) {
             isDetectPaste = false
-            Log.d(TAG, "isDetectPaste: $isDetectPaste")
         }
         edit.setText(text)
         if (text.isNotEmpty())
@@ -243,7 +239,6 @@ class TTextInputLayout : LinearLayout {
         tvHint.visibility = if (text.isNotEmpty()) View.VISIBLE else View.INVISIBLE
         if (isDisabledPaste) {
             isDetectPaste = true
-            Log.d(TAG, "isDetectPaste: $isDetectPaste")
         }
     }
 
@@ -373,7 +368,6 @@ class TTextInputLayout : LinearLayout {
         edit.isLongClickable = pastable
         isDisabledPaste = !pastable
         isDetectPaste = !pastable
-        Log.d(TAG, "Set isDisabledPaste: $isDisabledPaste!")
     }
 
     fun disableCopyPaste() {
@@ -382,7 +376,6 @@ class TTextInputLayout : LinearLayout {
         edit.setTextIsSelectable(false)
         isDisabledPaste = true
         isDetectPaste = true
-        Log.d(TAG, "Set isDisabledPaste: $isDisabledPaste!")
     }
 
     fun setFocus(isFocus: Boolean) {

@@ -162,6 +162,5 @@ public class WalletDetailInfoView extends FrameLayout implements View.OnClickLis
         this.loading.setVisibility(loading ? VISIBLE : GONE);
         txtAmount.setVisibility(loading ? INVISIBLE : VISIBLE);
         txtExchange.setVisibility(loading ? INVISIBLE : VISIBLE);
-        Log.d("set loading", "loading : " + loading);
     }
 }

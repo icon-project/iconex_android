@@ -144,7 +144,6 @@ public class ExpandableViewPager extends ViewPager {
 
     public void setExpandedHeight (int expandedHeight) {
         if (mExpandedHeight != expandedHeight) {
-            Log.d(TAG, "setExpandedHeight() called with: expandedHeight = [" + expandedHeight + "]");
             mExpandedHeight = expandedHeight;
             updateHeight(mState);
         }
@@ -152,7 +151,6 @@ public class ExpandableViewPager extends ViewPager {
 
     public void setCollapseHeight (int collapseHeight) {
         if (mCollapseHeight != collapseHeight) {
-            Log.d(TAG, "setCollapseHeight() called with: collapseHeight = [" + collapseHeight + "]");
             mCollapseHeight = collapseHeight;
             updateHeight(mState);
         }

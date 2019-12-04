@@ -91,11 +91,16 @@ public class SelectTokenDialog extends BottomSheetDialog {
                 walletViewHolder.txtSymbol.setText(entry.getSymbol());
                 walletViewHolder.txtName.setText(entry.getName());
 
+                BigDecimal balance = null;
                 try {
                     String strDecimal = ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec());
-                    BigDecimal balance = new BigDecimal(strDecimal);
+                    balance = new BigDecimal(strDecimal);
                     walletViewHolder.txtAmount.setText(balance.setScale(4, BigDecimal.ROUND_FLOOR) + "");
+                } catch (Exception e) {
+                    walletViewHolder.txtAmount.setText("-");
+                }
 
+                try {
                     String exchangeKey = entry.getSymbol().toLowerCase() + "usd";
                     BigDecimal exchanger = new BigDecimal(ICONexApp.EXCHANGE_TABLE.get(exchangeKey));
 
@@ -107,7 +112,6 @@ public class SelectTokenDialog extends BottomSheetDialog {
                     }
 
                 } catch (Exception e) {
-                    walletViewHolder.txtAmount.setText("-");
                     walletViewHolder.txtExchange.setText("$ -");
                 }
             }

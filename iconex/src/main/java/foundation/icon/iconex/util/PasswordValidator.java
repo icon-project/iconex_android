@@ -1,5 +1,7 @@
 package foundation.icon.iconex.util;
 
+import android.util.Log;
+
 import foundation.icon.MyConstants;
 
 /**
@@ -7,6 +9,7 @@ import foundation.icon.MyConstants;
  */
 
 public class PasswordValidator {
+    private static final String TAG = PasswordValidator.class.getSimpleName();
 
     public static final int OK = 0;
     public static final int EMPTY = 1;

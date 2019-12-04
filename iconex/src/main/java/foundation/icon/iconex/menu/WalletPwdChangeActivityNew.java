@@ -60,7 +60,6 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_pwd_change_new);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
 
         if (getIntent() != null) {
             mWallet = (Wallet) getIntent().getExtras().get("walletInfo");
@@ -107,7 +106,6 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
         editOldPwd.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {
-                Log.d(TAG, "onChanged() called with: s = [" + s.length() + "]");
                 if (s.length() == 0) validateAll(false, false, false);
             }
         });
@@ -216,7 +214,6 @@ public class WalletPwdChangeActivityNew extends AppCompatActivity {
 
     private boolean validateOldPwd(boolean showErr) {
         String pwd = editOldPwd.getText();
-        Log.d(TAG, "validateOldPwd() called with: showErr = [" + pwd + "]");
 
         if (pwd.isEmpty()) {
             editOldPwd.setError(false, null);

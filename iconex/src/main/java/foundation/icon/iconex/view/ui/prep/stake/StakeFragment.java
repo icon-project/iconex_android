@@ -139,7 +139,6 @@ public class StakeFragment extends Fragment {
                         editStaked.setSelection(editStaked.getText().toString().length());
                         editStaked.setTag(null);
                     } else if (i == stakeSeekBar.getMax()) {
-                        Log.w(TAG, "progress=" + i + ", max=" + stakeSeekBar.getMax());
                         editStaked.setTag("seekbar");
                         editStaked.setText(maxStake.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                         editStaked.setSelection(editStaked.getText().toString().length());
@@ -232,21 +231,21 @@ public class StakeFragment extends Fragment {
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", 100.0f));
                         stakeSeekBar.setProgress(100);
                         stakeGraph.updateGraph(maxStake);
-                        txtUnstaked.setText(total.subtract(maxStake).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).toString());
+                        txtUnstaked.setText(total.subtract(maxStake).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_DOWN).toString());
                     } else {
                         double totalPercent = calculatePercentage(total, input);
                         double maxPercent = calculatePercentage(maxStake, input);
                         stakeSeekBar.setProgress((int) (maxPercent - delegatedPercent));
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", totalPercent));
                         stakeGraph.updateGraph(input);
-                        txtUnstaked.setText(total.subtract(input).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).toString());
+                        txtUnstaked.setText(total.subtract(input).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_DOWN).toString());
                     }
                 } else {
                     double totalPercent = calculatePercentage(total, input);
                     double maxPercent = calculatePercentage(maxStake, input);
                     txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", totalPercent));
                     stakeGraph.updateGraph(input);
-                    txtUnstaked.setText(total.subtract(input).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR).toString());
+                    txtUnstaked.setText(total.subtract(input).scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_DOWN).toString());
                 }
 
                 if (localHandler == null)
@@ -314,20 +313,19 @@ public class StakeFragment extends Fragment {
         available = total.subtract(delegated);
 
         txtBalance.setText(total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
-        txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
+        txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.DOWN).toString());
 
         stakeGraph.setTotal(total);
         stakeGraph.setStake(staked);
 
         if (!delegated.equals(BigDecimal.ZERO)) {
             stakeGraph.setDelegation(delegated);
-            delegatedPercent = calculatePercentage(total, delegated);
+            delegatedPercent = calculatePercentage(staked, delegated);
             txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
                     delegated.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString(),
                     delegatedPercent));
 
             stakeSeekBar.setMax(100 - ((int) delegatedPercent));
-            Log.d(TAG, "seekbar max=" + stakeSeekBar.getMax());
         } else {
             txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
                     new BigDecimal("0").scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR), 0.0f));
@@ -336,7 +334,6 @@ public class StakeFragment extends Fragment {
         stakeGraph.updateGraph();
 
         float stakePercentage = calculatePercentage(total, staked);
-        Log.d(TAG, "stakePercent=" + stakePercentage);
         editStaked.setText(staked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)",
                 stakePercentage));
@@ -363,7 +360,6 @@ public class StakeFragment extends Fragment {
         } else {
             BigDecimal percent = new BigDecimal(Integer.toString(percentage));
             BigDecimal multiply = maxStake.multiply(percent);
-            Log.d(TAG, "calculateIcx=" + multiply.divide(ONE_HUNDRED).add(delegated).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
             return multiply.divide(ONE_HUNDRED).add(delegated).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR);
         }
     }
@@ -380,7 +376,6 @@ public class StakeFragment extends Fragment {
     private Runnable estimatedStepTask = new Runnable() {
         @Override
         public void run() {
-            Log.i(TAG, "estimatedStepTask Run!!");
             getStakingData();
         }
     };
@@ -417,8 +412,6 @@ public class StakeFragment extends Fragment {
                 stepLimit = IconService.estimateStep(transaction);
 
                 BigDecimal stakeValue = new BigDecimal(new BigDecimal(editStaked.getText().toString()).scaleByPowerOfTen(18).toBigInteger());
-                Log.w(TAG, "getStakingData:stakeValue=" + stakeValue);
-                Log.w(TAG, "getStakingData:staked=" + staked);
                 if (stakeValue.compareTo(staked) < 0) {
                     if (pRepService == null) {
                         pRepService = new PRepService(ICONexApp.NETWORK.getUrl());
@@ -491,30 +484,34 @@ public class StakeFragment extends Fragment {
     private StakeDialog dialog;
 
     private void showDialog() {
-        dialog = new StakeDialog(getContext());
+        if (fee.compareTo(new BigInteger(wallet.getWalletEntries().get(0).getBalance())) < 0) {
+            MessageDialog messageDialog = new MessageDialog(getContext());
+            messageDialog.setSingleButton(true);
+            messageDialog.setMessage(getString(R.string.errIcxOwnNotEnough));
+            messageDialog.show();
+        } else {
+            dialog = new StakeDialog(getContext());
 
-        if (txtTimeRequired.getText().toString().equals(getString(R.string.stakeTimeRquired)))
-            dialog.setTitle(getString(R.string.stake));
-        else
-            dialog.setTitle(getString(R.string.unstake));
+            if (txtTimeRequired.getText().toString().equals(getString(R.string.stakeTimeRquired)))
+                dialog.setTitle(getString(R.string.stake));
+            else
+                dialog.setTitle(getString(R.string.unstake));
 
-        dialog.setTimeRequired(txtTimeRequired.getText().toString());
-        dialog.setStepLimit(txtStepNPrice.getText().toString());
-        dialog.setEstimatedMaxFee(txtFee.getText().toString());
-        dialog.setExchangedFee(txtFeeUsd.getText().toString());
+            dialog.setTimeRequired(txtTimeRequired.getText().toString());
+            dialog.setStepLimit(txtStepNPrice.getText().toString());
+            dialog.setEstimatedMaxFee(txtFee.getText().toString());
+            dialog.setExchangedFee(txtFeeUsd.getText().toString());
 
-        Log.i(TAG, "setEstimatedFee=" + txtFee.getText().toString());
-        Log.i(TAG, "StakeDialog=" + dialog.getEstimatedMaxFee());
+            dialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    setStake();
+                    return true;
+                }
+            });
 
-        dialog.setOnConfirmClick(new Function1<View, Boolean>() {
-            @Override
-            public Boolean invoke(View view) {
-                setStake();
-                return true;
-            }
-        });
-
-        dialog.show();
+            dialog.show();
+        }
     }
 
     private SignedTransaction getSignedTransaction() {
@@ -546,7 +543,6 @@ public class StakeFragment extends Fragment {
                     PRepService service = new PRepService(ICONexApp.NETWORK.getUrl());
                     SignedTransaction signedTransaction = getSignedTransaction();
                     String tx = service.setStake(signedTransaction);
-                    Log.d(TAG, "Set stake=" + tx);
 
                     emitter.onComplete();
                 } catch (InterruptedIOException e) {

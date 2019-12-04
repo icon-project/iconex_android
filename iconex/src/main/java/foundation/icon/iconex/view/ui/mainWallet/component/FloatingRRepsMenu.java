@@ -3,6 +3,7 @@ package foundation.icon.iconex.view.ui.mainWallet.component;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import foundation.icon.iconex.view.PRepVoteActivity;
 import foundation.icon.iconex.wallet.Wallet;
 
 public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListener {
+    private static final String TAG = FloatingRRepsMenu.class.getSimpleName();
 
     private ImageButton btnAction;
     private ViewGroup bubbleMenuModal;
@@ -207,8 +209,7 @@ public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListen
 
                 try {
                     BigDecimal balance = new BigDecimal(wallet.getWalletEntries().get(0).getBalance())
-                            .add(new BigDecimal(wallet.getStaked())).add(new BigDecimal(wallet.getUnstake()))
-                            .scaleByPowerOfTen(-18);
+                            .add(new BigDecimal(wallet.getStaked())).add(new BigDecimal(wallet.getUnstake()));
                     if (balance.compareTo(BigDecimal.ONE) < 0) {
                         messageDialog = new MessageDialog(getContext());
                         messageDialog.setMessage(getContext().getString(R.string.notEnoughForStaking));

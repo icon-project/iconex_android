@@ -251,7 +251,6 @@ public class MainWalletFragment extends Fragment {
         walletViewPager.setOnStateChangeListener(new ExpandableViewPager.OnStateChangeListener() {
             @Override
             public void onChangeState(ExpandableViewPager.State state) {
-                Log.d("onChangeState", state.name());
                 switch (state) {
                     case Expaned: {
                         refresh.setRefreshEnable(false);

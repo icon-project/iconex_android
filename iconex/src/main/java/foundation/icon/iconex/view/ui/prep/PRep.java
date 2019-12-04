@@ -283,7 +283,6 @@ public class PRep implements Serializable {
                 .website(object.getItem("website").asString())
                 .p2pEndPoint(object.getItem("p2pEndpoint").asString())
                 .build();
-        Log.d(TAG, "PRep=" + pRep);
         return pRep;
     }
 

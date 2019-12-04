@@ -2,6 +2,7 @@ package foundation.icon.iconex.view.ui.wallet;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -65,13 +66,9 @@ public class ViewWalletInfoActivity extends AppCompatActivity {
                 if (position == 0) {
                     indicator1.setSelected(true);
                     indicator2.setSelected(false);
-
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
                 } else {
                     indicator1.setSelected(false);
                     indicator2.setSelected(true);
-
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
 
                     if (!wasShown) {
                         MessageDialog dialog = new MessageDialog(ViewWalletInfoActivity.this);

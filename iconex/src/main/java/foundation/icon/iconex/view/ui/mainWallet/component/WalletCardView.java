@@ -15,26 +15,30 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.view.ui.mainWallet.items.ETHcoinWalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.items.ICXcoinWalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.items.TokenWalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.items.WalletItem;
 import foundation.icon.iconex.view.ui.mainWallet.items.WalletWalletItem;
-import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
 import foundation.icon.iconex.view.ui.mainWallet.viewdata.EntryViewData;
-import foundation.icon.iconex.util.ScreenUnit;
+import foundation.icon.iconex.view.ui.mainWallet.viewdata.WalletViewData;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import loopchain.icon.wallet.core.Constants;
 
 public class WalletCardView extends FrameLayout {
 
-    public interface OnChangeIsScrollTopListener { void onChangeIsScrollTop(boolean isScrollTop); }
+    public interface OnChangeIsScrollTopListener {
+        void onChangeIsScrollTop(boolean isScrollTop);
+    }
 
     private WalletViewData walletViewData;
 
@@ -53,6 +57,7 @@ public class WalletCardView extends FrameLayout {
     public interface OnClickWalletItemListner {
         void onClickWalletItem(EntryViewData itemViewData);
     }
+
     private OnClickWalletItemListner mOnClickWalletItemListener = null;
 
     public WalletCardView(@NonNull Context context) {
@@ -85,11 +90,11 @@ public class WalletCardView extends FrameLayout {
                 paint.setColor(ContextCompat.getColor(getContext(), R.color.darkE6));
                 paint.setStrokeWidth(dp0_5);
 
-                int left =  getPaddingLeft() + dp20;
+                int left = getPaddingLeft() + dp20;
                 int right = parent.getWidth() - dp20;
 
                 int count = parent.getChildCount();
-                for (int i = 0; i < count; i++ ) {
+                for (int i = 0; i < count; i++) {
                     View child = parent.getChildAt(i);
 
                     int position = parent.getChildAdapterPosition(child);
@@ -109,10 +114,18 @@ public class WalletCardView extends FrameLayout {
                 WalletItem v;
                 switch (viewType) {
                     default:
-                    case 0: v = new ICXcoinWalletItem(parent.getContext()); break;
-                    case 1: v = new ETHcoinWalletItem(parent.getContext()); break;
-                    case 2: v = new TokenWalletItem(parent.getContext()); break;
-                    case 3: v = new WalletWalletItem(parent.getContext()); break;
+                    case 0:
+                        v = new ICXcoinWalletItem(parent.getContext());
+                        break;
+                    case 1:
+                        v = new ETHcoinWalletItem(parent.getContext());
+                        break;
+                    case 2:
+                        v = new TokenWalletItem(parent.getContext());
+                        break;
+                    case 3:
+                        v = new WalletWalletItem(parent.getContext());
+                        break;
                 }
 
                 v.setLayoutParams(new RecyclerView.LayoutParams(
@@ -120,7 +133,8 @@ public class WalletCardView extends FrameLayout {
                         RecyclerView.LayoutParams.WRAP_CONTENT
                 ));
 
-                RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) { };
+                RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(v) {
+                };
                 v.setOnClickWalletItem(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -140,6 +154,15 @@ public class WalletCardView extends FrameLayout {
                 EntryViewData data = walletItems.get(position);
                 WalletItem walletItem = (WalletItem) holder.itemView;
                 walletItem.bind(data);
+
+                if (holder.getItemViewType() == 0) {
+                    if (walletViewData.getWallet().getStaked().add(walletViewData.getWallet().getUnstake())
+                            .equals(BigInteger.ZERO)) {
+                        ICXcoinWalletItem icxItem = (ICXcoinWalletItem) holder.itemView;
+                        icxItem.layoutBottom.setVisibility(GONE);
+                    }
+                }
+
                 if (holder.getItemViewType() == 2 && position == 0) {
                     ((TokenWalletItem) holder.itemView).setBorderVisible(true);
                 }
@@ -158,7 +181,7 @@ public class WalletCardView extends FrameLayout {
                     if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                         // ICXcoin
                         return 0;
-                    } else  {
+                    } else {
                         // ETHcoin
                         return 1;
                     }

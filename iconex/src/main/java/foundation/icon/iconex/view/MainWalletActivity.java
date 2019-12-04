@@ -3,6 +3,7 @@ package foundation.icon.iconex.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -404,6 +405,7 @@ public class MainWalletActivity extends AppCompatActivity implements
     public void onLoadNextStake(Wallet wallet, int walletPosition, BigInteger unstake) {
         EntryViewData entryVD = walletVDs.get(walletPosition).getEntryVDs().get(0);
         entryVD.unstake = unstake;
+        ICONexApp.wallets.get(walletPosition).setUnstake(unstake);
         combineStake(entryVD, walletPosition);
     }
 
@@ -420,14 +422,18 @@ public class MainWalletActivity extends AppCompatActivity implements
         if (entryVD.amountLoading || entryVD.prepsLoading || entryVD.unstake == null) return;
 
         try {
-            BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec()));
-            BigDecimal staked = new BigDecimal(ConvertUtil.getValue(wallet.getStaked(), 18));
-            BigDecimal unstake = new BigDecimal(ConvertUtil.getValue(entryVD.unstake, 18));
+//            BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entry.getBalance()), entry.getDefaultDec()));
+//            BigDecimal unstake = new BigDecimal(ConvertUtil.getValue(entryVD.unstake, 18));
+//            BigDecimal staked = new BigDecimal(ConvertUtil.getValue(wallet.getStaked(), 18)).add(unstake);
+
+            BigDecimal balance = new BigDecimal(new BigInteger(entry.getBalance()));
+            BigDecimal unstake = new BigDecimal(entryVD.unstake);
+            BigDecimal staked = new BigDecimal(wallet.getStaked()).add(unstake);
 
             BigDecimal percent = BigDecimal.ZERO.setScale(1);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 percent = staked.multiply(new BigDecimal(100))
-                        .divide(balance.add(staked).add(unstake), 1, BigDecimal.ROUND_HALF_UP);
+                        .divide(balance.add(staked), 1, BigDecimal.ROUND_HALF_UP);
             }
 
             entryVD.setTxtStacked(DecimalFomatter.format(staked) + " (" + percent + "%)");
@@ -449,14 +455,18 @@ public class MainWalletActivity extends AppCompatActivity implements
                 EntryViewData entryVD = walletVD.getEntryVDs().get(0);
 
                 try {
-                    BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entry.getBalance()), 18));
-                    BigDecimal staked = new BigDecimal(ConvertUtil.getValue(wallet.getStaked(), 18));
-                    BigDecimal unstake = new BigDecimal(ConvertUtil.getValue(entryVD.unstake == null ? BigInteger.ZERO : entryVD.unstake, 18));
+//                    BigDecimal balance = new BigDecimal(ConvertUtil.getValue(new BigInteger(entry.getBalance()), 18));
+//                    BigDecimal staked = new BigDecimal(ConvertUtil.getValue(wallet.getStaked(), 18));
+//                    BigDecimal unstake = new BigDecimal(ConvertUtil.getValue(entryVD.unstake == null ? BigInteger.ZERO : entryVD.unstake, 18));
 
-                    BigDecimal totalBalance = balance.add(staked).add(unstake);
+                    BigDecimal balance = new BigDecimal(entry.getBalance());
+                    BigDecimal unstake = new BigDecimal((entryVD.unstake == null ? BigInteger.ZERO : entryVD.unstake));
+                    BigDecimal staked = new BigDecimal(wallet.getStaked()).add(unstake);
+
+                    BigDecimal totalBalance = balance.add(staked);
                     BigDecimal percent = totalBalance.compareTo(BigDecimal.ZERO) == 0 ? new BigDecimal("0.0") :
                             staked.multiply(new BigDecimal(100)).divide(totalBalance, 1, BigDecimal.ROUND_HALF_UP);
-                    entryVD.setTxtStacked(DecimalFomatter.format(staked) + " (" + percent + "%)");
+                    entryVD.setTxtStacked(staked.scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_DOWN) + " (" + percent + "%)");
                 } catch (Exception e) {
                     entryVD.setTxtStacked("- ( - %)");
                 }

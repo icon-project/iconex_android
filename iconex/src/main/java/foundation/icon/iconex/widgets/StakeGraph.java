@@ -109,7 +109,7 @@ public class StakeGraph extends ConstraintLayout {
         constraintSet.setHorizontalWeight(R.id.space, 100 - delegationPer);
         constraintSet.applyTo(findViewById(R.id.stake));
 
-        txtDelegationPer.setText(String.format(Locale.getDefault(), " %.1f%%", totalDelegationPer));
+        txtDelegationPer.setText(String.format(Locale.getDefault(), " %.1f%%", delegationPer));
     }
 
     public void updateGraph(BigDecimal stake) {

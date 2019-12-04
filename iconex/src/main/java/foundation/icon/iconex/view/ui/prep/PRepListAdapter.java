@@ -100,9 +100,6 @@ public class PRepListAdapter extends RecyclerView.Adapter {
         ConstraintLayout.LayoutParams layoutParams =
                 (ConstraintLayout.LayoutParams) h.layoutVotes.getLayoutParams();
 
-        Log.d(TAG, "TotalDelegated=" + prep.getTotalDelegated() + " // " + ConvertUtil.getValue(prep.getTotalDelegated(), 18));
-        Log.d(TAG, "Delegated=" + prep.getDelegated() + " // " + ConvertUtil.getValue(prep.getDelegated(), 18));
-
         BigDecimal totalDelegated = new BigDecimal(prep.getTotalDelegated());
         BigDecimal delegated = new BigDecimal(prep.getDelegated());
 
@@ -236,7 +233,6 @@ public class PRepListAdapter extends RecyclerView.Adapter {
                                     @Override
                                     public void onComplete() {
                                         loading.dismiss();
-                                        Log.d(TAG, "run website=" + preps.get(getAdapterPosition()).getWebsite() + ", " + getAdapterPosition());
                                         showDetailDialog(preps.get(getAdapterPosition()));
                                     }
 

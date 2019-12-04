@@ -14,7 +14,7 @@ public class EntryViewData {
     private Wallet wallet;
     private WalletEntry entry;
     private BigDecimal exchanged;
-    public BigInteger unstake;
+    public BigInteger unstake = BigInteger.ZERO;
 
     public int pos0;
     public int pos1;

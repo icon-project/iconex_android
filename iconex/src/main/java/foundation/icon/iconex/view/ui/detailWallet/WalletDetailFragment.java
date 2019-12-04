@@ -234,7 +234,6 @@ public class WalletDetailFragment extends Fragment {
                         Boolean loadMore = viewModel.isLoadMore.getValue();
                         Boolean isNoLoadMore = viewModel.isNoLoadMore.getValue();
 
-                        Log.d(TAG, "onScrollBottom() called");
                         if (!refresh && !loadMore && !isNoLoadMore && moreLoadable)
                             viewModel.isLoadMore.setValue(true);
                     }
@@ -364,7 +363,6 @@ public class WalletDetailFragment extends Fragment {
         viewModel.isRefreshing.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                Log.d(TAG, "onChanged() called with: aBoolean = [" + aBoolean + "]");
                 if (!aBoolean) refresh.stopRefresh(true);
             }
         });

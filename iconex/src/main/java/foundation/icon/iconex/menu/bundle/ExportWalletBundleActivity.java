@@ -66,15 +66,11 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
         mPrivSet = privSet;
         stepView.setStep(1);
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
     public void onBack() {
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override

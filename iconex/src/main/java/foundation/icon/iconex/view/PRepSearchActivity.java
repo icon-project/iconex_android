@@ -138,7 +138,6 @@ public class PRepSearchActivity extends AppCompatActivity implements View.OnClic
     private List<PRep> searchPReps(String search) {
         List<PRep> result = new ArrayList<>();
 
-        Log.wtf(TAG, "!!! searchPRep=" + search);
         for (PRep p : pReps) {
             if (p.getName().toUpperCase().contains(search.toUpperCase()))
                 result.add(p);

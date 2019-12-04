@@ -26,6 +26,7 @@ import java.util.Locale;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.view.ui.prep.Delegation;
+import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.VoteGraph;
 import io.reactivex.disposables.Disposable;
@@ -67,10 +68,13 @@ public class PRepVoteFragment extends Fragment {
         vm.getDelegations().observe(this, new Observer<List<Delegation>>() {
             @Override
             public void onChanged(List<Delegation> delegations) {
-                Log.d(TAG, "Delegate observer onChanged");
                 PRepVoteFragment.this.delegations = delegations;
-                if (adapter != null && delegations != null) {
-                    adapter.setData(delegations);
+                if (adapter != null && PRepVoteFragment.this.delegations != null) {
+                    sortAscending(PRepVoteFragment.this.delegations);
+                    if (sortType == Sort.Descending)
+                        Collections.reverse(PRepVoteFragment.this.delegations);
+
+                    adapter.setData(PRepVoteFragment.this.delegations);
                     list.setAdapter(adapter);
                 } else {
                     adapter = new MyVoteListAdapter(PRepVoteFragment.this.getContext(),
@@ -78,8 +82,10 @@ public class PRepVoteFragment extends Fragment {
                     adapter.setOnVoteChangedListener(new MyVoteListAdapter.OnVoteChangedListener() {
                         @Override
                         public void onVoted(List<Delegation> delegations) {
-                            Log.i(TAG, "onVoted");
                             PRepVoteFragment.this.delegations = delegations;
+                            sortAscending(PRepVoteFragment.this.delegations);
+                            if (sortType == Sort.Descending)
+                                Collections.reverse(PRepVoteFragment.this.delegations);
                             setData();
                             mListener.onVoted(delegations);
                         }
@@ -142,12 +148,7 @@ public class PRepVoteFragment extends Fragment {
             public void onClick(View v) {
                 switch (sortType) {
                     case Ascending:
-                        Collections.sort(delegations, new Comparator<Delegation>() {
-                            @Override
-                            public int compare(Delegation o1, Delegation o2) {
-                                return o1.getValue().compareTo(o2.getValue());
-                            }
-                        });
+                        sortAscending(delegations);
                         Collections.reverse(delegations);
                         adapter.setData(delegations);
                         adapter.notifyDataSetChanged();
@@ -185,6 +186,7 @@ public class PRepVoteFragment extends Fragment {
                                 delegations.set(i, reset);
                             }
 
+                            adapter.clearCurrentManage();
                             vm.setDelegations(delegations);
                             mListener.onVoted(delegations);
                             return true;
@@ -229,6 +231,16 @@ public class PRepVoteFragment extends Fragment {
             txtVotedIcx.setText(String.format(Locale.getDefault(), "%s", voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
             txtAvailableIcx.setText(String.format(Locale.getDefault(), "%s", total.subtract(voted).scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString()));
         }
+    }
+
+    private void sortAscending(List<Delegation> delegations) {
+        Collections.sort(delegations, new Comparator<Delegation>() {
+            @Override
+            public int compare(Delegation o1, Delegation o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+        Collections.reverse(delegations);
     }
 
     public void clearCurrentManage() {

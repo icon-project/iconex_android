@@ -507,9 +507,9 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
 
             @Override
             public void onReleased() {
-//                if (editSend.getText().length() > 0) {
-//                    validateSendAmount(editSend.getText());
-//                }
+                if (editSend.getText().length() > 0) {
+                    validateSendAmount(editSend.getText());
+                }
             }
         });
         editSend.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
@@ -554,11 +554,13 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
                             String strTransUSD = String.format("%,.2f", transUSD);
 
                             txtTransSend.setText(String.format("$ %s", strTransUSD));
-                        }
+                        } else
+                            txtTransSend.setText(String.format("$ %s", "-"));
+
                         setRemain(amount);
                     }
                 } else {
-                    txtTransSend.setText(String.format("$ %s", "0.00"));
+                    txtTransSend.setText(String.format("$ %s", "-"));
                     btnSend.setEnabled(false);
 
                     editSend.setError(false, null);
@@ -772,19 +774,19 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
             }
         }
 
+        if (stepPriceICX != null) {
+            if (feePrice != null) {
+                strTransFee = String.format(Locale.getDefault(), "%,.2f",
+                        Double.parseDouble(strFee) * Double.parseDouble(feePrice));
+
+                txtTransFee.setText("$ " + strTransFee);
+            }
+        }
+
         if (strPrice != null) {
             Double remainUSD = Double.parseDouble(ConvertUtil.getValue(remain, entry.getDefaultDec()))
                     * Double.parseDouble(strPrice);
             String strRemainUSD = String.format(Locale.getDefault(), "%,.2f", remainUSD);
-
-            if (stepPriceICX != null) {
-                if (feePrice != null) {
-                    strTransFee = String.format(Locale.getDefault(), "%,.2f",
-                            Double.parseDouble(strFee) * Double.parseDouble(feePrice));
-
-                    txtTransFee.setText("$ " + strTransFee);
-                }
-            }
 
             if (isNegative) {
                 txtRemain = String.format(getString(R.string.txWithdraw), ConvertUtil.getValue(remain, entry.getDefaultDec()));
@@ -804,7 +806,6 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
 
         if (entry.getType().equals(MyConstants.TYPE_COIN)) {
             BigInteger sendAmount = ConvertUtil.valueToBigInteger(value, 18);
-            BigInteger canICX = balance.subtract(ConvertUtil.valueToBigInteger(fee, 18));
 
             if (balance.compareTo(sendAmount) < 0) {
                 editSend.setError(true, getString(R.string.errNotEnough));
@@ -831,10 +832,10 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
     }
 
     private void setSendEnable() {
-//        boolean amount = validateSendAmount(editSend.getText());
-//        boolean address = validateAddress(editAddress.getText());
+        boolean amount = validateSendAmount(editSend.getText());
+        boolean address = validateAddress(editAddress.getText());
 
-        btnSend.setEnabled(validateAddress(editAddress.getText()));
+        btnSend.setEnabled(amount && address);
     }
 
     private void getStepPrice() {
