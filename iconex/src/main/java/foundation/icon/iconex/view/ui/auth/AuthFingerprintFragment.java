@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
@@ -89,6 +91,7 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
                     }
                 });
                 dialog.show();
+
             }
         } else {
             fab = new FingerprintAuthBuilder(getActivity());

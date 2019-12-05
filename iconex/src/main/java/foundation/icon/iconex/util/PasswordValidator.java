@@ -37,12 +37,6 @@ public class PasswordValidator {
         if (!pwd.matches(MyConstants.PATTERN_PASSWORD))
             return NOT_MATCH_PATTERN;
 
-//        if (pwd.contains(";"))
-//            return NOT_MATCH_PATTERN;
-//
-//        if (pwd.contains("="))
-//            return NOT_MATCH_PATTERN;
-
         if (!passwordPatternValidate(pwd))
             return SERIAL_CHAR;
 

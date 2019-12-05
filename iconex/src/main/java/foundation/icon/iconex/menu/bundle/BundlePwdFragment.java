@@ -4,14 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -49,6 +49,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
         editPwd = v.findViewById(R.id.edit_pwd);
         editPwd.setOnKeyPreImeListener(mKeyPreImeListener);
+        editPwd.disableCopyPaste();
         editPwd.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
@@ -73,6 +74,10 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
                     case PasswordValidator.SERIAL_CHAR:
                         editPwd.setError(true, getString(R.string.errSerialChar));
+                        break;
+
+                    case PasswordValidator.ILLEGAL_CHAR:
+                        editPwd.setError(true, getString(R.string.errAllowSpecialCharacters));
                         break;
 
                     default:
@@ -103,6 +108,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
         editCheck = v.findViewById(R.id.edit_check);
         editCheck.setOnKeyPreImeListener(mKeyPreImeListener);
+        editCheck.disableCopyPaste();
         editCheck.setOnFocusChangedListener(new TTextInputLayout.OnMyFocusChangedListener() {
             @Override
             public void onFocused() {
@@ -114,12 +120,11 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                 if (editCheck.getText().isEmpty()) {
                     btnExport.setEnabled(false);
                 } else {
-                    if (editPwd.getText().isEmpty()) {
-                        editCheck.setError(true, getString(R.string.errPasswordNotMatched));
-                    } else {
+                    if (!editCheck.getText().isEmpty()) {
                         boolean result = PasswordValidator.checkPasswordMatch(editPwd.getText(), editCheck.getText());
                         if (!result) {
-                            editCheck.setError(true, getString(R.string.errPasswordNotMatched));
+                            if (!editPwd.getText().isEmpty())
+                                editCheck.setError(true, getString(R.string.errPasswordNotMatched));
                         } else {
                             editCheck.setError(false, null);
                         }
@@ -177,34 +182,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
                 break;
 
             case R.id.btn_export:
-                int pwdResult = PasswordValidator.validatePassword(editPwd.getText());
-                if (pwdResult == PasswordValidator.EMPTY) {
-                    editPwd.setError(true, getString(R.string.errPwdEmpty));
-                } else if (pwdResult == PasswordValidator.LEAST_8) {
-                    editPwd.setError(true, getString(R.string.errAtLeast));
-                } else if (pwdResult == PasswordValidator.HAS_WHITE_SPACE) {
-                    editPwd.setError(true, getString(R.string.errWhiteSpace));
-                } else if (pwdResult == PasswordValidator.NOT_MATCH_PATTERN) {
-                    editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
-                } else if (pwdResult == PasswordValidator.SERIAL_CHAR) {
-                    editPwd.setError(true, getString(R.string.errSerialChar));
-                } else {
-                    editPwd.setError(false, null);
-                }
-
-                boolean checkResult = PasswordValidator.checkPasswordMatch(editPwd.getText(),
-                        editCheck.getText());
-                if (!checkResult)
-                    editCheck.setError(true, getString(R.string.errPasswordNotMatched));
-                else
-                    editCheck.setError(false, null);
-
-                if ((pwdResult == PasswordValidator.OK)
-                        && checkResult) {
-                    checkPermission();
-                } else {
-                    btnExport.setEnabled(false);
-                }
+                checkPermission();
                 break;
 
             case R.id.btn_back:
@@ -239,9 +217,7 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
 
     private void setDownEnabled() {
         int pwdResult = PasswordValidator.validatePassword(editPwd.getText());
-        if (pwdResult == PasswordValidator.EMPTY) {
-            editPwd.setError(true, getString(R.string.errPwdEmpty));
-        } else if (pwdResult == PasswordValidator.LEAST_8) {
+        if (pwdResult == PasswordValidator.LEAST_8) {
             editPwd.setError(true, getString(R.string.errAtLeast));
         } else if (pwdResult == PasswordValidator.HAS_WHITE_SPACE) {
             editPwd.setError(true, getString(R.string.errWhiteSpace));
@@ -249,18 +225,22 @@ public class BundlePwdFragment extends Fragment implements View.OnClickListener 
             editPwd.setError(true, getString(R.string.errPasswordPatternMatch));
         } else if (pwdResult == PasswordValidator.SERIAL_CHAR) {
             editPwd.setError(true, getString(R.string.errSerialChar));
+        } else if (pwdResult == PasswordValidator.ILLEGAL_CHAR) {
+            editPwd.setError(true, getString(R.string.errAllowSpecialCharacters));
         } else {
             editPwd.setError(false, null);
         }
 
-        boolean checkResult = PasswordValidator.checkPasswordMatch(editPwd.getText().toString(),
-                editCheck.getText());
-        if (editCheck.getText().trim().isEmpty()) {
-            editCheck.setError(true, getString(R.string.errCheckEmpty));
-        } else if (!checkResult)
-            editCheck.setError(true, getString(R.string.errPasswordNotMatched));
-        else
-            editCheck.setError(false, null);
+        boolean checkResult = false;
+        if (!editCheck.getText().isEmpty()) {
+            checkResult = PasswordValidator.checkPasswordMatch(editPwd.getText(),
+                    editCheck.getText());
+            if (!checkResult) {
+                if (!editPwd.getText().isEmpty())
+                    editCheck.setError(true, getString(R.string.errPasswordNotMatched));
+            } else
+                editCheck.setError(false, null);
+        }
 
         if ((pwdResult == PasswordValidator.OK)
                 && checkResult) {
