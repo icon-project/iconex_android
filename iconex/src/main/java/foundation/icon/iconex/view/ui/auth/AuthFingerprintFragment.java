@@ -136,6 +136,7 @@ public class AuthFingerprintFragment extends Fragment implements FingerprintAuth
                         }
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     if (!dialog.isShowing()) {
                         dialog.setMessage(getString(R.string.errInvalidatedByBiometricEnrollment));
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

@@ -48,15 +48,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View
+        <RelativeLayout
             android:id="@+id/unstake"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_graph_unstaking"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/unstaked"
             app:layout_constraintStart_toEndOf="@id/staked"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/view_unstake_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_graph_unstaking_base" />
+
+            <View
+                android:id="@+id/view_unstake_top"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_graph_unstaking" />
+        </RelativeLayout>
 
         <View
             android:id="@+id/unstaked"
@@ -86,14 +98,14 @@
             android:textColor="@color/primary" />
 
         <!--<TextView-->
-            <!--android:id="@+id/txt_staked_icx"-->
-            <!--style="@style/TextView12"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginStart="4dp"-->
-            <!--android:fontFamily="@font/nanum_square_regular"-->
-            <!--android:text="- ICX"-->
-            <!--android:textColor="@color/primary" />-->
+        <!--android:id="@+id/txt_staked_icx"-->
+        <!--style="@style/TextView12"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="4dp"-->
+        <!--android:fontFamily="@font/nanum_square_regular"-->
+        <!--android:text="- ICX"-->
+        <!--android:textColor="@color/primary" />-->
 
         <TextView
             android:id="@+id/txt_staked_per"
@@ -123,14 +135,14 @@
             android:textColor="@color/primary" />
 
         <!--<TextView-->
-            <!--android:id="@+id/txt_unstake_icx"-->
-            <!--style="@style/TextView10"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginStart="4dp"-->
-            <!--android:fontFamily="@font/nanum_square_regular"-->
-            <!--android:text="- ICX"-->
-            <!--android:textColor="@color/primary" />-->
+        <!--android:id="@+id/txt_unstake_icx"-->
+        <!--style="@style/TextView10"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="4dp"-->
+        <!--android:fontFamily="@font/nanum_square_regular"-->
+        <!--android:text="- ICX"-->
+        <!--android:textColor="@color/primary" />-->
 
         <TextView
             android:id="@+id/txt_unstake_per"

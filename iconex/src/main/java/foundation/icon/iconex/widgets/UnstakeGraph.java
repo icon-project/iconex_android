@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,9 +23,12 @@ public class UnstakeGraph extends LinearLayout {
     private static final String TAG = UnstakeGraph.class.getSimpleName();
 
     private TextView txtUnstakedPer, txtStakedIcx, txtStakedPer, txtUnstakeIcx, txtUnstakePer;
+    private View unstakeTop, unstakeBottom;
     private BigDecimal total, staked, unstake, unstaked;
 
     private BigDecimal THE_HUNDRED = new BigDecimal("100");
+
+    private Animation anim;
 
     public UnstakeGraph(Context context) {
         super(context);
@@ -47,16 +52,23 @@ public class UnstakeGraph extends LinearLayout {
         View v = View.inflate(getContext(), R.layout.layout_unstake_graph, null);
 
         txtUnstakedPer = v.findViewById(R.id.txt_unstaked_per);
-//        txtStakedIcx = v.findViewById(R.id.txt_staked_icx);
         txtStakedPer = v.findViewById(R.id.txt_staked_per);
-//        txtUnstakeIcx = v.findViewById(R.id.txt_unstake_icx);
         txtUnstakePer = v.findViewById(R.id.txt_unstake_per);
+
+        unstakeTop = v.findViewById(R.id.view_unstake_top);
+        unstakeBottom = v.findViewById(R.id.view_unstake_bottom);
+
+        anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(1000);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
 
         addView(v);
     }
 
     public void updateGraph() {
-        float stakedPer = staked.add(unstake).divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).floatValue();
+        float totalStakedPer = staked.add(unstake).divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).floatValue();
+        float stakedPer = staked.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).floatValue();
         float unstakePer = unstake.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).floatValue();
         float unstakedPer = unstaked.divide(total, 18, RoundingMode.FLOOR).multiply(THE_HUNDRED).floatValue();
 
@@ -67,10 +79,18 @@ public class UnstakeGraph extends LinearLayout {
         constraintSet.setHorizontalWeight(R.id.unstaked, unstakedPer);
         constraintSet.applyTo(findViewById(R.id.root));
 
+        if (totalStakedPer == unstakePer) {
+            unstakeTop.setBackgroundResource(R.drawable.bg_graph_unstaking_f);
+            unstakeBottom.setBackgroundResource(R.drawable.bg_graph_unstaking_base_f);
+        } else {
+            unstakeTop.setBackgroundResource(R.drawable.bg_graph_unstaking);
+            unstakeBottom.setBackgroundResource(R.drawable.bg_graph_unstaking_base);
+        }
+
+        unstakeTop.startAnimation(anim);
+
         txtUnstakedPer.setText(String.format(Locale.getDefault(), "%.1f%%", unstakedPer));
-//        txtStakedIcx.setText(String.format(Locale.getDefault(), "%s ICX", staked.scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR)));
-        txtStakedPer.setText(String.format(Locale.getDefault(), "%.1f%%", stakedPer));
-//        txtUnstakeIcx.setText(String.format(Locale.getDefault(), "%s ICX", unstake.scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_FLOOR)));
+        txtStakedPer.setText(String.format(Locale.getDefault(), "%.1f%%", totalStakedPer));
         txtUnstakePer.setText(String.format(Locale.getDefault(), "%.1f%%", unstakePer));
     }
 
