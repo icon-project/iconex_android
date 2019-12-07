@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".token.manage.TokenListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -43,13 +45,13 @@
 
             android:layout_margin="10dp"
             android:background="@drawable/bg_button_rounded12_darkf2"
-            android:stateListAnimator="@null"
-
             android:fontFamily="@font/noto_sans_regular"
+
+            android:stateListAnimator="@null"
+            android:text="@string/addToken"
             android:textAllCaps="false"
             android:textColor="@color/dark4D"
-            android:textSize="14dp"
 
-            android:text="@string/addToken"/>
+            android:textSize="14dp" />
     </FrameLayout>
 </RelativeLayout>

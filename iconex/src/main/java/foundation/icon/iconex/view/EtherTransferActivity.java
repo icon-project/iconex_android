@@ -540,16 +540,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         seekPrice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    if ((progress % 10) < 3) {
-                        progress = (progress / 10) * 10;
-                    } else {
-                        if ((10 - (progress % 10)) < 3) {
-                            progress = ((progress / 10) + 1) * 10;
-                        }
-                    }
-                }
-
                 if (progress == 0)
                     progress = 1;
 
@@ -559,7 +549,6 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 seekPrice.setProgress(progress);
                 txtPrice.setText(String.valueOf(progress));
 
-//                BigDecimal bigFee = new BigDecimal(calculateFee());
                 txtFee.setText(calculateFee());
                 setRemain(calculateFee());
             }

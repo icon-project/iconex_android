@@ -337,8 +337,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lb_slow"
-                    app:max="98"
-                    app:progress="53" />
+                    app:max="99"
+                    app:progress="21" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

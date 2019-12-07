@@ -490,6 +490,7 @@
     <string name="max">Max</string>
     <string name="stakeNotice01">・ You cannot unstake the amount that is already delegated.</string>
     <string name="stakeNotice02">・ Minimum Unstaked amount is 1 ICX. It is required to pay transaction fee occurred by delegation.</string>
+    <string name="stakeUnavailable">・ There is not enough amount.\nDeposit ICX or reduce the delegation abmount in Vote page.</string>
     <string name="unstakeNotice01">・ Changing in request amount will reset the completion time and transaction fee should be paid again.</string>
     <string name="timeRequired">Time Required</string>
     <string name="immediately">Immediately</string>

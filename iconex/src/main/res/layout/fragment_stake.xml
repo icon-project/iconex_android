@@ -284,6 +284,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/txt_notice_1"
                 style="@style/TextView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -295,6 +296,7 @@
                 android:textColor="@color/dark80" />
 
             <TextView
+                android:id="@+id/txt_notice_2"
                 style="@style/TextView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -306,6 +308,7 @@
                 android:textColor="@color/dark80" />
 
             <LinearLayout
+                android:id="@+id/layout_tx_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"

@@ -82,6 +82,8 @@ public class StakeFragment extends Fragment {
     private TextView txtTimeRequired, txtStepNPrice;
     private TextView txtFee, txtFeeUsd;
     private Button btnSubmit;
+    private ViewGroup layoutTxInfo;
+    private TextView txtNotice1, txtNotice2;
 
     private CompositeDisposable compositeDisposable;
     private Disposable disposable;
@@ -300,6 +302,10 @@ public class StakeFragment extends Fragment {
                 showDialog();
             }
         });
+
+        layoutTxInfo = v.findViewById(R.id.layout_tx_info);
+        txtNotice1 = v.findViewById(R.id.txt_notice_1);
+        txtNotice2 = v.findViewById(R.id.txt_notice_2);
     }
 
     private void setData() {
@@ -320,10 +326,11 @@ public class StakeFragment extends Fragment {
 
         if (!delegated.equals(BigDecimal.ZERO)) {
             stakeGraph.setDelegation(delegated);
-            delegatedPercent = calculatePercentage(staked, delegated);
+            delegatedPercent = calculatePercentage(maxStake, delegated);
+            float delPerOnStaked = calculatePercentage(staked, delegated);
             txtDelegation.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
                     delegated.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString(),
-                    delegatedPercent));
+                    delPerOnStaked));
 
             stakeSeekBar.setMax(100 - ((int) delegatedPercent));
         } else {
@@ -342,10 +349,18 @@ public class StakeFragment extends Fragment {
             editStaked.setEnabled(false);
             stakeSeekBar.setEnabled(false);
             txtStakedPer.setTextColor(getResources().getColor(R.color.darkB3));
+            layoutTxInfo.setVisibility(View.GONE);
+            txtNotice1.setText(getString(R.string.stakeUnavailable));
+            txtNotice2.setVisibility(View.GONE);
+            txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.DOWN).toString());
         } else if (available.subtract(ONE_ICX).compareTo(BigDecimal.ZERO) <= 0) {
             editStaked.setEnabled(false);
             stakeSeekBar.setEnabled(false);
             txtStakedPer.setTextColor(getResources().getColor(R.color.darkB3));
+            layoutTxInfo.setVisibility(View.GONE);
+            txtNotice1.setText(getString(R.string.stakeUnavailable));
+            txtNotice2.setVisibility(View.GONE);
+            txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.DOWN).toString());
         }
 
         stepLimit = vm.getStepLimit().getValue();

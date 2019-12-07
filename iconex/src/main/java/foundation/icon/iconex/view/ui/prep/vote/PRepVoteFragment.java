@@ -43,7 +43,7 @@ public class PRepVoteFragment extends Fragment {
     private TextView sort, resetVotes;
     private RecyclerView list;
     private MyVoteListAdapter adapter;
-    private Sort sortType = Sort.Ascending;
+    private Sort sortType = null;
 
     private List<Delegation> delegations = new ArrayList<>();
 
@@ -70,10 +70,6 @@ public class PRepVoteFragment extends Fragment {
             public void onChanged(List<Delegation> delegations) {
                 PRepVoteFragment.this.delegations = delegations;
                 if (adapter != null && PRepVoteFragment.this.delegations != null) {
-                    sortAscending(PRepVoteFragment.this.delegations);
-                    if (sortType == Sort.Descending)
-                        Collections.reverse(PRepVoteFragment.this.delegations);
-
                     adapter.setData(PRepVoteFragment.this.delegations);
                     list.setAdapter(adapter);
                 } else {
@@ -83,9 +79,6 @@ public class PRepVoteFragment extends Fragment {
                         @Override
                         public void onVoted(List<Delegation> delegations) {
                             PRepVoteFragment.this.delegations = delegations;
-                            sortAscending(PRepVoteFragment.this.delegations);
-                            if (sortType == Sort.Descending)
-                                Collections.reverse(PRepVoteFragment.this.delegations);
                             setData();
                             mListener.onVoted(delegations);
                         }
@@ -216,6 +209,13 @@ public class PRepVoteFragment extends Fragment {
             if (delegations.size() > 0 && !voted.equals(BigDecimal.ZERO)) {
                 resetVotes.setTextColor(getResources().getColor(R.color.dark4D));
                 resetVotes.setEnabled(true);
+
+                if (sortType == null) {
+                    sortType = Sort.Ascending;
+                    sortAscending(delegations);
+                    adapter.setData(delegations);
+                    adapter.notifyDataSetChanged();
+                }
             } else {
                 resetVotes.setTextColor(getResources().getColor(R.color.darkE6));
                 resetVotes.setEnabled(false);
