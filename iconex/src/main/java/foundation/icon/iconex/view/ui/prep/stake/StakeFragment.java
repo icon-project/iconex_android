@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -228,7 +229,7 @@ public class StakeFragment extends Fragment {
                 TextInputLayout dd = new TextInputLayout(getContext());
 
                 if (editStaked.getTag() == null) {
-                    if (input.compareTo(maxStake) > 0) {
+                    if (input.compareTo(maxStake) >= 0) {
                         txtStakedPer.setText(String.format(Locale.getDefault(), "(%.1f%%)", 100.0f));
                         stakeSeekBar.setProgress(100);
                         stakeGraph.updateGraph(maxStake);
@@ -311,11 +312,18 @@ public class StakeFragment extends Fragment {
         BigDecimal ONE_ICX = new BigDecimal("1").scaleByPowerOfTen(18);
         total = new BigDecimal(vm.getTotal().getValue());
         staked = new BigDecimal(vm.getStaked().getValue()).add(new BigDecimal(vm.getUnstake().getValue()));
-//        unstaked = new BigDecimal(vm.getUnstaked().getValue());
         unstaked = total.subtract(staked);
         delegated = new BigDecimal(vm.getDelegation().getValue());
-        maxStake = total.subtract(ONE_ICX);
+        if (unstaked.compareTo(BigDecimal.ONE.scaleByPowerOfTen(18)) < 0)
+            maxStake = total.subtract(unstaked);
+        else
+            maxStake = total.subtract(ONE_ICX);
         available = total.subtract(delegated);
+
+        Log.wtf(TAG, "staked=" + staked.toString());
+        Log.wtf(TAG, "delegated=" + delegated);
+        Log.wtf(TAG, "unstaked=" + unstaked.toString());
+        Log.wtf(TAG, "maxStake=" + maxStake.toString());
 
         stakeGraph.setTotal(total);
         stakeGraph.setStake(staked);

@@ -210,7 +210,7 @@ public class FloatingRRepsMenu extends FrameLayout implements View.OnClickListen
                 try {
                     BigDecimal balance = new BigDecimal(wallet.getWalletEntries().get(0).getBalance())
                             .add(new BigDecimal(wallet.getStaked())).add(new BigDecimal(wallet.getUnstake()));
-                    if (balance.compareTo(BigDecimal.ONE) < 0) {
+                    if (balance.compareTo(BigDecimal.ONE.scaleByPowerOfTen(18)) < 0) {
                         messageDialog = new MessageDialog(getContext());
                         messageDialog.setMessage(getContext().getString(R.string.notEnoughForStaking));
                         messageDialog.show();

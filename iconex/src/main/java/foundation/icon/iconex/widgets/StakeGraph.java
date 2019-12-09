@@ -20,7 +20,8 @@ public class StakeGraph extends ConstraintLayout {
     private static final String TAG = StakeGraph.class.getSimpleName();
 
     private TextView txtStakePer, txtUnstakePer, txtDelegationPer;
-    private BigDecimal total, stake, delegation;
+    private BigDecimal total, stake;
+    private BigDecimal delegation = BigDecimal.ZERO;
 
     private BigDecimal THE_HUNDRED = new BigDecimal("100");
 
@@ -94,6 +95,10 @@ public class StakeGraph extends ConstraintLayout {
             delegationPer = 0.0f;
             totalDelegationPer = 0.0f;
         }
+
+        Log.w(TAG, "total=" + total.toString());
+        Log.w(TAG, "stake=" + stake.toString() + "stakePer=" + stakePer);
+        Log.w(TAG, "delegation=" + delegation.toString() + "delegationPer=" + delegationPer);
 
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone((ConstraintLayout) findViewById(R.id.constraint_stake));
