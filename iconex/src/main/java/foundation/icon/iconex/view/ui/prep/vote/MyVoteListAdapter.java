@@ -56,8 +56,9 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     public MyVoteListAdapter(Context context, List<Delegation> delegations, Activity root) {
         this.context = context;
 
-        if (delegations != null)
+        if (delegations != null) {
             this.delegations = delegations;
+        }
 
         this.root = root;
 
@@ -96,6 +97,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Log.w(TAG, "onBindViewHolder=" + position);
         if (holder instanceof ItemViewHolder) {
             ItemViewHolder h = (ItemViewHolder) holder;
             Delegation delegation = delegations.get(position);
@@ -241,7 +243,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
             switch (view.getId()) {
                 case R.id.layout_info:
                     if (layoutGraph.getVisibility() == View.GONE) {
-                        if (currentManage > -1)
+                        if (currentManage != getAdapterPosition())
                             notifyItemChanged(currentManage);
 
                         layoutGraph.setVisibility(View.VISIBLE);
@@ -372,6 +374,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                 try {
                     input = new BigDecimal(new BigDecimal(inputString).scaleByPowerOfTen(18).toBigInteger());
                 } catch (Exception e) {
+                    e.printStackTrace();
                     mListener.onVoted(null);
                     return;
                 }
@@ -388,7 +391,6 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                         mListener.onVoted(delegations);
                         seekbar.setProgress(100);
                     } else {
-//                        int seekProgress = Integer.parseInt(input.divide(available, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).toString());
                         float percent = (input.floatValue() / available.floatValue()) * 100;
                         txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
                         seekbar.setProgress(Math.round(percent));
@@ -398,6 +400,10 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
                 }
 
+                Log.wtf(TAG, "getAdapterPosition=" + getAdapterPosition());
+                Log.v(TAG, "voted=" + voted.toString());
+                Log.v(TAG, "input=" + input.toString());
+
                 if (!input.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR)
                         .equals(voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR))) {
                     boolean isNew = delegations.get(getAdapterPosition()).isNew();
@@ -406,6 +412,13 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     d.isNew(isNew);
                     delegations.set(getAdapterPosition(), d);
                     mListener.onVoted(delegations);
+                } else {
+                    boolean isNew = delegations.get(getAdapterPosition()).isNew();
+                    Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(input.toBigInteger()).build();
+                    d.isEdited(true);
+                    d.isNew(isNew);
+                    delegations.set(getAdapterPosition(), d);
+                    mListener.onUiUpdate(delegations);
                 }
             }
         };
@@ -482,6 +495,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     }
 
     public void clearCurrentManage() {
+        Log.wtf(TAG, "Called clearCurrentManage!!!");
         currentManage = -1;
     }
 
@@ -493,5 +507,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
     public interface OnVoteChangedListener {
         void onVoted(List<Delegation> delegations);
+
+        void onUiUpdate(List<Delegation> delegations);
     }
 }

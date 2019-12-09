@@ -379,6 +379,9 @@ public class TokenManageFragment extends Fragment implements TTextInputLayout.On
                                 else
                                     getErcToken(s.toString());
                         }
+                        if (s.length() > 42) {
+                            editAddr.setText(s.subSequence(0, 42).toString());
+                        }
                     }
                 } else {
                     editAddr.setError(false, null);

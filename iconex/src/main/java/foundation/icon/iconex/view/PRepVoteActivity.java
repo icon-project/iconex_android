@@ -511,7 +511,7 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
 
                     @Override
                     public void onComplete() {
-                        vm.setStepLimit(stepLimit);
+//                        vm.setStepLimit(stepLimit);
                         btnSubmit.setEnabled(true);
                     }
                 });
@@ -520,12 +520,11 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     @Override
     public void onVoted(List<Delegation> delegations) {
         if (delegations == null) {
+            localHandler.removeCallbacks(estimateLimitTask);
             btnSubmit.setEnabled(false);
             return;
         }
 
-//        if (!btnSubmit.isEnabled())
-//            btnSubmit.setEnabled(true);
         btnSubmit.setEnabled(false);
         this.delegations = delegations;
 

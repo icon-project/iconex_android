@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -318,9 +317,6 @@ public class StakeFragment extends Fragment {
         maxStake = total.subtract(ONE_ICX);
         available = total.subtract(delegated);
 
-        txtBalance.setText(total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
-        txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.DOWN).toString());
-
         stakeGraph.setTotal(total);
         stakeGraph.setStake(staked);
 
@@ -352,7 +348,6 @@ public class StakeFragment extends Fragment {
             layoutTxInfo.setVisibility(View.GONE);
             txtNotice1.setText(getString(R.string.stakeUnavailable));
             txtNotice2.setVisibility(View.GONE);
-            txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.DOWN).toString());
         } else if (available.subtract(ONE_ICX).compareTo(BigDecimal.ZERO) <= 0) {
             editStaked.setEnabled(false);
             stakeSeekBar.setEnabled(false);
@@ -360,11 +355,13 @@ public class StakeFragment extends Fragment {
             layoutTxInfo.setVisibility(View.GONE);
             txtNotice1.setText(getString(R.string.stakeUnavailable));
             txtNotice2.setVisibility(View.GONE);
-            txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.DOWN).toString());
         }
 
         stepLimit = vm.getStepLimit().getValue();
         stepPrice = vm.getStepPrice().getValue();
+
+        txtBalance.setText(total.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
+        txtUnstaked.setText(unstaked.scaleByPowerOfTen(-18).setScale(4, RoundingMode.DOWN).toString());
     }
 
     private BigDecimal calculateIcx(int percentage) {

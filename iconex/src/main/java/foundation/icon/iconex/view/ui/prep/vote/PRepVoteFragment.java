@@ -26,7 +26,6 @@ import java.util.Locale;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.view.ui.prep.Delegation;
-import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.widgets.VoteGraph;
 import io.reactivex.disposables.Disposable;
@@ -76,6 +75,13 @@ public class PRepVoteFragment extends Fragment {
                     adapter = new MyVoteListAdapter(PRepVoteFragment.this.getContext(),
                             delegations, getActivity());
                     adapter.setOnVoteChangedListener(new MyVoteListAdapter.OnVoteChangedListener() {
+                        @Override
+                        public void onUiUpdate(List<Delegation> delegations) {
+                            PRepVoteFragment.this.delegations = delegations;
+                            setData();
+                            mListener.onVoted(null);
+                        }
+
                         @Override
                         public void onVoted(List<Delegation> delegations) {
                             PRepVoteFragment.this.delegations = delegations;
@@ -219,6 +225,9 @@ public class PRepVoteFragment extends Fragment {
             } else {
                 resetVotes.setTextColor(getResources().getColor(R.color.darkE6));
                 resetVotes.setEnabled(false);
+
+                if (sortType == null)
+                    sortType = Sort.Ascending;
             }
 
             vm.setVoted(voted.toBigInteger());
