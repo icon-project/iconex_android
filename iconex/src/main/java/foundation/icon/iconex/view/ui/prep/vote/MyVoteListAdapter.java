@@ -107,6 +107,7 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     String.format(Locale.getDefault(), "%d. %s", pRep.getRank(), pRep.getName())));
 
             String voteStatus;
+            float votePercent;
             if (delegation.isEdited()) {
                 if (!delegation.isNew())
                     voteStatus = String.format(Locale.getDefault(), "(%s / Voted / Edited)", pRep.getGrade().getLabel());
@@ -114,6 +115,16 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     voteStatus = String.format(Locale.getDefault(), "(%s / Edited)", pRep.getGrade().getLabel());
 
                 h.tvPrepGrade.setText(String.format(Locale.getDefault(), "%s", voteStatus));
+
+                if (delegation.getEdited().equals(BigDecimal.ZERO))
+                    votePercent = 0.0f;
+                else {
+                    votePercent = delegation.getEdited().floatValue() / vm.getVotingPower().getValue().add(vm.getVoted().getValue()).floatValue() * 100;
+                }
+
+                h.tvMyVotes.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                        delegation.getEdited().scaleByPowerOfTen(-18).setScale(4, BigDecimal.ROUND_DOWN).toString(),
+                        votePercent));
             } else {
                 if (!delegation.isNew())
                     voteStatus = String.format(Locale.getDefault(), "(%s / Voted)", pRep.getGrade().getLabel());
@@ -121,21 +132,32 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     voteStatus = String.format(Locale.getDefault(), "(%s)", pRep.getGrade().getLabel());
 
                 h.tvPrepGrade.setText(String.format(Locale.getDefault(), "%s", voteStatus));
+
+                if (delegation.getValue().equals(BigInteger.ZERO))
+                    votePercent = 0.0f;
+                else {
+                    votePercent = delegation.getValue().floatValue() / vm.getVotingPower().getValue().add(vm.getVoted().getValue()).floatValue() * 100;
+                }
+
+                h.tvMyVotes.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+                        Utils.formatFloating(ConvertUtil.getValue(delegation.getValue(), 18), 4),
+                        votePercent));
             }
 
             h.tvTotalVotes.setText(String.format(Locale.getDefault(), "%s (%s%%)",
                     Utils.formatFloating(ConvertUtil.getValue(pRep.getDelegated(), 18), 4),
                     Utils.formatFloating(Double.toString(pRep.delegatedPercent()), 1)));
 
-            float votePercent;
-            if (delegation.getValue().equals(BigInteger.ZERO))
-                votePercent = 0.0f;
-            else {
-                votePercent = delegation.getValue().floatValue() / vm.getVotingPower().getValue().add(vm.getVoted().getValue()).floatValue() * 100;
-            }
-            h.tvMyVotes.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
-                    Utils.formatFloating(ConvertUtil.getValue(delegation.getValue(), 18), 4),
-                    votePercent));
+
+//            if (delegation.getValue().equals(BigInteger.ZERO))
+//                votePercent = 0.0f;
+//            else {
+//                votePercent = delegation.getValue().floatValue() / vm.getVotingPower().getValue().add(vm.getVoted().getValue()).floatValue() * 100;
+//            }
+//
+//            h.tvMyVotes.setText(String.format(Locale.getDefault(), "%s (%.1f%%)",
+//                    Utils.formatFloating(ConvertUtil.getValue(delegation.getValue(), 18), 4),
+//                    votePercent));
 
             h.btnManage.setImageResource(R.drawable.bg_btn_prep_delete);
             if (!delegation.isNew()) {
@@ -253,20 +275,25 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
                         votingPower = new BigDecimal(vm.getVotingPower().getValue());
                         voted = new BigDecimal(delegation.getValue());
-                        available = votingPower.add(voted);
+                        BigDecimal value;
+                        if (delegation.isEdited())
+                            value = delegation.getEdited();
+                        else
+                            value = voted;
+                        available = votingPower.add(value);
 
                         float votePercent;
-                        if (voted.equals(BigDecimal.ZERO)) {
+                        if (value.equals(BigDecimal.ZERO)) {
                             votePercent = 0.0f;
-                            editDelegation.setText(voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
+                            editDelegation.setText(value.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                         } else {
-                            votePercent = voted.scaleByPowerOfTen(-18).divide(available.scaleByPowerOfTen(-18), RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
-                            editDelegation.setText(voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
+                            votePercent = value.scaleByPowerOfTen(-18).divide(available.scaleByPowerOfTen(-18), RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
+                            editDelegation.setText(value.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                         }
 
                         txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", votePercent));
 
-                        float maxPercent = available.scaleByPowerOfTen(-18).divide(getTotalVoted().add(available).subtract(voted).scaleByPowerOfTen(-18), RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
+                        float maxPercent = available.scaleByPowerOfTen(-18).divide(getTotalVoted().add(available).subtract(value).scaleByPowerOfTen(-18), RoundingMode.FLOOR).multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP).floatValue();
                         if (maxPercent == 0) {
                             txtMax.setText(String.format(Locale.getDefault(), "%.1f%%", 0.0f));
                             seekbar.setEnabled(false);
@@ -330,7 +357,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
 
                 if (inputString.isEmpty()) {
                     boolean isNew = delegations.get(getAdapterPosition()).isNew();
-                    Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(BigInteger.ZERO).build();
+                    Delegation d = delegations.get(getAdapterPosition());
+                    d.setEdited(BigDecimal.ZERO);
                     d.isEdited(true);
                     d.isNew(isNew);
                     delegations.set(getAdapterPosition(), d);
@@ -384,7 +412,8 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                         editDelegation.setText(available.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR).toString());
                         input = new BigDecimal(new BigDecimal(editDelegation.getText().toString()).scaleByPowerOfTen(18).toBigInteger());
                         boolean isNew = delegations.get(getAdapterPosition()).isNew();
-                        Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(input.toBigInteger()).build();
+                        Delegation d = delegations.get(getAdapterPosition());
+                        d.setEdited(input);
                         d.isEdited(true);
                         d.isNew(isNew);
                         delegations.set(getAdapterPosition(), d);
@@ -400,22 +429,20 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
                     txtPercent.setText(String.format(Locale.getDefault(), "(%.1f%%)", percent));
                 }
 
-                Log.wtf(TAG, "getAdapterPosition=" + getAdapterPosition());
-                Log.v(TAG, "voted=" + voted.toString());
-                Log.v(TAG, "input=" + input.toString());
-
                 if (!input.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR)
                         .equals(voted.scaleByPowerOfTen(-18).setScale(4, RoundingMode.FLOOR))) {
                     boolean isNew = delegations.get(getAdapterPosition()).isNew();
-                    Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(input.toBigInteger()).build();
+                    Delegation d = delegations.get(getAdapterPosition());
+                    d.setEdited(input);
                     d.isEdited(true);
                     d.isNew(isNew);
                     delegations.set(getAdapterPosition(), d);
                     mListener.onVoted(delegations);
                 } else {
                     boolean isNew = delegations.get(getAdapterPosition()).isNew();
-                    Delegation d = delegations.get(getAdapterPosition()).newBuilder().value(input.toBigInteger()).build();
-                    d.isEdited(true);
+                    Delegation d = delegations.get(getAdapterPosition());
+                    d.setEdited(BigDecimal.ZERO);
+                    d.isEdited(false);
                     d.isNew(isNew);
                     delegations.set(getAdapterPosition(), d);
                     mListener.onUiUpdate(delegations);
@@ -480,7 +507,10 @@ public class MyVoteListAdapter extends RecyclerView.Adapter {
     private BigDecimal getTotalVoted() {
         BigDecimal total = BigDecimal.ZERO;
         for (Delegation d : delegations) {
-            total = total.add(new BigDecimal(d.getValue()));
+            if (d.isEdited())
+                total = total.add(d.getEdited());
+            else
+                total = total.add(new BigDecimal(d.getValue()));
         }
 
         return total;

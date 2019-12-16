@@ -2,7 +2,6 @@ package foundation.icon.iconex.view.ui.prep.vote;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +78,7 @@ public class PRepVoteFragment extends Fragment {
                         public void onUiUpdate(List<Delegation> delegations) {
                             PRepVoteFragment.this.delegations = delegations;
                             setData();
-                            mListener.onVoted(null);
+                            mListener.onUiUpdated();
                         }
 
                         @Override
@@ -209,7 +208,10 @@ public class PRepVoteFragment extends Fragment {
             BigDecimal total = new BigDecimal(vm.getTotal().getValue());
             BigDecimal voted = BigDecimal.ZERO;
             for (Delegation d : delegations) {
-                voted = voted.add(new BigDecimal(d.getValue()));
+                if (d.isEdited())
+                    voted = voted.add(d.getEdited());
+                else
+                    voted = voted.add(new BigDecimal(d.getValue()));
             }
 
             if (delegations.size() > 0 && !voted.equals(BigDecimal.ZERO)) {
@@ -260,6 +262,8 @@ public class PRepVoteFragment extends Fragment {
     private OnVoteFragmentListener mListener;
 
     public interface OnVoteFragmentListener {
+        void onUiUpdated();
+
         void onVoted(List<Delegation> delegations);
 
         void onReset(List<Delegation> delegations);

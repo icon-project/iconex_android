@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -46,11 +45,11 @@ import foundation.icon.iconex.realm.RealmUtil;
 import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.util.DecimalFomatter;
+import foundation.icon.iconex.view.ui.transfer.EtherDataEnterFragment;
 import foundation.icon.iconex.view.ui.transfer.TransferViewModel;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import foundation.icon.iconex.wallet.contacts.ContactsActivity;
-import foundation.icon.iconex.view.ui.transfer.EtherDataEnterFragment;
 import foundation.icon.iconex.wallet.transfer.data.ErcTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.EthTxInfo;
 import foundation.icon.iconex.wallet.transfer.data.TxInfo;
@@ -278,7 +277,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         symbolEstimatedMaxFee.setText("(" + Constants.KS_COINTYPE_ETH + ")");
         String symbol = "(" + mWalletEntry.getSymbol() + ")";
         labelSymbol.setText(symbol);
-        editSend.setAppendText(symbol.substring(1, symbol.length() -1));
+        editSend.setAppendText(symbol.substring(1, symbol.length() - 1));
         TextViewCompat.setAutoSizeTextTypeWithDefaults(txtBalance, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
 
         // init appbar
@@ -286,8 +285,12 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             @Override
             public void onClickAction(CustomActionBar.ClickAction action) {
                 switch (action) {
-                    case btnStart: finish(); break;
-                    case btnEnd: showInfo(); break;
+                    case btnStart:
+                        finish();
+                        break;
+                    case btnEnd:
+                        showInfo();
+                        break;
                 }
             }
         });
@@ -359,9 +362,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                         amount = editSend.getText().toString();
                         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
                         if (strPrice != null) {
-                            if (strPrice.equals(MyConstants.NO_EXCHANGE)) {
-                                txtTransSend.setText("$ 0.00");
-                            } else {
+                            if (!strPrice.equals(MyConstants.NO_EXCHANGE)) {
                                 Double transUSD = Double.parseDouble(amount)
                                         * Double.parseDouble(strPrice);
                                 String strTransUSD = String.format(Locale.getDefault(), "%,.2f", transUSD);
@@ -374,6 +375,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 } else {
                     txtTransSend.setText("$ 0.00");
                     editSend.setError(false, null);
+                    setSendEnable(false);
                 }
 
                 setRemain(editSend.getText());
@@ -406,8 +408,10 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         editAddress.setOnTextChangedListener(new TTextInputLayout.OnTextChanged() {
             @Override
             public void onChanged(@NotNull CharSequence s) {
-                if (s.length() <= 0 )
+                if (s.length() <= 0) {
                     editAddress.setError(false, null);
+                    setSendEnable(false);
+                }
             }
         });
 
@@ -534,8 +538,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         });
 
         // set seek bar
-        labelSlow.setText(1 + " (" +getString(R.string.slow) +")");
-        labelFast.setText("(" +getString(R.string.fast) +") " + 99);
+        labelSlow.setText(1 + " (" + getString(R.string.slow) + ")");
+        labelFast.setText("(" + getString(R.string.fast) + ") " + 99);
         seekPrice.setProgress(DEFAULT_PRICE);
         seekPrice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -570,9 +574,15 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.btn_plus_10: addPlus(10); break;
-                    case R.id.btn_plus_100: addPlus(100); break;
-                    case R.id.btn_plus_1000: addPlus(1000); break;
+                    case R.id.btn_plus_10:
+                        addPlus(10);
+                        break;
+                    case R.id.btn_plus_100:
+                        addPlus(100);
+                        break;
+                    case R.id.btn_plus_1000:
+                        addPlus(1000);
+                        break;
                     case R.id.btn_plus_all:
                         if (mWalletEntry.getType().equals(MyConstants.TYPE_COIN)) {
                             BigInteger balance = new BigInteger(mWalletEntry.getBalance());
@@ -718,10 +728,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         String strPrice = ICONexApp.EXCHANGE_TABLE.get(CODE_EXCHANGE);
         if (strPrice != null) {
             if (strPrice.equals(MyConstants.NO_EXCHANGE)) {
-                ((TextView) findViewById(R.id.txt_trans_balance))
-                        .setText("$ -");
-
-                txtTransSend.setText("$ 0.00");
+                ((TextView) findViewById(R.id.txt_trans_balance)).setText("$ -");
+                txtTransSend.setText("$ -");
             } else {
                 Double balanceUSD = Double.parseDouble(ConvertUtil.getValue(balance, mWalletEntry.getDefaultDec()))
                         * Double.parseDouble(strPrice);
@@ -732,6 +740,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
             }
 
             setRemain(editSend.getText().toString());
+        } else {
+            ((TextView) findViewById(R.id.txt_trans_balance)).setText("$ -");
         }
     }
 
@@ -807,7 +817,7 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
                 else
                     txtRemain = remainValue;
 
-                txtTransRemain= String.format("$ %s", MyConstants.NO_BALANCE) ;
+                txtTransRemain = String.format("$ %s", MyConstants.NO_BALANCE);
 
             } else {
                 String strRemainUSD = String.format(Locale.getDefault(), "%,.2f", remainUSD);
@@ -925,7 +935,8 @@ public class EtherTransferActivity extends AppCompatActivity implements EtherDat
         if (editLimit.getText().isEmpty()) {
             if (errShow) editLimit.setError(true, getString(R.string.errGasLimitEmpty));
             return false;
-        } if (Integer.parseInt(editLimit.getText()) < 21000) {
+        }
+        if (Integer.parseInt(editLimit.getText()) < 21000) {
             if (errShow) editLimit.setError(true, getString(R.string.errEtherGasLimit));
             return false;
         } else {

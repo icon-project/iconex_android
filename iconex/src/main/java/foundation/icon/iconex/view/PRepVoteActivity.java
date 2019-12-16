@@ -461,9 +461,15 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
     private void estimateLimit() {
         RpcArray.Builder arrayBuilder = new RpcArray.Builder();
         for (Delegation d : delegations) {
+            BigInteger value;
+            if (d.isEdited())
+                value = d.getEdited().toBigInteger();
+            else
+                value = d.getValue();
+
             RpcObject object = new RpcObject.Builder()
                     .put("address", new RpcValue(d.getPrep().getAddress()))
-                    .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(d.getValue(), 18), 18)))
+                    .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(value, 18), 18)))
                     .build();
             arrayBuilder.add(object);
         }
@@ -534,6 +540,12 @@ public class PRepVoteActivity extends AppCompatActivity implements PRepVoteFragm
         } catch (Exception e) {
             localHandler.postDelayed(estimateLimitTask, 500);
         }
+    }
+
+    @Override
+    public void onUiUpdated() {
+        localHandler.removeCallbacks(estimateLimitTask);
+//        btnSubmit.setEnabled(false);
     }
 
     @Override

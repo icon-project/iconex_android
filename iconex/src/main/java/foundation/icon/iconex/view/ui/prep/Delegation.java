@@ -1,6 +1,7 @@
 package foundation.icon.iconex.view.ui.prep;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class Delegation implements Serializable {
@@ -9,6 +10,7 @@ public class Delegation implements Serializable {
     private BigInteger value;
     private boolean isNew;
     private boolean isEdited = false;
+    private BigDecimal edited = BigDecimal.ZERO;
 
     public PRep getPrep() {
         return prep;
@@ -32,6 +34,14 @@ public class Delegation implements Serializable {
 
     public boolean isEdited() {
         return isEdited;
+    }
+
+    public BigDecimal getEdited() {
+        return edited;
+    }
+
+    public void setEdited(BigDecimal edited) {
+        this.edited = edited;
     }
 
     Delegation(Builder builder) {

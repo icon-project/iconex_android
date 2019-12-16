@@ -124,9 +124,15 @@ public class PRepService {
     public String setDelegation(KeyWallet keyWallet, List<Delegation> delegations, BigInteger stepLimit) throws IOException {
         RpcArray.Builder arrayBuilder = new RpcArray.Builder();
         for (Delegation d : delegations) {
+            BigInteger value;
+            if (d.isEdited())
+                value = d.getEdited().toBigInteger();
+            else
+                value = d.getValue();
+
             RpcObject object = new RpcObject.Builder()
                     .put("address", new RpcValue(d.getPrep().getAddress()))
-                    .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(d.getValue(), 18), 18)))
+                    .put("value", new RpcValue(ConvertUtil.valueToHexString(ConvertUtil.getValue(value, 18), 18)))
                     .build();
             arrayBuilder.add(object);
         }

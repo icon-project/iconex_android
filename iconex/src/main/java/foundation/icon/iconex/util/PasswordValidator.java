@@ -19,7 +19,7 @@ public class PasswordValidator {
     public static final int LEAST_8 = 5;
     public static final int ILLEGAL_CHAR = 6;
 
-    private static final String allowSpecialChar = "?!:.,%+-/*<>{}()[]`”‘~_^\\|@#$&";
+    private static final String allowSpecialChar = "?!:.,%+-/*<>{}()[]`\"'~_^\\|@#$&";
 
     public static int validatePassword(String pwd) {
         if (pwd.isEmpty())
