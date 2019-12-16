@@ -5,8 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
@@ -32,6 +32,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     private static final String TAG = ExportWalletBundleActivity.class.getSimpleName();
 
     private Button btnBack;
+    private BundleStepView stepView;
     private NonSwipeViewPager viewPager;
     private BundleViewPagerAdapter adapter;
 
@@ -45,7 +46,6 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_export_wallet_bundle);
 
-        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.titleExportBundle));
         btnBack = findViewById(R.id.btn_close);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +53,7 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
                 finish();
             }
         });
+        stepView = findViewById(R.id.step_bundle);
 
         viewPager = findViewById(R.id.container);
         adapter = new BundleViewPagerAdapter(getSupportFragmentManager());
@@ -63,8 +64,13 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
     public void onNext(List<Wallet> bundle, HashMap<String, String> privSet) {
         mBundle = bundle;
         mPrivSet = privSet;
-
+        stepView.setStep(1);
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+    }
+
+    @Override
+    public void onBack() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
     }
 
     @Override
@@ -126,16 +132,15 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        BasicDialog dialog = new BasicDialog(this);
-        dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        MessageDialog messageDialog = new MessageDialog(this);
+        messageDialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+        messageDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 finish();
             }
         });
-        dialog.show();
+        messageDialog.show();
     }
 
     @Override
@@ -147,9 +152,9 @@ public class ExportWalletBundleActivity extends AppCompatActivity implements Mak
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    BasicDialog dialog = new BasicDialog(ExportWalletBundleActivity.this);
-                    dialog.setMessage(getString(R.string.permissionStorageDenied));
-                    dialog.show();
+                    MessageDialog messageDialog = new MessageDialog(ExportWalletBundleActivity.this);
+                    messageDialog.setMessage(getString(R.string.permissionStorageDenied));
+                    messageDialog.show();
                 }
                 return;
             }

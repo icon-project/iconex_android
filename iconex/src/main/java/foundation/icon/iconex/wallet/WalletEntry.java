@@ -10,20 +10,20 @@ import java.io.Serializable;
  */
 
 public class WalletEntry implements Serializable, Parcelable {
-    int id = 0;
-    String type = "";
-    String name = "";
-    String address = "";
-    String symbol = "";
-    String balance = "";
+    private int id = 0;
+    private String type = "";
+    private String name = "";
+    private String address = "";
+    private String symbol = "";
+    private String balance = "";
 
-    String contractAddress = "";
-    String userName = "";
-    String userSymbol = "";
-    int defaultDec = 0;
-    int userDec = 0;
+    private String contractAddress = "";
+    private String userName = "";
+    private String userSymbol = "";
+    private int defaultDec = 0;
+    private int userDec = 0;
 
-    String createdAt = "";
+    private String createdAt = "";
 
     public int getId() {
         return id;

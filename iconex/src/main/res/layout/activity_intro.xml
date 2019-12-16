@@ -3,25 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMain"
-    tools:context="foundation.icon.iconex.intro.IntroActivity">
+    android:background="@color/primary"
+    tools:context="foundation.icon.iconex.view.IntroActivity">
 
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="10dp">
 
         <Button
             android:id="@+id/btn_create_wallet"
             style="?borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_stroke_rounded"
-            android:fontFamily="@font/noto_sans_medium"
+            android:background="@drawable/bg_btn_rounded_29"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/createWallet"
             android:textAllCaps="false"
@@ -32,11 +32,11 @@
             android:id="@+id/btn_load_wallet"
             style="?borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_marginStart="6dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_stroke_rounded"
-            android:fontFamily="@font/noto_sans_medium"
+            android:background="@drawable/bg_btn_rounded_29"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/LoadWallet"
             android:textAllCaps="false"
@@ -44,12 +44,18 @@
             android:textSize="14dp" />
     </LinearLayout>
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/intro_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_buttons" />
+
     <LinearLayout
         android:id="@+id/layout_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="26dp"
+        android:layout_above="@id/layout_buttons"
+        android:layout_marginBottom="30dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -66,11 +72,4 @@
             android:layout_marginStart="6dp"
             android:background="@drawable/bg_intro_indicator" />
     </LinearLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/intro_view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/layout_buttons"
-        android:layout_below="@id/layout_indicator" />
 </RelativeLayout>

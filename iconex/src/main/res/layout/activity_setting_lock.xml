@@ -3,13 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="foundation.icon.iconex.menu.lock.SettingLockActivity">
 
-    <include
-        layout="@layout/layout_appbar_close"
+    <foundation.icon.iconex.widgets.CustomActionBar
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:start_icon="back"
+        app:text="@string/settingLock"/>
 
     <FrameLayout
         android:id="@+id/container"

@@ -1,7 +1,12 @@
 package foundation.icon.iconex.realm;
 
+import android.util.Log;
+
 import io.realm.DynamicRealm;
+import io.realm.DynamicRealmObject;
+import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
+import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 
 /**
@@ -16,15 +21,27 @@ public class MyMigration implements RealmMigration {
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
         RealmSchema schema = realm.getSchema();
 
-//        if (oldVersion == 1) {
-//            Log.d(TAG, "oldVersion=" + oldVersion + ", newVersion" + newVersion);
-//            RealmObjectSchema coinNToken = schema.get("CoinNToken");
-//            RealmObjectSchema wallet = schema.get("Wallet");
-//
-//            coinNToken.addField("createAt", String.class);
-//            wallet.addField("createAt", String.class);
-//
-//            oldVersion++;
-//        }
+        if (oldVersion == 0) {
+            schema.create("MyVotes")
+                    .addField("owner", String.class)
+                    .addField("prepAddress", String.class)
+                    .addField("prepName", String.class)
+                    .addField("prepGrade", Integer.class, FieldAttribute.REQUIRED);
+
+            oldVersion++;
+        }
+
+        if (oldVersion == 1) {
+            RealmObjectSchema recentETHSendSchema = schema.get("RecentETHSend");
+            recentETHSendSchema.addField("nid", int.class);
+            recentETHSendSchema.transform(new RealmObjectSchema.Function() {
+                @Override
+                public void apply(DynamicRealmObject obj) {
+                    obj.setInt("nid", 1);
+                }
+            });
+
+            oldVersion++;
+        }
     }
 }

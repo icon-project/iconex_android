@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp">
+
+    <TextView
+        android:id="@+id/lb_send_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/sendBalance"
+        android:textColor="@color/dark4D"
+        android:fontFamily="@font/noto_sans_medium"
+        android:textSize="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/symbol_send_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/noto_sans_medium"
+        android:textColor="@color/dark4D"
+        android:textSize="10dp"
+        android:text="(ICX)"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lb_send_balance"
+        app:layout_constraintStart_toEndOf="@+id/lb_send_balance" />
+
+    <TextView
+        android:id="@+id/txt_send_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="9,000,000.00000008"
+        android:fontFamily="@font/nanum_square_regular"
+        android:textColor="@color/primary"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lb_send_balance" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/darkE6"
+        app:layout_constraintTop_toBottomOf="@+id/txt_send_balance"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <TextView
+        android:id="@+id/lb_limit_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:text="@string/stepLimit_Price"
+        android:textColor="@color/dark80"
+        android:textSize="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line" />
+
+    <TextView
+        android:id="@+id/symbol_limit_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:text="(ICX)"
+        android:textColor="@color/dark80"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lb_limit_price"
+        app:layout_constraintStart_toEndOf="@+id/lb_limit_price" />
+
+    <TextView
+        android:id="@+id/txt_limit_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nanum_square_bold"
+        android:text="100,000 / 0.00000001"
+        android:textColor="@color/dark4D"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lb_limit_price"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/lb_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:text="@string/estimateFee"
+        android:textColor="@color/dark80"
+        android:textSize="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lb_limit_price"
+        app:layout_goneMarginTop="30dp" />
+
+    <TextView
+        android:id="@+id/symbol_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:text="(ICX)"
+        android:textColor="@color/dark80"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lb_fee"
+        app:layout_constraintStart_toEndOf="@+id/lb_fee" />
+
+    <TextView
+        android:id="@+id/txt_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nanum_square_bold"
+        android:text="0.00000008"
+        android:textColor="@color/dark4D"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lb_fee"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_trans_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/nanum_square_regular"
+        android:text=" $ 0.001"
+        android:textColor="@color/darkB3"
+        android:textSize="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_fee" />
+
+    <TextView
+        android:id="@+id/lb_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:text="@string/receivingAddress"
+        android:textColor="@color/dark80"
+        android:textSize="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lb_fee" />
+
+    <TextView
+        android:id="@+id/txt_receive"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="40dp"
+        android:fontFamily="@font/nanum_square_bold"
+        android:text="hxcf543f15c075ab859d878df42dd193b4b6cb3029"
+        android:textColor="@color/dark4D"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lb_receive" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_limit_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="lb_limit_price,symbol_limit_price,txt_limit_price"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

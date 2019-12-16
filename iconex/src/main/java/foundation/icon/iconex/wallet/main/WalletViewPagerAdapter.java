@@ -15,7 +15,7 @@ public class WalletViewPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = WalletViewPagerAdapter.class.getSimpleName();
 
-    private int NUM_PAGE = ICONexApp.mWallets.size();
+    private int NUM_PAGE = ICONexApp.wallets.size();
     public SparseArray<WalletFragment> fragments;
 
 
@@ -23,8 +23,8 @@ public class WalletViewPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
         fragments = new SparseArray<>();
 
-        for (int i = 0; i < ICONexApp.mWallets.size(); i++)
-            fragments.put(i, WalletFragment.newInstance(ICONexApp.mWallets.get(i)));
+        for (int i = 0; i < ICONexApp.wallets.size(); i++)
+            fragments.put(i, WalletFragment.newInstance(ICONexApp.wallets.get(i)));
     }
 
     @Override

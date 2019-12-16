@@ -3,6 +3,8 @@ package foundation.icon.iconex.wallet.contacts;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.widgets.TitleBar;
 import loopchain.icon.wallet.core.Constants;
 
 public class ContactsActivity extends AppCompatActivity implements ContactsFragment.OnContactsClickListener, MyContactsFragment.OnContactListener {
@@ -24,6 +27,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
     private ContactsViewPagerAdapter viewPagerAdapter;
 
     private String mCoinType;
+    private String mTokenType;
     private String mAddress;
 
     public static final int CODE_REQUEST = 30000;
@@ -34,7 +38,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        ((TextView) findViewById(R.id.txt_title)).setText(getString(R.string.contactsTitle));
+        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         btnClose = findViewById(R.id.btn_close);
         btnClose.setOnClickListener(new View.OnClickListener() {
@@ -44,13 +48,18 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
             }
         });
 
-        btnMod = findViewById(R.id.txt_mod);
+        btnMod = findViewById(R.id.btn_option);
         btnMod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (btnMod.isSelected()) {
                     btnMod.setSelected(false);
                     btnMod.setText(getString(R.string.edit));
+                    if (mCoinType.equals(Constants.KS_COINTYPE_ICX)) {
+                        btnMod.setEnabled(ICONexApp.ICXContacts.size() > 0);
+                    } else {
+                        btnMod.setEnabled(ICONexApp.ETHContacts.size() > 0);
+                    }
                     viewPagerAdapter.setEditable(false);
                 } else {
                     btnMod.setSelected(true);
@@ -59,8 +68,10 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
                 }
             }
         });
+        btnMod.setTextColor(ContextCompat.getColorStateList(this, R.color.txt_btn_rounded_02));
 
         mCoinType = getIntent().getStringExtra("coinType");
+        mTokenType = getIntent().getStringExtra("tokenType");
         mAddress = getIntent().getStringExtra("address");
 
         tabLayout = findViewById(R.id.tab_layout);
@@ -76,11 +87,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
                 if (position == 0) {
                     btnMod.setVisibility(View.VISIBLE);
                     if (mCoinType.equals(Constants.KS_COINTYPE_ICX)) {
-                        if (ICONexApp.ICXContacts.size() == 0)
-                            btnMod.setVisibility(View.INVISIBLE);
+                        btnMod.setEnabled(ICONexApp.ICXContacts.size() > 0);
                     } else {
-                        if (ICONexApp.ETHContacts.size() == 0)
-                            btnMod.setVisibility(View.INVISIBLE);
+                        btnMod.setEnabled(ICONexApp.ETHContacts.size() > 0);
                     }
 
                     btnMod.setSelected(false);
@@ -96,7 +105,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
             }
         });
 
-        viewPagerAdapter = new ContactsViewPagerAdapter(this, getSupportFragmentManager(), mAddress, mCoinType, false);
+        viewPagerAdapter = new ContactsViewPagerAdapter(this, getSupportFragmentManager(), mAddress, mCoinType, mTokenType, false);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
@@ -106,11 +115,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
         btnMod.setVisibility(View.VISIBLE);
 
         if (mCoinType.equals(Constants.KS_COINTYPE_ICX)) {
-            if (ICONexApp.ICXContacts.size() == 0)
-                btnMod.setVisibility(View.INVISIBLE);
+            btnMod.setEnabled(ICONexApp.ICXContacts.size() > 0);
         } else {
-            if (ICONexApp.ETHContacts.size() == 0)
-                btnMod.setVisibility(View.INVISIBLE);
+            btnMod.setEnabled(ICONexApp.ETHContacts.size() > 0);
         }
 
         viewPagerAdapter.setEditable(false);
@@ -122,7 +129,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsFragm
         finish();
     }
 
-    public void setBtnModVisibility(int visible) {
-        btnMod.setVisibility(visible);
+    public void setBtnModEnable(boolean enable) {
+        btnMod.setEnabled(enable);
     }
 }

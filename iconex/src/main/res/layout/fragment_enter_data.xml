@@ -3,20 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    tools:context=".wallet.transfer.EnterDataFragment">
+    tools:context=".view.ui.transfer.IconEnterDataFragment">
 
-    <include
-        layout="@layout/layout_appbar_mod"
+    <foundation.icon.iconex.widgets.TitleBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:type="title_option"
+        app:title="@string/data" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite">
 
         <RelativeLayout
             android:id="@+id/layout_data_limit"
@@ -35,10 +37,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_bold"
                 android:text="/512 KB"
-                android:textColor="#929292"
-                android:textSize="14dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/txt_limit"
@@ -48,26 +50,26 @@
                 android:layout_toStartOf="@id/txt_max"
                 android:fontFamily="@font/nanum_square_bold"
                 android:gravity="center"
-                android:textColor="@color/colorText"
-                android:textSize="14dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="12dp"
+                android:text="0 KB"/>
 
             <TextView
                 android:id="@+id/txt_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="30dp"
-                android:layout_toStartOf="@id/txt_limit"
-                android:fontFamily="@font/noto_sans_medium"
+                android:layout_alignParentLeft="true"
+                android:fontFamily="@font/noto_sans_regular"
                 android:text="TYPE"
-                android:textColor="#929292"
-                android:textSize="14dp" />
+                android:textColor="@color/darkB3"
+                android:textSize="12dp" />
         </RelativeLayout>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/layout_data_limit"
+            android:layout_above="@id/layout_complete"
             android:clipToPadding="false"
             android:scrollbars="none">
 
@@ -77,36 +79,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/colorWhite"
-                android:fontFamily="@font/noto_sans_medium"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textSize="12dp"
+                android:textColor="@color/dark4D"
                 android:gravity="top"
                 android:hint="@string/hintUtfData"
                 android:padding="24dp" />
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/layout_delete"
+
+        <FrameLayout
+            android:id="@+id/layout_complete"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorWhite90"
-            android:orientation="vertical"
-            android:paddingBottom="17dp"
-            android:paddingEnd="24dp"
-            android:paddingStart="24dp"
-            android:paddingTop="17dp"
-            android:visibility="gone">
+            android:layout_height="60dp"
+            android:layout_above="@id/layout_data_limit"
+            android:background="@color/darkFC">
 
             <Button
-                android:id="@+id/btn_delete"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:id="@+id/btn_complete"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_button_b"
-                android:gravity="center"
-                android:text="@string/delete"
-                android:textAllCaps="false"
-                android:textColor="@color/button_text" />
-        </LinearLayout>
-    </RelativeLayout>
 
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_btn_rounded_01_dark"
+
+                android:textSize="14dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textAllCaps="false"
+                android:textColor="@color/txt_btn_rounded_01_dark"
+                android:enabled="false"
+
+                android:text="@string/complete"/>
+        </FrameLayout>
+    </RelativeLayout>
 </LinearLayout>

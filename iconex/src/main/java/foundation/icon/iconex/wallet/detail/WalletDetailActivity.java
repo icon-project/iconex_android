@@ -37,7 +37,7 @@ import foundation.icon.iconex.dialogs.BottomSheetMenuDialog;
 import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.dialogs.SearchConditionDialog;
 import foundation.icon.iconex.dialogs.TrackerDialog;
-import foundation.icon.iconex.intro.IntroActivity;
+import foundation.icon.iconex.view.IntroActivity;
 import foundation.icon.iconex.menu.WalletAddressCodeActivity;
 import foundation.icon.iconex.menu.WalletBackUpActivity;
 import foundation.icon.iconex.menu.WalletPwdChangeActivity;
@@ -46,8 +46,8 @@ import foundation.icon.iconex.service.NetworkService;
 import foundation.icon.iconex.token.manage.TokenManageActivity;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.wallet.transfer.EtherTransferActivity;
-import foundation.icon.iconex.wallet.transfer.ICONTransferActivity;
+import foundation.icon.iconex.wallet.transfer.OldEtherTransferActivity;
+import foundation.icon.iconex.wallet.transfer.OldICONTransferActivity;
 import foundation.icon.iconex.widgets.RefreshLayout.LoadingHeaderView;
 import foundation.icon.iconex.widgets.RefreshLayout.OnRefreshListener;
 import foundation.icon.iconex.widgets.RefreshLayout.RefreshLayout;
@@ -450,7 +450,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                             keyStore.get("crypto").getAsJsonObject(), mWallet.getCoinType());
                     if (bytePrivKey != null) {
                         if (result == EditTextDialog.RESULT_PWD.TRANSFER) {
-                            startActivity(new Intent(WalletDetailActivity.this, ICONTransferActivity.class)
+                            startActivity(new Intent(WalletDetailActivity.this, OldICONTransferActivity.class)
                                     .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("walletEntry", (Serializable) selectedEntry)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
@@ -465,7 +465,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            if (ICONexApp.mWallets.size() == 0) {
+                            if (ICONexApp.wallets.size() == 0) {
                                 startActivity(new Intent(WalletDetailActivity.this, IntroActivity.class)
                                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                             } else {
@@ -492,7 +492,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                     bytePrivKey = KeyStoreUtils.decryptPrivateKey(pwd, mWallet.getAddress(), crypto, mWallet.getCoinType());
                     if (bytePrivKey != null) {
                         if (result == EditTextDialog.RESULT_PWD.TRANSFER) {
-                            startActivity(new Intent(WalletDetailActivity.this, EtherTransferActivity.class)
+                            startActivity(new Intent(WalletDetailActivity.this, OldEtherTransferActivity.class)
                                     .putExtra("walletInfo", (Serializable) mWallet)
                                     .putExtra("walletEntry", (Serializable) selectedEntry)
                                     .putExtra("privateKey", Hex.toHexString(bytePrivKey)));
@@ -507,7 +507,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            if (ICONexApp.mWallets.size() == 0) {
+                            if (ICONexApp.wallets.size() == 0) {
                                 startActivity(new Intent(WalletDetailActivity.this, IntroActivity.class)
                                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                             } else {
@@ -540,7 +540,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                 return;
             }
 
-            for (Wallet info : ICONexApp.mWallets) {
+            for (Wallet info : ICONexApp.wallets) {
                 if (info.getAlias().equals(alias)) {
                     editTextDialog.setError(getString(R.string.duplicateWalletAlias));
                     return;
@@ -672,7 +672,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                if (ICONexApp.mWallets.size() == 0) {
+                                if (ICONexApp.wallets.size() == 0) {
                                     dialog.dismiss();
                                     startActivity(new Intent(WalletDetailActivity.this, IntroActivity.class)
                                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -851,7 +851,7 @@ public class WalletDetailActivity extends AppCompatActivity implements View.OnCl
     }
 
     private boolean hasSwapWallet(String address) throws Exception {
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (address.equals(wallet.getAddress()))
                 return true;
         }

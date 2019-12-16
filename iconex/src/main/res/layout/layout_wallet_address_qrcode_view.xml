@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:fontFamily="@font/noto_sans_medium"
+        android:textColor="@color/dark4D"
+        android:textSize="18dp"
+
+        android:text="지갑 이름 TEST"/>
+
+    <RelativeLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="26dp">
+
+        <ImageView
+            android:id="@+id/img_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/qr_loading"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/anim_loading" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+
+        android:fontFamily="@font/noto_sans_regular"
+        android:textColor="@color/dark4D"
+        android:textSize="10dp"
+
+        android:text="hx1729b35b690d51e9944b2e94075acff986ea0675"/>
+
+    <Button
+        android:id="@+id/btn_copy_address"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+
+        android:fontFamily="@font/noto_sans_light"
+        android:textSize="10dp"
+        android:textColor="@color/txt_btn_outline_01"
+        android:background="@drawable/bg_btn_outline_01"
+        android:textAllCaps="false"
+
+        android:text="@string/copyAddress"/>
+
+    <LinearLayout
+        android:id="@+id/layout_request_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <foundation.icon.iconex.widgets.TTextInputLayout
+                android:id="@+id/edit_send_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:hint="@string/hintRequestSend"/>
+
+            <RelativeLayout
+                android:id="@+id/con_sync"
+                android:layout_width="95dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btn_request_send"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+
+                    android:fontFamily="@font/noto_sans_light"
+                    android:textSize="10dp"
+                    android:textColor="@color/txt_btn_outline_01"
+                    android:background="@drawable/bg_btn_outline_01"
+                    android:textAllCaps="false"
+
+                    android:text="@string/generateQRcode"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_trans_send_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+
+            android:fontFamily="@font/nanum_square_regular"
+            android:textSize="10dp"
+            android:textColor="@color/darkB3"
+
+            android:text="$ 0.00"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="10dp"
+            android:fontFamily="@font/noto_sans_light"
+            android:text="@string/msgRequestSend"
+            android:textColor="@color/primary00"/>
+    </LinearLayout>
+</LinearLayout>

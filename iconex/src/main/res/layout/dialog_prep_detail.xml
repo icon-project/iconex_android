@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/txt_prep_name"
+        style="@style/TextView14"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/noto_sans_medium"
+        android:text="prep_name"
+        android:textColor="@color/dark4D" />
+
+    <TextView
+        android:id="@+id/txt_prep_location"
+        style="@style/TextView12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/noto_sans_regular"
+        android:text="Server: Seoul / Korea"
+        android:textColor="@color/dark4D" />
+
+    <TextView
+        android:id="@+id/txt_prep_detail"
+        style="@style/TextView14"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/noto_sans_medium"
+        android:gravity="center"
+        android:text="@string/prepDetail"
+        android:textColor="@color/primary" />
+</LinearLayout>

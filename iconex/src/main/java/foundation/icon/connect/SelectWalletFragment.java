@@ -119,7 +119,7 @@ public class SelectWalletFragment extends Fragment implements View.OnClickListen
     private List<Wallet> makeWalletList() {
         List<Wallet> list = new ArrayList<>();
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
                 list.add(wallet);
         }

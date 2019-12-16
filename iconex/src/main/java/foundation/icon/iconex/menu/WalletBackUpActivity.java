@@ -7,9 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,16 +14,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import foundation.icon.MyConstants;
+import java.io.Serializable;
+
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.util.KeyStoreIO;
+import foundation.icon.iconex.view.ui.wallet.ViewWalletInfoActivity;
 import foundation.icon.iconex.wallet.Wallet;
-import loopchain.icon.wallet.core.Constants;
+import kotlin.jvm.functions.Function1;
 
 public class WalletBackUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,7 +46,6 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_wallet_back_up);
 
         if (getIntent() != null) {
@@ -69,7 +70,7 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
         txtPrivKey.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         txtPrivKey.setText(mPrivKey);
-        btnVisibility = findViewById(R.id.btn_visibility);
+        btnVisibility = findViewById(R.id.btn_eye);
         btnVisibility.setOnClickListener(this);
     }
 
@@ -92,7 +93,7 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
                 Toast.makeText(this, getString(R.string.msgCopyPrivateKey), Toast.LENGTH_SHORT).show();
                 break;
 
-            case R.id.btn_visibility:
+            case R.id.btn_eye:
                 if (btnVisibility.isSelected()) {
                     btnVisibility.setSelected(false);
                     txtPrivKey.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -104,19 +105,9 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.btn_view_info:
-                String coinName;
-                String format = "%1$s(%2$s)";
-                if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
-                    coinName = String.format(format, MyConstants.NAME_ICX, mWallet.getCoinType());
-                else
-                    coinName = String.format(format, MyConstants.NAME_ETH, mWallet.getCoinType());
-
                 startActivity(new Intent(this, ViewWalletInfoActivity.class)
-                        .putExtra("alias", mWallet.getAlias())
-                        .putExtra("coinName", coinName)
-                        .putExtra("address", mWallet.getAddress())
-                        .putExtra("privateKey", mPrivKey)
-                        .putExtra("date", mWallet.getCreatedAt()));
+                        .putExtra("wallet", ((Serializable) mWallet))
+                        .putExtra("privateKey", mPrivKey));
 
                 break;
         }
@@ -135,24 +126,18 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void checkPermission() {
-        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
+        MessageDialog dialog = new MessageDialog(this);
+        dialog.setSingleButton(false);
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             dialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
-            dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+            dialog.setOnConfirmClick(new Function1<View, Boolean>() {
                 @Override
-                public void onOk() {
-                    boolean result = downloadKeystore();
-                    if (result) {
-                        BasicDialog dialog = new BasicDialog(WalletBackUpActivity.this);
-                        dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
-                        dialog.show();
-                    }
-                }
-
-                @Override
-                public void onCancel() {
-
+                public Boolean invoke(View view) {
+                    MessageDialog dialog = new MessageDialog(WalletBackUpActivity.this);
+                    dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+                    dialog.show();
+                    return true;
                 }
             });
             dialog.show();
@@ -172,28 +157,22 @@ public class WalletBackUpActivity extends AppCompatActivity implements View.OnCl
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Basic2ButtonDialog dialog = new Basic2ButtonDialog(WalletBackUpActivity.this);
+                    MessageDialog dialog = new MessageDialog(WalletBackUpActivity.this);
+                    dialog.setSingleButton(false);
                     dialog.setMessage(getString(R.string.backupKeyStoreFileConfirm));
-                    dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                    dialog.setOnConfirmClick(new Function1<View, Boolean>() {
                         @Override
-                        public void onOk() {
-                            boolean result = downloadKeystore();
-                            if (result) {
-                                BasicDialog dialog = new BasicDialog(WalletBackUpActivity.this);
-                                dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
-                                dialog.show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancel() {
-
+                        public Boolean invoke(View view) {
+                            MessageDialog dialog = new MessageDialog(WalletBackUpActivity.this);
+                            dialog.setMessage(String.format(getString(R.string.keyStoreDownloadAccomplished), KeyStoreIO.DIR_PATH));
+                            dialog.show();
+                            return true;
                         }
                     });
                     dialog.show();
 
                 } else {
-                    BasicDialog dialog = new BasicDialog(WalletBackUpActivity.this);
+                    MessageDialog dialog = new MessageDialog(WalletBackUpActivity.this);
                     dialog.setMessage(getString(R.string.permissionStorageDenied));
                     dialog.show();
                 }

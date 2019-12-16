@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_margin="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:elevation="1dp"
+        android:background="@drawable/bg_dark26_rounded8">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="10dp"
+
+            android:fontFamily="@font/noto_sans_regular"
+            android:textSize="12dp"
+            android:textColor="@android:color/white"
+
+            android:text="Hello!" />
+    </FrameLayout>
+</FrameLayout>

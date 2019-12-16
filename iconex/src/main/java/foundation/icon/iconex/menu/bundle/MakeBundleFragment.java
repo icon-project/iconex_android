@@ -9,9 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
@@ -22,12 +19,11 @@ import java.util.List;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.dialogs.MessageDialog;
+import foundation.icon.iconex.dialogs.WalletPasswordDialog;
 import foundation.icon.iconex.wallet.Wallet;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
-import foundation.icon.iconex.dialogs.EditTextDialog;
 import foundation.icon.iconex.util.ConvertUtil;
-import loopchain.icon.wallet.core.Constants;
-import loopchain.icon.wallet.service.crypto.KeyStoreUtils;
+import kotlin.jvm.functions.Function1;
 
 public class MakeBundleFragment extends Fragment {
 
@@ -72,20 +68,17 @@ public class MakeBundleFragment extends Fragment {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(getActivity());
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
+                MessageDialog messageDialog = new MessageDialog(getContext());
+                messageDialog.setSingleButton(false);
+                messageDialog.setMessage(getString(R.string.msgBundleNotice));
+                messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
                     @Override
-                    public void onOk() {
+                    public Boolean invoke(View view) {
                         mListener.onNext(adapter.getBundle(), privSet);
-                    }
-
-                    @Override
-                    public void onCancel() {
-
+                        return true;
                     }
                 });
-                dialog.setMessage(getString(R.string.msgBundleNotice));
-                dialog.show();
+                messageDialog.show();
             }
         });
         return v;
@@ -122,12 +115,13 @@ public class MakeBundleFragment extends Fragment {
         List<BundleItem> list = new ArrayList<>();
 
         BundleItem wallet;
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             wallet = new BundleItem();
             wallet.setAlias(info.getAlias());
             wallet.setBalance(getBalance(info));
             wallet.setKeyStore(info.getKeyStore());
             wallet.setSymbol(info.getCoinType());
+            wallet.setWallet(info);
             wallet.setSelected(false);
 
             list.add(wallet);
@@ -147,68 +141,30 @@ public class MakeBundleFragment extends Fragment {
         }
     }
 
-    private EditTextDialog dialog;
-
-    private int mPosition;
-    private String address;
-    private JsonObject crypto;
-    private String coinType;
-
     private BundleRecyclerAdapter.OnWalletClickListener mWalletClickListener = new BundleRecyclerAdapter.OnWalletClickListener() {
         @Override
-        public void onWalletSelected(int position, BundleItem wallet) {
-            JsonObject keyStore = new Gson().fromJson(wallet.getKeyStore(), JsonObject.class);
-            address = keyStore.get("address").getAsString();
+        public void onWalletSelected(int position, BundleItem bundleItem) {
+            Wallet wallet = bundleItem.getWallet();
 
-            if (wallet.isSelected()) {
+            if (bundleItem.isSelected()) {
                 adapter.setSelected(position, false);
                 if (selectedCount != 0) {
                     selectedCount--;
-                    privSet.remove(address);
+                    privSet.remove(wallet.getAddress());
                     if (selectedCount == 0) {
                         btnNext.setEnabled(false);
                     }
                 }
             } else {
-                mPosition = position;
-
-                if (keyStore.has("coinType"))
-                    coinType = Constants.KS_COINTYPE_ICX;
-                else
-                    coinType = Constants.KS_COINTYPE_ETH;
-
-                if (keyStore.has("crypto"))
-                    crypto = keyStore.get("crypto").getAsJsonObject();
-                else if (keyStore.has("Crypto"))
-                    crypto = keyStore.get("Crypto").getAsJsonObject();
-
-
-                dialog = new EditTextDialog(getActivity(), getString(R.string.enterWalletPassword));
-                dialog.setOnPasswordCallback(mPasswordCallback);
-                dialog.setHint(getString(R.string.hintWalletPassword));
-                dialog.show();
-            }
-        }
-    };
-
-    private EditTextDialog.OnPasswordCallback mPasswordCallback = new EditTextDialog.OnPasswordCallback() {
-        @Override
-        public void onConfirm(EditTextDialog.RESULT_PWD result, String text) {
-            byte[] privKey = null;
-            try {
-                privKey = KeyStoreUtils.decryptPrivateKey(text, address, crypto, coinType);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (privKey != null) {
-                adapter.setSelected(mPosition, true);
-                selectedCount++;
-                privSet.put(address, Hex.toHexString(privKey));
-                btnNext.setEnabled(true);
-                dialog.dismiss();
-            } else {
-                dialog.setError(getString(R.string.errPassword));
+                new WalletPasswordDialog(getContext(), wallet, new WalletPasswordDialog.OnPassListener() {
+                    @Override
+                    public void onPass(byte[] bytePrivateKey) {
+                        adapter.setSelected(position, true);
+                        selectedCount++;
+                        privSet.put(wallet.getAddress(), Hex.toHexString(bytePrivateKey));
+                        btnNext.setEnabled(true);
+                    }
+                }).show();
             }
         }
     };

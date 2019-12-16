@@ -1,127 +1,170 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
+        android:id="@+id/step"
+        layout="@layout/layout_create_step1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorMain"
-        android:minHeight="75dp">
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:id="@+id/layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/darkFC"
+        android:orientation="vertical">
 
         <View
-            android:id="@+id/step_line"
-            android:layout_width="250dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="18dp"
-            android:background="#068a99"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="match_parent"
+            android:layout_height="0.5dip"
+            android:background="@color/darkE6" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_01_on"
-            app:layout_constraintStart_toStartOf="@id/step_line"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_02"
-            app:layout_constraintStart_toEndOf="@id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_03"
-            app:layout_constraintStart_toEndOf="@id/imageView2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_04"
-            app:layout_constraintStart_toEndOf="@id/imageView3"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_bold"
+        <Button
+            android:id="@+id/btn_next"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_btn_rounded_01_light"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
-            android:text="@string/selectCoin"
-            android:textColor="#ffffff"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView"
-            app:layout_constraintRight_toRightOf="@id/imageView"
-            app:layout_constraintTop_toBottomOf="@id/imageView" />
+            android:text="@string/next"
+            android:textAllCaps="false"
+            android:textColor="@color/txt_btn_rounded_01_light"
+            android:textSize="14dp" />
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_button"
+        android:layout_below="@id/step">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/information"
-            android:textColor="#068a99"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView2"
-            app:layout_constraintRight_toRightOf="@id/imageView2"
-            app:layout_constraintTop_toBottomOf="@id/imageView2" />
+            android:orientation="vertical"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/stepDownload"
-            android:textColor="#068a99"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView3"
-            app:layout_constraintRight_toRightOf="@id/imageView3"
-            app:layout_constraintTop_toBottomOf="@id/imageView3" />
+            <TextView
+                style="@style/TextView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/noto_sans_medium"
+                android:text="@string/step1SelectCoin"
+                android:textColor="@color/dark4D" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/savePrivateKey"
-            android:textColor="#068a99"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView4"
-            app:layout_constraintRight_toRightOf="@id/imageView4"
-            app:layout_constraintTop_toBottomOf="@id/imageView4" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                <LinearLayout
+                    android:id="@+id/btn_icx"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/bg_line_button_coin"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="W, 145:170"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ic_icx"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/ic_coin_icx" />
+
+                    <TextView
+                        style="@style/TextView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:text="ICX Wallet"
+                        android:textColor="@color/text_selector_primary" />
+
+                    <TextView
+                        style="@style/TextView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:text="ICON"
+                        android:textColor="@color/text_selector_primary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_eth"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_line_button_coin"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="W, 145:170"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/btn_icx"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ic_eth"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/ic_coin_eth" />
+
+                    <TextView
+                        style="@style/TextView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:text="ETH Wallet"
+                        android:textColor="@color/text_selector_primary" />
+
+                    <TextView
+                        style="@style/TextView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/noto_sans_light"
+                        android:text="Ethereum"
+                        android:textColor="@color/text_selector_primary" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/noto_sans_light"
+                android:text="@string/createWalletStep1Detailed1"
+                android:textColor="@color/primary00" />
+
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/noto_sans_light"
+                android:text="@string/createWalletStep1Detailed2"
+                android:textColor="@color/primary00" />
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

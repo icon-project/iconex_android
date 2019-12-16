@@ -13,16 +13,20 @@ import foundation.icon.iconex.control.RecentSendInfo;
 import foundation.icon.iconex.realm.data.CoinNToken;
 import foundation.icon.iconex.realm.data.ETHContacts;
 import foundation.icon.iconex.realm.data.ICXContacts;
+import foundation.icon.iconex.realm.data.MyVotes;
 import foundation.icon.iconex.realm.data.RecentETHSend;
 import foundation.icon.iconex.realm.data.RecentICXSend;
 import foundation.icon.iconex.token.Token;
+import foundation.icon.iconex.view.ui.prep.Delegation;
+import foundation.icon.iconex.view.ui.prep.PRep;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.Sort;
 import loopchain.icon.wallet.core.Constants;
 
-import static foundation.icon.MyConstants.CoinType.ICX;
+import static foundation.icon.MyConstants.Coin.ICX;
 
 /**
  * Created by js on 2018. 3. 5..
@@ -33,9 +37,9 @@ public class RealmUtil {
 
     public static void loadWallet() throws Exception {
         Realm realm = Realm.getDefaultInstance();
-        ICONexApp.mWallets = new ArrayList<>();
+        ICONexApp.wallets = new ArrayList<>();
         if (realm.where(foundation.icon.iconex.realm.data.Wallet.class).count() > 0) {
-            for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAll()) {
+            for (foundation.icon.iconex.realm.data.Wallet wallet : realm.where(foundation.icon.iconex.realm.data.Wallet.class).findAllSorted("id", Sort.DESCENDING)) {
                 Wallet walletInfo = new Wallet();
                 walletInfo.setCoinType(wallet.getCoinType());
                 walletInfo.setAlias(wallet.getAlias());
@@ -44,7 +48,6 @@ public class RealmUtil {
 
                 List<CoinNToken> list = wallet.getCoinNToken();
                 List<WalletEntry> entries = new ArrayList<>();
-                SecureRandom random = new SecureRandom();
                 for (CoinNToken coinNToken : list) {
                     WalletEntry entry = new WalletEntry();
                     entry.setType(coinNToken.getType());
@@ -77,10 +80,8 @@ public class RealmUtil {
                 }
                 walletInfo.setWalletEntries(entries);
                 walletInfo.setCreatedAt(wallet.getCreateAt());
-                ICONexApp.mWallets.add(walletInfo);
+                ICONexApp.wallets.add(walletInfo);
             }
-
-            Collections.reverse(ICONexApp.mWallets);
 
             makeExchanges();
         }
@@ -147,7 +148,6 @@ public class RealmUtil {
         }
 
         realm.commitTransaction();
-
         realm.close();
     }
 
@@ -194,7 +194,7 @@ public class RealmUtil {
     }
 
     public static void makeExchanges() {
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             for (WalletEntry entry : info.getWalletEntries()) {
                 String symbol = entry.getSymbol().toLowerCase();
                 if (!ICONexApp.EXCHANGES.contains(symbol))
@@ -265,7 +265,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addContacts(MyConstants.CoinType type, String name, String address) {
+    public static void addContacts(MyConstants.Coin type, String name, String address) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;
@@ -331,7 +331,7 @@ public class RealmUtil {
         realm.close();
     }
 
-    public static void addRecentSend(MyConstants.CoinType type, String txHash, String name, String address, String date, String amount, String symbol) {
+    public static void addRecentSend(MyConstants.Coin type, int nid, String txHash, String name, String address, String date, String amount, String symbol) {
         Realm realm = Realm.getDefaultInstance();
 
         Number currentMaxId;
@@ -365,11 +365,13 @@ public class RealmUtil {
 
             realm.beginTransaction();
             RecentETHSend send = realm.createObject(RecentETHSend.class, nextId);
+            send.setNid(nid);
             send.setName(name);
             send.setAddress(address);
             send.setAmount(amount);
             send.setDate(date);
             send.setSymbol(symbol);
+            send.setTxHash(txHash);
             send.setIsDone(MyConstants.TX_PENDING);
             realm.commitTransaction();
 
@@ -432,6 +434,7 @@ public class RealmUtil {
             ICONexApp.ETHSendInfo = new ArrayList<>();
             for (RecentETHSend send : realm.where(RecentETHSend.class).findAll()) {
                 RecentSendInfo sendInfo = new RecentSendInfo();
+                sendInfo.setNid(send.getNid());
                 sendInfo.setTxHash(send.getTxHash());
                 sendInfo.setName(send.getName());
                 sendInfo.setAddress(send.getAddress());
@@ -452,5 +455,42 @@ public class RealmUtil {
     private static String getTimeStamp() {
         long time = System.currentTimeMillis();
         return Long.toString(time);
+    }
+
+    public static List<Delegation> loadMyVotes(String owner) {
+        List<Delegation> delegations = new ArrayList<>();
+        Realm realm = Realm.getDefaultInstance();
+        List<MyVotes> myVotes = realm.where(MyVotes.class)
+                .equalTo("owner", owner).findAll();
+        for (MyVotes v : myVotes) {
+            Delegation d = new Delegation.Builder()
+                    .build();
+
+            delegations.add(d);
+        }
+
+        return delegations;
+    }
+
+    public static void addMyVote(String owner, PRep pRep) {
+        MyVotes myVotes = new MyVotes();
+        myVotes.setOwner(owner);
+        myVotes.setPrepName(pRep.getName());
+        myVotes.setPrepAddress(pRep.getAddress());
+        myVotes.setPrepGrade(pRep.getGrade().getGrade());
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.insert(myVotes);
+        realm.commitTransaction();
+    }
+
+    public static void deleteMyVote(String owner, String prepAddress) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        MyVotes myVote = realm.where(MyVotes.class).equalTo("owner", owner)
+                .equalTo("prepAddress", prepAddress).findFirst();
+        myVote.deleteFromRealm();
+        realm.commitTransaction();
     }
 }

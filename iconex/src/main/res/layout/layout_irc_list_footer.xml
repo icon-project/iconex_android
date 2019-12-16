@@ -3,29 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
-    android:orientation="vertical"
-    android:paddingStart="24dp"
-    android:paddingEnd="24dp">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:text="@string/msgNoToken"
-        android:textColor="@color/colorText70"
-        android:textSize="12dp" />
+        android:textColor="@color/dark80"
+        android:fontFamily="@font/noto_sans_light"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:textSize="10dp" />
 
     <Button
         android:id="@+id/btn_enter_info"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_button_b"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:background="@drawable/bg_btn_outline_01"
         android:gravity="center"
         android:text="@string/enterTokenInfo"
         android:textAllCaps="false"
-        android:textColor="@color/button_text"
-        android:textSize="13dp" />
+        android:textColor="@color/dark80"
+        android:textSize="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
 </LinearLayout>

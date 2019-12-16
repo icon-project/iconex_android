@@ -72,15 +72,13 @@ public class IrcListAdapter extends RecyclerView.Adapter {
 
             if (ownTokens.contains(token.getContractAddress())) {
                 ((ViewItemHolder) holder).checkBox.setEnabled(false);
-                ((ViewItemHolder) holder).checkBox.setButtonDrawable(R.drawable.btn_checkbox_disabled);
+                ((ViewItemHolder) holder).checkBox.setButtonDrawable(R.drawable.btn_check_disabled);
                 ((ViewItemHolder) holder).txtIrc.setTextColor(mContext.getResources().getColor(R.color.colorText30));
-                ((ViewItemHolder) holder).btnOpen.setEnabled(false);
             } else {
                 ((ViewItemHolder) holder).checkBox.setEnabled(true);
                 ((ViewItemHolder) holder).checkBox.setChecked(token.isChecked());
-                ((ViewItemHolder) holder).checkBox.setButtonDrawable(R.drawable.bg_check_box);
+                ((ViewItemHolder) holder).checkBox.setButtonDrawable(R.drawable.bg_checkbox);
                 ((ViewItemHolder) holder).txtIrc.setTextColor(mContext.getResources().getColor(R.color.colorText));
-                ((ViewItemHolder) holder).btnOpen.setEnabled(true);
             }
         }
     }
@@ -102,7 +100,7 @@ public class IrcListAdapter extends RecyclerView.Adapter {
     private void makeTokenList() {
         ownTokens = new ArrayList<>();
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 if (wallet.getAddress().equals(address)) {
                     for (WalletEntry entry : wallet.getWalletEntries()) {
@@ -145,6 +143,9 @@ public class IrcListAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     list.get(getAdapterPosition()).setChecked(isChecked);
+                    if (mListener != null) {
+                        mListener.onChangeCheckList();
+                    }
                 }
             });
             txtIrc = itemView.findViewById(R.id.txt_irc);
@@ -196,5 +197,6 @@ public class IrcListAdapter extends RecyclerView.Adapter {
 
     public interface OnClickListener {
         void onClick();
+        void onChangeCheckList();
     }
 }

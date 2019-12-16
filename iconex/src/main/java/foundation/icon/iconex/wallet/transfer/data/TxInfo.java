@@ -9,6 +9,7 @@ public class TxInfo {
     private String toAddress;
     private String sendAmount;
     private String fee;
+    private String transFee;
 
     public TxInfo(String to, String send, String fee) {
         this.toAddress = to;
@@ -34,6 +35,14 @@ public class TxInfo {
 
     public String getToAddress() {
         return toAddress;
+    }
+
+    public String getTransFee() {
+        return transFee;
+    }
+
+    public void setTransFee(String transFee) {
+        this.transFee = transFee;
     }
 
     public void setToAddress(String toAddress) {

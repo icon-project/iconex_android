@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import foundation.icon.ICONexApp;
-import foundation.icon.SplashActivity;
+import foundation.icon.iconex.view.SplashActivity;
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.icx.Transaction;
@@ -60,7 +60,6 @@ public class ICONexConnectActivity extends AppCompatActivity
 
             txString = new String(Base64.decode(requestData, Base64.NO_WRAP));
             JsonObject jsonObject = new Gson().fromJson(txString, JsonObject.class);
-            Log.d(TAG, txString);
 
             JsonObject params = jsonObject.get("params").getAsJsonObject();
             ObjectMapper mapper = new ObjectMapper();
@@ -87,7 +86,7 @@ public class ICONexConnectActivity extends AppCompatActivity
 
     private void checkWallet(String address) {
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX)) {
                 if (wallet.getAddress().equals(address)) {
                     this.wallet = wallet;

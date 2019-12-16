@@ -1,23 +1,24 @@
 package foundation.icon.iconex.wallet.contacts;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.TimeZone;
 
 import foundation.icon.iconex.R;
 import foundation.icon.iconex.control.RecentSendInfo;
+import foundation.icon.iconex.util.ConvertUtil;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
-import foundation.icon.iconex.util.ConvertUtil;
 
 /**
  * Created by js on 2018. 3. 19..
@@ -27,23 +28,51 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
 
     private static final String TAG = BasicContactsAdapter.class.getSimpleName();
 
-    public static final String TYPE_RECENT = "RECENT";
-    public static final String TYPE_WALLET = "WALLET";
-
     private Context mContext;
     private LayoutInflater mInflater;
     private List<?> mData;
     private String mAddress;
     private String mCoinType;
-    private String mType;
 
-    public BasicContactsAdapter(Context context, String address, List<?> data, String coinType, String type) {
+    public BasicContactsAdapter(Context context, String address, List<?> data, String coinType) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mData = data;
         mCoinType = coinType;
+        try {
+            ArrayList<Wallet> wallets = new ArrayList<>();
+            for (int i = 0; data.size() > i; i++) {
+                Wallet wallet = ((Wallet) data.get(i));
+                wallets.add(wallet);
+            }
+
+            Collections.sort(wallets, new Comparator<Wallet>() {
+                @Override
+                public int compare(Wallet o1, Wallet o2) {
+                    String s1 = o1.getAlias();
+                    String s2 = o2.getAlias();
+
+                    int compare = getPriority(s1).compareTo(getPriority(s2));
+                    if (compare == 0) compare = s1.compareTo(s2);
+
+                    return compare;
+                }
+
+                private Integer getPriority(String s) {
+                    char c = s.charAt(0);
+                    if ('0' <= c && c <= '9') {
+                        return 2;
+                    } else if ('A' <= c && c <= 'z') {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
+            mData = wallets;
+        } catch (Exception e) { }
         mAddress = address;
-        mType = type;
     }
 
     @Override
@@ -65,7 +94,6 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
             else
                 holder.txtName.setText(data.getName());
 
-            holder.txtDate.setText(getDate(data.getDate()));
             holder.txtAddr.setText(data.getAddress());
             holder.txtAmount.setText(String.format(mContext.getString(R.string.txWithdraw), data.getAmount()));
             holder.txtSymbol.setText(data.getSymbol());
@@ -75,7 +103,6 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
                 return;
             }
             holder.txtName.setText(data.getAlias());
-            holder.txtDate.setVisibility(View.INVISIBLE);
             holder.txtAddr.setText(data.getAddress());
             holder.txtAmount.setTextColor(mContext.getResources().getColor(R.color.colorText));
             holder.txtAmount.setText(getAsset(data));
@@ -91,13 +118,12 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView txtName, txtDate, txtAddr, txtAmount, txtSymbol;
+        TextView txtName, txtAddr, txtAmount, txtSymbol;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             txtName = itemView.findViewById(R.id.txt_name);
-            txtDate = itemView.findViewById(R.id.txt_date);
             txtAddr = itemView.findViewById(R.id.txt_address);
             txtAmount = itemView.findViewById(R.id.txt_amount);
             txtSymbol = itemView.findViewById(R.id.txt_symbol);
@@ -132,14 +158,6 @@ public class BasicContactsAdapter extends RecyclerView.Adapter<BasicContactsAdap
         }
 
         return ConvertUtil.getValue(asset, 18);
-    }
-
-    private String getDate(String timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getDefault());
-        Date date = new Date(Long.parseLong(timestamp) / 1000);
-
-        return sdf.format(date);
     }
 
     private OnItemClickListener mListener = null;

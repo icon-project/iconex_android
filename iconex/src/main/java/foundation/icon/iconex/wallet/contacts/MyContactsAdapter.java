@@ -43,10 +43,8 @@ public class MyContactsAdapter extends RecyclerView.Adapter<MyContactsAdapter.Vi
 
         if (mEditable) {
             holder.btnDelete.setVisibility(View.VISIBLE);
-            holder.btnEdit.setVisibility(View.VISIBLE);
         } else {
             holder.btnDelete.setVisibility(View.GONE);
-            holder.btnEdit.setVisibility(View.GONE);
         }
 
         holder.txtName.setText(contact.getName());
@@ -60,7 +58,7 @@ public class MyContactsAdapter extends RecyclerView.Adapter<MyContactsAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        Button btnDelete, btnEdit;
+        Button btnDelete;
         TextView txtName, txtAddress;
 
         public ViewHolder(View itemView) {
@@ -68,8 +66,6 @@ public class MyContactsAdapter extends RecyclerView.Adapter<MyContactsAdapter.Vi
 
             btnDelete = itemView.findViewById(R.id.btn_delete);
             btnDelete.setOnClickListener(this);
-            btnEdit = itemView.findViewById(R.id.btn_edit);
-            btnEdit.setOnClickListener(this);
 
             txtName = itemView.findViewById(R.id.txt_name);
             txtAddress = itemView.findViewById(R.id.txt_address);
@@ -83,11 +79,6 @@ public class MyContactsAdapter extends RecyclerView.Adapter<MyContactsAdapter.Vi
                 case R.id.btn_delete:
                     if (mListener != null)
                         mListener.onDelete(getAdapterPosition());
-                    break;
-
-                case R.id.btn_edit:
-                    if (mListener != null)
-                        mListener.onEdit(getAdapterPosition());
                     break;
 
                 default:

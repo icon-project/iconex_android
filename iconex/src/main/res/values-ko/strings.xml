@@ -42,44 +42,47 @@
     <string name="msgCopyTxID">거래 ID가 복사되었습니다.</string>
 
     <!-- Splash -->
-    <string name="copyright">\@2018 ICON Foundation</string>
+    <string name="copyright">\@2019 ICON Foundation</string>
     <string name="intro1">ICONex는 ICX와ETH를 비롯하여\nICON Network에 연결된 다양한 암호화폐의\n지갑을 만들고 관리할 수 있습니다.</string>
-    <string name="intro2">Reserved Balance를 기반으로\nICON에 연결된 다양한 암호화폐와 ICX의 편리한\n보관 및 송금이 가능합니다.</string>
+    <string name="intro2">Reserved Balance를 기반으로\nICON에 연결된 다양한 암호화폐와 ICX의 편리한\n보관 및 전송이 가능합니다.</string>
     <string name="createWallet">지갑 만들기</string>
     <string name="LoadWallet">지갑 가져오기</string>
     <string name="hintWalletPassword">비밀번호 입력</string>
+    <string name="password">비밀번호</string>
 
     <!-- Create Wallet -->
     <string name="titleCreateWallet">지갑 만들기</string>
     <string name="cancelCreateWallet">지갑 만들기를 취소하시겠습니까?</string>
     <string name="selectCoin">코인 선택</string>
     <string name="information">정보 입력</string>
-    <string name="stepDownload">Keystore\n다운로드</string>
+    <string name="stepDownload">백업 파일\n다운로드</string>
     <string name="savePrivateKey">개인 키\n저장</string>
     <string name="step1Header">선택한 코인의 지갑이 생성됩니다.</string>
     <string name="step1Sub">지갑 생성 후, 해당 코인 기반의 토큰을 추가하실 수 있습니다.</string>
-    <string name="step1SelectCoin">코인 종류를 선택해주세요.</string>
+    <string name="step1SelectCoin">어떤 코인 지갑을 추가하시겠습니까?</string>
     <string name="coin_icx">ICON (ICX)</string>
     <string name="coin_eth">Ethereum (ETH)</string>
     <string name="step2Header">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
     <string name="step2Sub">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
-    <string name="enterInfoHeader">새 지갑 이름과 비밀번호를 생성해주세요.</string>
+    <string name="enterInfoHeader">새 지갑 이름과 비밀번호를 입력해 주세요.</string>
     <string name="hintWalletAlias">지갑 이름 입력 (8자)</string>
     <string name="hintCreateWalletPassword">비밀번호 입력 (영문, 숫자, 특수문자 혼용 8자 이상)</string>
     <string name="hintWalletPasswordConfirm">비밀번호 확인</string>
-    <string name="createPasswordWarning">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
+    <string name="createPasswordWarning">영문, 숫자, 특수문자( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )를 혼용하여 입력해주세요.</string>
+    <string name="errAllowSpecialCharacters">사용 가능한 특수문자를 확인해 주세요. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
     <string name="step3Header">지갑 백업 파일(Keystore)은 지갑의 고유 정보인 개인 키(Private Key)를 담고 있는 파일이며, 지갑 백업 파일에는 비밀번호가 설정되어 있습니다.</string>
     <string name="step3Sub1">지갑 백업 파일과 비밀번호가 있으면 지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 수 있습니다.</string>
     <string name="step3Sub2">지갑을 만든 후 ‘지갑 백업’에서도 다운로드할 수 있습니다.</string>
-    <string name="walletDownloadGuide">지갑 백업 파일을 다운로드 하세요.</string>
-    <string name="walletDownload">지갑 백업 파일(Keystore 파일) 다운로드</string>
+    <string name="walletDownloadGuide">지갑 백업 파일을 다운로드 해주세요.</string>
+    <string name="walletDownload">지갑 백업 파일 다운로드</string>
     <string name="walletBackupDownload">지갑 백업 파일 다운로드</string>
     <string name="backupKeyStoreFileConfirm">지갑 백업 파일은 어떠한 경우에도\n외부 공유가 되어서는 안됩니다.\n다운로드 하시겠습니까?</string>
     <string name="noBackupKeyStoreFileConfirm">지갑 백업 파일을 다운로드 하지 않고\n다음 단계로 진행하시겠습니까?</string>
     <string name="keyStoreDownloadAccomplished">파일이 \'%s\'에 다운로드 되었습니다.</string>
+    <string name="step4PrivateKeyHeader">개인 키를 저장해주세요.</string>
     <string name="step4Header">개인 키(Private Key)는 지갑의 고유 정보이며,\n비밀번호가 설정되어 있지 않습니다.</string>
-    <string name="step4Sub1">개인 키만 알고 있으면 지갑 실행 및 복구가 가능하므로 타인에게 노출되지 않도록 각별한 관리가 필요합니다.</string>
-    <string name="step4Sub2">지갑을 만든 후 ‘지갑 백업’에서도 확인할 수 있습니다.</string>
+    <string name="step4Sub1">・ 개인 키만 알고 있으면 지갑 실행 및 복구가 가능하므로 타인에게 노출되지 않도록 각별한 관리가 필요합니다.</string>
+    <string name="step4Sub2">・ 지갑을 만든 후 ‘지갑 백업’에서도 확인할 수 있습니다.</string>
     <string name="privateKey">개인 키</string>
     <string name="copyPrivateKey">개인 키 복사</string>
     <string name="viewWalletInfo">지갑 정보 보기</string>
@@ -92,17 +95,17 @@
     <string name="titleLoadWallet">지갑 가져오기</string>
     <string name="cancelLoadWallet">지갑 가져오기를 취소하시겠습니까?</string>
     <string name="loadWalletHeader">지갑을 가져올 방법을 선택해주세요.</string>
-    <string name="loadByKeystore">지갑 백업 파일(Keystore 파일)</string>
-    <string name="loadByPrivateKey">개인 키</string>
+    <string name="loadByKeystore">백업 파일</string>
+    <string name="loadByPrivateKey">Private Key</string>
     <string name="selectKeyStore">지갑 백업 파일 선택</string>
-    <string name="loadKeystoreHeader">지갑 백업 파일(Keystore 파일) 선택 후 비밀번호를 입력해주세요.</string>
-    <string name="loadKeystoreSub">다른 기기에 지갑 백업 파일이 저장되어 있는 경우, 백업 파일을 이 기기로 옮기거나 클라우드 서비스에 업로드한 다음 백업 파일을 선택해주세요.</string>
+    <string name="loadKeystoreHeader">지갑 백업 파일 선택 후 비밀번호를 입력해주세요.</string>
+    <string name="loadKeystoreSub">・ 다른 기기에 지갑 백업 파일이 저장되어 있는 경우, 백업 파일을 이 기기로 옮기거나 클라우드 서비스에 업로드한 다음 백업 파일을 선택해주세요.</string>
     <string name="loadKeystore">지갑 백업 파일(Keystore파일) 선택</string>
     <string name="invalidKeyStoreFile">올바른 지갑 파일 형식이 아닙니다.</string>
     <string name="errPassword">비밀번호를 다시 확인해주세요.</string>
     <string name="enterWalletAliasHeader">새 지갑의 이름을 입력해주세요.</string>
     <string name="errNoKeystoreFile">지갑 백업 파일을 선택해주세요.</string>
-    <string name="errPrivateKey">개인 키를 다시 확인해주세요.</string>
+    <string name="errPrivateKey">개인 키를 확인해주세요.</string>
     <string name="hintEnterWalletAlias">지갑 이름 입력 (8자)</string>
 
     <string name="loadByPrivateKeyHeader">개인 키를 입력해주세요.</string>
@@ -110,17 +113,17 @@
     <string name="enterPrivateKey">개인 키 입력</string>
 
     <string name="titleLoadBundle">묶음 지갑 가져오기</string>
-    <string name="loadBundleHeader">묶음 지갑을 가져오는 경우, 이미 등록된 지갑은 제외하고 지갑들이 추가됩니다.\n\n묶음 지갑을 가져오시겠습니까?</string>
+    <string name="loadBundleHeader">묶음 지갑을 가져오는 경우, 이미 등록된 지갑은 제외하고 지갑들이 추가됩니다.</string>
     <string name="loadBundleDetailed">새로 추가되는 지갑들의 비밀번호는 묶음 지갑 비밀번호와 동일합니다.</string>
     <string name="loadBundleTotal">총 %d개의 지갑 중</string>
     <string name="loadBundleRegistered">이미 등록된 지갑은 %d개 입니다.</string>
-    <string name="registeredWallet">등록된 지갑</string>
+    <string name="registeredWallet">등록된 지갑 %s</string>
 
     <string name="msgLoadBundle">묶음 지갑을 가져왔습니다. 각 지갑들의 비밀번호는 묶음 지갑의 비밀번호와 동일하며, 지갑 메뉴에서 변경 가능합니다.</string>
 
     <string name="enterWalletAliasAndPassword">새 지갑의 이름과 비밀번호를 입력해주세요.</string>
     <string name="walletPasswordGuide1">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
-    <string name="walletPasswordGuide2">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
+    <string name="walletPasswordGuide2">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 전송 시 비밀번호를 입력해야 합니다.</string>
 
     <!-- Warning -->
     <string name="duplicateWalletAlias">같은 이름의 지갑이 이미 존재합니다.</string>
@@ -142,6 +145,7 @@
     <string name="settingLock">잠금 설정</string>
     <string name="settingLanguage">언어</string>
     <string name="appInfo">앱 정보</string>
+    <string name="versionInfo">버전 정보</string>
     <string name="ICONexDisclaimers">ICONex 이용 면책 조항</string>
 
     <string name="currentVersion">현재 버전</string>
@@ -273,10 +277,10 @@
     <string name="msgStepPrice">Step 한 단위 당 지불하는 가격입니다.\n\nStep 가격은 loop로 지불하며 1 loop는 0.000000000000000001(10-18) ICX로 고정되어 있습니다. ICON 거래 수수료는 스마트 컨트랙트 기능 사용 횟수, 블록체인 데이터베이스 사용량, 거래 데이터 크기 등에 따라 부과됩니다.</string>
     <string name="msgICXEstimateFee">Transaction 실행 시 발생할 수 있는 최대 수수료로서, Step 한도와 Step 가격을 곱한 값입니다.</string>
     <string name="msgIcxData">사용자가 원하는 데이터를 입력하여 송금할 수 있습니다. 입력한 데이터의 크기에 따라 수수료가 부과됩니다.</string>
-    <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할\n용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
-    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서\n1 Gwei = 0.000000001 ETH로\n고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
-    <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로\n가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
-    <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 송금할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 송금이 불가하며 수수료만\n차감될 수 있습니다.</string>
+    <string name="msgEthGasLimit">가스 한도는 Transaction 실행에 지불할 용의가 있는 가스의 최대량을 의미합니다.\n가스 한도를 아주 높게 설정하더라도 Transaction에 필요한 만큼의 가스만 소진합니다. 즉, 가스한도는 최대치만 설정 가능하며 실제 소진되는 가스량은 유동적입니다.</string>
+    <string name="msgEthGasPrice">가스 가격은 가스 한 단위의 가격으로서 1 Gwei = 0.000000001 ETH로 고정되어 있습니다.\n이더리움 채굴자는 블록을 생성할 때 자신에게 가장 이익이 되는 Transaction을 먼저 채택합니다. 이는 가스 가격을 높게 설정할수록, 또는 가스 한도가 높을수록 채택될 확률이 높음을 의미하며, 따라서 전송속도에 영향을 미치게 됩니다.</string>
+    <string name="msgEthEstimateFee">예상 최대 수수료는 Transaction 실행 시 발생할 수 있는 최대 수수료로 가스 한도와 가스 가격을 곱한 값입니다.\nTransaction이 발생했지만 채굴자에 의해 채택되지 않는 경우, 이미 사용된 수수료는 소진되고 해당 Transaction은 취소되니 적절한 수준의 가스 한도와 가스 가격을 설정해야 합니다.</string>
+    <string name="msgEthData">수신자로부터 Data 입력을 요청 받지 않은 경우에는 입력하지 않고 전송할 수 있습니다.\nData를 입력해야만 거래가 실행되도록 설계되어 있는 경우, Data를 입력하지 않으면 전송이 불가하며 수수료만\n차감될 수 있습니다.</string>
     <string name="msgDeleteData">입력된 데이터를 삭제하시겠습니까?</string>
 
     <string name="errNoSendAmount">송금할 수량을 입력해주세요.</string>
@@ -287,14 +291,14 @@
     <string name="errICXFee">수수료를 지불할 ICX가 부족합니다</string>
     <string name="errETHFee">수수료를 지불할 ETH가 부족합니다</string>
 
-    <string name="msgDoneRequestTransfer">송금 요청이 완료되었습니다.</string>
+    <string name="msgDoneRequestTransfer">전송 요청이 완료되었습니다.</string>
     <string name="errTransferFailed">오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
     <!-- Contacts -->
     <string name="contactsTitle">주소 선택</string>
     <string name="contacts">주소록</string>
     <string name="contactsRecent">최근 거래</string>
-    <string name="contactsWallet">내 지갑</string>
+    <string name="contactsWallet">내지갑</string>
     <string name="addContacts">주소록 추가</string>
     <string name="modContacts">주소록 수정</string>
     <string name="hintContactsName">주소록 이름 입력 (8자)</string>
@@ -330,7 +334,7 @@
     <string name="titleChangeWalletPwd">비밀번호 변경</string>
     <string name="changeWalletPwdHeader">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
     <string name="changeWalletPwdDetailed">지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 송금 시 비밀번호를 입력해야 합니다.</string>
-    <string name="changeWalletPwdGuide">현재 비밀번호와 변경할 비밀번호 입력</string>
+    <string name="changeWalletPwdGuide">현재 비밀번호 &amp; 변경할 비밀번호를 입력해주세요.</string>
     <string name="hintOldWalletPwd">현재 비밀번호 입력</string>
     <string name="hintNewWalletPwd">새 비밀번호 입력</string>
     <string name="hintNewWalletPwdConfirm">새 비밀번호 확인</string>
@@ -338,16 +342,16 @@
 
     <!-- Export bundle -->
     <string name="titleExportBundle">지갑 묶어서 내보내기</string>
-    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요. 선택한 지갑마다 지갑별 비밀번호 확인이 필요합니다.</string>
+    <string name="headerExportBundle">묶어서 내보낼 지갑들을 선택해주세요.\n선택 시 비밀번호 확인이 필요합니다.</string>
     <string name="exportBundleDetailed1">지갑 묶어서 내보내기는 선택한 지갑 파일을 묶어서 하나의 파일로 백업하는 기능입니다.</string>
     <string name="exportBundleEdtailed2">지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 경우 지갑 백업파일이 필요합니다.</string>
-    <string name="countSelectedWallet">%d 개 지갑 선택</string>
+    <string name="countSelectedWallet">개 지갑 선택</string>
 
     <string name="bundlePwdHeader">묶음 지갑의 비밀번호를 생성하고 묶음 지갑 백업 파일을 다운로드해주세요.</string>
     <string name="bundlePwdDetailed1">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
     <string name="bundlePwdDetailed2">지갑 백업 파일(Keystore\)은 지갑의 고유 정보인 개인 키(Private Key)를 담고 있는 파일이며, 사용을 위해서는 설정한 비밀번호를 입력해야 합니다.</string>
     <string name="bundlePwd">묶음 지갑 비밀번호</string>
-    <string name="bundleDownload">묶음 지갑 백업 파일 다운로드</string>
+    <string name="bundleDownload">백업 파일 다운로드</string>
 
     <string name="msgBundleNotice">묶어서 내보낼 때, 묶음 지갑 비밀번호를\n새로 만들어야 합니다. 기존 지갑들의 비밀번호는 묶음 지갑의 비밀번호로 바뀝니다. 계속 진행하시겠습니까?</string>
 
@@ -373,6 +377,8 @@
     <string name="titleFingerprintLock">지문으로 잠금 해제 안내</string>
     <string name="fingerprintLockHeader">지문으로 잠금 해제를 사용하겠습니까?</string>
     <string name="fingerprintLockDetailed">ICONex 앱을 실행할 때 지문을 사용하여 빠르게 잠금 해제가 가능합니다.\n\n휴대폰에 등록되어 있는 모든 지문으로 잠금 해제를 할 수 있습니다. 다른 사람의 지문이 등록되어 있는지 확인해주세요.</string>
+    <string name="fingerprintLockDetailed0">ICONex 앱을 실행할 때 지문을 사용하여 빠르게 잠금 해제가 가능합니다.</string>
+    <string name="fingerprintLockDetailed1">휴대폰에 등록되어 있는 모든 지문으로 잠금 해제를 할 수 있습니다. 다른 사람의 지문이 등록되어 있는지 확인해주세요.</string>
 
     <string name="titleSetLockNum">잠금 번호 설정</string>
     <string name="lockNumGuide">잠금 번호 6자리를 입력해주세요.</string>
@@ -384,10 +390,10 @@
     <string name="authMsgRecoverFingerprintAuth">지문으로 잠금 해제 사용이 중지되었습니다. 사용 설정을 하시겠습니까?</string>
 
     <string name="errNoKeyguard">휴대폰의 설정에서 화면 잠금 설정 후 \"지문으로 잠금 해제\" 기능을 사용할 수 있습니다.</string>
-    <string name="errNoEnrolledFingerprint">지문 정보가 등록되어 있지 않습니다.\n휴대폰의 설정화면에서 지문 등록 후 다시 시도해주세요.</string>
-    <string name="errCheckLockNum">잠금 번호가 일치하지 않습니다.\n설정할 잠금 번호 입력부터 다시 시도해주세요.</string>
+    <string name="errNoEnrolledFingerprint">휴대폰의 설정화면에서 지문 등록 후 \"지문으로 잠금 해제\" 기능을 사용할 수 있습니다.</string>
+    <string name="errCheckLockNum">잠금 번호가 일치하지 않습니다.\n현재 잠금 번호 입력부터 다시 시도해주세요.</string>
     <string name="errCurrentLockNum">잠금 번호가 일치 하지 않습니다.</string>
-    <string name="errRetryLockNum">잠금 번호를 다시 확인해주세요.</string>
+    <string name="errRetryLockNum">잠금 번호가 올바르지 않습니다.</string>
     <string name="errInvalidatedByBiometricEnrollment">등록되어 있는 지문 정보가 변경되어 지문 인증을 사용할 수 없습니다. 잠금 번호로 로그인 후, 지문 사용 여부를 다시 설정해주세요.</string>
 
     <string name="errFingerprintLockOut">Fingerprint scan is currently locked. You can reactivate the fingerprint scan by entering your mobile</string>
@@ -412,7 +418,7 @@
     <string name="permissionCameraDenied">카메라에 대한 권한을 허용하지 않으면\nQR 코드 스캔을 사용 할 수 없습니다.\n(휴대폰의 설정 > 앱 권한 설정에서 카메라 권한을 허용할 수 있습니다.)</string>
 
     <!-- Message -->
-    <string name="warningPrivateKey">개인 키 만으로 지갑 실행, 송금이 가능하므로 어떠한 경우에도 외부 공유가 되어서는 안됩니다.</string>
+    <string name="warningPrivateKey">개인 키 만으로 지갑 실행, 전송이 가능하므로 어떠한 경우에도 외부 공유가 되어서는 안됩니다.</string>
 
     <!-- Network -->
     <string name="networkNotWorking">네트워크에 접속 할 수 없습니다.</string>
@@ -426,8 +432,8 @@
 
     <!-- Permission notice -->
     <string name="noticeTitle">앱 접근 권한 안내</string>
-    <string name="requiredPermission">[ 필수 접근 권한 ]</string>
-    <string name="optionalPermission">[ 선택 접근 권한 ]</string>
+    <string name="requiredPermission">필수 접근 권한</string>
+    <string name="optionalPermission">선택 접근 권한</string>
     <string name="permissionCamera">지갑 주소 또는 Private Key의 QR 코드를 읽기 위해 사용합니다.</string>
     <string name="permissionStorage">지갑 백업 파일(Keystore 파일)을 저장하고 불러오기 위해 사용합니다.</string>
     <string name="permissionDetailed1">선택 접근 권한에 동의하지 않아도 서비스 이용이 가능하나, 일부 기능 이용은 제한될 수 있습니다.</string>
@@ -435,7 +441,6 @@
 
     <!-- ICON Connect -->
     <string name="selectWallet">지갑 선택</string>
-    <string name="txData">Tx Data</string>
 
     <string name="msgCancelBind">지갑 선택을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
     <string name="msgCancelPassword">지갑 비밀번호 입력을 취소하시겠습니까?\n이용 중이던 앱으로 돌아갑니다.</string>
@@ -444,4 +449,187 @@
     <string name="connSendSuccess">송금 요청이 완료되었습니다. 거래내역은 내 지갑 상세페이지 또는 ICON Tracker에서 조회 가능합니다.</string>
     <string name="connSendFailed">오류가 발생했습니다. 잠시 후 다시 시도해주세요.</string>
 
+    <!-- Dialogs -->
+    <string name="dialogHeadTextTxHash">TxHash</string>
+    <string name="dialogTxHashTrackerLink_ICON"><u>ICON Tracker로 이동</u></string>
+    <string name="dialogTxHashTrackerLink_ETHER"><u>Ether Scan으로 이동</u></string>
+    <string name="dialogTxHashCopyTxHash">복사</string>
+    <string name="forgot_passwword"><u>비밀번호를 잊으셨나요?</u></string>
+
+    <string name="dialogLabelTimeRequired">예상 완료 시간</string>
+    <string name="dialogLabelStepLimit">Step Limit / Price (ICX)</string>
+    <string name="dialogLabelEstimatedMaxFee">Estimated Maximum Fee (ICX)</string>
+
+    <!-- Stake -->
+    <string name="submit">Submit</string>
+    <string name="rankAscending">Rank ↑</string>
+    <string name="rankDecending">Rank ↓</string>
+    <string name="prepDetail"><u>상세 정보 보기</u></string>
+    <string name="stake">Stake</string>
+    <string name="unstake">Unstake</string>
+    <string name="unstaked">Unstaked</string>
+    <string name="under_voted">┗ Voted</string>
+    <string name="under_voted_icx">┗ Voted (ICX)</string>
+    <string name="under_unstake">┗ Unstake 요청</string>
+    <string name="voted">Voted</string>
+    <string name="available">Available</string>
+    <string name="balanceIcx">Balance (ICX)</string>
+    <string name="unstakedIcx">Unstaked (ICX)</string>
+    <string name="stakedIcx">Staked (ICX)</string>
+    <string name="request_unstake">Unstake 요청 (ICX)</string>
+    <string name="done_block">완료 BLOCK</string>
+    <string name="estimate_done_time">완료 예상 시간</string>
+    <string name="unstake_required_time">%02d시간 %02d분 남음</string>
+    <string name="adjust_stake">요청 수량 수정</string>
+    <string name="minLimit">%s 이상으로 입력해주세요.</string>
+    <string name="maxLimit">%s 이하로 입력해주세요.</string>
+    <string name="votedIcx">Voted (ICX)</string>
+    <string name="availableIcx">Available (ICX)</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="stakeNotice01">・ Stake 되어 있는 수량 중, 이미 투표에 사용된 수량은 Unstake 할 수 없습니다.</string>
+    <string name="stakeNotice02">・ Unstaked 최소 수량은 1 ICX 입니다. 최소 수량이 확보되어야 추후 Voting 등의 수수료를 지불할 수 있습니다.</string>
+    <string name="stakeUnavailable">・ 조절 가능한 수량이 없습니다.\nICX를 입금하거나, Vote 화면에서 투표에 사용한 수량을 줄여주세요.</string>
+    <string name="unstakeNotice01">요청 수량 수정 시 완료 예정 시간이 초기화되며,\nTransaction 수수료를 지불해야 합니다.</string>
+    <string name="timeRequired">예상 완료 시간</string>
+    <string name="immediately">즉시</string>
+    <string name="stakeTimeRquired">즉시</string>
+    <string name="unstakeTimeRequired">72시간 후 unstake</string>
+    <string name="stakeDone">Stake 실행이\n완료되었습니다.</string>
+    <string name="unstakeDone">Unstake 실행이\n완료되었습니다.</string>
+    <string name="stakeSubmitNoticeMsg">수정하지 않고 나가시겠습니까?</string>
+    <string name="stakeSubmitNoticeDesc">Submit 버튼을 눌러야 진행 중인 %s 요청 수량 수정을 할 수 있습니다.</string>
+
+    <!-- Vote -->
+    <string name="vote">Vote</string>
+    <string name="myVotes">My Votes</string>
+    <string name="myVotesAscending">My Votes ↑</string>
+    <string name="myVotesDecending">My Votes ↓</string>
+    <string name="myVoteReset">투표 수량 초기화</string>
+    <string name="preps">P-Reps</string>
+    <string name="myVotesEmptyGuide">P-Reps 탭에서 투표할 리스트 선택 후,\nVoting Power를 분배해 주세요.</string>
+    <string name="myVotesEmptyNotice">Voting Power로 사용한 ICX는 언제든지 돌려받을 수 있으며,\nNetwork 발전 기여에 대한 보상으로 I-Score를 지급해 드립니다.</string>
+    <string name="tipAddedPRep">이미 추가한 리스트입니다.</string>
+    <string name="tipPRepMax">Vote 가능한 리스트는 최대 10개 입니다.</string>
+    <string name="tipHasDelegation">이미 투표가 반영된 P-Rep은 삭제가 불가능합니다.\nVoting Power를 0으로 설정 후, Vote 버튼을 눌러주세요.</string>
+    <string name="voteNotExecute">Vote 버튼을 눌러야 설정한 수량이 실제 반영됩니다.\nVote 실행을 하지 않고 나가시겠습니까?</string>
+    <string name="voteReset">투표에 사용한 Voting Power를 모두 0으로 되돌리겠습니까?</string>
+
+    <!-- I-Score -->
+    <string name="claim">Claim</string>
+    <string name="currentIScore">현재 I-Score</string>
+    <string name="receiveIScroe">받을 수 있는 수량</string>
+    <string name="IScoreClaim">I-Score Claim</string>
+    <string name="stepLimitNPrice">적정 Step 한도 / 가격 (ICX)</string>
+    <string name="estimatedMaximumFee">예상 최대 수수료 (ICX)</string>
+    <string name="claimDone">Claim 실행이 완료되었습니다.</string>
+
+    <!-- P-Rep List -->
+    <string name="searchPrep">P-Rep 이름 검색</string>
+    <string name="prepName">Name</string>
+    <string name="createWalletStep1Detailed1">· 지갑 만들기 완료 시 선택한 코인의 지갑이 생성됩니다.</string>
+    <string name="createWalletStep1Detailed2">· 지갑 생성 후, 해당 코인 기반의 토큰을 추가하실 수 있습니다.</string>
+
+    <string name="createWalletStep2Notice">비밀번호의 관리는 사용자의 책임이며, 분실하면 다시 찾을 수 있는 방법이 없습니다.</string>
+    <string name="createWalletStep2Detailed1">・ 지갑 백업 파일(Keystore 파일)로 지갑을 복구하거나 실행하는 경우, 전송 시 비밀번호를 입력해야 합니다.</string>
+
+    <string name="createWalletStep3Detailed1">・ 지갑 백업 파일과 비밀번호가 있으면 지갑을 다른 디바이스에서 실행하거나, 삭제된 지갑을 복구할 수 있습니다.</string>
+    <string name="createWalletStep3Detailed2">・ 지갑을 만든 후 \`지갑 백업\`에서도 다운로드할 수 있습니다.</string>
+
+    <string name="createWalletStep4Header">개인 키를 저장해주세요.</string>
+
+    <string name="loadBundleConfirm">묶음 지갑을 가져오시겠습니까?</string>
+    <string name="loadSelectMethod">방법 선택</string>
+    <string name="loadStep2Title">파일 선택 또는\n개인 키 입력</string>
+    <string name="loadStep3Title">지갑 정보</string>
+
+    <!-- Toast -->
+    <string name="addMyVote">%d/10 My Votes에 추가</string>
+    <string name="completeVoting">Voting이 완료되었습니다.</string>
+
+    <!-- Dialog -->
+    <string name="showDetail">상세 정보 보기</string>
+
+    <string name="notEnoughForStaking">Stake 또는 Unstake 실행을\n하려면 1 ICX 이상 잔액이\n있어야 합니다.</string>
+    <string name="hasNoVotingPower">Voting Power가 없습니다.\nICX를 Stake하면 1:1 비율로\nVoting Power가 생성됩니다.</string>
+
+
+    <string name="votePReps">투표한 P-Rep</string>
+
+    <!-- Tool Tip -->
+
+
+    <!-- New - Password dialog   -->
+    <string name="msgForgetPassword">개인 키를 알고 있다면 지갑을 새로 가져와서 비밀번호를 재설정 할 수 있습니다. 아래 단계를 따라 진행해주세요. “지갑 가져오기” 선택 > “개인 키” 선택 > 개인 키 입력 후 가져오기 > 새 비밀번호 입력</string>
+
+    <!--  New - main wallet  -->
+    <string name="about">About</string>
+    <string name="staked">Staked</string>
+    <string name="iscore">I-Score</string>
+    <string name="icon_voting">ICON Voting</string>
+    <string name="requestSend">Request transfer</string>
+    <string name="msgRequestSend">・ 전송 요청 수량 입력 시, 입력한 수량 정보가 포함된 QR 코드로 변경됩니다.</string>
+    <string name="hintRequestSend">전송 요청 수량 (ICX)</string>
+    <string name="generateQRcode">QR 코드 생성</string>
+
+    <!-- New - wallet menu -->
+    <string name="totalAssets">전체 자산 가치</string>
+    <string name="totalVotedPower">전체 Voted Power</string>
+
+    <!-- New side Menu -->
+    <string name="appVer">앱 버전</string>
+    <string name="errPasscodeSame">현재 잠금번호와 동일합니다.\n새 잠금 번호를 입력해주세요.</string>
+
+    <!-- New Detail Wallet -->
+    <string name="icxBalance">ICX Balance</string>
+    <string name="liquidICX">Liquid ICX</string>
+    <string name="stakeICX">Staked ICX (Voting Power)</string>
+    <string name="deposit_list">입금 내역</string>
+
+    <!-- New - Transfer -->
+    <string name="availableBalance">사용가능 잔액</string>
+    <string name="sendBalance">전송 수량</string>
+    <string name="viewData">데이터 보기</string>
+    <string name="stepLimit_Price">적정 Step 한도 / 가격</string>
+    <string name="estimateFee">예상 최대 수수료</string>
+    <string name="maxBalance">전액</string>
+    <string name="transfer">전송</string>
+    <string name="errEtherGasLimit">21,000 이상으로 입력해주세요.</string>
+    <string name="qrcodeScanGuide">QR 코드를 인식해서 \n주소 또는 개인 키를 가져올 수 있습니다.</string>
+    <string name="errScanPrivateKey">개인 키 형식이 올바르지 않습니다.</string>
+
+    <!--  New Main wallet info  -->
+    <string name="guidance">안내</string>
+
+    <string name="mainWalletInfo00">전체 자산 가치</string>
+    <string name="mainWalletInfo01">USD 환산금액이 표시되지 않은 토큰은 전체 자산 평가금액에서 제외됩니다.</string>
+    <string name="mainWalletInfo02">평가금액은 참고용으로만 활용해주세요.</string>
+
+    <string name="mainWalletInfo10">P-Rep</string>
+    <string name="mainWalletInfo11">ICON Network는 대표자(Public Representative, 이하 P-Rep)에 의해 운영되는 블록체인 네트워크로, 사용자(ICONist)들은 양질의 P-Rep을 선별하여 투표해야 합니다. 각 대표자들은 ICON Network 전체 보상량에 영향을 주는 대표자 월간 보상 변수(i_rep) 값을 제출할 수 있으며, 사용자들은 각 대표자들이 제출한 값을 살펴볼 수 있습니다. 아울러, 투표에 참여한 사용자들은 대표자 위임 연간 보상률(r_rep)에 의해 투표에 대한 보상을 받습니다.</string>
+
+    <string name="mainWalletInfo20">Stake</string>
+    <string name="mainWalletInfo21">원하는 수량 만큼 ICX를 잠금 상태로 전환하는 기능입니다.</string>
+    <string name="mainWalletInfo22">Stake를 실행하면, Voting Power가 1:1 비율로 생성됩니다.</string>
+
+    <string name="mainWalletInfo30">Vote</string>
+    <string name="mainWalletInfo31">Voting Power를 이용하여 P-Rep 후보자에게 투표할 수 있습니다.</string>
+    <string name="mainWalletInfo32">후보자가 P-Rep으로 선출되면 위임한 지분의 X.XX %에 대한 보상을 I-Score로 받을 수 있습니다.</string>
+
+    <string name="mainWalletInfo40">I-Score</string>
+    <string name="mainWalletInfo41">P-Rep 투표에 대한 기여도 점수이며, 1,000 I-Score를 1 ICX로 환급 받을 수 있습니다.</string>
+
+    <string name="complete_transfer">전송완료</string>
+    <string name="fail_transfer">전송실패</string>
+    <string name="complete_deposit">입금완료</string>
+    <string name="fail_deposit">입금실패</string>
+
+    <string name="msgNewPasswordSame">현재 비밀번호와 동일합니다. 새 비밀번호를 입력해주세요.</string>
+    <string name="totalWalletCount">총 %d개 지갑</string>
+
+    <string name="history">History</string>
+    <string name="depositHistory">Deposit History</string>
+
+    <string name="send">Send</string>
+    <string name="convert">Convert</string>
 </resources>

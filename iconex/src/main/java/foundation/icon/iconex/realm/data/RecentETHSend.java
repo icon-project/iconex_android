@@ -1,5 +1,7 @@
 package foundation.icon.iconex.realm.data;
 
+import javax.annotation.Nullable;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -19,6 +21,16 @@ public class RecentETHSend extends RealmObject {
     private String symbol;
     private String txHash;
     private int isDone;
+
+    private int nid;
+
+    public int getNid() {
+        return nid;
+    }
+
+    public void setNid(int nid) {
+        this.nid = nid;
+    }
 
     public int getId() {
         return id;

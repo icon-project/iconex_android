@@ -27,7 +27,6 @@ public class CryptoUtil {
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-//        Log.i(TAG, "Cipher provider=" + cipher.getProvider());
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivSpec);
         byte[] encData = cipher.doFinal(cryptText.getBytes());
         return Base64.toBase64String(encData);
@@ -48,7 +47,6 @@ public class CryptoUtil {
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-//        Log.i(TAG, "Cipher provider=" + cipher.getProvider());
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivSpec);
         byte[] decData = cipher.doFinal(encData);
         return new String(decData);

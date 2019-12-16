@@ -4,32 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
     android:orientation="vertical"
     tools:context="foundation.icon.iconex.wallet.contacts.ContactsActivity">
 
-    <include
+    <foundation.icon.iconex.widgets.TitleBar
         android:id="@+id/appbar"
-        layout="@layout/layout_appbar_mod"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:type="title_option"
+        app:title="@string/selectAddress"
+        app:optionText="@string/edit"/>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        app:tabBackground="@drawable/bg_tab_layout"
-        app:tabIndicatorColor="@color/colorText"
-        app:tabIndicatorHeight="@dimen/TabLayoutIndicatorHeight" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewpager"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:paddingEnd="24dp"
-        android:paddingStart="24dp" />
+        android:orientation="vertical"
+        android:background="@color/colorWhite">
 
+        <com.google.android.material.tabs.TabLayout
+            app:tabTextAppearance="@style/TabTextAppearanceS"
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            app:tabBackground="@drawable/bg_tab_layout"
+            app:tabIndicatorColor="@color/colorText"
+            app:tabIndicatorHeight="@dimen/TabLayoutIndicatorHeight" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/darkE6"/>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite" />
+
+    </LinearLayout>
 </LinearLayout>

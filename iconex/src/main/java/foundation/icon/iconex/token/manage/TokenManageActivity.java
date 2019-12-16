@@ -1,19 +1,19 @@
 package foundation.icon.iconex.token.manage;
 
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.Basic2ButtonDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
+import foundation.icon.iconex.widgets.CustomActionBar;
+import kotlin.jvm.functions.Function1;
 import loopchain.icon.wallet.core.Constants;
 
 public class TokenManageActivity extends AppCompatActivity implements View.OnClickListener, TokenListFragment.OnTokenListClickListener,
@@ -23,10 +23,7 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
 
     private Wallet mWallet;
 
-    private ViewGroup appbar;
-    private TextView txtTitle;
-    private Button btnBack;
-    private TextView btnEdit;
+    private CustomActionBar appbar;
 
     private final String TAG_ADD = "TAG_ADD";
     private final String TAG_MOD = "TAG_MOD";
@@ -52,13 +49,10 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
         mWallet = (Wallet) getIntent().getSerializableExtra("walletInfo");
 
         appbar = findViewById(R.id.appbar);
-        txtTitle = findViewById(R.id.txt_title);
-        txtTitle.setText(getString(R.string.tokenManageTitle));
-        btnBack = findViewById(R.id.btn_close);
-        btnBack.setBackgroundResource(R.drawable.ic_appbar_back);
-        btnBack.setOnClickListener(this);
-        btnEdit = findViewById(R.id.txt_mod);
-        btnEdit.setOnClickListener(this);
+        appbar.setTitle(getString(R.string.tokenManageTitle));
+        appbar.setOnClickStartIcon(this);
+
+        appbar.setOnClickEndIcon(this); // btnEdit, R.id.txt_mod
 
         fragmentManager = getSupportFragmentManager();
         listFragment = TokenListFragment.newInstance(mWallet);
@@ -75,74 +69,20 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_close:
-                if (fragmentManager.getBackStackEntryCount() > 0) {
-                    if (btnEdit.isSelected()) {
-                        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-                        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                            @Override
-                            public void onOk() {
-                                fragmentManager.popBackStackImmediate();
-                                txtTitle.setText(getString(R.string.tokenManageTitle));
-
-                                btnEdit.setSelected(false);
-                                btnEdit.setText(getString(R.string.edit));
-                                btnEdit.setVisibility(View.INVISIBLE);
-
-                                listFragment.tokenNotifyDataChanged();
-                            }
-
-                            @Override
-                            public void onCancel() {
-
-                            }
-                        });
-                        dialog.setMessage(getString(R.string.msgTokenCancelMod));
-                        dialog.show();
-                    } else if (addFragment != null && !addFragment.isEmpty()) {
-                        Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-                        dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                            @Override
-                            public void onOk() {
-                                fragmentManager.popBackStackImmediate();
-                                txtTitle.setText(getString(R.string.tokenManageTitle));
-
-                                btnEdit.setSelected(false);
-                                btnEdit.setText(getString(R.string.edit));
-                                btnEdit.setVisibility(View.INVISIBLE);
-
-                                listFragment.tokenNotifyDataChanged();
-                            }
-
-                            @Override
-                            public void onCancel() {
-
-                            }
-                        });
-                        dialog.setMessage(getString(R.string.msgTokenCancelAdd));
-                        dialog.show();
-                    } else {
-                        fragmentManager.popBackStackImmediate();
-                        txtTitle.setText(getString(R.string.tokenManageTitle));
-
-                        btnEdit.setSelected(false);
-                        btnEdit.setText(getString(R.string.edit));
-                        btnEdit.setVisibility(View.INVISIBLE);
-
-                        listFragment.tokenNotifyDataChanged();
-                    }
-                } else
-                    finish();
+            case R.id.btn_close: // not use
+            case R.id.btn_start_icon:
+                onBackPressed();
                 break;
 
-            case R.id.txt_mod:
-                if (!btnEdit.isSelected()) {
-                    btnEdit.setSelected(true);
-                    btnEdit.setText(getString(R.string.complete));
+            case R.id.txt_mod: // not use
+            case R.id.btn_text:
+                if (!appbar.isTextButtonSelected()) {
+                    appbar.setTextButtonSelected(true);
+                    appbar.setTextButton(getString(R.string.delete));
 
                     modFragment.setEditable();
                 } else {
-                    modFragment.onEditDone();
+                    modFragment.deleteToken();
                 }
                 break;
         }
@@ -152,10 +92,11 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onTokenClick(WalletEntry entry) {
 
-        btnEdit.setVisibility(View.VISIBLE);
-        btnEdit.setSelected(false);
-        btnEdit.setText(getString(R.string.edit));
-        txtTitle.setText(entry.getUserName());
+        appbar.setIconEnd(CustomActionBar.IconEnd.text);
+        appbar.setTextButtonSelected(false);
+        appbar.setTextButton(getString(R.string.edit));
+
+        appbar.setTitle(entry.getUserName());
 
         TOKEN_TYPE tokenType;
         if (mWallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
@@ -173,20 +114,28 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClose() {
         fragmentManager.popBackStackImmediate();
-        txtTitle.setText(getString(R.string.tokenManageTitle));
-
-        btnEdit.setSelected(false);
-        btnEdit.setText(getString(R.string.edit));
-        btnEdit.setVisibility(View.INVISIBLE);
-
+        int resString = fragmentManager.getBackStackEntryCount() > 0 ?
+                R.string.addToken : R.string.tokenManageTitle;
+        appbar.setTitle(getString(resString));
+        appbar.setIconEnd(CustomActionBar.IconEnd.none);
         listFragment.tokenNotifyDataChanged();
     }
 
     @Override
-    public void onDone(String name) {
-        txtTitle.setText(name);
-        btnEdit.setSelected(false);
-        btnEdit.setText(getString(R.string.edit));
+    public void onDoneEditToken(String name) {
+        appbar.setTitle(name);
+        appbar.setTextButtonSelected(false);
+        appbar.setTextButton(getString(R.string.edit));
+    }
+
+    @Override
+    public void onDoneAddToken() {
+        fragmentManager.popBackStackImmediate();
+        if (fragmentManager.getBackStackEntryCount() > 0)
+            fragmentManager.popBackStackImmediate();
+        appbar.setTitle(getString(R.string.tokenManageTitle));
+        appbar.setIconEnd(CustomActionBar.IconEnd.none);
+        listFragment.tokenNotifyDataChanged();
     }
 
     @Override
@@ -197,11 +146,13 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
             ircFragment = IrcListFragment.newInstance(mWallet.getAddress());
             transaction.add(R.id.container, ircFragment);
             transaction.addToBackStack(TAG_IRC);
+            appbar.setTitle(getString(R.string.addToken));
         } else {
             addFragment = TokenManageFragment.newInstance(mWallet.getAddress(), MyConstants.MODE_TOKEN.ADD,
                     TOKEN_TYPE.ERC, null);
             transaction.add(R.id.container, addFragment);
             transaction.addToBackStack(TAG_ADD);
+            appbar.setTitle(getString(R.string.enterTokenInfo));
         }
 
         transaction.commit();
@@ -210,86 +161,54 @@ public class TokenManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void enterInfo() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        fragmentManager.popBackStackImmediate();
         addFragment = TokenManageFragment.newInstance(mWallet.getAddress(), MyConstants.MODE_TOKEN.ADD,
                 TOKEN_TYPE.IRC, null);
         transaction.add(R.id.container, addFragment);
         transaction.addToBackStack(TAG_ADD);
-
+        appbar.setTitle(getString(R.string.enterTokenInfo));
         transaction.commit();
     }
 
     @Override
     public void onListClose() {
         fragmentManager.popBackStackImmediate();
-        txtTitle.setText(getString(R.string.tokenManageTitle));
+        appbar.setTitle(getString(R.string.tokenManageTitle));
 
-        btnEdit.setSelected(false);
-        btnEdit.setText(getString(R.string.edit));
-        btnEdit.setVisibility(View.INVISIBLE);
+        appbar.setTextButtonSelected(false);
+        appbar.setTextButton(getString(R.string.edit));
+        appbar.setIconEnd(CustomActionBar.IconEnd.none);
 
         listFragment.tokenNotifyDataChanged();
     }
 
     @Override
     public void onBackPressed() {
+
         if (fragmentManager.getBackStackEntryCount() > 0) {
-            if (btnEdit.isSelected()) {
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        fragmentManager.popBackStackImmediate();
-                        txtTitle.setText(getString(R.string.tokenManageTitle));
+            MessageDialog messageDialog = new MessageDialog(this);
+            messageDialog.setSingleButton(false);
+            messageDialog.setOnConfirmClick(new Function1<View, Boolean>() {
+                @Override
+                public Boolean invoke(View view) {
+                    onClose();
+                    return true;
+                }
+            });
 
-                        btnEdit.setSelected(false);
-                        btnEdit.setText(getString(R.string.edit));
-                        btnEdit.setVisibility(View.INVISIBLE);
-
-                        listFragment.tokenNotifyDataChanged();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-                dialog.setMessage(getString(R.string.msgTokenCancelMod));
-                dialog.show();
+            if (modFragment != null && modFragment.isEdited()) {
+                messageDialog.setMessage(getString(R.string.msgTokenCancelMod));
+                messageDialog.show();
             } else if (addFragment != null && !addFragment.isEmpty()) {
-                Basic2ButtonDialog dialog = new Basic2ButtonDialog(this);
-                dialog.setOnDialogListener(new Basic2ButtonDialog.OnDialogListener() {
-                    @Override
-                    public void onOk() {
-                        fragmentManager.popBackStackImmediate();
-                        txtTitle.setText(getString(R.string.tokenManageTitle));
-
-                        btnEdit.setSelected(false);
-                        btnEdit.setText(getString(R.string.edit));
-                        btnEdit.setVisibility(View.INVISIBLE);
-
-                        listFragment.tokenNotifyDataChanged();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-                dialog.setMessage(getString(R.string.msgTokenCancelAdd));
-                dialog.show();
+                if (tokenType == TOKEN_TYPE.IRC && fragmentManager.getBackStackEntryCount() == 1) {
+                    onClose();
+                    return;
+                }
+                messageDialog.setMessage(getString(R.string.msgTokenCancelAdd));
+                messageDialog.show();
             } else {
-                fragmentManager.popBackStackImmediate();
-                txtTitle.setText(getString(R.string.tokenManageTitle));
-
-                btnEdit.setSelected(false);
-                btnEdit.setText(getString(R.string.edit));
-                btnEdit.setVisibility(View.INVISIBLE);
-
-                listFragment.tokenNotifyDataChanged();
+                onClose();
             }
-        } else
-            super.onBackPressed();
+        } else finish();
     }
 
     public enum TOKEN_TYPE {
