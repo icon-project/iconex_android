@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="30dp">
+
+    <TextView
+        android:id="@+id/txt_tx_hash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="30dp"
+
+        android:textSize="10dp"
+        android:lineHeight="18dp"
+        android:textColor="@color/dark"
+        android:fontFamily="@font/noto_sans_regular"
+        android:textAlignment="center"
+
+        tools:text="0x1f8b7bbfd494e01c949d0a8aea290a0ae4e4c30ad526e344feb2dafb40fecc34"/>
+
+    <TextView
+        android:id="@+id/lnk_tracker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="40dp"
+
+        android:textSize="12dp"
+        android:textColor="@color/primary"
+        android:fontFamily="@font/noto_sans_regular"
+        android:textAlignment="center"
+        android:text="@string/dialogTxHashTrackerLink_ICON"/>
+</LinearLayout>

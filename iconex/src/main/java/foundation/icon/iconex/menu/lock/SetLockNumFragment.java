@@ -93,9 +93,14 @@ public class SetLockNumFragment extends Fragment implements View.OnClickListener
                         case RESET:
                             if (isCorrect) {
                                 if (step1.isEmpty()) {
-                                    step1 = s.toString();
-                                    txtGuide.setText(getString(R.string.checkLockNumGuide));
-                                    editNum.setText("");
+                                    if (validateLockNumber(editNum.getText().toString())) {
+                                        txtGuide.setText(getString(R.string.errPasscodeSame));
+                                        editNum.setText("");
+                                    } else {
+                                        step1 = s.toString();
+                                        txtGuide.setText(getString(R.string.checkLockNumGuide));
+                                        editNum.setText("");
+                                    }
                                 } else {
                                     if (checkLockNumber(step1, editNum.getText().toString())) {
                                         saveLockNumber(editNum.getText().toString());
@@ -104,6 +109,7 @@ public class SetLockNumFragment extends Fragment implements View.OnClickListener
                                         txtGuide.setText(getString(R.string.errCheckLockNum));
                                         step1 = "";
                                         editNum.setText("");
+                                        isCorrect = false;
                                     }
                                 }
                             } else {

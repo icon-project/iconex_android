@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    tools:context="foundation.icon.iconex.wallet.load.LoadWalletActivity">
+    android:orientation="vertical"
+    tools:context=".view.LoadWalletActivity">
 
-    <include
-        android:id="@+id/appbar"
-        layout="@layout/layout_appbar_close"
+    <foundation.icon.iconex.widgets.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
+        app:title="@string/LoadWallet"
+        app:type="title" />
 
-    <foundation.icon.iconex.widgets.NonSwipeViewPager
-        android:id="@+id/load_view_pager"
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appbar"
         android:background="@color/colorWhite" />
-
-</RelativeLayout>
+</LinearLayout>

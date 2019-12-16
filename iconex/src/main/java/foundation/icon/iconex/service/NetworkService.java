@@ -132,7 +132,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.TRUSTED_HOST_MAIN;
                             break;
@@ -196,7 +196,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.TRUSTED_HOST_MAIN;
                             break;
@@ -273,7 +273,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.URL_VERSION_MAIN;
                             break;
@@ -333,7 +333,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.URL_VERSION_MAIN;
                             break;
@@ -386,7 +386,7 @@ public class NetworkService extends Service {
             public void run() {
                 try {
                     String url = null;
-                    switch (network) {
+                    switch (ICONexApp.NETWORK.getNid().intValue()) {
                         case MyConstants.NETWORK_MAIN:
                             url = ServiceConstants.URL_VERSION_MAIN;
                             break;
@@ -434,7 +434,7 @@ public class NetworkService extends Service {
 
     public void requestICXTransaction(Transaction tx) {
         String url = null;
-        switch (network) {
+        switch (ICONexApp.NETWORK.getNid().intValue()) {
             case MyConstants.NETWORK_MAIN:
                 url = ServiceConstants.TRUSTED_HOST_MAIN;
                 break;
@@ -483,7 +483,7 @@ public class NetworkService extends Service {
 //            public void run() {
 //                try {
 //                    String url = null;
-//                    switch (network) {
+//                    switch (ICONexApp.NETWORK.getNid().intValue()) {
 //                        case MyConstants.NETWORK_MAIN:
 //                            url = ServiceConstants.TRUSTED_HOST_MAIN;
 //                            break;
@@ -604,7 +604,7 @@ public class NetworkService extends Service {
             address = params[1];
 
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -642,7 +642,7 @@ public class NetworkService extends Service {
         @Override
         protected String[] doInBackground(String... params) {
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -668,9 +668,7 @@ public class NetworkService extends Service {
                         data,
                         LoopChainClient.valueToBigInteger(value));
                 if (tx.hasError()) {
-//                    Log.d(TAG, "Has error = " + tx.getError().getMessage());
                 }
-//                Log.d(TAG, "txHash=" + tx.getTransactionHash());
 
                 return new String[]{id, tx.getTransactionHash()};
 
@@ -685,11 +683,11 @@ public class NetworkService extends Service {
         protected void onPostExecute(String[] result) {
             super.onPostExecute(result);
 
-//            if (result != null) {
-//                mTransferCallback.onReceiveTransactionResult(result[0], result[1]);
-//            } else {
-//                mTransferCallback.onReceiveError("ETHTransfer", 9999);
-//            }
+            if (result != null) {
+                mTransferCallback.onReceiveTransactionResult(result[0], result[1]);
+            } else {
+                mTransferCallback.onReceiveError("ETHTransfer", 9999);
+            }
         }
     }
 
@@ -706,7 +704,7 @@ public class NetworkService extends Service {
             contract = params[2];
 
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -751,7 +749,7 @@ public class NetworkService extends Service {
             String privKey = params[7];
 
             String url;
-            if (network == MyConstants.NETWORK_MAIN)
+            if (ICONexApp.NETWORK.getNid().intValue() == MyConstants.NETWORK_MAIN)
                 url = ServiceConstants.ETH_HOST;
             else
                 url = ServiceConstants.ETH_ROP_HOST;
@@ -779,11 +777,11 @@ public class NetworkService extends Service {
         protected void onPostExecute(String[] results) {
             super.onPostExecute(results);
 
-//            if (results != null) {
-//                mTransferCallback.onReceiveTransactionResult(results[0], results[1]);
-//            } else {
-//                mTransferCallback.onReceiveError("TokenTransfer", 8888);
-//            }
+            if (results != null) {
+                mTransferCallback.onReceiveTransactionResult(results[0], results[1]);
+            } else {
+                mTransferCallback.onReceiveError("TokenTransfer", 8888);
+            }
         }
     }
 }

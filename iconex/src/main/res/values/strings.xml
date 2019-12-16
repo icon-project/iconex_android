@@ -42,19 +42,20 @@
     <string name="msgCopyTxID">Transaction ID is copied.</string>
 
     <!-- Splash -->
-    <string name="copyright">\@2018 ICON Foundation</string>
+    <string name="copyright">\@2019 ICON Foundation</string>
     <string name="intro1">ICONex enables users to create and manage wallets for various cryptocurrencies that are connected to ICON Network including ICX and ETH.</string>
     <string name="intro2">Convenient storage and transfer of ICX and other various cryptocurrencies connected with ICON are possible based on the Reserved Balance.</string>
     <string name="createWallet">Create Wallet</string>
     <string name="LoadWallet">Load Wallet</string>
     <string name="hintWalletPassword">Enter wallet password</string>
+    <string name="password">Enter the password</string>
 
     <!-- Create Wallet -->
     <string name="titleCreateWallet">Create Wallet</string>
     <string name="cancelCreateWallet">Are you sure you want to cancel?</string>
     <string name="selectCoin">Select Coin</string>
     <string name="information">Wallet Info</string>
-    <string name="stepDownload">Keystore File</string>
+    <string name="stepDownload">Download\nKeystore files</string>
     <string name="savePrivateKey">Private Key</string>
     <string name="step1Header">Select a wallet between ICX wallet and ETH wallet.</string>
     <string name="step1Sub">You can add ERC20 tokens from the Ethereum wallet menu.</string>
@@ -67,8 +68,9 @@
     <string name="hintWalletAlias">Enter wallet name</string>
     <string name="hintCreateWalletPassword">At least 8 characters including letters, numbers, and special characters.</string>
     <string name="hintWalletPasswordConfirm">Confirm password</string>
-    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \ | @ # $ &amp; )</string>
-    <string name="step3Header">This Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
+    <string name="createPasswordWarning">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
+    <string name="errAllowSpecialCharacters">Please check the available special character. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
+    <string name="step3Header">This Keystore file contains the encrypted private key\nrequires the wallet password to access it.</string>
     <string name="step3Sub1">Use this Keystore file to load your wallet from other devices.</string>
     <string name="step3Sub2">You can download your Keystore file from the \"Backup wallet\" menu later.</string>
     <string name="walletDownloadGuide">Download Keystore file</string>
@@ -77,14 +79,15 @@
     <string name="backupKeyStoreFileConfirm">DO NOT SHARE YOUR KEYSTORE FILE WITH OTHERS. Do you want to proceed? </string>
     <string name="noBackupKeyStoreFileConfirm">Do you want to proceed without downloading the Keystore file?</string>
     <string name="keyStoreDownloadAccomplished">\"%s\"\nThe file has been downloaded successfully.</string>
-    <string name="step4Header">The private key is unique to your wallet and has no password.</string>
+    <string name="step4PrivateKeyHeader">Please save private key.</string>
+    <string name="step4Header">The private key is unique to your wallet \nPrivate key has no password.</string>
     <string name="step4Sub1">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
     <string name="step4Sub2">You can access to your private key from the \'Backup wallet\' menu later.</string>
     <string name="privateKey">Private Key</string>
     <string name="copyPrivateKey">Copy Private Key</string>
-    <string name="viewWalletInfo">View Wallet Info</string>
+    <string name="viewWalletInfo">View Wallet Info.</string>
 
-    <string name="errAliasEmpty">Please enter new wallet name.</string>
+    <string name="errAliasEmpty">Please enter a new wallet name.</string>
     <string name="errPwdEmpty">Please enter your password.</string>
     <string name="errCheckEmpty">Please confirm your password.</string>
 
@@ -102,7 +105,7 @@
     <string name="errPassword">Please check your password.</string>
     <string name="enterWalletAliasHeader">Please enter a new wallet name</string>
     <string name="errNoKeystoreFile">Please select keystore file.</string>
-    <string name="errPrivateKey">Incorrect private key. Please check again.</string>
+    <string name="errPrivateKey">Private key format is incorrect.</string>
     <string name="hintEnterWalletAlias">Enter wallet name</string>
 
     <string name="loadByPrivateKeyHeader">Select a coin and enter your private key</string>
@@ -110,17 +113,17 @@
     <string name="enterPrivateKey">Enter your private key</string>
 
     <string name="titleLoadBundle">Load Wallet Bundle</string>
-    <string name="loadBundleHeader">If you load a wallet bundle, the wallets that are already registered in your wallet will not be loaded.\nDo you want to proceed?</string>
+    <string name="loadBundleHeader">If you load a wallet bundle, the wallets that are already registered in your wallet will not be loaded.</string>
     <string name="loadBundleDetailed">The password of each wallet is the same as the wallet bundle password.</string>
     <string name="loadBundleTotal">out of %d are already registered in your ICONex</string>
     <string name="loadBundleRegistered">%d wallets</string>
-    <string name="registeredWallet">Registered</string>
+    <string name="registeredWallet">Registered %s</string>
 
     <string name="msgLoadBundle">Wallet bundle is loaded. The password of each wallet is the same as the wallet bundle password and it can be changed from wallet menu.</string>
 
     <string name="enterWalletAliasAndPassword">Please enter the new wallet name and the password.</string>
     <string name="walletPasswordGuide1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
-    <string name="walletPasswordGuide2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
+    <string name="walletPasswordGuide2">In order to restore wallet by Keystore file, it requires password to send transaction.</string>
 
     <!-- Warning -->
     <string name="duplicateWalletAlias">This wallet name already exists.</string>
@@ -129,7 +132,7 @@
     <string name="errPasswordPatternMatch">Password must contain a combination of letters, numbers, and special characters. ( ? ! : . , % + - / * &lt; &gt; { } ( ) [ ] ` ” ‘ ~ _ ^ \\ | @ # $ &amp; )</string>
     <string name="errSerialChar">Password must not have more than 2 consecutive identical characters.</string>
     <string name="errWhiteSpace">Please do not leave blank.</string>
-    <string name="errPasswordNotMatched">Passwords do not match. Please check again.</string>
+    <string name="errPasswordNotMatched">The above passwords do not match. Please check again.</string>
 
     <!-- Main -->
     <string name="appbarSelectorWallets">Wallets</string>
@@ -142,6 +145,7 @@
     <string name="settingLock">Screen Lock</string>
     <string name="settingLanguage">Language</string>
     <string name="appInfo">App Info</string>
+    <string name="versionInfo">Version</string>
     <string name="ICONexDisclaimers">ICONex Disclaimer</string>
 
     <string name="currentVersion">Current Version</string>
@@ -288,7 +292,7 @@
     <string name="errICXFee">Insufficient ICX balance for transaction fee</string>
     <string name="errETHFee">Insufficient ETH balance for transaction fee</string>
 
-    <string name="msgDoneRequestTransfer">Transfer request has been completed.</string>
+    <string name="msgDoneRequestTransfer">Transfer Request Complete.</string>
     <string name="errTransferFailed">Error occurred.\nPlease try again.</string>
 
     <!-- Contacts -->
@@ -339,16 +343,16 @@
 
     <!-- Export bundle -->
     <string name="titleExportBundle">Export Wallet Bundle</string>
-    <string name="headerExportBundle">Select the wallets to bundle. Passwords are required.</string>
+    <string name="headerExportBundle">Select wallets that export in bundle.\nEach selected wallet requires password confirmation.</string>
     <string name="exportBundleDetailed1">Wallet bundle backs up your wallets in one file. You can easily manage different wallets at once.</string>
     <string name="exportBundleEdtailed2">You will need the password to load your wallet in other devices using the Keystore file or your private key.</string>
-    <string name="countSelectedWallet">%d Selected Wallets</string>
+    <string name="countSelectedWallet">Selected Wallets</string>
 
     <string name="bundlePwdHeader">Please create the password for the wallet bundle and download the backup file. </string>
     <string name="bundlePwdDetailed1">You are responsible for keeping your password safe. DO NOT FORGET TO SAVE THIS. If you lose your password, you cannot restore it.</string>
     <string name="bundlePwdDetailed2">The Keystore file contains the encrypted private key and requires the wallet password to access it.</string>
     <string name="bundlePwd">Wallet Bundle Password</string>
-    <string name="bundleDownload">Download</string>
+    <string name="bundleDownload">Download Keystore files</string>
 
     <string name="msgBundleNotice">If you back up your wallets using the ‘Wallet bundle’ function, the password of each wallet will be changed into\nthe wallet bundle password.\nAre you sure you want to proceed?</string>
 
@@ -374,6 +378,8 @@
     <string name="titleFingerprintLock">Fingerprint Unlock Guide</string>
     <string name="fingerprintLockHeader">Do you want to unlock ICONex with your fingerprint?</string>
     <string name="fingerprintLockDetailed">You can have fast access to ICONex using your fingerprint.\n\You can unlock ICONex with every fingerprint registered on your mobile phone. Please make sure you have registered your own fingerprint.</string>
+    <string name="fingerprintLockDetailed0">You can have fast access to ICONex using your fingerprint.</string>
+    <string name="fingerprintLockDetailed1">You can unlock ICONex with every fingerprint registered on your mobile phone. Please make sure you have registered your own fingerprint.</string>
 
     <string name="titleSetLockNum">Activate Screen Lock</string>
     <string name="lockNumGuide">Enter 6-digit passcode</string>
@@ -413,7 +419,7 @@
     <string name="permissionCameraDenied">If camera is not authorized, QR code scan function cannot be activated.\n(Camera can be authorized\nvia App settings.)</string>
 
     <!-- Message -->
-    <string name="warningPrivateKey">Pay special attention to your private key as anyone who can access to the private key can transfer assets from the wallets without your permission.</string>
+    <string name="warningPrivateKey">Private Key should not be shared since it can operate by itself.</string>
 
     <!-- Network -->
     <string name="networkNotWorking">No internet connection</string>
@@ -427,8 +433,8 @@
 
     <!-- Permission notice -->
     <string name="noticeTitle">App Permissions</string>
-    <string name="requiredPermission">[ Required ]</string>
-    <string name="optionalPermission">[ Optional ]</string>
+    <string name="requiredPermission">Required</string>
+    <string name="optionalPermission">Optional</string>
     <string name="permissionCamera">Read QR codes of wallet addresses or private keys.</string>
     <string name="permissionStorage">Store and restore Keystore files of your wallets.</string>
     <string name="permissionDetailed1">If you deny these permissions, you may no longer use some features of your device.</string>
@@ -436,7 +442,6 @@
 
     <!-- ICON Connect -->
     <string name="selectWallet">Select Wallet</string>
-    <string name="txData">Tx Data</string>
 
     <string name="msgCancelBind">Cancel select wallet?\nYou will return to previous app.</string>
     <string name="msgCancelPassword">Cancel enter password?\nYou will return to previous app.</string>
@@ -445,7 +450,182 @@
     <string name="connSendSuccess">Transfer Request Complete.\nYou can check the transaction history on ICON Tracker Go to ICON Tracker.</string>
     <string name="connSendFailed">Error occurred. Please try again.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Dialogs -->
+    <string name="dialogHeadTextTxHash">Tx Hash</string>
+    <string name="dialogTxHashTrackerLink_ICON"><u>Check in ICON Tracker</u></string>
+    <string name="dialogTxHashTrackerLink_ETHER"><u>Check in Ether Scan</u></string>
+    <string name="dialogTxHashCopyTxHash">Copy</string>
+    <string name="forgot_passwword"><u>Forget Password?</u></string>
 
+    <string name="dialogLabelTimeRequired">Time Required</string>
+    <string name="dialogLabelStepLimit">Step Limit / Price (ICX)</string>
+    <string name="dialogLabelEstimatedMaxFee">Estimated Maximum Fee (ICX)</string>
+
+    <!-- Stake -->
+    <string name="submit">Submit</string>
+    <string name="rankAscending">Rank ↑</string>
+    <string name="rankDecending">Rank ↓</string>
+    <string name="prepDetail"><u>Detail information</u></string>
+    <string name="stake">Stake</string>
+    <string name="unstake">Unstake</string>
+    <string name="unstaked">Unstaked</string>
+    <string name="under_voted">┗ Voted</string>
+    <string name="under_voted_icx">┗ Voted (ICX)</string>
+    <string name="under_unstake">┗ Request Unstake</string>
+    <string name="voted">Voted</string>
+    <string name="available">Available</string>
+    <string name="balanceIcx">Balance (ICX)</string>
+    <string name="unstakedIcx">Unstaked (ICX)</string>
+    <string name="stakedIcx">Staked (ICX)</string>
+    <string name="request_unstake">Request Unstake (ICX)</string>
+    <string name="done_block">Completed BLOCK</string>
+    <string name="estimate_done_time">Estimated completion time</string>
+    <string name="unstake_required_time">%02dh %02dm remaining</string>
+    <string name="adjust_stake">Change request amount</string>
+    <string name="minLimit">Enter more than %s</string>
+    <string name="maxLimit">Enter less than %s</string>
+    <string name="votedIcx">Voted (ICX)</string>
+    <string name="availableIcx">Available (ICX)</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="stakeNotice01">・ You cannot unstake the amount that is already delegated.</string>
+    <string name="stakeNotice02">・ Minimum Unstaked amount is 1 ICX. It is required to pay transaction fee occurred by delegation.</string>
+    <string name="stakeUnavailable">・ There is not enough amount.\nDeposit ICX or reduce the delegation abmount in Vote page.</string>
+    <string name="unstakeNotice01">・ Changing in request amount will reset the completion time and transaction fee should be paid again.</string>
+    <string name="timeRequired">Time Required</string>
+    <string name="immediately">Immediately</string>
+    <string name="stakeTimeRquired">Immediately</string>
+    <string name="unstakeTimeRequired">72시간 후 unstake</string>
+    <string name="stakeDone">Stake Operation completed.</string>
+    <string name="unstakeDone">Unstake Operation completed.</string>
+    <string name="stakeSubmitNoticeMsg">Do you want to leave without changing anything?</string>
+    <string name="stakeSubmitNoticeDesc">By prssing Submit button you can change the %s requested amount.</string>
+
+    <!-- Vote -->
+    <string name="vote">Vote</string>
+    <string name="myVotes">My Votes</string>
+    <string name="myVotesAscending">My Votes ↑</string>
+    <string name="myVotesDecending">My Votes ↓</string>
+    <string name="myVoteReset">Reset delegation amount</string>
+    <string name="preps">P-Reps</string>
+    <string name="myVotesEmptyGuide">In the P-Reps tab, add candidates to vote in the voting list first, then adjust Voting Power.</string>
+    <string name="myVotesEmptyNotice">ICX used for Voting Power can be returned when you unstake your Staked ICX and I-Score will be paid to you as a reward for ecosystem contribution.</string>
+    <string name="tipAddedPRep">Already in the list.</string>
+    <string name="tipPRepMax">Maximum number of P-Reps to Vote is 10.</string>
+    <string name="tipHasDelegation">Delegated P-Rep is not able to delete in the list.\nSet Voting Power to 0 and press Vote button.</string>
+    <string name="voteNotExecute">By pressing Vote button will apply the change you made. \nWould you like to leave without making change?</string>
+    <string name="voteReset">Do you like to set 0 for all voting power that have delegated?</string>
+
+    <!-- I-Score -->
+    <string name="claim">Claim</string>
+    <string name="currentIScore">Current I-Score</string>
+    <string name="receiveIScroe">Receivable amount</string>
+    <string name="IScoreClaim">I-Score Claim</string>
+    <string name="stepLimitNPrice">Step Limit / Price (ICX)</string>
+    <string name="estimatedMaximumFee">Expected Maximum transaction fee (ICX)</string>
+    <string name="claimDone">Claim operation completed.</string>
+
+    <!-- P-Rep List -->
+    <string name="searchPrep">Searching P-Rep Name</string>
+    <string name="prepName">Name</string>
+    <string name="createWalletStep1Detailed1">・ Selected coin wallet will be created after the completion of creating wallet.</string>
+    <string name="createWalletStep1Detailed2">・ After creating wallet, token that is based on according coin can be added.</string>
+
+    <string name="createWalletStep2Notice">It is users responsible to manage password. There is no way to find it.</string>
+    <string name="createWalletStep2Detailed1">・ In order to restore wallet by Keystore file, it requires a password to send transaction.</string>
+
+    <string name="createWalletStep3Detailed1">・ With wallet Keystore file and password, wallet can be installed in different device and restore deleted wallet.</string>
+    <string name="createWalletStep3Detailed2">・ Keystore files can be downloaded after creating wallet at \`Wallet Keystore\`.</string>
+
+    <string name="createWalletStep4Header">Save private key</string>
+
+    <string name="loadBundleConfirm">Would you like to import wallet bundle?</string>
+    <string name="loadSelectMethod">Select Method</string>
+    <string name="loadStep2Title">Select file or\nenter private key</string>
+    <string name="loadStep3Title">Wallet\nInformation</string>
+
+    <!-- Toast -->
+    <string name="addMyVote">%d/10 Add to My Votes</string>
+    <string name="completeVoting">Voting is Completed.</string>
+
+    <!-- Dialog -->
+    <string name="showDetail">Detail information</string>
+    <string name="notEnoughForStaking">In order to stake or unstake account should have more than 1 ICX.</string>
+    <string name="hasNoVotingPower">There is no Voting Power. Staking ICX will create Voting Power on 1 to 1 ratio.</string>
+    <string name="votePReps">Voted P-Rep</string>
+
+    <!-- New - Password dialog   -->
+    <string name="msgForgetPassword">You can reset password using private key. Please follow directions.\nSelect the \"Load your wallet\"> Select the \"Private Key\" > Input the Private Key and load your wallet > Input the new password"</string>
+
+    <!--  New - main wallet  -->
+    <string name="about">About</string>
+    <string name="staked">Staked</string>
+    <string name="iscore">I-Score</string>
+    <string name="icon_voting">ICON Voting</string>
+    <string name="requestSend">Request transfer</string>
+    <string name="msgRequestSend">・ After submitting request amount, QR code will be changed to contained one.</string>
+    <string name="hintRequestSend">Transfer request amount (ICX)</string>
+    <string name="generateQRcode">Create QR code</string>
+
+    <!-- New - wallet menu -->
+    <string name="totalAssets">Total Asset Value</string>
+    <string name="totalVotedPower">Total Voted Power</string>
+
+    <!-- New side Menu -->
+    <string name="appVer">Application version</string>
+    <string name="errPasscodeSame">This passcode is same as current passcode.\nPlease enter the new passcode</string>
+
+    <!-- New Detail Wallet -->
+    <string name="icxBalance">ICX Balance</string>
+    <string name="liquidICX">Liquid ICX</string>
+    <string name="stakeICX">Staked ICX (Voting Power)</string>
+    <string name="deposit_list">Deposit history</string>
+
+    <!-- New - Transfer -->
+    <string name="availableBalance">Available balance</string>
+    <string name="sendBalance">Transfer Amount</string>
+    <string name="viewData">Data</string>
+    <string name="stepLimit_Price">Proper Step Limit / Price</string>
+    <string name="estimateFee">Estimated Maximum Fee</string>
+    <string name="maxBalance">Max</string>
+    <string name="transfer">Transfer</string>
+    <string name="errEtherGasLimit">Enter more than 21,000</string>
+    <string name="qrcodeScanGuide">Address or private key can be imported by QRcode.</string>
+    <string name="errScanPrivateKey">Private key format is incorrect.</string>
+
+
+    <!--  New Main wallet info  -->
+    <string name="guidance">Information</string>
+
+    <string name="mainWalletInfo00">Total Asset Value</string>
+    <string name="mainWalletInfo01">Token that does not display USD value will be excluded from calculating total asset value.</string>
+    <string name="mainWalletInfo02">Please use evaluation amount for your information.</string>
+
+    <string name="mainWalletInfo10">P-Rep</string>
+    <string name="mainWalletInfo11">ICON Network is a blockchain network operated by Public Representative (P-Rep). Therefore, Users (ICONist) must vote for high qualified P-Reps so that ICON Network to be more stable. Each P-Reps can submit the Monthly Reward Variable for Representative  (i_rep) that affects the total reward amount for the ICON Network. Therefore, users should compare each i_reps submitted by each P-Reps and make right decision. In addition, users who have participated in the vote will receive reward with Annual Delegation Reward Rate for Representative (r_rep).</string>
+
+    <string name="mainWalletInfo20">Stake</string>
+    <string name="mainWalletInfo21">This function is to set ICX to staked ICX. By operating Stake, ICX will be changed to locked state, and it will take days to unlock it.</string>
+    <string name="mainWalletInfo22">Voting power will be created with 1 to 1 ratio with Staked ICX amount.</string>
+
+    <string name="mainWalletInfo30">Vote</string>
+    <string name="mainWalletInfo31">Using Voting Power you can delegate to P-Rep candidates.</string>
+    <string name="mainWalletInfo32">Using Voting Power you can delegate to P-Rep candidates.</string>
+
+    <string name="mainWalletInfo40">I-Score</string>
+    <string name="mainWalletInfo41">This Score is a contribution score for delegating P-Rep, 1,000 I-Score can be claim to 1 ICX.</string>
+
+    <string name="complete_transfer">Transfer Completed</string>
+    <string name="fail_transfer">Transfer Failed</string>
+    <string name="complete_deposit">Deposit Completed</string>
+    <string name="fail_deposit">Deposit Completed</string>
+
+    <string name="msgNewPasswordSame">This password is same as current password. Please enter new password</string>
+    <string name="totalWalletCount">A total of %d wallets</string>
+
+    <string name="history">History</string>
+    <string name="depositHistory">Deposit History</string>
+
+    <string name="send">Send</string>
+    <string name="convert">Convert</string>
 </resources>

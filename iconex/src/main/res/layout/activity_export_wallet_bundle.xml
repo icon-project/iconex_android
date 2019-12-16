@@ -3,16 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:orientation="vertical"
-    tools:context="foundation.icon.iconex.menu.bundle.ExportWalletBundleActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/layout_appbar_close"
+    <foundation.icon.iconex.widgets.TitleBar
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:type="title"
+        app:title="@string/exportWalletBundle"/>
+
+    <foundation.icon.iconex.menu.bundle.BundleStepView
+        android:id="@+id/step_bundle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <foundation.icon.iconex.widgets.NonSwipeViewPager
+        android:background="@android:color/white"
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

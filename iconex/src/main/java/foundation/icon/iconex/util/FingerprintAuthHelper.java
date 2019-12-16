@@ -36,7 +36,6 @@ public class FingerprintAuthHelper extends FingerprintManager.AuthenticationCall
 
     public void startFingerprintAuthListening(FingerprintManager.CryptoObject cryptoObject) {
         if (!isFingerprintAuthAvailable()) {
-//            Log.i(TAG, "지문 인증을 사용 할 수 없습니다.");
             return;
         }
 

@@ -28,7 +28,7 @@ public class MyConstants {
     public static final String PREFIX_IRC = "cx";
 
     // ======== Realm schema version ========
-    public static final int VERSION_REALM_SCHEMA = 0;
+    public static final int VERSION_REALM_SCHEMA = 2;
 
     // ======== Balance ========
     public static final String NO_BALANCE = "-";
@@ -68,11 +68,66 @@ public class MyConstants {
     public static final int NETWORK_TEST = 2;
     public static final int NETWORK_DEV = 3;
 
-    public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[?!:\\.,%+-/*<>{}()\\[\\]`\"'~_^\\|@#$&]).{8,}$";
+    public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[?!:\\.,%+-/*<>{}()\\[\\]`\"'~_^\\\\|@#$&]).{8,}$";
 
-    public enum CoinType {
-        ICX,
-        ETH
+    public enum Coin {
+        ICX("ICON", "icx", "ICON (ICX)"),
+        ETH("Etherenum", "eth", "Ethereum (ETH)");
+
+        private String name;
+        private String symbol;
+        private String label;
+
+        public String getName() {
+            return name;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        Coin(String name, String symbol, String label) {
+            this.name = name;
+            this.symbol = symbol;
+            this.label = label;
+        }
+
+        public static Coin fromName(String name) {
+            if (name != null) {
+                for (Coin t : values()) {
+                    if (t.getName().equals(name))
+                        return t;
+                }
+            }
+
+            return null;
+        }
+
+        public static Coin fromSymbol(String symbol) {
+            if (symbol != null) {
+                for (Coin t : values()) {
+                    if (t.getSymbol().equals(symbol))
+                        return t;
+                }
+            }
+
+            return null;
+        }
+
+        public static Coin fromLabel(String label) {
+            if (label != null) {
+                for (Coin t : values()) {
+                    if (t.getLabel().equals(label))
+                        return t;
+                }
+            }
+
+            return null;
+        }
     }
 
     public enum TxState {

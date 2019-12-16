@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <foundation.icon.iconex.widgets.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/ICONexDisclaimers"
+        app:type="title"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="30dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+
+                android:fontFamily="@font/noto_sans_regular"
+                android:textSize="14dp"
+                android:textColor="@color/dark4D"
+                android:lineHeight="22dp"
+
+                android:text="@string/disclaimersHeader"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@font/noto_sans_light"
+                android:textSize="10dp"
+                android:textColor="@color/dark4D"
+                android:lineHeight="18dp"
+
+                android:text="@string/disclaimersContents"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

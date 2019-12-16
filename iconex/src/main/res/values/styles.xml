@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/dark</item>
+        <item name="colorAccent">@color/redCoral</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/colorMain</item>
+        <item name="android:statusBarColor">@color/primary</item>
     </style>
 
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">
@@ -36,6 +36,98 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="BottomSheetModal" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowSwipeToDismiss">false</item>
+        <item name="android:state_expanded">true</item>
+        <item name="cornerSize">18dp</item>
+    </style>
+
+    <!-- DialogActivity -->
+    <style name="DialogActivity" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="CustomDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="NoPaddingDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <!-- TextView -->
+    <style name="TextView10">
+        <item name="android:textSize">10dp</item>
+        <item name="android:lineSpacingExtra">8dp</item>
+    </style>
+
+    <style name="TextView12" parent="TextView10">
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="TextView14">
+        <item name="android:textSize">14dp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
+    </style>
+
+    <style name="TextView16" parent="TextView10">
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <!-- TextInputLayout -->
+    <style name="HintAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/edit_box_stroke</item>
+        <item name="android:background">@color/redCoral</item>
+    </style>
+
+    <!-- Tab TextAppearance -->
+    <style name="TabTextAppearanceS" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">12dp</item>
+        <item name="android:fontFamily">@font/noto_sans_bold</item>
+    </style>
+
+    <style name="TabTextAppearanceN" parent="TabTextAppearanceS">
+        <item name="android:fontFamily">@font/noto_sans_regular</item>
+    </style>
+
+    <!-- Search TextAppearance -->
+    <style name="SearchTextAppearanceS" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">10dp</item>
+        <item name="android:fontFamily">@font/noto_sans_medium</item>
+    </style>
+
+    <style name="SearchTextAppearanceN" parent="SearchTextAppearanceS">
+        <item name="android:fontFamily">@font/noto_sans_light</item>
+    </style>
+
+    <!-- Button -->
+    <style name="TextButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Linear -->
+    <style name="BaseLinear" parent="AppTheme">
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingTop">40dp</item>
+        <item name="android:paddingBottom">50dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
     </style>
 
 </resources>

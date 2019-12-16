@@ -175,7 +175,7 @@ public class SelectWalletActivity extends AppCompatActivity implements View.OnCl
     private List<Wallet> makeWalletList() {
         List<Wallet> list = new ArrayList<>();
 
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getCoinType().equals(Constants.KS_COINTYPE_ICX))
                 list.add(wallet);
         }

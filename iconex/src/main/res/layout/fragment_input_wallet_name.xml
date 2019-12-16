@@ -1,118 +1,111 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context="foundation.icon.iconex.wallet.load.LoadInputWalletNameFragment">
+    android:clickable="true"
+    android:focusable="true"
+    tools:context=".view.ui.load.LoadInputWalletAliasFragment">
 
-    <TextView
-        android:id="@+id/txt_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/noto_sans_bold"
-        android:text="@string/enterWalletAliasHeader"
-        android:textColor="@color/colorText"
-        android:textSize="14dp"
-        android:textStyle="bold" />
-
-    <RelativeLayout
+    <include
+        android:id="@+id/step"
+        layout="@layout/layout_load_step3"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:layout_below="@id/txt_header"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorWhite"
-        android:paddingEnd="24dp"
-        android:paddingStart="24dp">
-
-        <TextView
-            android:id="@+id/txt_name_warning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/noto_sans_regular"
-            android:text="@string/errPassword"
-            android:textColor="@color/colorWarning"
-            android:textSize="10dp"
-            android:visibility="invisible" />
-
-        <View
-            android:id="@+id/line_name"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_above="@id/txt_name_warning"
-            android:layout_marginBottom="6dp"
-            android:background="@color/editNormal" />
-
-        <foundation.icon.iconex.widgets.MyEditText
-            android:id="@+id/edit_name"
-            style="@style/CustomEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/line_name"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="6dp"
-            android:layout_marginStart="10dp"
-            android:layout_toStartOf="@+id/btn_name_delete"
-            android:background="@color/colorWhite"
-            android:fontFamily="@font/noto_sans_medium"
-            android:hint="@string/hintWalletAlias"
-            android:imeOptions="actionDone"
-            android:longClickable="false"
-            android:singleLine="true"
-            android:textColor="@color/colorText"
-            android:textColorHint="@color/colorText20"
-            android:textSize="14dp" />
-
-        <Button
-            android:id="@+id/btn_name_delete"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_above="@id/line_name"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="6dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/ic_input_delete"
-            android:visibility="invisible" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
+        android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_back"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/bg_rounded_button_a"
-            android:fontFamily="@font/noto_sans_medium"
-            android:text="@string/back"
-            android:textAllCaps="false"
-            android:textColor="@color/button_text"
-            android:textSize="16dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/darkE6" />
 
-        <Button
-            android:id="@+id/btn_done"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_colored_rounded_button_a"
-            android:enabled="false"
-            android:fontFamily="@font/noto_sans_medium"
-            android:text="@string/complete"
-            android:textAllCaps="false"
-            android:textColor="@color/button_text"
-            android:textSize="16dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/darkFC"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btn_back"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_rounded_02"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="center"
+                android:text="@string/back"
+                android:textAllCaps="false"
+                android:textColor="@color/txt_btn_rounded_02"
+                android:textSize="14dp" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="2">
+
+                <Button
+                    android:id="@+id/btn_done"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_btn_rounded_01_light"
+                    android:enabled="false"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:gravity="center"
+                    android:text="@string/complete"
+                    android:textAllCaps="false"
+                    android:textColor="@color/txt_btn_rounded_01_light"
+                    android:textSize="14dp" />
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminateDrawable="@drawable/anim_loading"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_buttons"
+        android:layout_below="@id/step">
+
+        <LinearLayout
+            style="@style/BaseLinear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/TextView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center_horizontal"
+                android:text="@string/enterWalletAliasHeader"
+                android:textColor="@color/dark4D" />
+
+            <foundation.icon.iconex.widgets.TTextInputLayout
+                android:id="@+id/input_alias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:hint="@string/hintWalletAlias"
+                app:inputType="text" />
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

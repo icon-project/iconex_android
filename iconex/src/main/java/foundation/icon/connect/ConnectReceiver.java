@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import foundation.icon.ICONexApp;
-import foundation.icon.SplashActivity;
+import foundation.icon.iconex.view.SplashActivity;
 import foundation.icon.iconex.util.PreferenceUtil;
 
 import static foundation.icon.ICONexApp.DEVELOPER;

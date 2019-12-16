@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
+import foundation.icon.iconex.service.Urls;
 
 /**
  * Created by js on 2018. 4. 22..
@@ -69,16 +70,6 @@ public class PreferenceUtil {
     public void saveAppLock(boolean locked) {
         SharedPreferences.Editor editor = mPreference.edit();
         editor.putBoolean(PREF_LOCKED, locked);
-        editor.apply();
-    }
-
-    public boolean getBeingLock() {
-        return mPreference.getBoolean(PREF_BEING_LOCK, false);
-    }
-
-    public void saveBeingLock(boolean beingLock) {
-        SharedPreferences.Editor editor = mPreference.edit();
-        editor.putBoolean(PREF_BEING_LOCK, beingLock);
         editor.apply();
     }
 
@@ -169,12 +160,7 @@ public class PreferenceUtil {
         ICONexApp.permissionConfirm = getPermissionConfrim();
         ICONexApp.isLocked = getLocked();
         ICONexApp.useFingerprint = getUseFingerprint();
-        ICONexApp.network = getNetwork();
+        ICONexApp.NETWORK = Urls.Network.fromNid(getNetwork());
         ICONexApp.isDeveloper = isDeveloper();
-
-        if (!ICONexApp.isDeveloper) {
-            ICONexApp.network = MyConstants.NETWORK_MAIN;
-            setNetwork(MyConstants.NETWORK_MAIN);
-        }
     }
 }

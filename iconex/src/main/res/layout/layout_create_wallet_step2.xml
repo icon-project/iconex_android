@@ -1,139 +1,151 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context="foundation.icon.iconex.view.ui.create.CreateWalletStep2Fragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
+        android:id="@+id/step"
+        layout="@layout/layout_create_step2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorMain"
-        android:minHeight="75dp">
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:id="@+id/layout_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/darkE6" />
 
         <LinearLayout
-            android:id="@+id/step_line"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="18dp"
-            android:gravity="center"
+            android:background="@color/darkFC"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:padding="10dp">
 
-            <View
-                android:layout_width="76dp"
-                android:layout_height="1dp"
-                android:background="@color/colorWhite" />
+            <Button
+                android:id="@+id/btn_back"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_rounded_02"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="center"
+                android:text="@string/back"
+                android:textAllCaps="false"
+                android:textColor="@color/txt_btn_rounded_02"
+                android:textSize="14dp" />
 
-            <View
-                android:layout_width="174dp"
-                android:layout_height="1dp"
-                android:background="#068a99" />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="2">
+
+                <Button
+                    android:id="@+id/btn_next"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_btn_rounded_01_light"
+                    android:enabled="false"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:gravity="center"
+                    android:text="@string/next"
+                    android:textAllCaps="false"
+                    android:textColor="@color/txt_btn_rounded_01_light"
+                    android:textSize="14dp" />
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminateDrawable="@drawable/anim_loading"
+                    android:visibility="gone" />
+            </RelativeLayout>
         </LinearLayout>
+    </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_check"
-            app:layout_constraintStart_toStartOf="@id/step_line"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_buttons"
+        android:layout_below="@id/step">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_02_on"
-            app:layout_constraintStart_toEndOf="@id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            style="@style/BaseLinear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_03"
-            app:layout_constraintStart_toEndOf="@id/imageView2"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                style="@style/TextView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/noto_sans_medium"
+                android:text="@string/enterInfoHeader"
+                android:textColor="@color/dark4D" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_step_04"
-            app:layout_constraintStart_toEndOf="@id/imageView3"
-            app:layout_constraintTop_toTopOf="parent" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/selectCoin"
-            android:textColor="@color/colorWhite50"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView"
-            app:layout_constraintRight_toRightOf="@id/imageView"
-            app:layout_constraintTop_toBottomOf="@id/imageView" />
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/input_alias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    app:hint="@string/hintWalletAlias" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_bold"
-            android:gravity="center"
-            android:text="@string/information"
-            android:textColor="@color/colorWhite"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView2"
-            app:layout_constraintRight_toRightOf="@id/imageView2"
-            app:layout_constraintTop_toBottomOf="@id/imageView2" />
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/input_pwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/password"
+                    app:inputType="password" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/stepDownload"
-            android:textColor="#068a99"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView3"
-            app:layout_constraintRight_toRightOf="@id/imageView3"
-            app:layout_constraintTop_toBottomOf="@id/imageView3" />
+                <foundation.icon.iconex.widgets.TTextInputLayout
+                    android:id="@+id/input_pwd_check"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/hintWalletPasswordConfirm"
+                    app:inputType="password" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:gravity="center"
-            android:text="@string/savePrivateKey"
-            android:textColor="#068a99"
-            android:textSize="10dp"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="@id/imageView4"
-            app:layout_constraintRight_toRightOf="@id/imageView4"
-            app:layout_constraintTop_toBottomOf="@id/imageView4" />
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/bg_outline_box_cyan"
+                android:fontFamily="@font/noto_sans_regular"
+                android:padding="20dp"
+                android:text="@string/createWalletStep2Notice"
+                android:textColor="@color/primary00" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                style="@style/TextView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/noto_sans_light"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/createWalletStep2Detailed1"
+                android:textColor="@color/primary00" />
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

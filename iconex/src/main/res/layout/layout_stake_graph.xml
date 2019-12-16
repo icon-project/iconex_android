@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint_stake"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/stake"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:background="@drawable/bg_graph_stake"
+        app:layout_constraintEnd_toStartOf="@+id/unstake"
+        app:layout_constraintHorizontal_weight="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/delegation"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_graph_delegation"
+            app:layout_constraintEnd_toStartOf="@+id/space"
+            app:layout_constraintHorizontal_weight="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="100"
+            app:layout_constraintStart_toEndOf="@id/delegation"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/unstake"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:background="@drawable/bg_graph_unstake"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="100"
+        app:layout_constraintStart_toEndOf="@id/stake"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/layout_stake_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stake">
+
+        <TextView
+            android:id="@+id/text1"
+            style="@style/TextView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_light"
+            android:text="@string/staked"
+            android:textColor="@color/primary" />
+
+        <TextView
+            android:id="@+id/stake_percentage"
+            style="@style/TextView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanum_square_regular"
+            android:text=" -%"
+            android:textColor="@color/primary" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_delegation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_stake_percentage">
+
+        <TextView
+            android:id="@+id/text2"
+            style="@style/TextView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_light"
+            android:text="@string/under_voted"
+            android:textColor="@color/primary" />
+
+        <TextView
+            android:id="@+id/delegation_percentage"
+            style="@style/TextView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanum_square_regular"
+            android:text=" -%"
+            android:textColor="@color/primary" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_unstake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stake">
+
+        <TextView
+            android:id="@+id/text3"
+            style="@style/TextView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_light"
+            android:text="@string/unstaked"
+            android:textColor="@color/dark4D" />
+
+        <TextView
+            android:id="@+id/unstake_percentage"
+            style="@style/TextView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanum_square_regular"
+            android:text=" -%"
+            android:textColor="@color/dark4D" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

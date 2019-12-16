@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context="foundation.icon.iconex.wallet.transfer.ICONTransferActivity">
+    tools:context="foundation.icon.iconex.wallet.transfer.OldICONTransferActivity">
 
     <include
         android:id="@+id/appbar"
@@ -372,7 +372,7 @@
                         android:textSize="13dp" />
 
                     <Button
-                        android:id="@+id/btn_scan"
+                        android:id="@+id/btn_qr_scan"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="2dp"

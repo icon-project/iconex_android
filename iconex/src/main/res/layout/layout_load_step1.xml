@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorWhite"
+        android:minHeight="75dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+
+        <View
+            android:id="@+id/step_line"
+            android:layout_width="250dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/darkE6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_step_01_on"
+            app:layout_constraintBottom_toTopOf="@id/step_line"
+            app:layout_constraintStart_toStartOf="@id/step_line"
+            app:layout_constraintTop_toTopOf="@id/step_line" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_step_02_off"
+            app:layout_constraintBottom_toTopOf="@id/step_line"
+            app:layout_constraintEnd_toEndOf="@id/step_line"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/step_line"
+            app:layout_constraintTop_toTopOf="@id/step_line" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_step_03"
+            app:layout_constraintBottom_toTopOf="@id/step_line"
+            app:layout_constraintEnd_toEndOf="@id/step_line"
+            app:layout_constraintTop_toTopOf="@id/step_line" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:gravity="center"
+            android:text="@string/loadSelectMethod"
+            android:textColor="@color/primary00"
+            android:textSize="10dp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="@id/imageView"
+            app:layout_constraintRight_toRightOf="@id/imageView"
+            app:layout_constraintTop_toBottomOf="@id/imageView" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:gravity="center"
+            android:text="@string/loadStep2Title"
+            android:textColor="@color/dark80"
+            android:textSize="10dp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="@id/imageView2"
+            app:layout_constraintRight_toRightOf="@id/imageView2"
+            app:layout_constraintTop_toBottomOf="@id/imageView2" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:gravity="center"
+            android:text="@string/loadStep3Title"
+            android:textColor="@color/dark80"
+            android:textSize="10dp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="@id/imageView3"
+            app:layout_constraintRight_toRightOf="@id/imageView3"
+            app:layout_constraintTop_toBottomOf="@id/imageView3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -87,8 +87,6 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
          * scale.
          */
         public float scaleX(float horizontal) {
-//            Log.d(TAG, "ScaleX horizontal=" + horizontal);
-//            Log.d(TAG, "ScaleX return=" + horizontal * mOverlay.mWidthScaleFactor);
             return horizontal * mOverlay.mWidthScaleFactor;
         }
 
@@ -96,8 +94,6 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
          * Adjusts a vertical value of the supplied value from the preview scale to the view scale.
          */
         public float scaleY(float vertical) {
-//            Log.d(TAG, "ScaleY vertical=" + vertical);
-//            Log.d(TAG, "ScaleY return=" + vertical * mOverlay.mHeightScaleFactor);
             return vertical * mOverlay.mHeightScaleFactor;
         }
 

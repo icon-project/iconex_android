@@ -55,7 +55,7 @@ public class BundleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (holder instanceof HeaderViewHolder) {
 
             HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-            headerHolder.txtCount.setText(String.format(mContext.getString(R.string.countSelectedWallet), getCount()));
+            headerHolder.txtCount.setText(getCount() + "");
 
         } else {
 
@@ -133,7 +133,7 @@ public class BundleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         for (BundleItem item : mData) {
             if (item.isSelected()) {
-                for (Wallet info : ICONexApp.mWallets) {
+                for (Wallet info : ICONexApp.wallets) {
                     if (info.getAlias().equals(item.getAlias())) {
                         bundle.add(info);
                         break;

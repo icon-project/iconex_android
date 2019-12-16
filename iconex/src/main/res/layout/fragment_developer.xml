@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:paddingEnd="24dp"
     android:paddingStart="24dp"
-    tools:context=".menu.appInfo.DeveloperFragment">
+    tools:context=".menu.appInfo.OldDeveloperFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

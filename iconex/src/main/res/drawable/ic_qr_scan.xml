@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pressed -->
+    <item android:drawable="@drawable/ic_qrcode_scan_pressed" android:state_pressed="true" />
+
+    <!-- Disabled -->
+    <item android:drawable="@drawable/ic_qrcode_scan_disabled" android:state_enabled="false" />
+
+    <!-- Normal -->
+    <item android:drawable="@drawable/ic_qrcode_scan_enabled" />
+
+</selector>

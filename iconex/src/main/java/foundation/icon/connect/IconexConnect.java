@@ -140,7 +140,7 @@ public class IconexConnect {
     }
 
     private Wallet findWallet(String address) {
-        for (Wallet wallet : ICONexApp.mWallets) {
+        for (Wallet wallet : ICONexApp.wallets) {
             if (wallet.getAddress().equals(address))
                 return wallet;
         }
@@ -435,7 +435,7 @@ public class IconexConnect {
     private void initIconService() {
         if (iconService == null) {
             String url = null;
-            switch (network) {
+            switch (ICONexApp.NETWORK.getNid().intValue()) {
                 case MyConstants.NETWORK_MAIN:
                     url = ServiceConstants.TRUSTED_HOST_MAIN + ServiceConstants.LC_API_HEADER + ServiceConstants.LC_API_V3;
                     break;

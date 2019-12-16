@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set
+    android:repeatMode="restart"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <rotate
+        android:startOffset="2000"
+        android:duration="400"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:repeatMode="restart"
+        android:repeatCount="infinite"
+        android:fromDegrees="0"
+        android:toDegrees="-180"
+        android:pivotY="50%"
+        android:pivotX="50%"/>
+
+    <alpha
+        android:duration="400"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:fromAlpha="0"
+        android:toAlpha="1"/>
+</set>

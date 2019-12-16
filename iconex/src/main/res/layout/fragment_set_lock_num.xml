@@ -22,17 +22,16 @@
             android:id="@+id/txt_lock_num_guide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans_bold"
+            android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/lockNumGuide"
-            android:textColor="@color/colorText"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            android:textColor="@color/dark4D"
+            android:textSize="16dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp">
+            android:layout_marginTop="30dp">
 
             <EditText
                 android:id="@+id/edit_lock_num"
@@ -54,42 +53,42 @@
 
                 <ImageView
                     android:id="@+id/lock_num1"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/img_dark_circle" />
 
                 <ImageView
                     android:id="@+id/lock_num2"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/img_dark_circle" />
 
                 <ImageView
                     android:id="@+id/lock_num3"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/img_dark_circle" />
 
                 <ImageView
                     android:id="@+id/lock_num4"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/img_dark_circle" />
 
                 <ImageView
                     android:id="@+id/lock_num5"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/img_dark_circle" />
 
                 <ImageView
                     android:id="@+id/lock_num6"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/img_dark_circle" />
             </LinearLayout>
@@ -98,7 +97,7 @@
         <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="60dp"
             android:columnCount="3"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
@@ -111,10 +110,10 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="1"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <Button
                 android:id="@+id/btnNum2"
@@ -123,10 +122,10 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="32dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="2"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <Button
                 android:id="@+id/btnNum3"
@@ -135,10 +134,10 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="32dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="3"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <Button
                 android:id="@+id/btnNum4"
@@ -146,10 +145,10 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="4"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <Button
                 android:id="@+id/btnNum5"
@@ -158,10 +157,10 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="32dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="5"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <Button
                 android:id="@+id/btnNum6"
@@ -170,10 +169,10 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="32dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="6"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <Button
                 android:id="@+id/btnNum7"
@@ -181,10 +180,10 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="7"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <Button
                 android:id="@+id/btnNum8"
@@ -193,10 +192,10 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="32dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="8"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <Button
                 android:id="@+id/btnNum9"
@@ -205,10 +204,10 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="32dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="9"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <View
                 android:layout_width="72dp"
@@ -221,10 +220,10 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="32dp"
                 android:background="@drawable/bg_btn_keypad_dark"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/nanum_square_light"
                 android:text="0"
-                android:textColor="@color/colorText"
-                android:textSize="32dp" />
+                android:textColor="@color/dark4D"
+                android:textSize="30dp" />
 
             <ImageView
                 android:id="@+id/delete"
@@ -234,7 +233,7 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/bg_btn_keypad_dark"
                 android:padding="23dp"
-                android:src="@drawable/btn_keypad_delete" />
+                android:src="@drawable/btn_keypad_delete_w" />
         </GridLayout>
     </LinearLayout>
 

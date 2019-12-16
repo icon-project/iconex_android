@@ -63,7 +63,7 @@ public class EditTextLayout extends RelativeLayout {
         editText = v.findViewById(R.id.edit_text);
         if (attrIsPassword) {
             editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            btnVisibility = v.findViewById(R.id.btn_visibility);
+            btnVisibility = v.findViewById(R.id.btn_eye);
             btnVisibility.setVisibility(View.VISIBLE);
             btnVisibility.setOnClickListener(new OnClickListener() {
                 @Override

@@ -8,16 +8,16 @@ import io.realm.RealmObject;
 
 public class CoinNToken extends RealmObject {
 
-    String type;
-    String name;
-    String userName;
-    String address;
-    String contractAddress = "";
-    String symbol;
-    String userSymbol;
-    int decimal;
-    int userDecimal;
-    String createAt;
+    private String type;
+    private String name;
+    private String userName;
+    private String address;
+    private String contractAddress = "";
+    private String symbol;
+    private String userSymbol;
+    private int decimal;
+    private int userDecimal;
+    private String createAt;
 
     public String getType() {
         return type;

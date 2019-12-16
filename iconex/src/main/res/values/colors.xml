@@ -4,6 +4,43 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!-- Primary -->
+    <color name="primary">#00a2b8</color>
+    <color name="primary00">#00b4cc</color>
+    <color name="primaryB6">#b6ebf2</color>
+    <color name="primaryF5">#f5feff</color>
+    <color name="primary29">#29B9CC</color>
+
+    <!-- Dark -->
+    <color name="dark">#4d4d4d</color>
+    <color name="dark33">#333333</color>
+    <color name="dark80">#808080</color>
+    <color name="darkB3">#b3b3b3</color>
+    <color name="darkE6">#e6e6e6</color>
+    <color name="darkF2">#f2f2f2</color>
+    <color name="darkFA">#fafafa</color>
+    <color name="dark4D">#4d4d4d</color>
+    <color name="dark40">#404040</color>
+    <color name="darkD9">#d9d9d9</color>
+    <color name="darkFC">#fcfcfc</color>
+    <color name="dark26">#E5262626</color>
+    <color name="darkAlpha07">#07000000</color>
+    <color name="paleGrey">#f5feff</color>
+
+    <!-- Red -->
+    <color name="redCoral">#f25849</color>
+    <color name="redED">#ffefed</color>
+    <color name="redF7">#fff8f7</color>
+
+    <!-- Light -->
+    <color name="lightCyan">#B6EBF2</color>
+    <color name="lightPinkTree">#F2F2F2</color>
+
+    <color name="alphaBackground">#52000000</color>
+
+    <!-- Shadow -->
+    <color name="shadow94">#19000000</color>
+
     <color name="colorMain">#1aaaba</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhite20">#33ffffff</color>
@@ -46,6 +83,7 @@
 
     <!-- Dim -->
     <color name="dim">#4d000000</color>
+    <color name="dim66">#66000000</color>
     <color name="transparent">#00000000</color>
 
     <!-- Transaction -->

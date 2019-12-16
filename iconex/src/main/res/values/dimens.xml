@@ -3,11 +3,18 @@
 
     <dimen name="spaceTopStepText">6dp</dimen>
 
+    <dimen name="dp4">4dp</dimen>
     <dimen name="dp6">6dp</dimen>
     <dimen name="dp9">9dp</dimen>
     <dimen name="dp10">10dp</dimen>
+    <dimen name="dp12">12dp</dimen>
+    <dimen name="dp14">14dp</dimen>
     <dimen name="dp16">16dp</dimen>
+    <dimen name="dp22">22dp</dimen>
+    <dimen name="dp25">25dp</dimen>
     <dimen name="dp40">40dp</dimen>
+    <dimen name="dp56">56dp</dimen>
+
 
     <dimen name="BottomSheetMaxHeight">334dp</dimen>
 
@@ -17,6 +24,11 @@
 
     <dimen name="ChangePwdMarginTopShow">30dp</dimen>
     <dimen name="ChangePwdMarginTopHide">50dp</dimen>
+    <dimen name="list_item_spacing">16dp</dimen>
+    <dimen name="list_item_spacing_half">8dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
-
+    <dimen name="divider_padding">20dp</dimen>
 </resources>

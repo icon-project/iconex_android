@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    android:paddingStart="30dp"
+    android:paddingTop="56dp"
+    android:paddingEnd="30dp"
+    android:paddingBottom="56dp">
+
+    <TextView
+        style="@style/TextView12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/noto_sans_regular"
+        android:gravity="center"
+        android:text="@string/myVotesEmptyGuide"
+        android:textColor="@color/primary" />
+
+    <TextView
+        style="@style/TextView10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/noto_sans_light"
+        android:gravity="center"
+        android:text="@string/myVotesEmptyNotice"
+        android:textColor="@color/dark80" />
+</LinearLayout>

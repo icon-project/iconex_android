@@ -28,16 +28,25 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -46,10 +55,16 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
+
 import java.io.IOException;
+import java.math.BigInteger;
 
 import foundation.icon.iconex.R;
-import foundation.icon.iconex.dialogs.BasicDialog;
+import foundation.icon.iconex.dialogs.MessageDialog;
+import foundation.icon.iconex.util.ConvertUtil;
+import foundation.icon.iconex.view.IconTransferActivity;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
@@ -80,6 +95,17 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
     private Handler localHandler = new Handler();
 
+    private ViewGroup toast;
+    private TextView toastText;
+
+    public static final String PARAM_SCANTYPE = "scanType";
+    public enum ScanType{
+        ETH_Address,
+        ICX_Address,
+        PrivateKey
+    }
+    private ScanType scanType;
+
     /**
      * Initializes the UI and creates the detector pipeline.
      */
@@ -90,6 +116,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
+
+        toast = findViewById(R.id.toast);
+        toastText = findViewById(R.id.text);
+        toast.setVisibility(View.INVISIBLE);
 
         imgTarget = findViewById(R.id.img_target);
         imgTarget.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -116,6 +146,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         // read parameters from the intent used to launch the activity.
         boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
         boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
+        scanType = ScanType.valueOf(getIntent().getStringExtra(PARAM_SCANTYPE));
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -128,6 +159,8 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+
+        animatie();
     }
 
     /**
@@ -209,7 +242,6 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
             if (hasLowStorage) {
 //                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
-//                Log.w(TAG, getString(R.string.low_storage_error));
             }
         }
 
@@ -296,7 +328,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             createCameraSource(autoFocus, useFlash);
 //            return;
         } else {
-            BasicDialog dialog = new BasicDialog(BarcodeCaptureActivity.this);
+            MessageDialog dialog = new MessageDialog(BarcodeCaptureActivity.this);
             dialog.setMessage(getString(R.string.permissionCameraDenied));
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -379,10 +411,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         }
 
         if (best != null) {
-            Intent data = new Intent();
-            data.putExtra(BarcodeObject, best);
-            setResult(CommonStatusCodes.SUCCESS, data);
-            finish();
+            validate(best);
             return true;
         }
         return false;
@@ -464,16 +493,97 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         rect.right = translateX(rect.right);
         rect.bottom = translateY(rect.bottom);
         if (viewRect.contains(rect)) {
-            Intent data = new Intent();
-            data.putExtra(BarcodeObject, barcode);
-            setResult(CommonStatusCodes.SUCCESS, data);
-            finish();
+            validate(barcode);
+        }
+    }
+
+    boolean isStartActivity = false;
+    private void validate(Barcode barcode) {
+        String value = barcode.displayValue;
+
+        
+        switch (scanType) {
+            case PrivateKey: {
+                try {
+                    Hex.decode(value);
+                    Intent data = new Intent();
+                    data.putExtra(BarcodeObject, barcode);
+                    setResult(CommonStatusCodes.SUCCESS, data);
+                    finish();
+                } catch (Exception e) {
+                    showToast(getString(R.string.errScanPrivateKey));
+                }
+            } break;
+
+            case ICX_Address: {
+                boolean fromWallet = getIntent().getSerializableExtra("wallet") != null &&
+                        getIntent().getSerializableExtra("entry") != null &&
+                        getIntent().getStringExtra("privateKey") != null;
+
+                if (value.startsWith("iconex://pay")) {
+                    try {
+                        String base64Encoded = value.split("data=")[1];
+                        JSONObject jsonObject = new JSONObject(new String(Base64.decode(base64Encoded, Base64.NO_WRAP)));
+                        String address = jsonObject.getString("address");
+                        BigInteger amount = ConvertUtil.hexStringToBigInt(jsonObject.getString("amount"), 18);
+
+                        if (!fromWallet) {
+                            Intent data = new Intent();
+                            barcode.displayValue = address;
+                            data.putExtra(BarcodeObject, barcode);
+                            setResult(CommonStatusCodes.SUCCESS, data);
+                            finish();
+                        } else {
+                            if (!isStartActivity)
+                                startActivity(new Intent(this, IconTransferActivity.class)
+                                        .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
+                                        .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
+                                        .putExtra("privateKey", getIntent().getStringExtra("privateKey"))
+                                        .putExtra("address", address)
+                                        .putExtra("amount", amount)
+                                );
+                            isStartActivity = true;
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        showToast(getString(R.string.errIncorrectICXAddr));
+                    }
+                } else if (value.startsWith("hx") || value.startsWith("cx")) {
+                    if (fromWallet) {
+                        if (!isStartActivity)
+                            startActivity(new Intent(this, IconTransferActivity.class)
+                                    .putExtra("walletInfo", getIntent().getSerializableExtra("wallet"))
+                                    .putExtra("walletEntry", getIntent().getSerializableExtra("entry"))
+                                    .putExtra("privateKey", getIntent().getStringExtra("privateKey"))
+                                    .putExtra("address", barcode.displayValue)
+                            );
+
+                        isStartActivity = true;
+                        finish();
+                    } else {
+                        Intent data = new Intent();
+                        data.putExtra(BarcodeObject, barcode);
+                        setResult(CommonStatusCodes.SUCCESS, data);
+                        finish();
+                    }
+                } else {
+                    showToast(getString(R.string.errIncorrectICXAddr));
+                }
+            } break;
+            case ETH_Address: {
+                if (value.startsWith("0x") && value.length() == 42 && !value.contains(" ")) {
+                    Intent data = new Intent();
+                    data.putExtra(BarcodeObject, barcode);
+                    setResult(CommonStatusCodes.SUCCESS, data);
+                    finish();
+                } else {
+                    showToast(getString(R.string.errIncorrectETHAddr));
+                }
+            } break;
         }
     }
 
     public float scaleX(float horizontal) {
-//            Log.d(TAG, "ScaleX horizontal=" + horizontal);
-//            Log.d(TAG, "ScaleX return=" + horizontal * mOverlay.mWidthScaleFactor);
         return horizontal * mGraphicOverlay.getWidthScaleFactor();
     }
 
@@ -481,8 +591,6 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
      * Adjusts a vertical value of the supplied value from the preview scale to the view scale.
      */
     public float scaleY(float vertical) {
-//            Log.d(TAG, "ScaleY vertical=" + vertical);
-//            Log.d(TAG, "ScaleY return=" + vertical * mOverlay.mHeightScaleFactor);
         return vertical * mGraphicOverlay.getHeightScaleFactor();
     }
 
@@ -501,5 +609,135 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
      */
     public float translateY(float y) {
         return scaleY(y);
+    }
+
+    private void showToast(String text) {
+        if (toast.getVisibility() == View.VISIBLE && toastText.getText().toString().equals(text)) return;
+
+        toast.clearAnimation();
+
+        AlphaAnimation aniShow = new AlphaAnimation(0, 1);
+        aniShow.setFillAfter(true);
+        aniShow.setDuration(500);
+
+        AlphaAnimation aniDismiss = new AlphaAnimation(1, 0);
+        aniDismiss.setFillAfter(true);
+        aniDismiss.setStartOffset(1500);
+        aniDismiss.setDuration(500);
+
+        AnimationSet ani = new AnimationSet(false);
+        ani.addAnimation(aniShow);
+        ani.addAnimation(aniDismiss);
+        ani.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                toast.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        toastText.setText(text);
+        toast.startAnimation(ani);
+        toast.setVisibility(View.VISIBLE);
+    }
+
+    private void animatie() {
+        Button btnClose = findViewById(R.id.btn_close);
+        ImageView imhQrCode = findViewById(R.id.img_qrcode);
+        TextView txtGuide = findViewById(R.id.txt_guide);
+
+        ImageView aimLT = findViewById(R.id.aim_lt);
+        ImageView aimRT = findViewById(R.id.aim_rt);
+        ImageView aimRB = findViewById(R.id.aim_rb);
+        ImageView aimLB = findViewById(R.id.aim_lb);
+
+        // btn close
+        AlphaAnimation aniClose = new AlphaAnimation(0, 1);
+        aniClose.setStartOffset(400);
+        aniClose.setDuration(200);
+        aniClose.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
+        aniClose.setFillAfter(true);
+        btnClose.startAnimation(aniClose);
+
+        // qr code
+        AlphaAnimation aniQrCode0 = new AlphaAnimation(0, 1);
+        aniQrCode0.setStartOffset(800);
+        aniQrCode0.setDuration(100);
+        aniQrCode0.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
+
+        AlphaAnimation aniQrCode1 = new AlphaAnimation(1, 0);
+        aniQrCode1.setStartOffset(900);
+        aniQrCode1.setDuration(1600);
+        aniQrCode1.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
+
+        AnimationSet aniQrcode = new AnimationSet(false);
+        aniQrcode.addAnimation(aniQrCode0);
+        aniQrcode.addAnimation(aniQrCode1);
+        aniQrcode.setFillAfter(true);
+        imhQrCode.startAnimation(aniQrcode);
+
+        // txt guide
+        AlphaAnimation aniText0 = new AlphaAnimation(0, 1);
+        aniText0.setStartOffset(800);
+        aniText0.setDuration(100);
+        aniText0.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
+
+        AlphaAnimation aniText1 = new AlphaAnimation(1, 0);
+        aniText1.setStartOffset(3000);
+        aniText1.setDuration(1600);
+        aniText1.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
+
+        AnimationSet aniText = new AnimationSet(false);
+        aniText.addAnimation(aniText0);
+        aniText.addAnimation(aniText1);
+        aniText.setFillAfter(true);
+        txtGuide.startAnimation(aniText);
+
+        aimLT.startAnimation(genAnimation(-1, -1));
+        aimRT.startAnimation(genAnimation(1, -1));
+        aimRB.startAnimation(genAnimation(1, 1));
+        aimLB.startAnimation(genAnimation(-1, 1));
+    }
+
+    private Animation genAnimation(float xDirection, float yDirection) {
+        AlphaAnimation aniAlpha = new AlphaAnimation(0, 1);
+        aniAlpha.setStartOffset(900);
+        aniAlpha.setDuration(400);
+        aniAlpha.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
+
+        TranslateAnimation aniTranslate0 = new TranslateAnimation(
+                TranslateAnimation.RELATIVE_TO_SELF, xDirection * 1.2f,
+                TranslateAnimation.RELATIVE_TO_SELF, 0,
+                TranslateAnimation.RELATIVE_TO_SELF, yDirection * 1.2f,
+                TranslateAnimation.RELATIVE_TO_SELF, 0
+        );
+        aniTranslate0.setStartOffset(900);
+        aniTranslate0.setDuration(400);
+
+        TranslateAnimation aniTranslate1 = new TranslateAnimation(
+                TranslateAnimation.RELATIVE_TO_SELF, 0,
+                TranslateAnimation.RELATIVE_TO_SELF, xDirection * 1.2f,
+                TranslateAnimation.RELATIVE_TO_SELF, 0,
+                TranslateAnimation.RELATIVE_TO_SELF, yDirection * 1.2f
+                );
+        aniTranslate1.setStartOffset(2300);
+        aniTranslate1.setDuration(200);
+
+        AnimationSet animationSet = new AnimationSet(false);
+        animationSet.addAnimation(aniAlpha);
+        animationSet.addAnimation(aniTranslate0);
+        animationSet.addAnimation(aniTranslate1);
+        animationSet.setFillAfter(true);
+
+        return animationSet;
     }
 }

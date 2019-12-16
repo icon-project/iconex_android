@@ -50,10 +50,6 @@ public class KeyStoreUtils {
 
     public static final int PBKDF2_COUNT = 16384;
 
-//    static {
-//        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
-//    }
-
     public static byte[] decryptPrivateKey(String password, String address, JsonObject crypto, String coinType) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         String strCipherText = crypto.get("ciphertext").getAsString();
 
@@ -408,7 +404,6 @@ public class KeyStoreUtils {
         } else {
             return null;
         }
-
     }
 
     public static String[] generateICXKeyStoreByPriv(String pwd, byte[] privKey) {
@@ -781,13 +776,9 @@ public class KeyStoreUtils {
         }
     }
 
-    public static boolean validatePassword(String pwd, JsonObject keyStore) {
+    public static boolean validatePassword(String pwd, JsonObject keyStore) throws Exception {
         String address;
-        try {
-            address = keyStore.get("address").getAsString();
-        } catch (Exception e) {
-            return false;
-        }
+        address = keyStore.get("address").getAsString();
 
         JsonObject crypto;
         String coinType;
@@ -805,11 +796,7 @@ public class KeyStoreUtils {
         }
 
         byte[] privKey = null;
-        try {
-            privKey = KeyStoreUtils.decryptPrivateKey(pwd, address, crypto, coinType);
-        } catch (Exception e) {
-            return false;
-        }
+        privKey = KeyStoreUtils.decryptPrivateKey(pwd, address, crypto, coinType);
 
         if (privKey == null)
             return false;

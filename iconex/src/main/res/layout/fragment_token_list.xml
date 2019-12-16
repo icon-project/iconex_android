@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".token.manage.TokenListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -30,20 +32,26 @@
             android:textSize="14dp" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btn_add_token"
-        style="@style/Widget.AppCompat.Button.Borderless"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:background="@drawable/bg_button_b"
-        android:fontFamily="@font/noto_sans_medium"
-        android:gravity="center"
-        android:text="@string/addToken"
-        android:textAllCaps="false"
-        android:textColor="@color/button_text"
-        android:textSize="13dp" />
+        android:background="@color/darkFC">
+
+        <Button
+            android:id="@+id/btn_add_token"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_button_rounded12_darkf2"
+            android:fontFamily="@font/noto_sans_regular"
+
+            android:stateListAnimator="@null"
+            android:text="@string/addToken"
+            android:textAllCaps="false"
+            android:textColor="@color/dark4D"
+
+            android:textSize="14dp" />
+    </FrameLayout>
 </RelativeLayout>

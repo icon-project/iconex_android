@@ -1,7 +1,12 @@
 package foundation.icon.iconex.token.manage;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +20,7 @@ import java.util.List;
 import foundation.icon.ICONexApp;
 import foundation.icon.MyConstants;
 import foundation.icon.iconex.R;
+import foundation.icon.iconex.util.ScreenUnit;
 import foundation.icon.iconex.wallet.Wallet;
 import foundation.icon.iconex.wallet.WalletEntry;
 
@@ -87,6 +93,29 @@ public class TokenListFragment extends Fragment {
                 mListener.onTokenClick(token);
             }
         });
+        int dp0_5 = ScreenUnit.dp2px(getContext(), 0.5f);
+        int dp20 = ScreenUnit.dp2px(getContext(), 20);
+        recyclerToken.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                Paint paint = new Paint();
+                paint.setColor(ContextCompat.getColor(getContext(), R.color.darkE6));
+                paint.setStrokeWidth(dp0_5);
+
+                int left =  dp20;
+                int right = parent.getWidth() - dp20;
+
+                int count = parent.getChildCount();
+                for (int i = 0; i < count; i++ ) {
+                    View child = parent.getChildAt(i);
+
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                    int top = child.getBottom() + params.bottomMargin - dp0_5;
+                    c.drawLine(left, top, right, top, paint);
+                }
+            }
+        });
         recyclerToken.setAdapter(adapter);
 
         return v;
@@ -123,7 +152,7 @@ public class TokenListFragment extends Fragment {
 
         mTokens = new ArrayList<>();
 
-        for (Wallet info : ICONexApp.mWallets) {
+        for (Wallet info : ICONexApp.wallets) {
             if (info.getAddress().equals(mWallet.getAddress())) {
                 for (WalletEntry entry : info.getWalletEntries()) {
                     if (entry.getType().equals(MyConstants.TYPE_TOKEN)) {
