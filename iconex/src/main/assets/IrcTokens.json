@@ -1,79 +1,194 @@
 [
   {
-    "score": "cxbdda1241313c0113f8ebf4b974239b145558513a",
-    "name": "BLOC8",
-    "symbol": "BLOC8",
+    "address": "cx9ab3078e72c8d9017194d17b34b1a47b661945ca",
     "decimals": 18,
-    "type": "default"
-  },
-  {
-    "score": "cx9ab3078e72c8d9017194d17b34b1a47b661945ca",
     "name": "AC3",
-    "symbol": "AC3",
-    "decimals": 18,
-    "type": "default"
+    "symbol": "AC3"
   },
   {
-    "score": "cxf9148db4f8ec78823a50cb06c4fed83660af38d0",
-    "name": "MECA Coin",
-    "symbol": "MCA",
+    "address": "cx502c47463314f01e84b1b203c315180501eb2481",
+    "decimals": 18,
+    "name": "ACT",
+    "symbol": "ACT"
+  },
+  {
+    "address": "cxa3512fb64b8808ca07a8469e391b33d7243153b5",
+    "decimals": 18,
+    "name": "Andrew Token",
+    "symbol": "ATK"
+  },
+  {
+    "address": "cxfdc37ff554fd0a7fae0073984d5e0d89739a7bb6",
     "decimals": 0,
-    "type": "default"
+    "name": "Bea's Coin",
+    "symbol": "BEA"
   },
   {
-    "score": "cx3ec2814520c0096715159b8fc55fa1f385be038c",
-    "name": "SportToken",
-    "symbol": "SPORT",
+    "address": "cxbdda1241313c0113f8ebf4b974239b145558513a",
     "decimals": 18,
-    "type": "default"
+    "name": "BLOC8",
+    "symbol": "BLOC8"
   },
   {
-    "score": "cxbc264e6279ec971f11ebe3939fc88d05b243eba7",
-    "name": "VELICX",
-    "symbol": "VCX",
+    "address": "cxe1c39cac4b1976ae81c3fc0a4bd654f884c775bf",
     "decimals": 18,
-    "type": "default"
+    "name": "BOOKSON",
+    "symbol": "BXO"
   },
   {
-    "score": "cx921205acb7c51e16d5b7cbc37539a4357d929d20",
-    "name": "weBloc",
-    "symbol": "WOK",
+    "address": "cxf537f85007f26415a82e9b41ea77fa6ec2e3e4cd",
     "decimals": 18,
-    "type": "default"
+    "name": "broof",
+    "symbol": "BRF"
   },
   {
+    "address": "cx5931aa6e4870efea295850500b80166328cfa2b4",
+    "decimals": 0,
+    "name": "CJ Cooperation",
+    "symbol": "CJLSS"
+  },
+  {
+    "address": "cx17eb6014740f2ae1d547df76fa593f988986661b",
+    "decimals": 18,
+    "name": "DiceCoinX",
+    "symbol": "DCX"
+  },
+  {
+    "address": "cxba7a8271d85ed673d27574a30e3261e147902e92",
+    "decimals": 18,
+    "name": "ELGUAPO COIN",
+    "symbol": "GUP"
+  },
+  {
+    "address": "cx82e9075445764ef32f772d11f5cb08dae71d463b",
+    "decimals": 18,
+    "name": "ICON Talent Donation",
+    "symbol": "ITD"
+  },
+  {
+    "address": "cxd9858f1c48df0e9b1237c2a757d468b41bd94fc1",
+    "decimals": 18,
+    "name": "ICONBET",
+    "symbol": "ICBX"
+  },
+  {
+    "address": "cx81fe20ac9a8ed7387b8d17be878c1d0ccb01aabf",
+    "decimals": 18,
     "name": "IconGameAlliance",
-    "symbol": "IGA",
-    "decimals": 18,
-    "score": "cx81fe20ac9a8ed7387b8d17be878c1d0ccb01aabf",
-    "type": "default"
+    "symbol": "IGA"
   },
   {
+    "address": "cxb6eb15f06653d40e2259b7f41d240e597cffb8cb",
+    "decimals": 18,
+    "name": "icon_delta_token",
+    "symbol": "IDA"
+  },
+  {
+    "address": "cx862833853e07ab4f808a1532efb48aafbeaf5d81",
+    "decimals": 18,
+    "name": "Insight Token",
+    "symbol": "INX"
+  },
+  {
+    "address": "cxbd31ecb07aca9f6f65e00cbcb94189eb209c5148",
+    "decimals": 4,
+    "name": "KRWb Token",
+    "symbol": "KRWb"
+  },
+  {
+    "address": "cx2137642d0bf1926fbe23a3688d042a0f34bc2b9a",
+    "decimals": 18,
     "name": "LogisticsX",
-    "symbol": "PNP",
-    "decimals": 18,
-    "score": "cx2137642d0bf1926fbe23a3688d042a0f34bc2b9a",
-    "type": "default"
+    "symbol": "PNP"
   },
   {
+    "address": "cxf9148db4f8ec78823a50cb06c4fed83660af38d0",
+    "decimals": 0,
+    "name": "MECA Coin",
+    "symbol": "MCA"
+  },
+  {
+    "address": "cx1485a8d99c0c670cc52429dc2e999830427d9941",
+    "decimals": 18,
+    "name": "MYID",
+    "symbol": "MYID"
+  },
+  {
+    "address": "cx8c43c6980d57aee6a0c69fb3a2f3c30fb0801b6d",
+    "decimals": 18,
+    "name": "PATRICK",
+    "symbol": "PAT"
+  },
+  {
+    "address": "cxea312eb662a97659d1ccf44381eeb2c943161bb7",
+    "decimals": 18,
+    "name": "P_Rep Token",
+    "symbol": "PRT"
+  },
+  {
+    "address": "cx429731644462ebcfd22185df38727273f16f9b87",
+    "decimals": 18,
     "name": "Somesing Exchange",
-    "symbol": "SSX",
+    "symbol": "SSX"
+  },
+  {
+    "address": "cx08eb683a53d6f244d538a45f0cc584825e2cb985",
     "decimals": 18,
-    "score": "cx429731644462ebcfd22185df38727273f16f9b87",
-    "type": "default"
+    "name": "SportsToken",
+    "symbol": "SPORTS"
   },
   {
+    "address": "cx3ec2814520c0096715159b8fc55fa1f385be038c",
+    "decimals": 18,
+    "name": "SportToken",
+    "symbol": "SPORT"
+  },
+  {
+    "address": "cxc0b5b52c9f8b4251a47e91dda3bd61e5512cd782",
+    "decimals": 18,
+    "name": "TapToken",
+    "symbol": "TAP"
+  },
+  {
+    "address": "cxbf638bac4c5f7905141f25a3add16ba5544a0417",
+    "decimals": 18,
+    "name": "Test Token",
+    "symbol": "TST"
+  },
+  {
+    "address": "cxefaa21e34a3a1abf97369b5beef84524f52d88a8",
+    "decimals": 8,
     "name": "Velic Authority",
-    "symbol": "VELA",
-    "decimals": 8,
-    "score": "cxefaa21e34a3a1abf97369b5beef84524f52d88a8",
-    "type": "default"
+    "symbol": "VELA"
   },
   {
-    "name": "Velic Token",
-    "symbol": "VELT",
+    "address": "cx19a23e850bf736387cd90d0b6e88ce9af76a8d41",
     "decimals": 8,
-    "score": "cx19a23e850bf736387cd90d0b6e88ce9af76a8d41",
-    "type": "default"
+    "name": "Velic Token",
+    "symbol": "VELT"
+  },
+  {
+    "address": "cxbc264e6279ec971f11ebe3939fc88d05b243eba7",
+    "decimals": 18,
+    "name": "VELICX",
+    "symbol": "VCX"
+  },
+  {
+    "address": "cx921205acb7c51e16d5b7cbc37539a4357d929d20",
+    "decimals": 18,
+    "name": "weBloc",
+    "symbol": "WOK"
+  },
+  {
+    "address": "cx0b6d085c4f42ca85da612a8cc02a519241587e14",
+    "decimals": 18,
+    "name": "WideNEQ",
+    "symbol": "NEQ"
+  },
+  {
+    "address": "cxc248ee72f58f7ec0e9a382379d67399f45b596c7",
+    "decimals": 18,
+    "name": "WITHU",
+    "symbol": "WTU"
   }
 ]

@@ -19,6 +19,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import foundation.icon.MyConstants;
@@ -156,7 +158,7 @@ public class IrcListFragment extends Fragment implements View.OnClickListener {
         IrcToken irc;
         for (int i = 0; i < tokens.size(); i++) {
             JsonObject token = tokens.get(i).getAsJsonObject();
-            String score = token.get("score").getAsString();
+            String score = token.get("address").getAsString();
             String name = token.get("name").getAsString();
             String symbol = token.get("symbol").getAsString();
             int decimal = token.get("decimals").getAsInt();
@@ -164,6 +166,20 @@ public class IrcListFragment extends Fragment implements View.OnClickListener {
             irc = new IrcToken(address, score, name, symbol, decimal);
             list.add(irc);
         }
+
+        Collections.sort(list, new Comparator<IrcToken>() {
+            @Override
+            public int compare(IrcToken o1, IrcToken o2) {
+                try {
+                    Integer i1 = Integer.parseInt(o1.getName());
+                    Integer i2 = Integer.parseInt(o2.getName());
+
+                    return i1.compareTo(i2);
+                } catch (Exception e) {
+                    return o1.getName().compareToIgnoreCase(o2.getName());
+                }
+            }
+        });
 
         return list;
     }
