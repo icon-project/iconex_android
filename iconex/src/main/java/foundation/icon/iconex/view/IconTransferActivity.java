@@ -1013,7 +1013,7 @@ public class IconTransferActivity extends AppCompatActivity implements IconEnter
                         break;
 
                     case MyConstants.NETWORK_TEST:
-                        nid = "0x2";
+                        nid = "0x53";
                         break;
 
                     default:
