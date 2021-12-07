@@ -5,11 +5,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
     defaultConfig {
         applicationId "foundation.icon.iconex"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 31
         multiDexEnabled true
         versionCode 81
         versionName "1.7.1"
@@ -58,7 +58,7 @@ ext {
     lifecycleVersion = '2.0.0'
     roomVersion = '2.1.0-alpha04'
 
-    iconSdkVersion = '0.9.14'
+    iconSdkVersion = '2.0.0'
 
     gsonVersion = '2.8.0'
 
