@@ -12,8 +12,7 @@ android {
         targetSdkVersion 31
         multiDexEnabled true
         versionCode 82
-        //TODO Confirm appropriate versionName
-        versionName "1.8.0"
+        versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
