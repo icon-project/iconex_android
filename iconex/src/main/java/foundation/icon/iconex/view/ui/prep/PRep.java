@@ -16,9 +16,9 @@ public class PRep implements Serializable {
     private static final String TAG = PRep.class.getSimpleName();
 
     private int rank;
-    private String name, country, city, address, irep, irepUpdated, irepGen;
+    private String name, country, city, address, irep, irepUpdated;
     private Grade grade;
-    private BigInteger stake, totalDelegated, delegated, totalBlocks, validatedBlocks;
+    private BigInteger totalDelegated, delegated, totalBlocks, validatedBlocks;
     private String penalty, email, website, details, p2pEndPoint;
 
     public int getRank() {
@@ -49,16 +49,8 @@ public class PRep implements Serializable {
         return irepUpdated;
     }
 
-    public String getIrepGen() {
-        return irepGen;
-    }
-
     public Grade getGrade() {
         return grade;
-    }
-
-    public BigInteger getStake() {
-        return stake;
     }
 
     public void setTotalDelegated(BigInteger totalDelegated) {
@@ -110,8 +102,6 @@ public class PRep implements Serializable {
         address = b.address;
         irep = b.irep;
         irepUpdated = b.irepUpdated;
-        irepGen = b.irepGen;
-        stake = b.stake;
         totalDelegated = b.totalDelegated;
         delegated = b.delegated;
         totalBlocks = b.totalBlocks;
@@ -269,8 +259,6 @@ public class PRep implements Serializable {
                 .address(object.getItem("address").asString())
                 .irep(object.getItem("irep").asString())
                 .irepUpdated(object.getItem("irepUpdateBlockHeight").asString())
-                .irepGen(object.getItem("lastGenerateBlockHeight").asString())
-                .stake(object.getItem("stake").asString())
                 .delegated(object.getItem("delegated").asString())
                 .totalBlocks(object.getItem("totalBlocks").asString())
                 .validatedBlocks(object.getItem("validatedBlocks").asString())
@@ -296,8 +284,6 @@ public class PRep implements Serializable {
                 .address(address)
                 .irep(irep)
                 .irepUpdated(irepUpdated)
-                .irepGen(irepGen)
-                .stake(stake)
                 .totalDelegated(totalDelegated)
                 .delegated(delegated)
                 .totalBlocks(totalBlocks)
@@ -383,8 +369,6 @@ public class PRep implements Serializable {
                 "\"address\": \"" + address + "\",\n" +
                 "\"irep\": \"" + irep + "\",\n" +
                 "\"irepUpdateBlockHeight\": \"" + irepUpdated + "\",\n" +
-                "\"lastGenerateBlockHeight\": \"" + irepGen + "\",\n" +
-                "\"stake\": \"" + stake + "\",\n" +
                 "\"delegated\": \"" + delegated + "\",\n" +
                 "\"totalBlocks\": \"" + totalBlocks + "\",\n" +
                 "\"validatedBlocks\": \"" + validatedBlocks + "\"\n" +

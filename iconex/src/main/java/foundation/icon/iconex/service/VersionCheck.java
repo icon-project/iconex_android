@@ -96,9 +96,13 @@ public class VersionCheck extends AsyncTask {
 
                 @Override
                 public void onFailure(Call<VSResponse> call, Throwable t) {
-                    mActivity.startActivity(new Intent(mActivity, NetworkErrorActivity.class)
-                            .putExtra(NetworkErrorActivity.PARAM_TARGET_SPLASH, true)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                    if (mCallback != null && ICONexApp.NETWORK == Urls.Network.Euljiro) {
+                        mCallback.onPass();
+                    } else {
+                        mActivity.startActivity(new Intent(mActivity, NetworkErrorActivity.class)
+                                .putExtra(NetworkErrorActivity.PARAM_TARGET_SPLASH, true)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                    }
                 }
             });
         } catch (Exception e) {

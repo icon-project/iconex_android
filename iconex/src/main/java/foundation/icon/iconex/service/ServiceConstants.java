@@ -8,7 +8,7 @@ public class ServiceConstants {
 
     // ICON
     public static final String TRUSTED_HOST_MAIN = "https://ctz.solidwallet.io";
-    public static final String TRUSTED_HOST_TEST = "https://test-ctz.solidwallet.io";
+    public static final String TRUSTED_HOST_TEST = "https://sejong.net.solidwallet.io/";
     public static final String DEV_HOST = "http://13.209.103.183:9000";
 
     public static final String LC_API_HEADER = "/api";
@@ -16,7 +16,7 @@ public class ServiceConstants {
 
     // ICON Tracker
     public static final String URL_TRACKER_MAIN = "https://tracker.icon.foundation/transaction/";
-    public static final String URL_TRACKER_TEST = "https://trackerdev.icon.foundation/transaction/";
+    public static final String URL_TRACKER_TEST = "https://sejong.tracker.solidwallet.io/transaction/";
     public static final String DEV_TRACKER = "http://trackerlocaldev.icon.foundation";
 
     public static final String TR_V0 = "/v0";
@@ -26,7 +26,7 @@ public class ServiceConstants {
     public static final String TR_API_TOKEN_TX_LIST = "/token/txList";
 
     public static final String URL_VERSION_MAIN = "https://tracker.icon.foundation";
-    public static final String URL_VERSION_TEST = "https://trackerdev.icon.foundation";
+    public static final String URL_VERSION_TEST = "https://sejong.tracker.solidwallet.io";
     public static final String VS_API = "/app/and.json";
 
     // Ethereum

@@ -65,7 +65,7 @@ public class MyConstants {
 
     // ======== Network ========
     public static final int NETWORK_MAIN = 1;
-    public static final int NETWORK_TEST = 2;
+    public static final int NETWORK_TEST = 0x53;
     public static final int NETWORK_DEV = 3;
 
     public static final String PATTERN_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[?!:\\.,%+-/*<>{}()\\[\\]`\"'~_^\\\\|@#$&]).{8,}$";
