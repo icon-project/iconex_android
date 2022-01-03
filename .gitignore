@@ -39,24 +39,9 @@ captures/
 # Signing files
 .signing/
 
-# User-specific configurations
-.idea/libraries/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/.tokenName
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
+# IntelliJ IDEA files
+.idea
 *.iml
-.idea/assetWizardSettings.xml
-.idea/dictionaries
-.idea/libraries
-.idea/caches
-.idea/gradle.xml
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
