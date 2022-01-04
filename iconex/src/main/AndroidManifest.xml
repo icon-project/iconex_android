@@ -26,13 +26,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.SplashActivity"
+            android:exported="true"
             android:configChanges="fontScale"
             android:noHistory="true"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -258,15 +258,14 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="foundation.icon.connect.ICONexConnectActivity"
+            android:exported="true"
             android:configChanges="fontScale"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="iconex" />
             </intent-filter>
         </activity>
