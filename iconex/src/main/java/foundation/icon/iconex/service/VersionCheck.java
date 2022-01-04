@@ -131,12 +131,11 @@ public class VersionCheck extends AsyncTask {
         String[] vArr = version.split("\\.");
         String[] nArr = necessary.split("\\.");
 
-        if (Integer.parseInt(vArr[0]) < Integer.parseInt(nArr[0])) {
+        int major = Integer.parseInt(vArr[0]) - Integer.parseInt(nArr[0]);
+        if (major < 0) {
             return false;
-        } else {
-            if (Integer.parseInt(vArr[1]) < Integer.parseInt(nArr[1])) {
-                return false;
-            }
+        } else if (major == 0) {
+            return Integer.parseInt(vArr[1]) >= Integer.parseInt(nArr[1]);
         }
 
         return true;
